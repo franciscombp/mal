@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- azulejo de talavera: el fondo del puesto -->
+  <rect width="512" height="512" rx="116" fill="#1b5faa"/>
+  <rect width="512" height="512" rx="116" fill="url(#fondo)"/>
+  <defs>
+    <radialGradient id="fondo" cx="50%" cy="30%" r="80%">
+      <stop offset="0%" stop-color="#2f74c2"/>
+      <stop offset="100%" stop-color="#123f74"/>
+    </radialGradient>
+    <radialGradient id="olla" cx="40%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#ef4b40"/>
+      <stop offset="100%" stop-color="#9b1219"/>
+    </radialGradient>
+    <linearGradient id="madera" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d07c3f"/>
+      <stop offset="100%" stop-color="#93491c"/>
+    </linearGradient>
+  </defs>
+
+  <!-- cuartos de flor de talavera en las esquinas -->
+  <g fill="#5f97d8" opacity=".5">
+    <circle cx="0" cy="0" r="86"/><circle cx="512" cy="0" r="86"/>
+    <circle cx="0" cy="512" r="86"/><circle cx="512" cy="512" r="86"/>
+  </g>
+  <g fill="#3fc7bc" opacity=".55">
+    <circle cx="74" cy="74" r="17"/><circle cx="438" cy="74" r="17"/>
+    <circle cx="74" cy="438" r="17"/><circle cx="438" cy="438" r="17"/>
+  </g>
+
+  <!-- papel picado colgado arriba -->
+  <g>
+    <path d="M96 0 L124 0 L110 34 Z" fill="#e01b6a"/>
+    <path d="M158 0 L186 0 L172 40 Z" fill="#f5a623"/>
+    <path d="M220 0 L248 0 L234 34 Z" fill="#3fc7bc"/>
+    <path d="M282 0 L310 0 L296 40 Z" fill="#e01b6a"/>
+    <path d="M344 0 L372 0 L358 34 Z" fill="#f5a623"/>
+    <path d="M406 0 L434 0 L420 30 Z" fill="#3fc7bc"/>
+  </g>
+
+  <!-- vapor -->
+  <g stroke="#ffffff" stroke-width="17" stroke-linecap="round" fill="none" opacity=".92">
+    <path d="M205 148 q-16 -26 0 -50 q16 -24 2 -46"/>
+    <path d="M307 148 q16 -26 0 -50 q-16 -24 -2 -46"/>
+    <path d="M256 128 q-14 -22 0 -44"/>
+  </g>
+
+  <!-- la olla de peltre rojo -->
+  <ellipse cx="256" cy="420" rx="176" ry="26" fill="#000000" opacity=".25"/>
+  <!-- asas -->
+  <path d="M96 262 q-34 0 -34 32 q0 30 32 30" fill="none" stroke="#f3f1ec" stroke-width="24" stroke-linecap="round"/>
+  <path d="M416 262 q34 0 34 32 q0 30 -32 30" fill="none" stroke="#f3f1ec" stroke-width="24" stroke-linecap="round"/>
+  <path d="M92 238 a164 148 0 0 0 328 0 z" fill="url(#olla)"/>
+  <!-- borde de peltre blanco -->
+  <ellipse cx="256" cy="236" rx="168" ry="40" fill="#f3f1ec"/>
+  <ellipse cx="256" cy="230" rx="150" ry="30" fill="#e3dfd6"/>
+  <!-- el caldo dorado -->
+  <ellipse cx="256" cy="232" rx="136" ry="24" fill="#f5a623"/>
+  <ellipse cx="220" cy="228" rx="34" ry="9" fill="#ffc93c" opacity=".9"/>
+  <!-- carita de la olla -->
+  <circle cx="212" cy="316" r="15" fill="#2b2129"/>
+  <circle cx="300" cy="316" r="15" fill="#2b2129"/>
+  <circle cx="217" cy="311" r="5" fill="#ffffff" opacity=".85"/>
+  <circle cx="305" cy="311" r="5" fill="#ffffff" opacity=".85"/>
+  <path d="M222 352 q34 26 68 0" fill="none" stroke="#2b2129" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="180" cy="342" r="15" fill="#ff77ab" opacity=".5"/>
+  <circle cx="332" cy="342" r="15" fill="#ff77ab" opacity=".5"/>
+  <!-- brillo esmaltado -->
+  <ellipse cx="176" cy="292" rx="26" ry="44" fill="#ffffff" opacity=".22" transform="rotate(-18 176 292)"/>
+
+  <!-- estrella de cempasúchil -->
+  <path d="M418 130 l10 24 26 3 -19 18 5 26 -22 -13 -22 13 5 -26 -19 -18 26 -3 z" fill="#ffc93c" stroke="#c07610" stroke-width="6" stroke-linejoin="round"/>
+
+  <!-- la tabla de madera de abajo -->
+  <rect x="60" y="428" width="392" height="30" rx="15" fill="url(#madera)"/>
+</svg>

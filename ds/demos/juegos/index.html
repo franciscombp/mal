@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es" data-marca="juegos">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HUD de Estado Decepción · demo del sistema · UNA</title>
+<meta name="description" content="Cómo se ve el sistema con el tema de juegos: botones volumétricos y acento holográfico.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://una.red/ds/demos/juegos/">
+<link rel="stylesheet" href="/ds/mal/mal.css?v=1.0.15">
+<link rel="stylesheet" href="/ds/demos/demos.css?v=1.0.15">
+<style>
+/* Solo el lienzo y las esquinas del HUD: la pantalla de un juego no es un
+   componente. Lo que va encima sí lo es —.marcador, .medidor, .vidas,
+   .badge, .vidrio, .boton-juego, .chip, .list-row—. */
+.hd{width:min(100% - 2rem, 1120px);margin-inline:auto;padding-block:var(--mal-e6)}
+.lienzo{
+  position:relative;aspect-ratio:16/9;min-height:400px;margin-top:var(--mal-e6);
+  border-radius:var(--mal-r);overflow:hidden;border:var(--mal-borde-fuerte);
+  box-shadow:var(--mal-elev-2);display:grid;place-items:center;
+}
+.hud-esq{position:absolute;display:flex;gap:var(--mal-e3);align-items:center}
+.hud-esq--ai{top:var(--mal-e4);left:var(--mal-e4)}
+.hud-esq--ad{top:var(--mal-e4);right:var(--mal-e4)}
+.hud-esq--bi{bottom:var(--mal-e4);left:var(--mal-e4);flex-direction:column;align-items:flex-start;width:220px}
+.hud-panel{padding:var(--mal-e5);width:min(100% - 2rem, 360px);text-align:center}
+.hud-panel .kicker{justify-content:center}
+.abajo{display:grid;gap:var(--mal-e5);grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  margin-top:var(--mal-e6)}
+</style>
+</head>
+<body>
+<div class="demo-barra">
+  <a class="demo-barra__marca" href="/ds/">
+    <svg class="icono icono--s" aria-hidden="true"><use href="#i-flecha-izq"/></svg> mal-ds</a>
+  <nav aria-label="Las cuatro demos"><a href="/ds/demos/mal/">Portafolio</a><a href="/ds/demos/mercio/">Periódico</a><a href="/ds/demos/apps/">Onboarding</a><a href="/ds/demos/juegos/" aria-current="page">HUD</a></nav>
+  <div class="demo-barra__acc">
+    <label class="sr-only" for="demo-marca">Tema de marca</label>
+    <span class="seleccion"><select id="demo-marca"><option value="mal">Tema MAL</option><option value="mercio">Tema EL MERCIO.</option><option value="apps">Tema APPS</option><option value="juegos" selected>Tema Juegos</option></select></span>
+    <button class="btn btn--sm" id="demo-tema" type="button">Sistema</button>
+    <a class="btn btn--sm" href="/ds/mal/">El sistema</a>
+  </div>
+</div>
+<p class="demo-nota">Demo del sistema · la misma página bajo los cuatro temas · cambia el
+selector y no se toca ni una línea de HTML</p>
+
+<main class="hd">
+  <p class="kicker">Tema juegos · Estado Decepción</p>
+  <h1>El HUD, con volumen.</h1>
+  <p class="lede">Corres, esquivas y documentas mientras el poder te pisa los talones. El tema de
+  juegos no difumina la sombra: la apoya, así que el botón tiene grosor y se hunde al pulsarlo.</p>
+
+  <div class="lienzo fondo--aurora">
+    <div class="hud-esq hud-esq--ai">
+      <div class="panel panel--compacto">
+        <p class="marcador">18 420<small>puntos</small></p>
+      </div>
+      <span class="badge badge-info">Escenario 2 · Apagón</span>
+    </div>
+    <div class="hud-esq hud-esq--ad">
+      <span class="badge"><svg class="icono icono--s" aria-hidden="true"><use href="#i-documento"/></svg> 34</span>
+      <div class="vidas" role="img" aria-label="2 vidas de 3">
+        <svg class="icono" aria-hidden="true"><use href="#i-vida"/></svg>
+        <svg class="icono" aria-hidden="true"><use href="#i-vida"/></svg>
+        <svg class="icono perdida" aria-hidden="true"><use href="#i-vida"/></svg>
+      </div>
+    </div>
+    <div class="hud-esq hud-esq--bi">
+      <span class="micro">Evidencia</span>
+      <div class="medidor" role="img" aria-label="4 de 6">
+        <i class="lleno"></i><i class="lleno"></i><i class="lleno"></i><i class="lleno"></i><i></i><i></i>
+      </div>
+    </div>
+
+    <div class="vidrio pila hud-panel">
+      <p class="kicker">Pausa</p>
+      <h2>¿Seguimos documentando?</h2>
+      <p class="caption">Vas por el segundo escenario. Si sales ahora, se guarda el récord.</p>
+      <button class="btn btn--rojo boton-juego btn-block" type="button">
+        <svg class="icono" aria-hidden="true"><use href="#i-play"/></svg> Reanudar</button>
+      <button class="btn boton-juego btn-block" type="button">
+        <svg class="icono" aria-hidden="true"><use href="#i-reiniciar"/></svg> Reintentar</button>
+      <button class="btn btn-ghost btn-block" type="button">
+        <svg class="icono" aria-hidden="true"><use href="#i-salir"/></svg> Salir al menú</button>
+    </div>
+  </div>
+
+  <div class="abajo">
+    <div class="card pila">
+      <p class="kicker">Potenciadores</p>
+      <div class="fila">
+        <button class="chip" type="button" aria-pressed="true">
+          <svg class="icono icono--s" aria-hidden="true"><use href="#i-rayo"/></svg> Prisa</button>
+        <button class="chip" type="button" aria-pressed="false">
+          <svg class="icono icono--s" aria-hidden="true"><use href="#i-escudo"/></svg> Escudo</button>
+        <button class="chip" type="button" aria-pressed="false">
+          <svg class="icono icono--s" aria-hidden="true"><use href="#i-buscar"/></svg> Zoom</button>
+        <button class="chip" type="button" aria-pressed="false">
+          <svg class="icono icono--s" aria-hidden="true"><use href="#i-altavoz"/></svg> Ruido</button>
+      </div>
+      <p class="caption">Se desbloquean documentando: cada reportaje completo abre uno.</p>
+    </div>
+    <div class="card pila">
+      <p class="kicker">Tabla de la semana</p>
+      <div>
+        <div class="list-row"><span class="icon-circle">
+          <svg class="icono" aria-hidden="true"><use href="#i-trofeo"/></svg></span>
+          <span><b>la_mofle</b><br><span class="caption">Carondelet</span></span>
+          <span class="tabular">42 180</span></div>
+        <div class="list-row"><span class="icon-circle">2</span>
+          <span><b>pasante_op</b><br><span class="caption">La Bahía</span></span>
+          <span class="tabular">38 905</span></div>
+        <div class="list-row"><span class="icon-circle">3</span>
+          <span><b>tú</b><br><span class="caption">Apagón</span></span>
+          <span class="tabular">18 420</span></div>
+      </div>
+      <p class="caption">La tabla se reinicia cada lunes. El récord personal no.</p>
+    </div>
+  </div>
+</main>
+
+<script src="/ds/mal/mal.js?v=1.0.15" defer></script>
+<script src="/ds/demos/demos.js?v=1.0.15" defer></script>
+</body>
+</html>

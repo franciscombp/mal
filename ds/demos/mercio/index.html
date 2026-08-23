@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es" data-marca="mercio">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portada de EL MERCIO. · demo del sistema · UNA</title>
+<meta name="description" content="Cómo se ve el sistema con el tema de prensa: serif, página blanca y esquinas a escuadra.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://una.red/ds/demos/mercio/">
+<link rel="stylesheet" href="/ds/mal/mal.css?v=1.0.15">
+<link rel="stylesheet" href="/ds/demos/demos.css?v=1.0.15">
+<style>
+/* Solo la caja de la portada y las dos rejillas del papel. La cabecera,
+   las tarjetas, la lista de opinión y la banda oscura son componentes:
+   .em-header, .em-cards-4up, .em-opinion-list, .em-dark. */
+.em-portada{width:min(100% - 2rem, 1180px);margin-inline:auto}
+.em-masthead{text-align:center;padding-block:var(--em-32) var(--em-16)}
+/* el cartel es el MISMO logotipo de la cabecera, a tamaño de portada: si se
+   escribe con .em-display sale en serif y la marca aparece de dos formas
+   distintas en la misma página. Aquí solo se escala. */
+.em-masthead .em-logo{font-size:var(--em-t-display);display:inline-block}
+.em-fecha{
+  display:flex;justify-content:space-between;gap:var(--em-16);flex-wrap:wrap;
+  padding-block:var(--em-12);border-block:1px solid var(--em-border);
+  font-family:var(--em-sans);font-size:var(--em-t-caption);
+  font-weight:var(--em-sans-peso,500);text-transform:uppercase;
+  letter-spacing:var(--em-sans-tracking,.06em);color:var(--em-contrast-3);
+}
+.em-apertura{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:var(--em-32)}
+.em-dos{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:var(--em-32)}
+.em-hueco{aspect-ratio:16/9;background:var(--em-surface);border:1px solid var(--em-border)}
+@media (max-width:820px){.em-apertura,.em-dos{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="demo-barra">
+  <a class="demo-barra__marca" href="/ds/">
+    <svg class="icono icono--s" aria-hidden="true"><use href="#i-flecha-izq"/></svg> mal-ds</a>
+  <nav aria-label="Las cuatro demos"><a href="/ds/demos/mal/">Portafolio</a><a href="/ds/demos/mercio/" aria-current="page">Periódico</a><a href="/ds/demos/apps/">Onboarding</a><a href="/ds/demos/juegos/">HUD</a></nav>
+  <div class="demo-barra__acc">
+    <label class="sr-only" for="demo-marca">Tema de marca</label>
+    <span class="seleccion"><select id="demo-marca"><option value="mal">Tema MAL</option><option value="mercio" selected>Tema EL MERCIO.</option><option value="apps">Tema APPS</option><option value="juegos">Tema Juegos</option></select></span>
+    <button class="btn btn--sm" id="demo-tema" type="button">Sistema</button>
+    <a class="btn btn--sm" href="/ds/mal/">El sistema</a>
+  </div>
+</div>
+<p class="demo-nota">Demo del sistema · la misma página bajo los cuatro temas · cambia el
+selector y no se toca ni una línea de HTML</p>
+
+<div class="progreso progreso--lectura" aria-hidden="true"><span></span></div>
+
+<div class="em-portada">
+  <header class="em-header">
+    <a class="em-logo" href="#portada">EL MERCIO<span class="em-logo-dot">.</span></a>
+    <nav class="em-nav" id="em-nav-portada" aria-label="Secciones">
+      <a href="#portada">Desinformación</a><a href="#portada">Opinión</a>
+      <a href="#portada">Política</a><a href="#portada">Cultura</a><a href="#portada">Necflis</a>
+    </nav>
+    <button class="em-menu-toggle" type="button" data-alterna="#em-nav-portada"
+            aria-controls="em-nav-portada">
+      <svg class="icono" aria-hidden="true"><use href="#i-menu"/></svg> Menú</button>
+    <a class="em-btn" href="#portada">Suscríbete</a>
+  </header>
+
+  <main class="em-home-main" id="portada">
+    <section class="em-masthead">
+      <p><a class="em-logo" href="#portada">EL MERCIO<span class="em-logo-dot">.</span></a></p>
+      <p class="em-frase">Las noticias, el entretenimiento y la desinformación de ayer.</p>
+      <p class="em-fecha"><span>Quito · viernes 23 de agosto de 2026</span>
+      <span>Año XVII · nº 4 812</span></p>
+    </section>
+
+    <section class="em-section-padded">
+      <div class="em-apertura">
+        <article>
+          <p class="em-kicker">Desinformación</p>
+          <h1 class="em-h1">La Asamblea aprueba por unanimidad una ley que nadie alcanzó a leer,
+          ni siquiera quien la escribió</h1>
+          <p>El texto tiene 412 páginas y fue votado en once minutos. Consultada sobre el
+          artículo 3, la bancada mayoritaria respondió que ese artículo «se explica solo».
+          La oposición coincidió, por primera vez en el periodo, en que tampoco lo había leído.</p>
+          <p class="em-meta">Por elmercio · 6 min de lectura</p>
+          <p><a class="em-btn" href="#portada">Seguir leyendo</a></p>
+        </article>
+        <aside>
+          <figure class="em-garabato">
+            <div class="em-hueco" role="img" aria-label="Fotografía de la sesión"></div>
+            <figcaption class="em-figcaption">El momento exacto en que la ley fue aprobada.
+            / Foto: EL MERCIO.</figcaption>
+          </figure>
+          <blockquote class="em-quote">Se explica solo, y quien no lo entienda es porque no
+          quiere.<cite>La bancada mayoritaria</cite></blockquote>
+        </aside>
+      </div>
+    </section>
+
+    <section class="em-section-padded">
+      <div class="em-dos">
+        <div>
+          <div class="em-section-header-row">
+            <h2 class="em-h2"><a class="em-link" href="#portada">Lo último</a></h2>
+            <p class="em-section-description">Noticias que no pasaron, contadas como si
+            hubieran pasado.</p>
+          </div>
+          <div class="em-cards em-cards-4up">
+            <article class="em-card">
+              <div class="em-card__img em-hueco" role="img" aria-label="Ilustración"></div>
+              <div class="em-card__body">
+                <span class="em-kicker">Política</span>
+                <h3 class="em-h3"><a class="em-link" href="#portada">Un municipio inaugura por
+                tercera vez el mismo puente y promete una cuarta</a></h3>
+                <p class="em-card__excerpt">La placa ya no cabe: van a poner otra placa.</p>
+                <p class="em-meta">Por Pasante · 22 ago</p>
+              </div>
+            </article>
+            <article class="em-card">
+              <div class="em-card__img em-hueco" role="img" aria-label="Ilustración"></div>
+              <div class="em-card__body">
+                <span class="em-kicker">Sociedad</span>
+                <h3 class="em-h3"><a class="em-link" href="#portada">Estudio revela que el 100%
+                de los encuestados respondió la encuesta</a></h3>
+                <p class="em-card__excerpt">El margen de error es de cero, y eso asusta.</p>
+                <p class="em-meta">Por Copy Paste · 21 ago</p>
+              </div>
+            </article>
+            <article class="em-card">
+              <div class="em-card__img em-hueco" role="img" aria-label="Ilustración"></div>
+              <div class="em-card__body">
+                <span class="em-kicker">Cultura</span>
+                <h3 class="em-h3"><a class="em-link" href="#portada">La fanesca de este año traía
+                trece granos y el país entró en crisis constitucional</a></h3>
+                <p class="em-card__excerpt">La Corte pidió tiempo para contar de nuevo.</p>
+                <p class="em-meta">Por ¡ele quesf! · 20 ago</p>
+              </div>
+            </article>
+          </div>
+        </div>
+        <aside>
+          <div class="em-section-header-row">
+            <h2 class="em-h2"><a class="em-link" href="#portada">Opinión</a></h2>
+          </div>
+          <ol class="em-opinion-list">
+            <li class="em-opinion-list-item">
+              <span class="em-opinion-list-number" aria-hidden="true"></span>
+              <div><a class="em-opinion-headline" href="#portada">Lo que no se dice cuando se
+              habla de seguridad</a><p class="em-meta">Paqui Mal</p></div></li>
+            <li class="em-opinion-list-item">
+              <span class="em-opinion-list-number" aria-hidden="true"></span>
+              <div><a class="em-opinion-headline" href="#portada">El país que se acostumbró a
+              esperar</a><p class="em-meta">Fran Maldonado</p></div></li>
+            <li class="em-opinion-list-item">
+              <span class="em-opinion-list-number" aria-hidden="true"></span>
+              <div><a class="em-opinion-headline" href="#portada">Manual para aplaudir cualquier
+              cosa</a><p class="em-meta">La redacción</p></div></li>
+            <li class="em-opinion-list-item">
+              <span class="em-opinion-list-number" aria-hidden="true"></span>
+              <div><a class="em-opinion-headline" href="#portada">Contra la costumbre de llamar
+              «gestión» a la suerte</a><p class="em-meta">Paqui Mal</p></div></li>
+          </ol>
+          <p><a class="em-btn em-btn--linea" href="#portada">Todas las columnas</a></p>
+          <p class="em-podcast-rss"><a class="em-link" href="#portada">
+            <svg class="icono icono--s" aria-hidden="true"><use href="#i-altavoz"/></svg>
+            El pódcast, por RSS</a></p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="em-dark em-section-padded">
+      <div class="em-dos">
+        <div>
+          <span class="em-badge em-badge--oscuro">Lo más leído</span>
+          <h2 class="em-h2">Cinco señales de que su ministerio ya no lo quiere</h2>
+          <p class="em-meta">Por Paqui Mal · Las Noticias de Ayer</p>
+          <blockquote class="em-quote">Si le quitaron el escritorio pero le dejaron el cargo,
+          respire: todavía cobra.</blockquote>
+          <p><a class="em-btn" href="#portada">Leer la edición</a></p>
+        </div>
+        <div class="em-revista-portada">
+          <img src="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 4 5%27%3E%3Crect width=%274%27 height=%275%27 fill=%27%23c53b2b%27/%3E%3Crect x=%27.4%27 y=%27.4%27 width=%273.2%27 height=%273%27 fill=%27%23141414%27/%3E%3C/svg%3E"
+               alt="Portada de La Re-bestia" width="400" height="500">
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="em-section-padded">
+    <p class="em-frase">EL MERCIO. · Quito, Ecuador · Un medio de MAL</p>
+    <p class="em-frase">Demo del sistema de diseño · esta portada no es la publicada.</p>
+  </footer>
+</div>
+
+<script src="/ds/mal/mal.js?v=1.0.15" defer></script>
+<script src="/ds/demos/demos.js?v=1.0.15" defer></script>
+</body>
+</html>

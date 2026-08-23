@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mal-ds · el sistema de diseño de MAL · UNA</title>
+<meta name="description" content="mal-ds, el sistema de diseño de MAL: un solo CSS con cuatro temas —la marca, el periódico EL MERCIO., las apps y los juegos—. Tokens, componentes y el CSS listo para consumir por URL.">
+<link rel="canonical" href="https://una.red/ds/">
+<meta name="theme-color" content="#E7E7E4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151514" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="UNA">
+<meta property="og:locale" content="es_EC">
+<meta property="og:title" content="mal-ds · el sistema de diseño de MAL · UNA">
+<meta property="og:description" content="mal-ds, el sistema de diseño de MAL: un solo CSS con cuatro temas —la marca, el periódico EL MERCIO., las apps y los juegos—. Tokens, componentes y el CSS listo para consumir por URL.">
+<meta property="og:url" content="https://una.red/ds/">
+<meta property="og:image" content="https://una.red/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/img/icono-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/img/icono-180.png">
+<link rel="preload" href="/ds/fonts/syne.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/ds/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/ds/mal/mal.css?v=1.0.15">
+<script src="/ds/mal/mal.js?v=1.0.15" defer></script>
+</head>
+<body>
+<a class="salta" href="#principal">Saltar al contenido</a>
+<header class="hud">
+  <div class="wrap hud__in">
+    <a class="hud__marca" href="/"><span class="hud__punto" aria-hidden="true"></span><b>UNA</b><span>una.red</span></a>
+    <nav aria-label="Secciones"><a href="/#apps">Apps</a><a href="/#juegos">Juegos</a><a href="/#medios">Blogs</a><a href="/ds/" aria-current="page">Sistemas</a><a href="/#quien">Quién</a></nav>
+  </div>
+</header>
+<main id="principal">
+<section class="hero">
+  <div class="wrap">
+    <p class="kicker">Sistemas de diseño</p>
+    <h1>Un sistema, cuatro temas.</h1>
+    <p class="lede">Un solo sistema de componentes con cuatro pieles: la marca, el periódico, las
+    apps y los juegos. La arquitectura es la de Material —referencia, roles, componentes—, así que
+    cambiar de tema es cambiar un atributo, no una hoja.</p>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec__cab">
+      <div>
+        <p class="kicker">01 / El paquete</p>
+        <h2>Uno solo.</h2>
+      </div>
+      <p class="intro">No son tres hojas ni tres carpetas: es <b>un CSS</b>. La arquitectura es
+      la de Material —referencia, roles, componentes— y solo la capa de referencia cambia con el
+      tema, así que un componente se escribe una vez y se ve distinto en cada sitio.</p>
+    </div>
+    <div class="rej">
+      <article class="tarj">
+        <div class="tarj__cover tarj__cover--glifo" style="--fondo:#D6382B">
+          <span aria-hidden="true">mal-ds</span>
+        </div>
+        <div class="tarj__cuerpo">
+          <p class="tarj__kicker">Un sistema, cuatro temas</p>
+          <h3><a href="/ds/mal/">mal-ds</a></h3>
+          <p>Un solo juego de componentes y cuatro pieles: la marca, el periódico, las apps y los juegos. Cambia un atributo en la raíz y cambia todo — color, tipografía, forma, borde, elevación y densidad.</p>
+          <ul class="tarj__tags"><li>Un CSS · cuatro temas · sin dependencias</li></ul>
+          <p class="tarj__acc"><a href="/ds/mal/">Ver el sistema →</a>
+          <a class="sec-link" href="/ds/demos/mal/">Verlo aplicado</a><a class="sec-link" href="/ds/mal/mal.css">CSS</a></p>
+        </div>
+      </article></div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec__cab">
+      <div>
+        <p class="kicker">02 / Los cuatro temas</p>
+        <h2>Verlos aplicados.</h2>
+      </div>
+      <p class="intro">Un storybook enseña piezas sueltas; esto enseña el sistema puesto. Cada demo
+      es una página de verdad hecha solo con los componentes, cambiando únicamente el tema.</p>
+    </div>
+    <div class="rej">
+      <article class="tarj">
+        <div class="tarj__cover tarj__cover--glifo" style="--fondo:#D6382B">
+          <svg class="icono icono--xl" aria-hidden="true"><use href="#i-estrella"/></svg>
+        </div>
+        <div class="tarj__cuerpo">
+          <p class="tarj__kicker">Tema la marca</p>
+          <h3><a href="/ds/demos/mal/">Portafolio</a></h3>
+          <p>El escritorio de Fran con el tema por defecto: crema, Syne en los titulares.</p>
+          <p class="tarj__acc"><a href="/ds/demos/mal/">Abrir la demo →</a></p>
+        </div>
+      </article>
+      <article class="tarj">
+        <div class="tarj__cover tarj__cover--glifo" style="--fondo:#c53b2b">
+          <svg class="icono icono--xl" aria-hidden="true"><use href="#i-periodico"/></svg>
+        </div>
+        <div class="tarj__cuerpo">
+          <p class="tarj__kicker">Tema mercio</p>
+          <h3><a href="/ds/demos/mercio/">Portada del periódico</a></h3>
+          <p>EL MERCIO. con el tema de prensa: serif, página blanca, esquinas a escuadra.</p>
+          <p class="tarj__acc"><a href="/ds/demos/mercio/">Abrir la demo →</a></p>
+        </div>
+      </article>
+      <article class="tarj">
+        <div class="tarj__cover tarj__cover--glifo" style="--fondo:#1f7a3d">
+          <svg class="icono icono--xl" aria-hidden="true"><use href="#i-flecha-der"/></svg>
+        </div>
+        <div class="tarj__cuerpo">
+          <p class="tarj__kicker">Tema apps</p>
+          <h3><a href="/ds/demos/apps/">Onboarding</a></h3>
+          <p>Mi Huerto con el tema de producto: controles grandes, una decisión por pantalla.</p>
+          <p class="tarj__acc"><a href="/ds/demos/apps/">Abrir la demo →</a></p>
+        </div>
+      </article>
+      <article class="tarj">
+        <div class="tarj__cover tarj__cover--glifo" style="--fondo:#e01b6a">
+          <svg class="icono icono--xl" aria-hidden="true"><use href="#i-mando"/></svg>
+        </div>
+        <div class="tarj__cuerpo">
+          <p class="tarj__kicker">Tema juegos</p>
+          <h3><a href="/ds/demos/juegos/">HUD de juego</a></h3>
+          <p>Estado Decepción con el tema de juegos: botones volumétricos y acento holográfico.</p>
+          <p class="tarj__acc"><a href="/ds/demos/juegos/">Abrir la demo →</a></p>
+        </div>
+      </article></div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec__cab">
+      <div>
+        <p class="kicker">03 / Consumirlo</p>
+        <h2>Una línea, y ya.</h2>
+      </div>
+      <p class="intro">Las fuentes se sirven desde <code>/ds/fonts/</code> de una.red con CORS,
+      así que no hay que instalar nada ni llamar a Google Fonts. El tema se elige con
+      <code>data-marca</code> en el <code>&lt;html&gt;</code>; claro y oscuro van por
+      <code>data-tema</code>, que es un eje aparte. <b>Los temas no conviven</b>: un documento,
+      un tema.</p>
+    </div>
+    <div class="codigo-bloque">
+      <button class="btn-copy" type="button" data-copiar>Copiar</button>
+      <pre>&lt;link rel="stylesheet" href="https://una.red/ds/mal/mal.css"&gt;
+&lt;script src="https://una.red/ds/mal/mal.js" defer&gt;&lt;/script&gt;</pre>
+    </div>
+    <div class="tabla-env" style="margin-top:var(--mal-e5)">
+      <table class="tabla tabla--cebra">
+        <caption class="sr-only">Los cuatro temas del sistema</caption>
+        <thead><tr><th scope="col">Tema</th><th scope="col">En la raíz</th>
+        <th scope="col">Dónde</th><th scope="col">Carácter</th></tr></thead>
+        <tbody>
+        <tr>
+          <th scope="row">MAL</th>
+          <td><code>— por defecto</code></td>
+          <td>una.red · maldonado.pro</td>
+          <td>Crema cálida, filete de 1 px, sombra blanda. Syne en los titulares.</td>
+        </tr>
+        <tr>
+          <th scope="row">mercio</th>
+          <td><code>data-marca=&quot;mercio&quot;</code></td>
+          <td>elmercio.com</td>
+          <td>Página blanca, PT Serif, radio 0, sin sombras ni salto. Marca en Montserrat.</td>
+        </tr>
+        <tr>
+          <th scope="row">apps</th>
+          <td><code>data-marca=&quot;apps&quot;</code></td>
+          <td>Quanto · Mi Huerto · Jacky · Test CDS</td>
+          <td>App nativa: superficies sólidas, controles de 52 px, sin hover y con presión al pulsar.</td>
+        </tr>
+        <tr>
+          <th scope="row">juegos</th>
+          <td><code>data-marca=&quot;juegos&quot;</code></td>
+          <td>los siete juegos del hub</td>
+          <td>Volumétrico: sombra dura de 4 px, borde de 2 px y relleno en degradado.</td>
+        </tr></tbody>
+      </table>
+    </div>
+    <p class="nota-pie" style="margin-top:var(--mal-e4)">El <code>&lt;script&gt;</code> es
+    opcional: sin él todo se ve igual, solo deja de moverse. Es también quien inyecta el
+    sprite de iconos la primera vez que encuentra un <code>.icono</code>.</p>
+  </div>
+</section>
+</main>
+<footer class="pie">
+  <div class="wrap pie__in">
+    <p><b>UNA</b> · <a href="/">una.red</a> · el hub de MAL · Quito, Ecuador</p>
+    <ul>
+      <li><a href="/ds/">Sistemas de diseño</a></li>
+      <li><a href="https://elmercio.com/">EL MERCIO.</a></li>
+      <li><a href="https://malpensamientos.substack.com/">Mal Pensamientos</a></li>
+      <li><a href="https://github.com/franciscombp">GitHub</a></li>
+      <li><a href="mailto:francisco@maldonado.pro">Correo</a></li>
+    </ul>
+    <p>Código abierto en GitHub · hecho en Quito, con Claude Code de copiloto</p>
+  </div>
+</footer>
+</body>
+</html>

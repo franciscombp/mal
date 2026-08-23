@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es" data-marca="apps" data-app="agro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Onboarding de Mi Huerto · demo del sistema · UNA</title>
+<meta name="description" content="Cómo se ve el sistema con el tema de producto: controles grandes y una decisión por pantalla.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://una.red/ds/demos/apps/">
+<link rel="stylesheet" href="/ds/mal/mal.css?v=1.0.15">
+<link rel="stylesheet" href="/ds/demos/demos.css?v=1.0.15">
+<style>
+/* Solo el marco del teléfono y la fila que los alinea: un mockup no es
+   un componente del sistema. Todo lo de dentro sí lo es —.cabecera-app,
+   .opciones, .campo, .seg, .lista-agrupada, .navbar, .btn-block—. */
+.on{width:min(100% - 2rem, 1180px);margin-inline:auto;padding-block:var(--mal-e6)}
+.on-fila{display:grid;gap:var(--mal-e5);grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+  align-items:start;margin-top:var(--mal-e6)}
+.tel{
+  border:var(--mal-borde-fuerte);border-radius:var(--mal-r);overflow:hidden;
+  background:var(--mal-fondo);box-shadow:var(--mal-elev-2);
+  display:flex;flex-direction:column;min-height:540px;
+}
+.tel__n{
+  font-family:var(--mal-mono);font-size:var(--mal-t-mini);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--mal-on-surface-3);
+  padding:var(--mal-e3) var(--mal-e4) 0;
+}
+.tel__c{padding:var(--mal-e4);display:flex;flex-direction:column;gap:var(--mal-e4);flex:1}
+.tel__pie{margin-top:auto;display:flex;flex-direction:column;gap:var(--mal-e2)}
+</style>
+</head>
+<body>
+<div class="demo-barra">
+  <a class="demo-barra__marca" href="/ds/">
+    <svg class="icono icono--s" aria-hidden="true"><use href="#i-flecha-izq"/></svg> mal-ds</a>
+  <nav aria-label="Las cuatro demos"><a href="/ds/demos/mal/">Portafolio</a><a href="/ds/demos/mercio/">Periódico</a><a href="/ds/demos/apps/" aria-current="page">Onboarding</a><a href="/ds/demos/juegos/">HUD</a></nav>
+  <div class="demo-barra__acc">
+    <label class="sr-only" for="demo-marca">Tema de marca</label>
+    <span class="seleccion"><select id="demo-marca"><option value="mal">Tema MAL</option><option value="mercio">Tema EL MERCIO.</option><option value="apps" selected>Tema APPS</option><option value="juegos">Tema Juegos</option></select></span>
+    <button class="btn btn--sm" id="demo-tema" type="button">Sistema</button>
+    <a class="btn btn--sm" href="/ds/mal/">El sistema</a>
+  </div>
+</div>
+<p class="demo-nota">Demo del sistema · la misma página bajo los cuatro temas · cambia el
+selector y no se toca ni una línea de HTML</p>
+
+<main class="on">
+  <p class="kicker">Tema apps · Mi Huerto</p>
+  <h1>Una decisión por pantalla.</h1>
+  <p class="lede">Qué sembrar y criar en tu zona, cuándo hacerlo y cuánto puedes ganar. El tema de
+  producto sube los controles a 52 px, quita el salto al pasar por encima y responde al pulsar.</p>
+
+  <div class="on-fila">
+    <div class="tel">
+      <p class="tel__n">01 · Bienvenida</p>
+      <div class="tel__c">
+        <span class="icon-circle">
+          <svg class="icono icono--l" aria-hidden="true"><use href="#i-semilla"/></svg></span>
+        <div>
+          <h2>Mi Huerto</h2>
+          <p class="caption">Para huertos urbanos y agricultura familiar de hasta dos hectáreas.
+          Usa tu altitud y tu clima, y funciona sin internet.</p>
+        </div>
+        <p class="aviso aviso--info"><svg class="icono" aria-hidden="true"><use href="#i-candado"/></svg>
+        <span><b>No pedimos cuenta.</b> Todo lo que guardes se queda en tu teléfono.</span></p>
+        <div class="tel__pie">
+          <button class="btn btn-block" type="button">Empezar</button>
+          <button class="btn btn-quiet btn-block" type="button">Ya lo usé antes</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tel">
+      <p class="tel__n">02 · Tu zona</p>
+      <div class="tel__c">
+        <div class="progreso" role="progressbar" aria-label="Paso 2 de 3" aria-valuenow="66"
+             aria-valuemin="0" aria-valuemax="100"><span style="width:66%"></span></div>
+        <div>
+          <h2>¿Dónde vas a sembrar?</h2>
+          <p class="caption">Con esto filtramos qué crece de verdad en tu piso climático.</p>
+        </div>
+        <div class="opciones">
+          <label class="opcion"><input type="radio" name="zona">
+            <svg class="icono" aria-hidden="true"><use href="#i-gota"/></svg>
+            <b>Costa</b><small>0–500 m</small></label>
+          <label class="opcion"><input type="radio" name="zona">
+            <svg class="icono" aria-hidden="true"><use href="#i-sol"/></svg>
+            <b>Valle</b><small>500–2 000 m</small></label>
+          <label class="opcion"><input type="radio" name="zona" checked>
+            <svg class="icono" aria-hidden="true"><use href="#i-termometro"/></svg>
+            <b>Sierra</b><small>2 000–3 200 m</small></label>
+          <label class="opcion"><input type="radio" name="zona">
+            <svg class="icono" aria-hidden="true"><use href="#i-nube"/></svg>
+            <b>Páramo</b><small>más de 3 200 m</small></label>
+        </div>
+        <div class="campo">
+          <label for="alt">Altitud</label>
+          <div class="grupo-entrada"><input id="alt" type="text" value="2 850" inputmode="numeric">
+            <span class="grupo-entrada__fijo">m</span></div>
+          <span class="campo__pista">La tomamos del GPS si se lo permites.</span>
+        </div>
+        <div class="seg seg--lleno" role="tablist" aria-label="Espacio">
+          <button type="button" role="tab" aria-selected="false">Macetas</button>
+          <button type="button" role="tab" aria-selected="true">Huerto</button>
+          <button type="button" role="tab" aria-selected="false">Parcela</button>
+        </div>
+        <div class="tel__pie">
+          <button class="btn btn-block" type="button">Continuar
+            <svg class="icono" aria-hidden="true"><use href="#i-flecha-der"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tel">
+      <p class="tel__n">03 · Resultado</p>
+      <header class="cabecera-app">
+        <button class="icon-btn" type="button" aria-label="Volver">
+          <svg class="icono" aria-hidden="true"><use href="#i-chevron-izq"/></svg></button>
+        <p class="cabecera-app__titulo">Mi huerto<span class="cabecera-app__sub">Sierra · 2 850 m</span></p>
+        <button class="icon-btn" type="button" aria-label="Ajustes">
+          <svg class="icono" aria-hidden="true"><use href="#i-ajustes"/></svg></button>
+      </header>
+      <div class="tel__c">
+        <div class="tarjeta-app">
+          <div class="fila fila--entre"><span class="kicker">Hoy</span>
+            <span class="badge badge-ok">Buen día de siembra</span></div>
+          <p class="display-num">14<small>°C</small></p>
+          <p class="caption">Lluvia ligera por la tarde. Cubre el semillero.</p>
+        </div>
+        <div class="grupo">
+          <p class="grupo__titulo">Para sembrar en agosto</p>
+          <ul class="lista-agrupada">
+            <li><a class="fila-app" href="#resultado">
+              <span class="fila-app__icono"><svg class="icono" aria-hidden="true"><use href="#i-maiz"/></svg></span>
+              <span class="fila-app__texto"><b>Choclo</b><small>cosecha en 5 meses</small></span>
+              <span class="badge badge-ok">Ideal</span>
+              <svg class="icono fila-app__chevron" aria-hidden="true"><use href="#i-chevron-der"/></svg></a></li>
+            <li><a class="fila-app" href="#resultado">
+              <span class="fila-app__icono"><svg class="icono" aria-hidden="true"><use href="#i-semilla"/></svg></span>
+              <span class="fila-app__texto"><b>Papa chola</b><small>cosecha en 6 meses</small></span>
+              <span class="badge badge-ok">Ideal</span>
+              <svg class="icono fila-app__chevron" aria-hidden="true"><use href="#i-chevron-der"/></svg></a></li>
+            <li><a class="fila-app" href="#resultado">
+              <span class="fila-app__icono fila-app__icono--tono"><svg class="icono" aria-hidden="true"><use href="#i-hoja"/></svg></span>
+              <span class="fila-app__texto"><b>Habas</b><small>cosecha en 4 meses</small></span>
+              <span class="badge">Se puede</span>
+              <svg class="icono fila-app__chevron" aria-hidden="true"><use href="#i-chevron-der"/></svg></a></li>
+            <li><a class="fila-app" href="#resultado">
+              <span class="fila-app__icono fila-app__icono--tono"><svg class="icono" aria-hidden="true"><use href="#i-huella"/></svg></span>
+              <span class="fila-app__texto"><b>Cuyes</b><small>crianza continua</small></span>
+              <span class="badge badge-warn">Espacio</span>
+              <svg class="icono fila-app__chevron" aria-hidden="true"><use href="#i-chevron-der"/></svg></a></li>
+          </ul>
+          <p class="grupo__nota">Cuidado con las heladas de agosto: cubre el semillero de noche.</p>
+        </div>
+      </div>
+      <nav class="navbar" aria-label="Secciones de la app">
+        <a class="nav-item" href="#resultado" aria-current="page">
+          <svg class="icono" aria-hidden="true"><use href="#i-casa"/></svg><span>Hoy</span></a>
+        <a class="nav-item" href="#resultado">
+          <svg class="icono" aria-hidden="true"><use href="#i-calendario"/></svg><span>Almanaque</span></a>
+        <a class="nav-item" href="#resultado">
+          <svg class="icono" aria-hidden="true"><use href="#i-bolsa"/></svg><span>Mercado</span></a>
+        <a class="nav-item" href="#resultado">
+          <svg class="icono" aria-hidden="true"><use href="#i-hoja"/></svg><span>Mi huerto</span></a>
+      </nav>
+    </div>
+  </div>
+</main>
+
+<script src="/ds/mal/mal.js?v=1.0.15" defer></script>
+<script src="/ds/demos/demos.js?v=1.0.15" defer></script>
+</body>
+</html>

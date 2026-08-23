@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Huecas — el bolón asomándose de la olla, sobre la hornilla.
+       Paleta coral/fogón de ESTILO.md. Zona segura maskable: r≈205 del centro. -->
+  <defs>
+    <radialGradient id="mesa" cx="50%" cy="28%" r="80%">
+      <stop offset="0%" stop-color="#f2bfae"/>
+      <stop offset="60%" stop-color="#e8a596"/>
+      <stop offset="100%" stop-color="#cf8172"/>
+    </radialGradient>
+    <radialGradient id="olla" cx="40%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#cfc0d8"/>
+      <stop offset="45%" stop-color="#8a7796"/>
+      <stop offset="100%" stop-color="#5f5069"/>
+    </radialGradient>
+    <radialGradient id="bolon" cx="42%" cy="34%" r="66%">
+      <stop offset="0%" stop-color="#f0cd85"/>
+      <stop offset="100%" stop-color="#c99a4a"/>
+    </radialGradient>
+  </defs>
+
+  <!-- la encimera coral -->
+  <rect width="512" height="512" fill="url(#mesa)"/>
+  <!-- vetas sutiles de la madera pintada -->
+  <g stroke="#cf8172" stroke-width="4" opacity=".28">
+    <line x1="86" y1="0" x2="66" y2="512"/>
+    <line x1="256" y1="0" x2="240" y2="512"/>
+    <line x1="428" y1="0" x2="412" y2="512"/>
+  </g>
+
+  <!-- la hornilla: el punto oscuro que atrae la mirada -->
+  <circle cx="256" cy="272" r="196" fill="#3a2740"/>
+  <circle cx="256" cy="272" r="196" fill="none" stroke="#5a4260" stroke-width="14"/>
+  <!-- la brasa encendida alrededor de la olla -->
+  <circle cx="256" cy="272" r="160" fill="none" stroke="#d95f43" stroke-width="26" opacity=".55"/>
+
+  <!-- la olla de peltre -->
+  <circle cx="256" cy="272" r="150" fill="url(#olla)"/>
+  <circle cx="256" cy="272" r="118" fill="#40354a"/>
+
+  <!-- el bolón asomándose, con sus motitas y su carita -->
+  <circle cx="256" cy="278" r="104" fill="url(#bolon)"/>
+  <circle cx="215" cy="246" r="11" fill="#f6ecc4"/>
+  <circle cx="300" cy="256" r="9" fill="#f6ecc4"/>
+  <circle cx="282" cy="322" r="8" fill="#8fae72"/>
+  <circle cx="222" cy="312" r="6" fill="#8fae72"/>
+  <circle cx="230" cy="280" r="9" fill="#4a2f3d"/>
+  <circle cx="284" cy="280" r="9" fill="#4a2f3d"/>
+  <path d="M238 302 q18 16 38 0" fill="none" stroke="#4a2f3d" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="207" cy="298" r="10" fill="#e79aa2" opacity=".6"/>
+  <circle cx="307" cy="298" r="10" fill="#e79aa2" opacity=".6"/>
+
+  <!-- el vapor -->
+  <g fill="none" stroke="#fdf0e2" stroke-width="16" stroke-linecap="round" opacity=".85">
+    <path d="M214 132 q-14 -26 6 -48"/>
+    <path d="M262 118 q-14 -28 8 -52"/>
+    <path d="M306 136 q-12 -24 6 -44"/>
+  </g>
+</svg>

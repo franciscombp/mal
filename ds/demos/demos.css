@@ -1,0 +1,41 @@
+/* La barra de las demos. NO es el sistema: es el andamio que lo enseña,
+   igual que storybook.css. Por eso vive aquí y no en mal.css.
+
+   Todo sale de tokens: si un valor de esta hoja no puede escribirse con
+   una variable --mal-*, es que al sistema le falta ese token. */
+
+.demo-barra{
+  display:flex;align-items:center;gap:var(--mal-e3);flex-wrap:wrap;
+  padding:var(--mal-e3) clamp(1rem, 4vw, 2.75rem);
+  border-bottom:var(--mal-borde);background:var(--mal-paper-2);
+  font-family:var(--mal-texto);font-size:var(--mal-t-caption);
+}
+.demo-barra__marca{
+  display:inline-flex;align-items:center;gap:var(--mal-e2);
+  color:var(--mal-ink);text-decoration:none;font-weight:600;
+}
+.demo-barra__marca:hover{color:var(--mal-primary-txt)}
+.demo-barra nav{display:flex;gap:var(--mal-e2);flex-wrap:wrap}
+.demo-barra nav a{
+  color:var(--mal-ink-2);text-decoration:none;padding:.3rem .7rem;
+  border-radius:var(--mal-r-full);border:var(--ref-borde) solid transparent;
+}
+.demo-barra nav a:hover{color:var(--mal-primary-txt);border-color:var(--mal-linea)}
+.demo-barra nav a[aria-current]{
+  color:var(--mal-ink);border-color:var(--mal-linea);background:var(--mal-paper);
+}
+.demo-barra__acc{display:flex;align-items:center;gap:var(--mal-e2);margin-left:auto}
+.demo-barra__acc select{padding-block:.4rem;font-size:var(--mal-t-caption)}
+/* el aviso de que esto es una demo, no el sitio de verdad */
+.demo-nota{
+  padding:var(--mal-e2) clamp(1rem, 4vw, 2.75rem);
+  font-family:var(--mal-mono);font-size:var(--mal-t-mini);
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--mal-on-surface-3);background:var(--mal-relleno);
+  border-bottom:var(--mal-borde);
+}
+@media (max-width:720px){
+  .demo-barra__acc{margin-left:0;width:100%}
+  .demo-barra__acc .seleccion{flex:1}
+  .demo-barra__acc select{width:100%}
+}

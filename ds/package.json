@@ -1,0 +1,35 @@
+{
+  "name": "mal-ds",
+  "version": "1.0.15",
+  "description": "El sistema de diseño de MAL: un CSS, cuatro temas (la marca, EL MERCIO., las apps y los juegos).",
+  "homepage": "https://una.red/ds/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/franciscombp/mal-ds.git"
+  },
+  "author": "Francisco Maldonado",
+  "license": "UNLICENSED",
+  "style": "./mal/mal.css",
+  "files": [
+    "mal",
+    "fonts",
+    "componentes.json",
+    "version.json",
+    "README.md"
+  ],
+  "exports": {
+    "./mal": "./mal/mal.css",
+    "./compat": "./mal/compat.css",
+    "./js": "./mal/mal.js",
+    "./iconos": "./mal/iconos.svg",
+    "./componentes": "./componentes.json",
+    "./version": "./version.json"
+  },
+  "keywords": [
+    "design-system",
+    "css",
+    "design-tokens",
+    "mal",
+    "una.red"
+  ]
+}
