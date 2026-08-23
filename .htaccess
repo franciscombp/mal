@@ -1,0 +1,24 @@
+# una.red — landing de MAL (estática)
+# Antes (hasta 2026-08-22): RewriteRule ^(.*)$ https://elmercio.com/$1 [R=301,L]  — todo el dominio a elmercio.com
+Options -Indexes
+AddDefaultCharset UTF-8
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+RewriteEngine On
+# www → apex. Cloudflare termina el TLS: no redirigir http→https aquí para no crear bucles.
+RewriteCond %{HTTP_HOST} ^www\.una\.red$ [NC]
+RewriteRule ^ https://una.red%{REQUEST_URI} [R=301,L]
+
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  <FilesMatch "\.(woff2|jpg|png|svg)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.css$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+</IfModule>
+AddType font/woff2 .woff2
+AddType image/svg+xml .svg

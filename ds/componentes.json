@@ -2,7 +2,7 @@
   "nombre": "mal-ds",
   "version": "1.0.15",
   "url": "https://una.red/ds/",
-  "repo": "https://github.com/franciscombp/mal-ds",
+  "repo": "https://github.com/franciscombp/mal",
   "licencia": "sin definir",
   "css": "/ds/mal/mal.css",
   "js": "/ds/mal/mal.js",
@@ -503,7 +503,7 @@
       "seccion": "terminal",
       "grupo": "Organismos",
       "nombre": ".terminal",
-      "html": "<div class=\"terminal\"><div class=\"terminal-header\"><span class=\"dot dot-red\"></span><span class=\"dot dot-yellow\"></span><span class=\"dot dot-green\"></span></div><div class=\"terminal-body\" data-auto><div class=\"t-line\"><span class=\"t-prompt\">$</span><span data-escribir=\"git clone https://github.com/franciscombp/mal-ds ds\"></span></div><div class=\"t-line info\"><span></span><span>Cloning into 'ds'…</span></div><div class=\"t-line success\"><span></span><span>listo · 1 sistema, 4 temas, 8 fuentes</span></div><div class=\"t-line\"><span class=\"t-prompt\">$</span><span>_</span></div></div></div>"
+      "html": "<div class=\"terminal\"><div class=\"terminal-header\"><span class=\"dot dot-red\"></span><span class=\"dot dot-yellow\"></span><span class=\"dot dot-green\"></span></div><div class=\"terminal-body\" data-auto><div class=\"t-line\"><span class=\"t-prompt\">$</span><span data-escribir=\"git clone https://github.com/franciscombp/mal ds\"></span></div><div class=\"t-line info\"><span></span><span>Cloning into 'ds'…</span></div><div class=\"t-line success\"><span></span><span>listo · 1 sistema, 4 temas, 8 fuentes</span></div><div class=\"t-line\"><span class=\"t-prompt\">$</span><span>_</span></div></div></div>"
     },
     {
       "id": "blog-card",

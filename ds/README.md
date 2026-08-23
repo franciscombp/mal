@@ -96,18 +96,50 @@ apagar su reset para no pelearse con el del anfitrión:
 Con `data-ds="invitado"` el sistema no aplica su `@layer reset` y deja el ritmo vertical
 al anfitrión. Es lo que hace el tema de WordPress de EL MERCIO.
 
+## De dónde sale
+
+El paquete vive en **[franciscombp/mal](https://github.com/franciscombp/mal)**, que es el
+repositorio del hub entero ([una.red](https://una.red)). El sistema es su carpeta `ds/`:
+
+```
+franciscombp/mal
+├── ds/            ← esto es el paquete
+│   ├── mal/       mal.css · mal.js · iconos.svg · compat.css
+│   └── fonts/
+├── apps/  img/  renuncia/  index.html   ← el resto del hub
+```
+
+**una.red es producción**: lo que sirve el dominio y lo que hay en `main` son lo mismo.
+
 ## Usarlo dentro de tu repo
 
-```bash
-git clone https://github.com/franciscombp/mal-ds ds
+Por CDN, sin clonar nada y con la versión clavada:
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/franciscombp/mal@main/ds/mal/mal.css">
 ```
 
-O como submódulo, si quieres que se actualice solo:
+Como submódulo, si quieres que se actualice solo — ojo con la ruta, el paquete
+está **dentro** del repo:
 
 ```bash
-git submodule add https://github.com/franciscombp/mal-ds ds
-git submodule update --remote ds
+git submodule add https://github.com/franciscombp/mal vendor/mal
 ```
+
+```html
+<link rel="stylesheet" href="/vendor/mal/ds/mal/mal.css">
+```
+
+O copiando solo la carpeta que necesitas:
+
+```bash
+git clone --depth 1 https://github.com/franciscombp/mal /tmp/mal && cp -R /tmp/mal/ds ds
+```
+
+⚠️ **Si lo sirves tú, copia también `ds/.htaccess`.** Es quien manda
+`Access-Control-Allow-Origin: *`, y `@font-face` aplica CORS **siempre**: sin esa cabecera
+la hoja carga pero las fuentes y el sprite de iconos fallan **en silencio**, y el sitio cae
+a las tipografías del sistema sin avisar de nada.
 
 Para una hoja antigua con otros tokens está `mal/compat.css`, que traduce nombres viejos a
 los roles actuales sin tocar el marcado.

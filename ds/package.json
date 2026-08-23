@@ -5,7 +5,8 @@
   "homepage": "https://una.red/ds/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/franciscombp/mal-ds.git"
+    "url": "git+https://github.com/franciscombp/mal.git",
+    "directory": "ds"
   },
   "author": "Francisco Maldonado",
   "license": "UNLICENSED",

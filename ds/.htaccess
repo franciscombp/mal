@@ -1,0 +1,47 @@
+# El sistema de diseño se consume DESDE OTROS ORÍGENES (maldonado.pro,
+# acolita.org, los repos de GitHub Pages), así que tiene que ir con CORS.
+#
+# Sin esto, el CSS se descarga pero las fuentes NO: @font-face aplica CORS
+# siempre, incluso para hojas que sí cargaron, y el sitio consumidor cae a
+# las tipografías del sistema sin avisar de nada. Es un fallo silencioso y
+# cuesta verlo, porque «la hoja funciona».
+#
+# Lo mismo vale para `iconos.svg`, y esa parte FALTABA: mal.js lo pide con
+# `fetch()` para inyectar el sprite, así que sin la cabecera un consumidor
+# externo se queda sin un solo icono, también en silencio.
+#
+# `*` es correcto aquí: esto es un paquete público y estático, sin cookies
+# ni datos de nadie.
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(woff2|woff|ttf|otf|css|js|json|svg)$">
+    Header set Access-Control-Allow-Origin "*"
+    Header set Timing-Allow-Origin "*"
+  </FilesMatch>
+
+  # Las fuentes no cambian nunca: caché de un año.
+  <FilesMatch "\.(woff2|woff|ttf|otf)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # El CSS, el JS y el sprite SÍ cambian, y se consumen por una URL sin
+  # número de versión: `una.red/ds/mal/mal.css` es siempre la misma URL.
+  # Con los 7 días que había aquí antes, una versión nueva tardaba una
+  # semana en llegar a quien la usa —y quedaba clavada en el borde de
+  # Cloudflare—. Una hora en caché y un día sirviendo la copia vieja
+  # mientras se refresca por detrás: rápido, y se entera el mismo día.
+  <FilesMatch "\.(css|js|svg)$">
+    Header set Cache-Control "public, max-age=3600, stale-while-revalidate=86400"
+  </FilesMatch>
+
+  # El manifiesto de versión es justo lo que no puede ir cacheado: es lo
+  # que consulta `version.js` para avisar a una copia desfasada.
+  <FilesMatch "(version|componentes)\.json$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+AddType font/woff2 .woff2
+AddType text/css .css
+AddType application/json .json
+AddType image/svg+xml .svg
