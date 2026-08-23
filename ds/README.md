@@ -44,6 +44,13 @@ La **capa de expresión** es lo que hace que dos temas no se parezcan aunque com
 componente: `--ref-radio`, `--ref-borde`, `--ref-densidad`, `--ref-tap`, `--ref-elev-1/2`,
 `--ref-relleno`, `--ref-salto`, `--ref-presion`, `--ref-grano`.
 
+El color de marca va además **en RGB** (`--ref-marca-rgb`, rol `--mal-primary-rgb`), que es
+lo que hace falta para graduarlo: un halo, una selección o un tinte al 12 % piden `rgba()`, y
+sin el triplete hay que volver a escribir el hexadecimal — justo lo que los tokens vienen a
+evitar. Y hay tres **pasteles de fondo de caja** (`--mal-pastel-lila|verde|azul`) para
+distinguir dos cosas sin gastar el rojo, más `--mal-primary-en-tinta`: el acento aclarado
+para cuando el fondo es tinta, porque el rojo sobre negro no llega ni a 3 : 1.
+
 Para hacer un tema nuevo se redefine la capa 1 y ya:
 
 ```css
@@ -83,6 +90,18 @@ que sigue al scroll y unas cuantas piezas de escaparate.
 ```js
 window.malDS = { init, aviso, abrir, iconos, quieto }
 ```
+
+## Para juegos
+
+La sección `juego` trae las piezas del HUD (`.marcador`, `.medidor`, `.vidas`, `.chip`,
+`.boton-juego`), **el contenedor que las reparte** (`.hud-juego`, con sus zonas seguras y
+sus dos filas) y **la pantalla de premio** (`.premio`), que es lo que sale cuando un juego
+desbloquea algo: pantalla entera, abanico de rayos, la pieza en el centro y un toque para
+seguir.
+
+`.hud-juego` se llama así y no `.hud` porque `.hud` es la cabecera del sitio. No es un
+capricho: el `background` de aquella, aplicado a un contenedor a `inset: 0`, tapa el juego
+entero con una sábana.
 
 ## Dentro de otro framework
 

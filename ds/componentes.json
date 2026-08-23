@@ -583,6 +583,20 @@
       "html": "<div class=\"pila\"><p class=\"marcador\">42 180<small>récord de la semana</small></p><div class=\"medidor\"><i class=\"lleno\"></i><i class=\"lleno\"></i><i class=\"lleno\"></i><i></i><i></i></div><div class=\"vidas\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg><svg class=\"icono perdida\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg><svg class=\"icono perdida\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg></div><div class=\"fila\"><button class=\"chip\" type=\"button\" aria-pressed=\"true\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-rayo\"/></svg> Prisa</button><button class=\"chip\" type=\"button\" aria-pressed=\"false\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-escudo\"/></svg> Escudo</button><button class=\"chip\" type=\"button\" aria-pressed=\"false\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-altavoz\"/></svg> Ruido</button></div></div>"
     },
     {
+      "id": "HUD contenedor",
+      "seccion": "juego",
+      "grupo": "Organismos",
+      "nombre": "El HUD, con su contenedor",
+      "html": "<div style=\"position:relative;aspect-ratio:16/9;min-height:300px;background:var(--mal-bg-2);border-radius:var(--mal-r);overflow:hidden\"><div class=\"hud-juego\"><div class=\"hud-juego__arriba\"><button class=\"btn btn--rojo btn--icono\" type=\"button\" aria-label=\"Pausar\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-pausa\"/></svg></button><div class=\"hud-juego__cifras\"><p class=\"marcador\">1.345<small>evidencia</small></p><div class=\"vidas\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg><svg class=\"icono perdida\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg></div></div></div><div class=\"hud-juego__abajo\"><span class=\"badge\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-rayo\"/></svg> 7 s</span><div class=\"medidor\" style=\"width:120px\"><i class=\"lleno\"></i><i class=\"lleno\"></i><i class=\"lleno\"></i><i></i></div></div></div></div>"
+    },
+    {
+      "id": "Premio",
+      "seccion": "juego",
+      "grupo": "Organismos",
+      "nombre": "Desbloqueo a pantalla completa",
+      "html": "<div class=\"premio\" style=\"min-height:420px;border-radius:var(--mal-r);overflow:hidden\"><div class=\"premio__rayos\"></div><p class=\"kicker\" style=\"position:relative;justify-content:center\">Exclusiva</p><div class=\"premio__escena\"><div class=\"premio__pieza premio__pieza--entra\"><div class=\"premio__disco\"><svg class=\"icono icono--xl\" aria-hidden=\"true\" style=\"width:96px;height:96px\"><use href=\"#i-trofeo\"/></svg></div></div><div class=\"premio__texto\"><p class=\"micro\">Nuevo en el arsenal</p><h2 class=\"premio__nombre\">Salvoconducto</h2><p class=\"premio__desc\">Aguanta un golpe. Alguien movió un contacto.</p></div></div><p class=\"premio__pie\">Toca para continuar</p></div>"
+    },
+    {
       "id": "vibrant-tag",
       "seccion": "cluster",
       "grupo": "Organismos",
