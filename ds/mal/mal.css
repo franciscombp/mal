@@ -2080,6 +2080,24 @@ label.chip:has(input:checked){background:var(--mal-primary);border-color:var(--m
 .medidor{display:flex;gap:3px;height:12px}
 .medidor > i{flex:1;border-radius:3px;background:var(--mal-bg-2)}
 .medidor > i.lleno{background:var(--mal-relleno-marca)}
+/* …Y EL MISMO MEDIDOR, CONTINUO. El de arriba va POR TRAMOS —vidas, munición,
+   turnos: cosas que se cuentan—. Este es una barra que se llena, para lo que
+   NO se cuenta: aguante, carga, lo que falta para llegar. Es el mismo
+   componente y el mismo sitio en el HUD, y lo único que cambia es que dentro
+   hay un relleno en vez de N tramos: por eso es una variante y no una pieza
+   nueva.
+   El ancho del relleno lo escribe quien lo pinta, en línea: es el único que
+   sabe el porcentaje, y en un HUD eso cambia cada fotograma.
+   El color sale de `--mal-relleno-medidor`, que por defecto es el de marca.
+   Un consumidor que necesite semáforo —verde mientras vas bien, rojo cuando
+   se acaba— lo cambia en la propia barra sin tocar el relleno. */
+.medidor--continuo{display:block;height:7px;border-radius:var(--mal-r-s);background:var(--mal-bg-2);overflow:hidden}
+.medidor--continuo > i{
+  display:block;height:100%;border-radius:inherit;
+  background:var(--mal-relleno-medidor, var(--mal-relleno-marca));
+  transition:background .18s;
+}
+.medidor--fino{height:5px}
 .vidas{display:flex;gap:var(--mal-e1);color:var(--mal-primary)}
 .vidas .icono{width:1.4em;height:1.4em}
 .vidas .icono.perdida{color:var(--mal-outline-2)}

@@ -99,6 +99,18 @@ sus dos filas) y **la pantalla de premio** (`.premio`), que es lo que sale cuand
 desbloquea algo: pantalla entera, abanico de rayos, la pieza en el centro y un toque para
 seguir.
 
+El medidor viene en dos: `.medidor` reparte **tramos** —vidas, munición, turnos: lo que
+se cuenta— y `.medidor--continuo` es una **barra que se llena** —aguante, carga, lo que
+falta para llegar—. Misma clase base, mismo sitio en el HUD; el ancho del relleno lo
+escribe quien lo pinta, en línea, y el color sale de `--mal-relleno-medidor`.
+
+```html
+<div class="medidor"><i class="lleno"></i><i class="lleno"></i><i></i></div>
+<div class="medidor medidor--continuo medidor--fino" style="--mal-relleno-medidor:var(--mal-verde)">
+  <i style="width:62%"></i>
+</div>
+```
+
 `.hud-juego` se llama así y no `.hud` porque `.hud` es la cabecera del sitio. No es un
 capricho: el `background` de aquella, aplicado a un contenedor a `inset: 0`, tapa el juego
 entero con una sábana.
