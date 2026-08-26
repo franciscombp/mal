@@ -42,39 +42,234 @@
       "demo": "https://una.red/ds/demos/juegos/"
     }
   ],
+  "secciones": [
+    {
+      "id": "temas",
+      "grupo": "Fundamentos",
+      "titulo": "Un sistema, cuatro temas",
+      "intro": "La arquitectura es la de Material 3; la piel, la de MAL. Tres capas: <b>referencia</b> (lo único que cambia por tema) → <b>roles</b> → <b>componentes</b>. Usa el selector del banner: esta página entera cambia, menús incluidos."
+    },
+    {
+      "id": "tipografia",
+      "grupo": "Fundamentos",
+      "titulo": "Tipografía",
+      "intro": "<b>Syne solo para display</b>. A tamaño de subtítulo pierde legibilidad, así que de ahí para abajo trabaja Inter. Cada tema cambia las familias, no la regla."
+    },
+    {
+      "id": "color",
+      "grupo": "Fundamentos",
+      "titulo": "Color",
+      "intro": "Roles, no colores. Cada uno tiene su pareja en oscuro y su valor en cada tema."
+    },
+    {
+      "id": "iconos",
+      "grupo": "Fundamentos",
+      "titulo": "Iconos",
+      "intro": "Un sprite de trazo, 24 px, dibujado para este sistema. <b>Nada de emojis en la interfaz.</b> <code class=\"sb-inline\">mal.js</code> mete el sprite en la página la primera vez que ve un icono, así que basta el <code class=\"sb-inline\">#id</code>."
+    },
+    {
+      "id": "fondos",
+      "grupo": "Fundamentos",
+      "titulo": "Fondos y contenedores",
+      "intro": "El fondo del documento lo pone el tema (<code class=\"sb-inline\">--mal-fondo</code>). Los contenedores piden relleno, borde y elevación al tema, y el tema decide si hay línea, sombra, tono o nada."
+    },
+    {
+      "id": "botones",
+      "grupo": "Átomos",
+      "titulo": "Botones",
+      "intro": "Un solo <code class=\"sb-inline\">.btn</code> con sus variantes. El tema decide la forma, el relleno, la sombra y qué pasa al pulsar."
+    },
+    {
+      "id": "etiquetas",
+      "grupo": "Átomos",
+      "titulo": "Etiquetas e indicadores"
+    },
+    {
+      "id": "formularios",
+      "grupo": "Átomos",
+      "titulo": "Formularios",
+      "intro": "Un campo es un campo en cualquier tema: en MAL lleva filete, en EL MERCIO es un rectángulo de tono sin línea, en APPS es el campo relleno del teléfono. Los controles nativos van vestidos, no sustituidos."
+    },
+    {
+      "id": "selectores",
+      "grupo": "Átomos",
+      "titulo": "Selectores",
+      "intro": "Elegir una cosa, elegir varias, encender algo. El estado va en el control nativo o en atributos ARIA, nunca solo en una clase."
+    },
+    {
+      "id": "menus",
+      "grupo": "Moléculas",
+      "titulo": "Menús y navegación",
+      "intro": "Desplegable con <code class=\"sb-inline\">&lt;details&gt;</code>, migas, cabecera de app, cajón lateral, barra de pestañas y paginación."
+    },
+    {
+      "id": "retro",
+      "grupo": "Moléculas",
+      "titulo": "Retroalimentación",
+      "intro": "Toast, modal, hoja, pista, progreso, carga y estado vacío. El modal es un <code class=\"sb-inline\">&lt;dialog&gt;</code>: el navegador pone el foco y cierra con Escape."
+    },
+    {
+      "id": "logica",
+      "grupo": "Moléculas",
+      "titulo": "Lógica"
+    },
+    {
+      "id": "marquesina",
+      "grupo": "Moléculas",
+      "titulo": "Marquesina",
+      "intro": "Se arrastra con inercia (mal.js) y se para sola con <code class=\"sb-inline\">prefers-reduced-motion</code>."
+    },
+    {
+      "id": "bento",
+      "grupo": "Moléculas",
+      "titulo": "Bento y tarjetas"
+    },
+    {
+      "id": "precios",
+      "grupo": "Moléculas",
+      "titulo": "Precios"
+    },
+    {
+      "id": "listas",
+      "grupo": "Moléculas",
+      "titulo": "Listas",
+      "intro": "La lista de enlaces del sitio, las filas de una app y la tabla."
+    },
+    {
+      "id": "app",
+      "grupo": "Organismos",
+      "titulo": "Pantallas de app",
+      "intro": "El patrón de app nativa actual: título grande, lista agrupada con filas de chevrón y valor, tarjetas sólidas y barra de pestañas translúcida. Míralo con el tema <b>apps</b>."
+    },
+    {
+      "id": "prensa",
+      "grupo": "Organismos",
+      "titulo": "Prensa",
+      "intro": "Las piezas del periódico, portadas del tema WordPress de elmercio.com con sus mismos nombres: la marca con el punto, la cabecera, la rejilla de noticias, la columna de opinión numerada, el podcast, el artículo con capitular y las revistas. Míralo con el tema <b>mercio</b>."
+    },
+    {
+      "id": "mapa-mental",
+      "grupo": "Organismos",
+      "titulo": "Mind map · Tags graph",
+      "intro": "El grafo de etiquetas del blog, tal como estaba en el storybook original. Las líneas y las posiciones las pone mal.js; cada nodo es un enlace."
+    },
+    {
+      "id": "carne",
+      "grupo": "Organismos",
+      "titulo": "Carné de identidad"
+    },
+    {
+      "id": "social",
+      "grupo": "Organismos",
+      "titulo": "Reseñas",
+      "intro": "Las tarjetas de reseña y el carrusel arrastrable que las pasea. El contenido va en el HTML."
+    },
+    {
+      "id": "casos",
+      "grupo": "Organismos",
+      "titulo": "Casos"
+    },
+    {
+      "id": "terminal",
+      "grupo": "Organismos",
+      "titulo": "Consola",
+      "intro": "Se teclea sola al entrar en pantalla."
+    },
+    {
+      "id": "blog",
+      "grupo": "Organismos",
+      "titulo": "Blog y editorial",
+      "intro": "Todo lo que una entrada necesita: tarjeta, filtros, índice, figura, notas, suscripción, compartir, relacionados, comentarios."
+    },
+    {
+      "id": "articulo",
+      "grupo": "Organismos",
+      "titulo": "Artículo",
+      "intro": "El flujo de lectura: cabecera, prosa y ficha de autor. Con barra de progreso arriba si la página la pone."
+    },
+    {
+      "id": "juego",
+      "grupo": "Organismos",
+      "titulo": "Juego",
+      "intro": "Las piezas de un HUD: marcador, medidor por segmentos, vidas, el botón de juego y el panel de pausa sobre el lienzo."
+    },
+    {
+      "id": "cluster",
+      "grupo": "Organismos",
+      "titulo": "Texto en cluster"
+    },
+    {
+      "id": "cascara",
+      "grupo": "Identidad",
+      "titulo": "Cáscara de página"
+    },
+    {
+      "id": "mapa",
+      "grupo": "Identidad",
+      "titulo": "Mapa de la red",
+      "intro": "El SVG de la portada. Cada nodo es un enlace; el estilo va en el CSS."
+    },
+    {
+      "id": "marco",
+      "grupo": "Identidad",
+      "titulo": "Marco de app",
+      "intro": "La ventana con la que UNA incrusta una app sin sacarte del sitio."
+    }
+  ],
   "componentes": [
     {
       "id": "Los cuatro",
       "seccion": "temas",
       "grupo": "Fundamentos",
+      "etiqueta": "Los cuatro",
       "nombre": "Cada uno con su carácter",
-      "html": "<html data-marca=\"mercio\">      <!-- viste el documento entero -->\n<html data-marca=\"apps\" data-app=\"agro\">   <!-- y el tinte de la app -->\n<html data-marca=\"apps\" data-tema=\"oscuro\"> <!-- ortogonal al claro/oscuro -->"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<html data-marca=\"mercio\">      <!-- viste el documento entero -->\n<html data-marca=\"apps\" data-app=\"agro\">   <!-- y el tinte de la app -->\n<html data-marca=\"apps\" data-tema=\"oscuro\"> <!-- ortogonal al claro/oscuro -->",
+      "demo": "<div class=\"sb-tabla-env\"><table class=\"sb-tabla\"><thead><tr><th>Tema</th><th>Para qué</th><th>Carácter</th></tr></thead><tbody><tr><td><code>(por defecto)</code></td><td>UNA, maldonado.pro</td><td>Crema cálida. Syne solo en display, Inter en lo que se lee. Filete fino.</td></tr><tr><td><code>data-marca=\"mercio\"</code></td><td>El periódico</td><td>Editorial: página blanca, mucho aire, serif. <b>Sin líneas ni sombras</b>: la separación la hacen el aire y el tono. Montserrat solo en el logotipo y los rótulos.</td></tr><tr><td><code>data-marca=\"apps\"</code></td><td>Producto</td><td>App nativa actual: superficies sólidas sobre fondo agrupado, hairlines, controles de 52 px y <b>barras translúcidas</b> que desenfocan lo que pasa debajo.</td></tr><tr><td><code>data-marca=\"juegos\"</code></td><td>Los juegos</td><td>Volumétrico: la sombra se apoya, no difumina. Borde de 2 px, relleno holográfico.</td></tr></tbody></table></div>",
+      "nota": "<div class=\"notice\"><span aria-hidden=\"true\"></span><div><b>Los temas no conviven.</b> Se pone uno por sitio y viste la página entera. Mezclarlos en una misma página no es un caso real.</div></div>"
+    },
+    {
+      "id": "La expresión",
+      "seccion": "temas",
+      "grupo": "Fundamentos",
+      "etiqueta": "La expresión",
+      "nombre": "Lo que hace que no se parezcan",
+      "html": "<div class=\"sb-tabla-env\"><table class=\"sb-tabla\"><thead><tr><th>Token</th><th>Qué decide</th></tr></thead><tbody><tr><td><code>--ref-radio</code></td><td>factor de forma · 0 = a escuadra</td></tr><tr><td><code>--ref-borde</code></td><td>grosor del filete · 0 = sin líneas</td></tr><tr><td><code>--ref-acento-linea</code></td><td>filetes de acento en citas y avisos · 0 los quita</td></tr><tr><td><code>--ref-densidad</code></td><td>aire · <1 compacto, >1 editorial</td></tr><tr><td><code>--ref-tap</code></td><td>altura mínima de un control</td></tr><tr><td><code>--ref-elev-1 / -2</code></td><td>elevación en reposo y levantado · none = no flota</td></tr><tr><td><code>--ref-relleno</code></td><td>con qué se llena una superficie</td></tr><tr><td><code>--ref-relleno-marca</code></td><td>con qué se llena una superficie de marca (puede ser degradado)</td></tr><tr><td><code>--ref-campo</code></td><td>con qué se llena un campo</td></tr><tr><td><code>--ref-vidrio-barra</code></td><td>desenfoque de las barras · APPS lo usa</td></tr><tr><td><code>--ref-salto / --ref-presion</code></td><td>qué hace al pasar por encima y al pulsar</td></tr><tr><td><code>--ref-marca-tipo</code></td><td>la familia del logotipo, si no es la display</td></tr></tbody></table></div><div class=\"notice\"><span aria-hidden=\"true\"></span><div>Un componente no sabe en qué tema está: pide <code class=\"sb-inline\">var(--mal-borde)</code> y en EL MERCIO eso vale <code class=\"sb-inline\">0px</code>. Así «sin líneas» es verdad en los 400 componentes a la vez.</div></div>",
+      "codigo": false
     },
     {
       "id": "La escala",
       "seccion": "tipografia",
       "grupo": "Fundamentos",
+      "etiqueta": "La escala",
       "nombre": "Un paso por nivel",
-      "html": "<div class=\"type-sample\"><p class=\"sb-meta\">.display — el cartel: portada, hero, logotipo</p><p class=\"display\">Todo lo que hace MAL.</p></div><div class=\"type-sample\"><p class=\"sb-meta\">h1 — el título de la página</p><h1>Herramientas que resuelven algo concreto</h1></div><div class=\"type-sample\"><p class=\"sb-meta\">h2 — la sección</p><h2>Un titular de sección</h2></div><div class=\"type-sample\"><p class=\"sb-meta\">h3 — el subtítulo</p><h3>Comparar precios sin cuentas ni servidores</h3></div><div class=\"type-sample\"><p class=\"sb-meta\">h4 — el rótulo de un bloque</p><h4>Qué se guarda en tu teléfono</h4></div><div class=\"type-sample\"><p class=\"sb-meta\">lede</p><p class=\"lede\">Una entradilla que no pasa de 42 caracteres de ancho.</p></div><div class=\"type-sample\"><p class=\"sb-meta\">cuerpo</p><p>Comparar precios, saber qué sembrar o alimentar a tu mascota. Sin cuentas y sin servidores.</p></div><div class=\"type-sample\"><p class=\"sb-meta\">kicker · micro</p><p class=\"kicker\">01 / Apps</p></div><div class=\"type-sample\"><p class=\"sb-meta\">marca · .logo</p><p class=\"logo\">UNA</p></div>"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"type-sample\">\n  <p class=\"sb-meta\">.display — el cartel: portada, hero, logotipo</p>\n  <p class=\"display\">Todo lo que hace MAL.</p>\n</div>\n<div class=\"type-sample\">\n  <p class=\"sb-meta\">h1 — el título de la página</p>\n  <h1>Herramientas que resuelven algo concreto</h1>\n</div>\n<div class=\"type-sample\">\n  <p class=\"sb-meta\">h2 — la sección</p>\n  <h2>Un titular de sección</h2>\n</div>\n<div class=\"type-sample\">\n  <p class=\"sb-meta\">h3 — el subtítulo</p>\n  <h3>Comparar precios sin cuentas ni servidores</h3>\n</div>\n<div class=\"type-sample\">\n  <p class=\"sb-meta\">h4 — el rótulo de un bloque</p>\n  <h4>Qué se guarda en tu teléfono</h4>\n</div>\n<div class=\"type-sample\">\n  <p class=\"sb-meta\">lede</p>\n  <p class=\"lede\">Una entradilla que no pasa de 42 caracteres de ancho.</p>\n</div>\n<div class=\"type-sample\">\n  <p class=\"sb-meta\">cuerpo</p>\n  <p>Comparar precios, saber qué sembrar o alimentar a tu mascota. Sin cuentas y sin servidores.</p>\n</div>\n<div class=\"type-sample\">\n  <p class=\"sb-meta\">kicker · micro</p>\n  <p class=\"kicker\">01 / Apps</p>\n</div>\n<div class=\"type-sample\">\n  <p class=\"sb-meta\">marca · .logo</p>\n  <p class=\"logo\">UNA</p>\n</div>"
     },
     {
       "id": "La cita",
       "seccion": "tipografia",
       "grupo": "Fundamentos",
+      "etiqueta": "La cita",
       "nombre": "Un solo componente",
-      "html": "<blockquote class=\"cita\">La fricción no es un error cuando sirve para que quien decide despierte.<cite>Fran Maldonado · Mal Pensamientos</cite></blockquote><p style=\"margin-top:20px\">Dentro de una tarjeta pequeña baja sola, porque el tamaño es <code class=\"sb-inline\">1.15em</code>:</p><div class=\"panel panel--compacto\" style=\"font-size:.9rem;margin-top:10px\"><blockquote class=\"cita\">Superó completamente mis expectativas.<cite>Julver · UI Designer</cite></blockquote></div>"
+      "desc": "Relativa al texto que la rodea, no un tamaño fijo. El tema decide si se marca con filete o con comilla.",
+      "rejilla": "sb-grid",
+      "html": "<blockquote class=\"cita\">La fricción no es un error cuando sirve para que quien decide despierte.<cite>Fran Maldonado · Mal Pensamientos</cite></blockquote><p style=\"margin-top:20px\">Dentro de una tarjeta pequeña baja sola, porque el tamaño es <code class=\"sb-inline\">1.15em</code>:</p><div class=\"panel panel--compacto\" style=\"font-size:.9rem;margin-top:10px\"><blockquote class=\"cita\">Superó completamente mis expectativas.<cite>Julver · UI Designer</cite></blockquote></div>",
+      "nota": "<div class=\"notice\"><span aria-hidden=\"true\"></span><div>En el periódico no hay filete —el tema no tiene líneas—, así que la misma cita abre con una comilla grande y va en serif cursiva. Es el mismo marcado.</div></div>"
     },
     {
       "id": "El error a evitar",
       "seccion": "tipografia",
       "grupo": "Fundamentos",
+      "etiqueta": "El error a evitar",
       "nombre": "Un subtítulo en Syne no se lee",
-      "html": "<p class=\"micro\" style=\"margin-bottom:6px\">Correcto</p><h3 style=\"margin-bottom:20px\">Herramientas que resuelven algo concreto</h3><p class=\"micro\" style=\"margin-bottom:6px\">Incorrecto</p><h3 style=\"font-family:var(--mal-display)\">Herramientas que resuelven algo concreto</h3>"
+      "html": "<p class=\"micro\" style=\"margin-bottom:6px\">Correcto</p>\n<h3 style=\"margin-bottom:20px\">Herramientas que resuelven algo concreto</h3>\n<p class=\"micro\" style=\"margin-bottom:6px\">Incorrecto</p>\n<h3 style=\"font-family:var(--mal-display)\">Herramientas que resuelven algo concreto</h3>"
     },
     {
       "id": "Utilidades",
       "seccion": "tipografia",
       "grupo": "Fundamentos",
+      "etiqueta": "Utilidades",
       "nombre": "Color del texto",
       "html": "<p><span class=\"text-accent\" style=\"font-weight:700\">.text-accent</span> — la marca</p><p><span class=\"text-muted\">.text-muted</span> — apoyo</p><p><span class=\"text-faint\">.text-faint</span> — microcopia</p><p><span class=\"text-mono\">.text-mono</span> — datos</p><p><span class=\"tabular\">1 234 567,89</span> — cifras tabulares</p><p><span class=\"sr-only\">.sr-only</span>«.sr-only» — solo para lectores de pantalla: esta línea empieza con un texto que no se ve.</p>"
     },
@@ -82,454 +277,584 @@
       "id": "codigo-bloque",
       "seccion": "tipografia",
       "grupo": "Fundamentos",
+      "etiqueta": ".codigo-bloque",
       "nombre": "Bloque de código",
-      "html": "<div class=\"codigo-bloque\"><button class=\"btn-copy\" type=\"button\" data-copiar>Copiar</button><pre>&lt;link rel=\"stylesheet\" href=\"https://una.red/ds/mal/mal.css\"&gt;\n&lt;script src=\"https://una.red/ds/mal/mal.js\" defer&gt;&lt;/script&gt;</pre></div>"
+      "desc": "Un <code>pre</code> con su botón de copiar. El botón es hermano del <code>pre</code>, no hijo: mal.js lo sabe.",
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"codigo-bloque\"><button class=\"btn-copy\" type=\"button\" data-copiar>Copiar</button>\n  <pre>&lt;link rel=\"stylesheet\" href=\"https://una.red/ds/mal/mal.css\"&gt;\n&lt;script src=\"https://una.red/ds/mal/mal.js\" defer&gt;&lt;/script&gt;</pre>\n</div>"
+    },
+    {
+      "id": "Roles",
+      "seccion": "color",
+      "grupo": "Fundamentos",
+      "etiqueta": "Roles",
+      "nombre": "Roles",
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"sb-swatches\"><div class=\"sb-swatch\"><div class=\"sb-swatch__c\" style=\"background:var(--mal-bg)\"></div><div class=\"sb-swatch__t\"><code>--mal-bg</code><span>lienzo</span></div></div><div class=\"sb-swatch\"><div class=\"sb-swatch__c\" style=\"background:var(--mal-bg-2)\"></div><div class=\"sb-swatch__t\"><code>--mal-bg-2</code><span>rebaje</span></div></div><div class=\"sb-swatch\"><div class=\"sb-swatch__c\" style=\"background:var(--mal-surface)\"></div><div class=\"sb-swatch__t\"><code>--mal-surface</code><span>superficie</span></div></div><div class=\"sb-swatch\"><div class=\"sb-swatch__c\" style=\"background:var(--mal-surface-alt)\"></div><div class=\"sb-swatch__t\"><code>--mal-surface-alt</code><span>superficie alterna</span></div></div><div class=\"sb-swatch\"><div class=\"sb-swatch__c\" style=\"background:var(--mal-on-surface)\"></div><div class=\"sb-swatch__t\"><code>--mal-on-surface</code><span>texto</span></div></div><div class=\"sb-swatch\"><div class=\"sb-swatch__c\" style=\"background:var(--mal-on-surface-2)\"></div><div class=\"sb-swatch__t\"><code>--mal-on-surface-2</code><span>secundario</span></div></div><div class=\"sb-swatch\"><div class=\"sb-swatch__c\" style=\"background:var(--mal-on-surface-3)\"></div><div class=\"sb-swatch__t\"><code>--mal-on-surface-3</code><span>terciario</span></div></div><div class=\"sb-swatch\"><div class=\"sb-swatch__c\" style=\"background:var(--mal-primary)\"></div><div class=\"sb-swatch__t\"><code>--mal-primary</code><span>marca</span></div></div><div class=\"sb-swatch\"><div class=\"sb-swatch__c\" style=\"background:var(--mal-primary-txt)\"></div><div class=\"sb-swatch__t\"><code>--mal-primary-txt</code><span>marca como texto</span></div></div><div class=\"sb-swatch\"><div class=\"sb-swatch__c\" style=\"background:var(--mal-secondary)\"></div><div class=\"sb-swatch__t\"><code>--mal-secondary</code><span>acento</span></div></div><div class=\"sb-swatch\"><div class=\"sb-swatch__c\" style=\"background:var(--mal-tertiary)\"></div><div class=\"sb-swatch__t\"><code>--mal-tertiary</code><span>terciario</span></div></div><div class=\"sb-swatch\"><div class=\"sb-swatch__c\" style=\"background:var(--mal-ok)\"></div><div class=\"sb-swatch__t\"><code>--mal-ok</code><span>bien</span></div></div><div class=\"sb-swatch\"><div class=\"sb-swatch__c\" style=\"background:var(--mal-warn)\"></div><div class=\"sb-swatch__t\"><code>--mal-warn</code><span>atención</span></div></div><div class=\"sb-swatch\"><div class=\"sb-swatch__c\" style=\"background:var(--mal-danger)\"></div><div class=\"sb-swatch__t\"><code>--mal-danger</code><span>peligro</span></div></div></div><div class=\"notice\"><span aria-hidden=\"true\"></span><div><b>La marca tiene dos papeles.</b> <code class=\"sb-inline\">--mal-primary</code> es para fondos; como texto va <code class=\"sb-inline\">--mal-primary-txt</code>, que sí cumple contraste sobre papel. Encima de la marca, <code class=\"sb-inline\">--mal-on-primary</code>.</div></div>",
+      "codigo": false
     },
     {
       "id": "El sprite",
       "seccion": "iconos",
       "grupo": "Fundamentos",
+      "etiqueta": "El sprite",
       "nombre": "81 iconos",
-      "html": "<svg class=\"icono\"><use href=\"#i-casa\"/></svg>\n<svg class=\"icono icono--l\"><use href=\"#i-buscar\"/></svg>\n\n<!-- tamaños: .icono--s .icono (1.25em) .icono--l .icono--xl\n     color: el del texto (currentColor) -->"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<svg class=\"icono\"><use href=\"#i-casa\"/></svg>\n<svg class=\"icono icono--l\"><use href=\"#i-buscar\"/></svg>\n\n<!-- tamaños: .icono--s .icono (1.25em) .icono--l .icono--xl\n     color: el del texto (currentColor) -->",
+      "demo": "<div style=\"display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:12px\"><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-casa\"/></svg><code style=\"font-size:10px\">casa</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-calendario\"/></svg><code style=\"font-size:10px\">calendario</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-bolsa\"/></svg><code style=\"font-size:10px\">bolsa</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-hoja\"/></svg><code style=\"font-size:10px\">hoja</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-usuario\"/></svg><code style=\"font-size:10px\">usuario</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-ajustes\"/></svg><code style=\"font-size:10px\">ajustes</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-info\"/></svg><code style=\"font-size:10px\">info</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-alerta\"/></svg><code style=\"font-size:10px\">alerta</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-check\"/></svg><code style=\"font-size:10px\">check</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-mas\"/></svg><code style=\"font-size:10px\">mas</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-menos\"/></svg><code style=\"font-size:10px\">menos</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-cerrar\"/></svg><code style=\"font-size:10px\">cerrar</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-menu\"/></svg><code style=\"font-size:10px\">menu</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-buscar\"/></svg><code style=\"font-size:10px\">buscar</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-flecha-der\"/></svg><code style=\"font-size:10px\">flecha-der</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-flecha-izq\"/></svg><code style=\"font-size:10px\">flecha-izq</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-flecha-arriba\"/></svg><code style=\"font-size:10px\">flecha-arriba</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-flecha-abajo\"/></svg><code style=\"font-size:10px\">flecha-abajo</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-chevron-der\"/></svg><code style=\"font-size:10px\">chevron-der</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-chevron-izq\"/></svg><code style=\"font-size:10px\">chevron-izq</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-chevron-abajo\"/></svg><code style=\"font-size:10px\">chevron-abajo</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-chevron-arriba\"/></svg><code style=\"font-size:10px\">chevron-arriba</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-externo\"/></svg><code style=\"font-size:10px\">externo</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-copiar\"/></svg><code style=\"font-size:10px\">copiar</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-play\"/></svg><code style=\"font-size:10px\">play</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-pausa\"/></svg><code style=\"font-size:10px\">pausa</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-reiniciar\"/></svg><code style=\"font-size:10px\">reiniciar</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-salir\"/></svg><code style=\"font-size:10px\">salir</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-rayo\"/></svg><code style=\"font-size:10px\">rayo</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-escudo\"/></svg><code style=\"font-size:10px\">escudo</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-altavoz\"/></svg><code style=\"font-size:10px\">altavoz</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-documento\"/></svg><code style=\"font-size:10px\">documento</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-corazon\"/></svg><code style=\"font-size:10px\">corazon</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-estrella\"/></svg><code style=\"font-size:10px\">estrella</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-sol\"/></svg><code style=\"font-size:10px\">sol</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-luna\"/></svg><code style=\"font-size:10px\">luna</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-monitor\"/></svg><code style=\"font-size:10px\">monitor</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-reloj\"/></svg><code style=\"font-size:10px\">reloj</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-pin\"/></svg><code style=\"font-size:10px\">pin</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-teclado\"/></svg><code style=\"font-size:10px\">teclado</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-ojo\"/></svg><code style=\"font-size:10px\">ojo</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-ojo-cerrado\"/></svg><code style=\"font-size:10px\">ojo-cerrado</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-candado\"/></svg><code style=\"font-size:10px\">candado</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-camara\"/></svg><code style=\"font-size:10px\">camara</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-subir\"/></svg><code style=\"font-size:10px\">subir</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-descargar\"/></svg><code style=\"font-size:10px\">descargar</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-filtro\"/></svg><code style=\"font-size:10px\">filtro</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-cuadricula\"/></svg><code style=\"font-size:10px\">cuadricula</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-lista\"/></svg><code style=\"font-size:10px\">lista</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-comentario\"/></svg><code style=\"font-size:10px\">comentario</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-compartir\"/></svg><code style=\"font-size:10px\">compartir</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-etiqueta\"/></svg><code style=\"font-size:10px\">etiqueta</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-mando\"/></svg><code style=\"font-size:10px\">mando</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-trofeo\"/></svg><code style=\"font-size:10px\">trofeo</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-editar\"/></svg><code style=\"font-size:10px\">editar</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-papelera\"/></svg><code style=\"font-size:10px\">papelera</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-balanza\"/></svg><code style=\"font-size:10px\">balanza</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-tijeras\"/></svg><code style=\"font-size:10px\">tijeras</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-huella\"/></svg><code style=\"font-size:10px\">huella</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-portapapeles\"/></svg><code style=\"font-size:10px\">portapapeles</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-periodico\"/></svg><code style=\"font-size:10px\">periodico</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-codigo\"/></svg><code style=\"font-size:10px\">codigo</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-enlace\"/></svg><code style=\"font-size:10px\">enlace</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-campana\"/></svg><code style=\"font-size:10px\">campana</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-correo\"/></svg><code style=\"font-size:10px\">correo</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-globo\"/></svg><code style=\"font-size:10px\">globo</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-tarjeta\"/></svg><code style=\"font-size:10px\">tarjeta</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-billete\"/></svg><code style=\"font-size:10px\">billete</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-grafica\"/></svg><code style=\"font-size:10px\">grafica</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-telefono\"/></svg><code style=\"font-size:10px\">telefono</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-gota\"/></svg><code style=\"font-size:10px\">gota</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-termometro\"/></svg><code style=\"font-size:10px\">termometro</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-nube\"/></svg><code style=\"font-size:10px\">nube</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-regalo\"/></svg><code style=\"font-size:10px\">regalo</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-cafe\"/></svg><code style=\"font-size:10px\">cafe</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-maiz\"/></svg><code style=\"font-size:10px\">maiz</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-semilla\"/></svg><code style=\"font-size:10px\">semilla</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-marcador\"/></svg><code style=\"font-size:10px\">marcador</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg><code style=\"font-size:10px\">vida</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-punto\"/></svg><code style=\"font-size:10px\">punto</code></div><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:var(--mal-r-s);background:var(--mal-surface-alt)\"><svg class=\"icono icono--l\" aria-hidden=\"true\"><use href=\"#i-cargando\"/></svg><code style=\"font-size:10px\">cargando</code></div></div>"
     },
     {
       "id": "panel",
       "seccion": "fondos",
       "grupo": "Fundamentos",
+      "etiqueta": ".panel",
       "nombre": "Paneles",
-      "html": "<div class=\"pila pila--estrecha\"><div class=\"panel panel--compacto\">.panel — relleno, borde y elevación del tema</div><div class=\"panel panel--compacto panel--tono\">.panel--tono — superficie alterna, sin sombra</div><div class=\"panel panel--compacto panel--hundido\">.panel--hundido — rebaje</div><div class=\"panel panel--compacto panel--marca\">.panel--marca — relleno de marca</div><div class=\"panel panel--compacto panel--flotante\">.panel--flotante — levantado</div></div>"
+      "desc": "Uno por intención: plano, de tono, hundido, de marca, flotante.",
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"pila pila--estrecha\">\n  <div class=\"panel panel--compacto\">.panel — relleno, borde y elevación del tema</div>\n  <div class=\"panel panel--compacto panel--tono\">.panel--tono — superficie alterna, sin sombra</div>\n  <div class=\"panel panel--compacto panel--hundido\">.panel--hundido — rebaje</div>\n  <div class=\"panel panel--compacto panel--marca\">.panel--marca — relleno de marca</div>\n  <div class=\"panel panel--compacto panel--flotante\">.panel--flotante — levantado</div>\n</div>"
     },
     {
       "id": "fondo--*",
       "seccion": "fondos",
       "grupo": "Fundamentos",
+      "etiqueta": ".fondo--*",
       "nombre": "Fondos de sección",
+      "rejilla": "sb-grid",
       "html": "<div class=\"pila pila--estrecha\"><div class=\"fondo--aurora\" style=\"padding:24px;border-radius:var(--mal-r)\"><b>.fondo--aurora</b> — para que una barra translúcida tenga algo que desenfocar</div><div class=\"fondo--malla\" style=\"padding:24px;border-radius:var(--mal-r)\"><b>.fondo--malla</b></div><div class=\"fondo--tono\" style=\"padding:24px;border-radius:var(--mal-r)\"><b>.fondo--tono</b></div><div class=\"fondo--tinta\" style=\"padding:24px;border-radius:var(--mal-r)\"><b>.fondo--tinta</b></div><div class=\"fondo--marca\" style=\"padding:24px;border-radius:var(--mal-r)\"><b>.fondo--marca</b></div></div>"
     },
     {
       "id": "vidrio",
       "seccion": "fondos",
       "grupo": "Fundamentos",
+      "etiqueta": ".vidrio",
       "nombre": "Vidrio explícito",
-      "html": "<div class=\"fondo--aurora\" style=\"padding:32px;border-radius:var(--mal-r)\"><div class=\"vidrio\" style=\"padding:20px\"><b>Panel de vidrio</b><p class=\"caption\">Desenfoca lo que tiene detrás.</p></div></div>"
+      "desc": "Translúcido en cualquier tema: para lo que flota sobre una imagen o un lienzo.",
+      "html": "<div class=\"fondo--aurora\" style=\"padding:32px;border-radius:var(--mal-r)\">\n  <div class=\"vidrio\" style=\"padding:20px\"><b>Panel de vidrio</b>\n    <p class=\"caption\">Desenfoca lo que tiene detrás.</p>\n  </div>\n</div>"
     },
     {
       "id": "separador",
       "seccion": "fondos",
       "grupo": "Fundamentos",
+      "etiqueta": ".separador",
       "nombre": "Separadores",
-      "html": "<p>Arriba</p><hr class=\"separador\"><p>Raya (o aire)</p><hr class=\"separador--ornamento\"><p>Ornamento</p>"
+      "desc": "Una raya donde el tema la tenga; aire donde no. El ornamento es para el periódico.",
+      "html": "<p>Arriba</p><hr class=\"separador\">\n<p>Raya (o aire)</p><hr class=\"separador--ornamento\">\n<p>Ornamento</p>"
     },
     {
       "id": "btn",
       "seccion": "botones",
       "grupo": "Átomos",
+      "etiqueta": ".btn",
       "nombre": "Pesos",
-      "html": "<div class=\"fila\"><a class=\"btn btn--rojo\" href=\"#botones\">Principal</a><a class=\"btn\" href=\"#botones\">Secundario</a><a class=\"btn btn--fantasma\" href=\"#botones\">Fantasma</a><button class=\"btn btn-tonal\" type=\"button\">Tonal</button><button class=\"btn btn-danger\" type=\"button\">Peligro</button></div><div class=\"fila\" style=\"margin-top:14px\"><a class=\"btn btn--rojo btn--sm\" href=\"#botones\">Pequeño</a><button class=\"btn\" type=\"button\" disabled>Inactivo</button><button class=\"btn btn--cargando\" type=\"button\">Cargando</button></div>"
+      "html": "<div class=\"fila\"><a class=\"btn btn--rojo\" href=\"#botones\">Principal</a><a class=\"btn\" href=\"#botones\">Secundario</a><a class=\"btn btn--fantasma\" href=\"#botones\">Fantasma</a><button class=\"btn btn-tonal\" type=\"button\">Tonal</button><button class=\"btn btn-danger\" type=\"button\">Peligro</button>\n</div>\n<div class=\"fila\" style=\"margin-top:14px\"><a class=\"btn btn--rojo btn--sm\" href=\"#botones\">Pequeño</a><button class=\"btn\" type=\"button\" disabled>Inactivo</button><button class=\"btn btn--cargando\" type=\"button\">Cargando</button>\n</div>"
     },
     {
       "id": "Con icono",
       "seccion": "botones",
       "grupo": "Átomos",
+      "etiqueta": "Con icono",
       "nombre": "Icono + texto, y solo icono",
-      "html": "<div class=\"fila\"><a class=\"btn btn--rojo\" href=\"#botones\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-mas\"/></svg> Nuevo</a><a class=\"btn\" href=\"#botones\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-descargar\"/></svg> Descargar</a><button class=\"icon-btn\" type=\"button\" aria-label=\"Buscar\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-buscar\"/></svg></button><button class=\"icon-btn con-punto\" data-cuenta=\"3\" type=\"button\" aria-label=\"Avisos\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-campana\"/></svg></button></div>"
+      "html": "<div class=\"fila\"><a class=\"btn btn--rojo\" href=\"#botones\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-mas\"/></svg>Nuevo</a><a class=\"btn\" href=\"#botones\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-descargar\"/></svg>Descargar</a><button class=\"icon-btn\" type=\"button\" aria-label=\"Buscar\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-buscar\"/></svg></button><button class=\"icon-btn con-punto\" data-cuenta=\"3\" type=\"button\" aria-label=\"Avisos\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-campana\"/></svg></button>\n</div>"
     },
     {
       "id": "btn-block",
       "seccion": "botones",
       "grupo": "Átomos",
+      "etiqueta": ".btn-block",
       "nombre": "De ancho completo",
-      "html": "<div class=\"pila pila--estrecha\" style=\"max-width:340px\"><button class=\"btn btn--rojo btn-block\" type=\"button\">Continuar</button><button class=\"btn btn-block\" type=\"button\">Ahora no</button></div>"
+      "desc": "Para una decisión por pantalla.",
+      "html": "<div class=\"pila pila--estrecha\" style=\"max-width:340px\"><button class=\"btn btn--rojo btn-block\" type=\"button\">Continuar</button><button class=\"btn btn-block\" type=\"button\">Ahora no</button>\n</div>"
     },
     {
       "id": "boton-juego",
       "seccion": "botones",
       "grupo": "Átomos",
+      "etiqueta": ".boton-juego",
       "nombre": "El botón de juego",
-      "html": "<div class=\"fila\"><button class=\"btn btn--rojo boton-juego\" type=\"button\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-play\"/></svg> Jugar</button><button class=\"btn boton-juego\" type=\"button\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-reiniciar\"/></svg> Reintentar</button></div>"
+      "desc": "Más alto y más ancho. En el tema de juegos gana volumen y holograma.",
+      "html": "<div class=\"fila\"><button class=\"btn btn--rojo boton-juego\" type=\"button\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-play\"/></svg>Jugar</button><button class=\"btn boton-juego\" type=\"button\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-reiniciar\"/></svg>Reintentar</button>\n</div>"
     },
     {
       "id": "tag / .badge",
       "seccion": "etiquetas",
       "grupo": "Átomos",
+      "etiqueta": ".tag / .badge",
       "nombre": "Etiquetas e insignias",
-      "html": "<div class=\"fila\"><span class=\"tag\">etiqueta</span><span class=\"tag tag--acento\">destacado</span><span class=\"badge\">Neutra</span><span class=\"badge badge-ok\">Bien</span><span class=\"badge badge-warn\">Atención</span><span class=\"badge badge-danger\">Peligro</span><span class=\"badge badge-info\">Info</span></div>"
+      "html": "<div class=\"fila\"><span class=\"tag\">etiqueta</span><span class=\"tag tag--acento\">destacado</span><span class=\"badge\">Neutra</span><span class=\"badge badge-ok\">Bien</span><span class=\"badge badge-warn\">Atención</span><span class=\"badge badge-danger\">Peligro</span><span class=\"badge badge-info\">Info</span>\n</div>"
     },
     {
       "id": "kpi",
       "seccion": "etiquetas",
       "grupo": "Átomos",
+      "etiqueta": ".kpi",
       "nombre": "Cifras clave",
-      "html": "<div style=\"display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))\"><div class=\"kpi\"><span class=\"kpi__etiqueta\">Artículos</span><span class=\"kpi__valor\">944</span><span class=\"kpi__delta kpi__delta--sube\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-flecha-arriba\"/></svg> 12 esta semana</span></div><div class=\"kpi\"><span class=\"kpi__etiqueta\">Lectores</span><span class=\"kpi__valor\">18 420</span><span class=\"kpi__delta kpi__delta--baja\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-flecha-abajo\"/></svg> 3 %</span></div></div>"
+      "html": "<div style=\"display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))\">\n  <div class=\"kpi\"><span class=\"kpi__etiqueta\">Artículos</span><span class=\"kpi__valor\">944</span><span class=\"kpi__delta kpi__delta--sube\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-flecha-arriba\"/></svg>12 esta semana</span>\n  </div>\n  <div class=\"kpi\"><span class=\"kpi__etiqueta\">Lectores</span><span class=\"kpi__valor\">18 420</span><span class=\"kpi__delta kpi__delta--baja\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-flecha-abajo\"/></svg>3 %</span>\n  </div>\n</div>"
     },
     {
       "id": "avatar",
       "seccion": "etiquetas",
       "grupo": "Átomos",
+      "etiqueta": ".avatar",
       "nombre": "Avatares",
-      "html": "<div class=\"fila\"><span class=\"avatar avatar--s\">FM</span><span class=\"avatar\">FM</span><span class=\"avatar avatar--l\">FM</span><div class=\"avatares\"><span class=\"avatar\">NS</span><span class=\"avatar\">MA</span><span class=\"avatar\">JE</span><span class=\"avatar\">+8</span></div></div>"
+      "html": "<div class=\"fila\"><span class=\"avatar avatar--s\">FM</span><span class=\"avatar\">FM</span><span class=\"avatar avatar--l\">FM</span>\n  <div class=\"avatares\"><span class=\"avatar\">NS</span><span class=\"avatar\">MA</span><span class=\"avatar\">JE</span><span class=\"avatar\">+8</span>\n  </div>\n</div>"
     },
     {
       "id": "cifras",
       "seccion": "etiquetas",
       "grupo": "Átomos",
+      "etiqueta": ".cifras",
       "nombre": "Píldoras de dato",
-      "html": "<ul class=\"cifras\" style=\"margin:0\"><li><b>5</b> apps</li><li><b>7</b> juegos</li><li>desde <b>2009</b></li></ul>"
+      "html": "<ul class=\"cifras\" style=\"margin:0\">\n  <li><b>5</b>apps\n  </li>\n  <li><b>7</b>juegos\n  </li>\n  <li>desde<b>2009</b>\n  </li>\n</ul>"
     },
     {
       "id": "campo",
       "seccion": "formularios",
       "grupo": "Átomos",
+      "etiqueta": ".campo",
       "nombre": "Campo con etiqueta, pista y error",
-      "html": "<form class=\"formulario\" onsubmit=\"return false\"><div class=\"campo\"><label for=\"f-nombre\">Nombre</label><input id=\"f-nombre\" type=\"text\" placeholder=\"Cómo te llamas\"><span class=\"campo__pista\">Como quieras que te llamemos.</span></div><div class=\"campo campo--error\"><label for=\"f-correo\">Correo</label><input id=\"f-correo\" type=\"email\" value=\"fran@\"><span class=\"campo__error\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-alerta\"/></svg> Falta el dominio.</span></div><div class=\"campo\"><label for=\"f-msg\">Mensaje</label><textarea id=\"f-msg\" placeholder=\"Cuéntame\"></textarea></div><div class=\"formulario__acciones\"><button class=\"btn\" type=\"button\">Cancelar</button><button class=\"btn btn--rojo\" type=\"submit\">Enviar</button></div></form>"
+      "html": "<form class=\"formulario\" onsubmit=\"return false\">\n  <div class=\"campo\"><label for=\"f-nombre\">Nombre</label><input id=\"f-nombre\" type=\"text\" placeholder=\"Cómo te llamas\"><span class=\"campo__pista\">Como quieras que te llamemos.</span>\n  </div>\n  <div class=\"campo campo--error\"><label for=\"f-correo\">Correo</label><input id=\"f-correo\" type=\"email\" value=\"fran@\"><span class=\"campo__error\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-alerta\"/></svg>Falta el dominio.</span>\n  </div>\n  <div class=\"campo\"><label for=\"f-msg\">Mensaje</label><textarea id=\"f-msg\" placeholder=\"Cuéntame\"></textarea>\n  </div>\n  <div class=\"formulario__acciones\"><button class=\"btn\" type=\"button\">Cancelar</button><button class=\"btn btn--rojo\" type=\"submit\">Enviar</button>\n  </div>\n</form>"
     },
     {
       "id": "grupo-entrada",
       "seccion": "formularios",
       "grupo": "Átomos",
+      "etiqueta": ".grupo-entrada",
       "nombre": "Prefijo y sufijo",
-      "html": "<div class=\"pila pila--estrecha\"><div class=\"grupo-entrada\"><span class=\"grupo-entrada__fijo\">$</span><input class=\"entrada--mono\" type=\"text\" inputmode=\"decimal\" value=\"1,89\" aria-label=\"Precio\"></div><div class=\"grupo-entrada\"><input class=\"entrada--mono\" type=\"text\" inputmode=\"numeric\" value=\"2 850\" aria-label=\"Altitud\"><span class=\"grupo-entrada__fijo\">m</span></div></div>"
+      "desc": "Para cifras con unidad: el precio de Quanto, la altitud de Mi Huerto.",
+      "html": "<div class=\"pila pila--estrecha\">\n  <div class=\"grupo-entrada\"><span class=\"grupo-entrada__fijo\">$</span><input class=\"entrada--mono\" type=\"text\" inputmode=\"decimal\" value=\"1,89\" aria-label=\"Precio\">\n  </div>\n  <div class=\"grupo-entrada\"><input class=\"entrada--mono\" type=\"text\" inputmode=\"numeric\" value=\"2 850\" aria-label=\"Altitud\"><span class=\"grupo-entrada__fijo\">m</span>\n  </div>\n</div>"
     },
     {
       "id": "buscar / .seleccion",
       "seccion": "formularios",
       "grupo": "Átomos",
+      "etiqueta": ".buscar / .seleccion",
       "nombre": "Buscar y seleccionar",
-      "html": "<div class=\"pila pila--estrecha\"><div class=\"buscar\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-buscar\"/></svg><input type=\"search\" placeholder=\"Buscar un cultivo\" aria-label=\"Buscar\"></div><div class=\"seleccion\"><select aria-label=\"Zona\"><option>Sierra</option><option>Costa</option><option>Oriente</option></select></div></div>"
+      "html": "<div class=\"pila pila--estrecha\">\n  <div class=\"buscar\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-buscar\"/></svg><input type=\"search\" placeholder=\"Buscar un cultivo\" aria-label=\"Buscar\">\n  </div>\n  <div class=\"seleccion\"><select aria-label=\"Zona\"><option>Sierra</option><option>Costa</option><option>Oriente</option></select>\n  </div>\n</div>"
     },
     {
       "id": "Contraseña y código",
       "seccion": "formularios",
       "grupo": "Átomos",
+      "etiqueta": "Contraseña y código",
       "nombre": "Ver la clave · código de verificación",
-      "html": "<div class=\"pila pila--estrecha\"><div class=\"grupo-entrada\"><input id=\"f-clave\" type=\"password\" value=\"secreto\" aria-label=\"Contraseña\"><button class=\"icon-btn\" type=\"button\" data-ver-clave=\"#f-clave\" aria-label=\"Ver contraseña\" style=\"border:0;background:none\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-ojo\"/></svg></button></div><div class=\"codigo\" aria-label=\"Código de 6 dígitos\"><input type=\"text\" inputmode=\"numeric\" maxlength=\"1\" aria-label=\"dígito\"><input type=\"text\" inputmode=\"numeric\" maxlength=\"1\" aria-label=\"dígito\"><input type=\"text\" inputmode=\"numeric\" maxlength=\"1\" aria-label=\"dígito\"><input type=\"text\" inputmode=\"numeric\" maxlength=\"1\" aria-label=\"dígito\"><input type=\"text\" inputmode=\"numeric\" maxlength=\"1\" aria-label=\"dígito\"><input type=\"text\" inputmode=\"numeric\" maxlength=\"1\" aria-label=\"dígito\"></div></div>"
+      "html": "<div class=\"pila pila--estrecha\">\n  <div class=\"grupo-entrada\"><input id=\"f-clave\" type=\"password\" value=\"secreto\" aria-label=\"Contraseña\"><button class=\"icon-btn\" type=\"button\" data-ver-clave=\"#f-clave\" aria-label=\"Ver contraseña\" style=\"border:0;background:none\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-ojo\"/></svg></button>\n  </div>\n  <div class=\"codigo\" aria-label=\"Código de 6 dígitos\"><input type=\"text\" inputmode=\"numeric\" maxlength=\"1\" aria-label=\"dígito\"><input type=\"text\" inputmode=\"numeric\" maxlength=\"1\" aria-label=\"dígito\"><input type=\"text\" inputmode=\"numeric\" maxlength=\"1\" aria-label=\"dígito\"><input type=\"text\" inputmode=\"numeric\" maxlength=\"1\" aria-label=\"dígito\"><input type=\"text\" inputmode=\"numeric\" maxlength=\"1\" aria-label=\"dígito\"><input type=\"text\" inputmode=\"numeric\" maxlength=\"1\" aria-label=\"dígito\">\n  </div>\n</div>"
     },
     {
       "id": "paso / range",
       "seccion": "formularios",
       "grupo": "Átomos",
+      "etiqueta": ".paso / range",
       "nombre": "Cantidad y deslizador",
-      "html": "<div class=\"pila\"><div class=\"paso\" data-min=\"1\" data-max=\"20\"><button type=\"button\" aria-label=\"Menos\">−</button><output>3</output><button type=\"button\" aria-label=\"Más\">+</button></div><input type=\"range\" min=\"0\" max=\"100\" value=\"60\" aria-label=\"Intensidad\"></div>"
+      "html": "<div class=\"pila\">\n  <div class=\"paso\" data-min=\"1\" data-max=\"20\"><button type=\"button\" aria-label=\"Menos\">−</button><output>3</output><button type=\"button\" aria-label=\"Más\">+</button>\n  </div><input type=\"range\" min=\"0\" max=\"100\" value=\"60\" aria-label=\"Intensidad\">\n</div>"
     },
     {
       "id": "teclado",
       "seccion": "formularios",
       "grupo": "Átomos",
+      "etiqueta": ".teclado",
       "nombre": "Teclado numérico",
-      "html": "<div class=\"teclado\"><button type=\"button\">1</button><button type=\"button\">2</button><button type=\"button\">3</button><button type=\"button\">4</button><button type=\"button\">5</button><button type=\"button\">6</button><button type=\"button\">7</button><button type=\"button\">8</button><button type=\"button\">9</button><button type=\"button\" class=\"teclado__accion\">,</button><button type=\"button\">0</button><button type=\"button\" class=\"teclado__ok\" aria-label=\"Aceptar\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-check\"/></svg></button></div>"
+      "desc": "El de Quanto: para teclear un precio con el pulgar, sin el teclado del sistema.",
+      "html": "<div class=\"teclado\"><button type=\"button\">1</button><button type=\"button\">2</button><button type=\"button\">3</button><button type=\"button\">4</button><button type=\"button\">5</button><button type=\"button\">6</button><button type=\"button\">7</button><button type=\"button\">8</button><button type=\"button\">9</button><button type=\"button\" class=\"teclado__accion\">,</button><button type=\"button\">0</button><button type=\"button\" class=\"teclado__ok\" aria-label=\"Aceptar\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-check\"/></svg></button>\n</div>"
     },
     {
       "id": "casilla",
       "seccion": "selectores",
       "grupo": "Átomos",
+      "etiqueta": ".casilla",
       "nombre": "Casillas y radios",
-      "html": "<div class=\"pila pila--estrecha\"><label class=\"casilla\"><input type=\"checkbox\" checked><span class=\"casilla__texto\">Avisarme por correo<small>Solo lo importante</small></span></label><label class=\"casilla\"><input type=\"checkbox\"><span class=\"casilla__texto\">Recibir la newsletter</span></label><label class=\"casilla\"><input type=\"radio\" name=\"r\" checked><span class=\"casilla__texto\">Presencial</span></label><label class=\"casilla\"><input type=\"radio\" name=\"r\"><span class=\"casilla__texto\">En línea</span></label></div>"
+      "html": "<div class=\"pila pila--estrecha\"><label class=\"casilla\"><input type=\"checkbox\" checked><span class=\"casilla__texto\">Avisarme por correo<small>Solo lo importante</small></span></label><label class=\"casilla\"><input type=\"checkbox\"><span class=\"casilla__texto\">Recibir la newsletter</span></label><label class=\"casilla\"><input type=\"radio\" name=\"r\" checked><span class=\"casilla__texto\">Presencial</span></label><label class=\"casilla\"><input type=\"radio\" name=\"r\"><span class=\"casilla__texto\">En línea</span></label>\n</div>"
     },
     {
       "id": "interruptor",
       "seccion": "selectores",
       "grupo": "Átomos",
+      "etiqueta": ".interruptor",
       "nombre": "Interruptor",
-      "html": "<div class=\"pila pila--estrecha\"><label class=\"interruptor\"><input type=\"checkbox\" checked><span>Sin conexión</span></label><label class=\"interruptor\"><input type=\"checkbox\"><span>Notificaciones</span></label></div>"
+      "html": "<div class=\"pila pila--estrecha\"><label class=\"interruptor\"><input type=\"checkbox\" checked><span>Sin conexión</span></label><label class=\"interruptor\"><input type=\"checkbox\"><span>Notificaciones</span></label>\n</div>"
     },
     {
       "id": "chip / .seg",
       "seccion": "selectores",
       "grupo": "Átomos",
+      "etiqueta": ".chip / .seg",
       "nombre": "Chips y segmentado",
-      "html": "<div class=\"pila\"><div class=\"fila\"><label class=\"chip\"><input type=\"checkbox\" checked>Ansiedad</label><label class=\"chip\"><input type=\"checkbox\">Duelo</label><label class=\"chip\"><input type=\"checkbox\">Autoestima</label><label class=\"chip\"><input type=\"checkbox\">Pareja</label></div><div class=\"seg seg--lleno\" role=\"tablist\"><button type=\"button\" role=\"tab\" aria-selected=\"true\">Hoy</button><button type=\"button\" role=\"tab\" aria-selected=\"false\">Semana</button><button type=\"button\" role=\"tab\" aria-selected=\"false\">Mes</button></div></div>"
+      "html": "<div class=\"pila\">\n  <div class=\"fila\"><label class=\"chip\"><input type=\"checkbox\" checked>Ansiedad</label><label class=\"chip\"><input type=\"checkbox\">Duelo</label><label class=\"chip\"><input type=\"checkbox\">Autoestima</label><label class=\"chip\"><input type=\"checkbox\">Pareja</label>\n  </div>\n  <div class=\"seg seg--lleno\" role=\"tablist\"><button type=\"button\" role=\"tab\" aria-selected=\"true\">Hoy</button><button type=\"button\" role=\"tab\" aria-selected=\"false\">Semana</button><button type=\"button\" role=\"tab\" aria-selected=\"false\">Mes</button>\n  </div>\n</div>"
     },
     {
       "id": "opcion",
       "seccion": "selectores",
       "grupo": "Átomos",
+      "etiqueta": ".opcion",
       "nombre": "Opciones como tarjeta",
-      "html": "<div class=\"opciones\"><label class=\"opcion\"><input type=\"radio\" name=\"zona\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-gota\"/></svg><b>Costa</b><small>0–500 m</small></label><label class=\"opcion\"><input type=\"radio\" name=\"zona\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-sol\"/></svg><b>Valle</b><small>500–2 000 m</small></label><label class=\"opcion\"><input type=\"radio\" name=\"zona\" checked><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-termometro\"/></svg><b>Sierra</b><small>2 000–3 200 m</small></label><label class=\"opcion\"><input type=\"radio\" name=\"zona\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-nube\"/></svg><b>Páramo</b><small>más de 3 200 m</small></label></div>"
+      "desc": "Una decisión por pantalla: la zona de Mi Huerto, el tipo de terapia.",
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"opciones\"><label class=\"opcion\"><input type=\"radio\" name=\"zona\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-gota\"/></svg><b>Costa</b><small>0–500 m</small></label><label class=\"opcion\"><input type=\"radio\" name=\"zona\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-sol\"/></svg><b>Valle</b><small>500–2 000 m</small></label><label class=\"opcion\"><input type=\"radio\" name=\"zona\" checked><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-termometro\"/></svg><b>Sierra</b><small>2 000–3 200 m</small></label><label class=\"opcion\"><input type=\"radio\" name=\"zona\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-nube\"/></svg><b>Páramo</b><small>más de 3 200 m</small></label>\n</div>"
     },
     {
       "id": "tabs-control",
       "seccion": "selectores",
       "grupo": "Átomos",
+      "etiqueta": ".tabs-control",
       "nombre": "Pestañas",
-      "html": "<div class=\"pila\"><div class=\"tabs-control\"><button class=\"tab-trigger active\" type=\"button\" aria-selected=\"true\">Resumen</button><button class=\"tab-trigger\" type=\"button\" aria-selected=\"false\">Detalle</button></div><div class=\"tabs-control tabs-control--linea\"><button class=\"tab-trigger active\" type=\"button\" aria-selected=\"true\">Desinformación</button><button class=\"tab-trigger\" type=\"button\" aria-selected=\"false\">Opinión</button><button class=\"tab-trigger\" type=\"button\" aria-selected=\"false\">Cultura</button></div></div>"
+      "desc": "Con fondo, y la versión de filete para lo editorial.",
+      "rejilla": "sb-grid",
+      "html": "<div class=\"pila\">\n  <div class=\"tabs-control\"><button class=\"tab-trigger active\" type=\"button\" aria-selected=\"true\">Resumen</button><button class=\"tab-trigger\" type=\"button\" aria-selected=\"false\">Detalle</button>\n  </div>\n  <div class=\"tabs-control tabs-control--linea\"><button class=\"tab-trigger active\" type=\"button\" aria-selected=\"true\">Desinformación</button><button class=\"tab-trigger\" type=\"button\" aria-selected=\"false\">Opinión</button><button class=\"tab-trigger\" type=\"button\" aria-selected=\"false\">Cultura</button>\n  </div>\n</div>"
     },
     {
       "id": "menu",
       "seccion": "menus",
       "grupo": "Moléculas",
+      "etiqueta": ".menu",
       "nombre": "Desplegable",
-      "html": "<div style=\"min-height:240px\"><details class=\"menu\"><summary class=\"btn\">Opciones <svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-chevron-abajo\"/></svg></summary><div class=\"menu__lista\"><p class=\"menu__titulo\">Artículo</p><a class=\"menu__item\" href=\"#menus\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-editar\"/></svg> Editar <span class=\"menu__atajo\">E</span></a><a class=\"menu__item\" href=\"#menus\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-copiar\"/></svg> Duplicar</a><a class=\"menu__item\" href=\"#menus\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-compartir\"/></svg> Compartir</a><hr class=\"menu__sep\"><button class=\"menu__item menu__item--peligro\" type=\"button\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-papelera\"/></svg> Enviar a la papelera</button></div></details></div>"
+      "desc": "Se abre sin JS; mal.js lo cierra al pulsar fuera y con Escape.",
+      "html": "<div style=\"min-height:240px\"><details class=\"menu\"><summary class=\"btn\">Opciones<svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-chevron-abajo\"/></svg></summary>\n  <div class=\"menu__lista\">\n    <p class=\"menu__titulo\">Artículo</p><a class=\"menu__item\" href=\"#menus\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-editar\"/></svg>Editar<span class=\"menu__atajo\">E</span></a><a class=\"menu__item\" href=\"#menus\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-copiar\"/></svg>Duplicar</a><a class=\"menu__item\" href=\"#menus\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-compartir\"/></svg>Compartir</a><hr class=\"menu__sep\"><button class=\"menu__item menu__item--peligro\" type=\"button\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-papelera\"/></svg>Enviar a la papelera</button>\n  </div></details>\n</div>"
     },
     {
       "id": "migas",
       "seccion": "menus",
       "grupo": "Moléculas",
+      "etiqueta": ".migas",
       "nombre": "Migas",
-      "html": "<ol class=\"migas\"><li><a href=\"#menus\">UNA</a></li><li><a href=\"#menus\">Sistema</a></li><li aria-current=\"page\">Menús</li></ol>"
+      "html": "<ol class=\"migas\">\n  <li><a href=\"#menus\">UNA</a>\n  </li>\n  <li><a href=\"#menus\">Sistema</a>\n  </li>\n  <li aria-current=\"page\">Menús</li>\n</ol>"
     },
     {
       "id": "cabecera-app",
       "seccion": "menus",
       "grupo": "Moléculas",
+      "etiqueta": ".cabecera-app",
       "nombre": "Cabecera de app",
-      "html": "<div class=\"panel panel--hundido\" style=\"padding:0;overflow:hidden\"><header class=\"cabecera-app\" style=\"position:static\"><button class=\"icon-btn\" type=\"button\" aria-label=\"Volver\" style=\"border:0;background:none\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-chevron-izq\"/></svg></button><p class=\"cabecera-app__titulo\">Mi huerto<span class=\"cabecera-app__sub\">Sierra · 2 850 m</span></p><button class=\"icon-btn\" type=\"button\" aria-label=\"Ajustes\" style=\"border:0;background:none\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-ajustes\"/></svg></button></header><p class=\"titulo-grande\">Para sembrar en agosto<small>4 cultivos recomendados</small></p></div>"
+      "desc": "Volver · título · acción. Translúcida en el tema de producto.",
+      "html": "<div class=\"panel panel--hundido\" style=\"padding:0;overflow:hidden\">\n  <header class=\"cabecera-app\" style=\"position:static\"><button class=\"icon-btn\" type=\"button\" aria-label=\"Volver\" style=\"border:0;background:none\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-chevron-izq\"/></svg></button>\n    <p class=\"cabecera-app__titulo\">Mi huerto<span class=\"cabecera-app__sub\">Sierra · 2 850 m</span>\n    </p><button class=\"icon-btn\" type=\"button\" aria-label=\"Ajustes\" style=\"border:0;background:none\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-ajustes\"/></svg></button>\n  </header>\n  <p class=\"titulo-grande\">Para sembrar en agosto<small>4 cultivos recomendados</small>\n  </p>\n</div>"
     },
     {
       "id": "cajon",
       "seccion": "menus",
       "grupo": "Moléculas",
+      "etiqueta": ".cajon",
       "nombre": "Cajón lateral",
-      "html": "<nav class=\"cajon\" style=\"max-width:260px\"><p class=\"cajon__titulo\">Secciones</p><a class=\"cajon__item\" href=\"#menus\" aria-current=\"page\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-casa\"/></svg> Portada</a><a class=\"cajon__item\" href=\"#menus\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-periodico\"/></svg> Desinformación</a><a class=\"cajon__item\" href=\"#menus\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-comentario\"/></svg> Opinión</a><a class=\"cajon__item\" href=\"#menus\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-mando\"/></svg> Juegos</a></nav>"
+      "html": "<nav class=\"cajon\" style=\"max-width:260px\">\n  <p class=\"cajon__titulo\">Secciones</p><a class=\"cajon__item\" href=\"#menus\" aria-current=\"page\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-casa\"/></svg>Portada</a><a class=\"cajon__item\" href=\"#menus\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-periodico\"/></svg>Desinformación</a><a class=\"cajon__item\" href=\"#menus\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-comentario\"/></svg>Opinión</a><a class=\"cajon__item\" href=\"#menus\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-mando\"/></svg>Juegos</a>\n</nav>"
     },
     {
       "id": "navbar",
       "seccion": "menus",
       "grupo": "Moléculas",
+      "etiqueta": ".navbar",
       "nombre": "Barra de pestañas",
-      "html": "<div class=\"panel panel--hundido\" style=\"padding:0;overflow:hidden\"><nav class=\"navbar\" style=\"position:static\"><a class=\"nav-item\" href=\"#menus\" aria-current=\"page\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-casa\"/></svg><span>Hoy</span></a><a class=\"nav-item\" href=\"#menus\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-calendario\"/></svg><span>Almanaque</span></a><a class=\"nav-item\" href=\"#menus\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-bolsa\"/></svg><span>Mercado</span></a><a class=\"nav-item\" href=\"#menus\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-hoja\"/></svg><span>Mi huerto</span></a></nav></div>"
+      "desc": "Pegada abajo, con el hueco de la barra del teléfono.",
+      "html": "<div class=\"panel panel--hundido\" style=\"padding:0;overflow:hidden\">\n  <nav class=\"navbar\" style=\"position:static\"><a class=\"nav-item\" href=\"#menus\" aria-current=\"page\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-casa\"/></svg><span>Hoy</span></a><a class=\"nav-item\" href=\"#menus\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-calendario\"/></svg><span>Almanaque</span></a><a class=\"nav-item\" href=\"#menus\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-bolsa\"/></svg><span>Mercado</span></a><a class=\"nav-item\" href=\"#menus\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-hoja\"/></svg><span>Mi huerto</span></a>\n  </nav>\n</div>"
     },
     {
       "id": "paginas",
       "seccion": "menus",
       "grupo": "Moléculas",
+      "etiqueta": ".paginas",
       "nombre": "Paginación",
-      "html": "<nav class=\"fila\" aria-label=\"Páginas\"><ul class=\"paginas\"><li><a href=\"#menus\" aria-label=\"Anterior\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-chevron-izq\"/></svg></a></li><li><a href=\"#menus\">1</a></li><li><span aria-current=\"page\">2</span></li><li><a href=\"#menus\">3</a></li><li><span>…</span></li><li><a href=\"#menus\">12</a></li><li><a href=\"#menus\" aria-label=\"Siguiente\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-chevron-der\"/></svg></a></li></ul></nav>"
+      "html": "<nav class=\"fila\" aria-label=\"Páginas\">\n  <ul class=\"paginas\">\n    <li><a href=\"#menus\" aria-label=\"Anterior\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-chevron-izq\"/></svg></a>\n    </li>\n    <li><a href=\"#menus\">1</a>\n    </li>\n    <li><span aria-current=\"page\">2</span>\n    </li>\n    <li><a href=\"#menus\">3</a>\n    </li>\n    <li><span>…</span>\n    </li>\n    <li><a href=\"#menus\">12</a>\n    </li>\n    <li><a href=\"#menus\" aria-label=\"Siguiente\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-chevron-der\"/></svg></a>\n    </li>\n  </ul>\n</nav>"
     },
     {
       "id": "barra-acciones",
       "seccion": "menus",
       "grupo": "Moléculas",
+      "etiqueta": ".barra-acciones",
       "nombre": "Barra de acciones",
-      "html": "<div style=\"position:relative;min-height:110px;background:var(--mal-surface-alt);border-radius:var(--mal-r)\"><div class=\"barra-acciones\" style=\"position:absolute;bottom:16px;left:50%;transform:translateX(-50%)\"><button class=\"btn btn--sm\" type=\"button\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-editar\"/></svg> Editar</button><button class=\"btn btn--sm\" type=\"button\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-compartir\"/></svg> Compartir</button><button class=\"btn btn--rojo btn--sm\" type=\"button\">Publicar</button></div></div>"
+      "desc": "Flota al pie de lo que se edita.",
+      "html": "<div style=\"position:relative;min-height:110px;background:var(--mal-surface-alt);border-radius:var(--mal-r)\">\n  <div class=\"barra-acciones\" style=\"position:absolute;bottom:16px;left:50%;transform:translateX(-50%)\"><button class=\"btn btn--sm\" type=\"button\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-editar\"/></svg>Editar</button><button class=\"btn btn--sm\" type=\"button\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-compartir\"/></svg>Compartir</button><button class=\"btn btn--rojo btn--sm\" type=\"button\">Publicar</button>\n  </div>\n</div>"
     },
     {
       "id": "Toast y modal",
       "seccion": "retro",
       "grupo": "Moléculas",
+      "etiqueta": "Toast y modal",
       "nombre": "Pruébalos",
-      "html": "<button class=\"btn\" data-abre=\"#d-modal\">Abrir</button>\n\n<dialog class=\"modal\" id=\"d-modal\">\n  <div class=\"modal__cab\"><h3>Título</h3></div>\n  <div class=\"modal__cuerpo\">…</div>\n  <div class=\"modal__pie\"><button class=\"btn\" data-cierra>Cerrar</button></div>\n</dialog>\n\n<!-- y desde JS -->\nmalDS.aviso('Guardado', 'ok');\nmalDS.abrir('#d-modal');"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<button class=\"btn\" data-abre=\"#d-modal\">Abrir</button>\n\n<dialog class=\"modal\" id=\"d-modal\">\n  <div class=\"modal__cab\"><h3>Título</h3></div>\n  <div class=\"modal__cuerpo\">…</div>\n  <div class=\"modal__pie\"><button class=\"btn\" data-cierra>Cerrar</button></div>\n</dialog>\n\n<!-- y desde JS -->\nmalDS.aviso('Guardado', 'ok');\nmalDS.abrir('#d-modal');",
+      "demo": "<div class=\"fila\"><button class=\"btn\" type=\"button\" onclick=\"malDS.aviso('Guardado', 'ok')\">Toast de éxito</button><button class=\"btn\" type=\"button\" onclick=\"malDS.aviso('No se pudo guardar', 'error')\">Toast de error</button><button class=\"btn btn--rojo\" type=\"button\" data-abre=\"#d-modal\">Abrir modal</button><button class=\"btn\" type=\"button\" data-abre=\"#d-hoja\">Abrir hoja</button></div><dialog class=\"modal\" id=\"d-modal\"><div class=\"modal__cab\"><h3>¿Enviar a la papelera?</h3><button class=\"icon-btn\" type=\"button\" data-cierra aria-label=\"Cerrar\" style=\"border:0;background:none\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-cerrar\"/></svg></button></div><div class=\"modal__cuerpo\">El artículo deja de verse en el sitio. Se puede recuperar durante 30 días.</div><div class=\"modal__pie\"><button class=\"btn\" type=\"button\" data-cierra>Cancelar</button><button class=\"btn btn-danger\" type=\"button\" data-cierra>Enviar a la papelera</button></div></dialog><dialog class=\"modal modal--hoja\" id=\"d-hoja\"><div class=\"modal__cab\"><h3>Agregar producto</h3></div><div class=\"modal__cuerpo\"><div class=\"campo\"><label for=\"h-precio\">Precio</label><div class=\"grupo-entrada\"><span class=\"grupo-entrada__fijo\">$</span><input id=\"h-precio\" type=\"text\" inputmode=\"decimal\" placeholder=\"0,00\"></div></div></div><div class=\"modal__pie\"><button class=\"btn btn--rojo btn-block\" type=\"button\" data-cierra>Guardar</button></div></dialog>"
     },
     {
       "id": "aviso",
       "seccion": "retro",
       "grupo": "Moléculas",
+      "etiqueta": ".aviso",
       "nombre": "Avisos en línea",
+      "rejilla": "sb-grid",
       "html": "<div class=\"pila pila--estrecha\"><p class=\"aviso\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-info\"/></svg><span><b>El escáner necesita la cámara.</b> Si no arranca, ábrela aparte.</span></p><p class=\"aviso aviso--ok\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-check\"/></svg><span><b>Todo cuadra.</b> 34 boletos, $34.</span></p><p class=\"aviso aviso--atencion\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-alerta\"/></svg><span><b>Ojo.</b> Esto no está publicado.</span></p><p class=\"aviso aviso--peligro\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-alerta\"/></svg><span><b>No se guardó.</b> Inténtalo otra vez.</span></p></div>"
     },
     {
       "id": "Pista y progreso",
       "seccion": "retro",
       "grupo": "Moléculas",
+      "etiqueta": "Pista y progreso",
       "nombre": "data-pista · .progreso · .girando · .esqueleto",
-      "html": "<div class=\"pila\"><div class=\"fila\"><button class=\"icon-btn\" type=\"button\" data-pista=\"Copiar enlace\" aria-label=\"Copiar enlace\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-enlace\"/></svg></button><span class=\"girando\" role=\"status\" aria-label=\"Cargando\"></span><span>Cargando…</span></div><div class=\"progreso\" aria-label=\"Paso 2 de 3\"><span style=\"width:66%\"></span></div><div class=\"pila pila--estrecha\"><span class=\"esqueleto\" style=\"width:60%\">&nbsp;</span><span class=\"esqueleto\">&nbsp;</span><span class=\"esqueleto\" style=\"width:80%\">&nbsp;</span></div></div>"
+      "html": "<div class=\"pila\">\n  <div class=\"fila\"><button class=\"icon-btn\" type=\"button\" data-pista=\"Copiar enlace\" aria-label=\"Copiar enlace\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-enlace\"/></svg></button><span class=\"girando\" role=\"status\" aria-label=\"Cargando\"></span><span>Cargando…</span>\n  </div>\n  <div class=\"progreso\" aria-label=\"Paso 2 de 3\"><span style=\"width:66%\"></span>\n  </div>\n  <div class=\"pila pila--estrecha\"><span class=\"esqueleto\" style=\"width:60%\">&nbsp;</span><span class=\"esqueleto\">&nbsp;</span><span class=\"esqueleto\" style=\"width:80%\">&nbsp;</span>\n  </div>\n</div>"
     },
     {
       "id": "empty-state",
       "seccion": "retro",
       "grupo": "Moléculas",
+      "etiqueta": ".empty-state",
       "nombre": "Estado vacío",
-      "html": "<div class=\"empty-state\"><svg class=\"icono icono--xl\" aria-hidden=\"true\"><use href=\"#i-semilla\"/></svg><p style=\"margin-top:8px\"><b>Todavía no hay nada sembrado.</b></p><p class=\"caption\">Agrega tu primer cultivo y te avisamos cuándo regar.</p><p style=\"margin-top:12px\"><button class=\"btn btn--rojo btn--sm\" type=\"button\">Agregar</button></p></div>"
+      "html": "<div class=\"empty-state\"><svg class=\"icono icono--xl\" aria-hidden=\"true\"><use href=\"#i-semilla\"/></svg>\n  <p style=\"margin-top:8px\"><b>Todavía no hay nada sembrado.</b>\n  </p>\n  <p class=\"caption\">Agrega tu primer cultivo y te avisamos cuándo regar.</p>\n  <p style=\"margin-top:12px\"><button class=\"btn btn--rojo btn--sm\" type=\"button\">Agregar</button>\n  </p>\n</div>"
     },
     {
       "id": "accordion-item",
       "seccion": "logica",
       "grupo": "Moléculas",
+      "etiqueta": ".accordion-item",
       "nombre": "Acordeón",
-      "html": "<div class=\"accordion-item\"><details><summary>¿Qué es un sistema de diseño?</summary><div class=\"accordion-content\">Un vocabulario compartido: tokens, componentes y las reglas de cuándo usar cada uno.</div></details></div><div class=\"accordion-item\"><details><summary>¿Puedo usarlo en mi proyecto?</summary><div class=\"accordion-content\">Sí: enlaza el CSS o clona el paquete.</div></details></div>"
+      "desc": "Con <code class=\"sb-inline\">&lt;details&gt;</code>: sin JS.",
+      "html": "<div class=\"accordion-item\"><details><summary>¿Qué es un sistema de diseño?</summary>\n  <div class=\"accordion-content\">Un vocabulario compartido: tokens, componentes y las reglas de cuándo usar cada uno.</div></details>\n</div>\n<div class=\"accordion-item\"><details><summary>¿Puedo usarlo en mi proyecto?</summary>\n  <div class=\"accordion-content\">Sí: enlaza el CSS o clona el paquete.</div></details>\n</div>"
     },
     {
       "id": "feature-stepper",
       "seccion": "logica",
       "grupo": "Moléculas",
+      "etiqueta": ".feature-stepper",
       "nombre": "Pasos de proceso",
-      "html": "<div class=\"feature-stepper\"><div class=\"feature-step active\"><div class=\"feature-step-title\">01 Descubrir</div><div class=\"feature-step-desc\">Qué necesita el sistema de verdad.</div></div><div class=\"feature-step\"><div class=\"feature-step-title\">02 Sintetizar</div><div class=\"feature-step-desc\">Mapear los flujos.</div></div><div class=\"feature-step\"><div class=\"feature-step-title\">03 Ejecutar</div><div class=\"feature-step-desc\">Y medirlo.</div></div></div>"
+      "html": "<div class=\"feature-stepper\">\n  <div class=\"feature-step active\">\n    <div class=\"feature-step-title\">01 Descubrir</div>\n    <div class=\"feature-step-desc\">Qué necesita el sistema de verdad.</div>\n  </div>\n  <div class=\"feature-step\">\n    <div class=\"feature-step-title\">02 Sintetizar</div>\n    <div class=\"feature-step-desc\">Mapear los flujos.</div>\n  </div>\n  <div class=\"feature-step\">\n    <div class=\"feature-step-title\">03 Ejecutar</div>\n    <div class=\"feature-step-desc\">Y medirlo.</div>\n  </div>\n</div>"
     },
     {
       "id": "marquee-container",
       "seccion": "marquesina",
       "grupo": "Moléculas",
+      "etiqueta": ".marquee-container",
       "nombre": ".marquee-container",
-      "html": "<div class=\"marquee-container\"><div class=\"marquee-content\"><div class=\"marquee-item\">PRECISIÓN</div><div class=\"marquee-item\">SISTEMA</div><div class=\"marquee-item\">IDENTIDAD</div><div class=\"marquee-item\">PRECISIÓN</div><div class=\"marquee-item\">SISTEMA</div><div class=\"marquee-item\">IDENTIDAD</div></div></div>"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"marquee-container\">\n  <div class=\"marquee-content\">\n    <div class=\"marquee-item\">PRECISIÓN</div>\n    <div class=\"marquee-item\">SISTEMA</div>\n    <div class=\"marquee-item\">IDENTIDAD</div>\n    <div class=\"marquee-item\">PRECISIÓN</div>\n    <div class=\"marquee-item\">SISTEMA</div>\n    <div class=\"marquee-item\">IDENTIDAD</div>\n  </div>\n</div>",
+      "nota": "<div class=\"notice\"><span aria-hidden=\"true\"></span><div><b>En el sitio de Anny la marquesina está prohibida</b>, por decisión de Francisco. Aquí es parte del kit de MAL, que es otro contexto.</div></div>"
     },
     {
       "id": "bento-grid",
       "seccion": "bento",
       "grupo": "Moléculas",
+      "etiqueta": ".bento-grid",
       "nombre": "Rejilla bento",
-      "html": "<div class=\"bento-grid\"><div class=\"card card-large\"><span class=\"tag\">Principal</span><h3 style=\"font-family:var(--mal-display);font-weight:var(--ref-peso-display)\">Arquitectura del sistema</h3><p class=\"text-muted\">Construido sobre decisiones medibles, no sobre gusto.</p></div><div class=\"card\"><span class=\"tag\">02</span><h3>Refinamiento</h3></div><div class=\"card\"><span class=\"tag\">03</span><h3>Ejecución</h3></div></div>"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"bento-grid\">\n  <div class=\"card card-large\"><span class=\"tag\">Principal</span>\n    <h3 style=\"font-family:var(--mal-display);font-weight:var(--ref-peso-display)\">Arquitectura del sistema</h3>\n    <p class=\"text-muted\">Construido sobre decisiones medibles, no sobre gusto.</p>\n  </div>\n  <div class=\"card\"><span class=\"tag\">02</span>\n    <h3>Refinamiento</h3>\n  </div>\n  <div class=\"card\"><span class=\"tag\">03</span>\n    <h3>Ejecución</h3>\n  </div>\n</div>"
     },
     {
       "id": "tarj",
       "seccion": "bento",
       "grupo": "Moléculas",
+      "etiqueta": ".tarj",
       "nombre": "Tarjeta de proyecto",
-      "html": "<div class=\"rej\" style=\"grid-template-columns:1fr\"><article class=\"tarj\"><div class=\"tarj__cover tarj__cover--glifo\" style=\"--fondo:#1f7a3d\"><svg class=\"icono icono--xl\" aria-hidden=\"true\"><use href=\"#i-hoja\"/></svg></div><div class=\"tarj__cuerpo\"><p class=\"tarj__kicker\">Guía de siembra</p><h3><a href=\"#bento\">Mi Huerto</a></h3><p>Qué sembrar y criar en tu zona, cuándo hacerlo y cuánto puedes ganar.</p><ul class=\"tarj__tags\"><li>PWA</li><li>sin conexión</li></ul><p class=\"tarj__acc\"><a href=\"#bento\">Abrir →</a><a class=\"sec-link\" href=\"#bento\">Código</a></p></div></article></div>"
+      "rejilla": "sb-grid",
+      "html": "<div class=\"rej\" style=\"grid-template-columns:1fr\">\n  <article class=\"tarj\">\n    <div class=\"tarj__cover tarj__cover--glifo\" style=\"--fondo:#1f7a3d\"><svg class=\"icono icono--xl\" aria-hidden=\"true\"><use href=\"#i-hoja\"/></svg>\n    </div>\n    <div class=\"tarj__cuerpo\">\n      <p class=\"tarj__kicker\">Guía de siembra</p>\n      <h3><a href=\"#bento\">Mi Huerto</a>\n      </h3>\n      <p>Qué sembrar y criar en tu zona, cuándo hacerlo y cuánto puedes ganar.</p>\n      <ul class=\"tarj__tags\">\n        <li>PWA</li>\n        <li>sin conexión</li>\n      </ul>\n      <p class=\"tarj__acc\"><a href=\"#bento\">Abrir →</a><a class=\"sec-link\" href=\"#bento\">Código</a>\n      </p>\n    </div>\n  </article>\n</div>",
+      "lienzo": "sb-lienzo"
     },
     {
       "id": "tarj--destacada",
       "seccion": "bento",
       "grupo": "Moléculas",
+      "etiqueta": ".tarj--destacada",
       "nombre": "Destacada",
-      "html": "<div class=\"rej\"><article class=\"tarj tarj--destacada\"><div class=\"tarj__cover tarj__cover--glifo\" style=\"--fondo:#0a0e17\"><svg class=\"icono icono--xl\" aria-hidden=\"true\"><use href=\"#i-mando\"/></svg></div><div class=\"tarj__cuerpo\"><p class=\"tarj__kicker\">EL MERCIO presenta</p><h3><a href=\"#bento\">Estado Decepción</a></h3><p>Un endless runner satírico ecuatoriano.</p><ul class=\"tarj__tags\"><li>Three.js</li><li>PWA</li></ul><p class=\"tarj__acc\"><a href=\"#bento\">Jugar →</a></p></div></article></div>"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"rej\">\n  <article class=\"tarj tarj--destacada\">\n    <div class=\"tarj__cover tarj__cover--glifo\" style=\"--fondo:#0a0e17\"><svg class=\"icono icono--xl\" aria-hidden=\"true\"><use href=\"#i-mando\"/></svg>\n    </div>\n    <div class=\"tarj__cuerpo\">\n      <p class=\"tarj__kicker\">EL MERCIO presenta</p>\n      <h3><a href=\"#bento\">Estado Decepción</a>\n      </h3>\n      <p>Un endless runner satírico ecuatoriano.</p>\n      <ul class=\"tarj__tags\">\n        <li>Three.js</li>\n        <li>PWA</li>\n      </ul>\n      <p class=\"tarj__acc\"><a href=\"#bento\">Jugar →</a>\n      </p>\n    </div>\n  </article>\n</div>",
+      "lienzo": "sb-lienzo"
     },
     {
       "id": "plugin-card / .stacked-card",
       "seccion": "bento",
       "grupo": "Moléculas",
+      "etiqueta": ".plugin-card / .stacked-card",
       "nombre": "Módulo y pila",
-      "html": "<div class=\"fila\" style=\"align-items:flex-start;gap:24px\"><div class=\"plugin-card\"><div class=\"plugin-card-image\"><svg class=\"icono icono--xl\" aria-hidden=\"true\"><use href=\"#i-codigo\"/></svg></div><div class=\"plugin-card-title\">Extensión del sistema</div><div class=\"plugin-card-desc\">Amplía el núcleo con piezas sueltas.</div><button class=\"btn btn-primary\" type=\"button\" style=\"margin-top:auto\">Instalar</button></div><div class=\"stacked-cards-container\"><div class=\"stacked-card\"><span class=\"tag\">01</span><h3>Arquitectura</h3><p class=\"text-muted\">Capas que escalan.</p></div><div class=\"stacked-card\"><span class=\"tag\">02</span><h3>Sistemas</h3></div><div class=\"stacked-card\"><span class=\"tag\">03</span><h3>Acabado</h3></div></div></div>"
+      "html": "<div class=\"fila\" style=\"align-items:flex-start;gap:24px\">\n  <div class=\"plugin-card\">\n    <div class=\"plugin-card-image\"><svg class=\"icono icono--xl\" aria-hidden=\"true\"><use href=\"#i-codigo\"/></svg>\n    </div>\n    <div class=\"plugin-card-title\">Extensión del sistema</div>\n    <div class=\"plugin-card-desc\">Amplía el núcleo con piezas sueltas.</div><button class=\"btn btn-primary\" type=\"button\" style=\"margin-top:auto\">Instalar</button>\n  </div>\n  <div class=\"stacked-cards-container\">\n    <div class=\"stacked-card\"><span class=\"tag\">01</span>\n      <h3>Arquitectura</h3>\n      <p class=\"text-muted\">Capas que escalan.</p>\n    </div>\n    <div class=\"stacked-card\"><span class=\"tag\">02</span>\n      <h3>Sistemas</h3>\n    </div>\n    <div class=\"stacked-card\"><span class=\"tag\">03</span>\n      <h3>Acabado</h3>\n    </div>\n  </div>\n</div>"
     },
     {
       "id": "pricing-card",
       "seccion": "precios",
       "grupo": "Moléculas",
+      "etiqueta": ".pricing-card",
       "nombre": "Planes",
-      "html": "<div style=\"display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))\"><div class=\"pricing-card\"><span class=\"tag\">Comunidad</span><h3 style=\"font-family:var(--mal-display)\">Por tu cuenta</h3><div class=\"price\">$0</div><p class=\"period\">para siempre</p><button class=\"btn btn-outline\" type=\"button\">Ver la documentación</button></div><div class=\"pricing-card featured\"><span class=\"tag tag--acento\">Mentoría</span><h3 style=\"font-family:var(--mal-display)\">ADPList</h3><div class=\"price\">Gratis</div><p class=\"period\">revisión de portafolio, sin adornos</p><button class=\"btn btn-primary\" type=\"button\">Reservar</button></div></div>"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div style=\"display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))\">\n  <div class=\"pricing-card\"><span class=\"tag\">Comunidad</span>\n    <h3 style=\"font-family:var(--mal-display)\">Por tu cuenta</h3>\n    <div class=\"price\">$0</div>\n    <p class=\"period\">para siempre</p><button class=\"btn btn-outline\" type=\"button\">Ver la documentación</button>\n  </div>\n  <div class=\"pricing-card featured\"><span class=\"tag tag--acento\">Mentoría</span>\n    <h3 style=\"font-family:var(--mal-display)\">ADPList</h3>\n    <div class=\"price\">Gratis</div>\n    <p class=\"period\">revisión de portafolio, sin adornos</p><button class=\"btn btn-primary\" type=\"button\">Reservar</button>\n  </div>\n</div>"
     },
     {
       "id": "lista",
       "seccion": "listas",
       "grupo": "Moléculas",
+      "etiqueta": ".lista",
       "nombre": "Lista de enlaces",
+      "rejilla": "sb-grid sb-grid--ancha",
       "html": "<ul class=\"lista\"><li><a href=\"#listas\"><span class=\"ico ico--glifo\" aria-hidden=\"true\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-codigo\"/></svg></span><span><span class=\"nom\">GitHub</span> <span class=\"url\">github.com/franciscombp</span><br><span class=\"des\">Once repositorios públicos con su código.</span></span><span class=\"fl\" aria-hidden=\"true\">→</span></a></li></ul>"
     },
     {
       "id": "list-row",
       "seccion": "listas",
       "grupo": "Moléculas",
+      "etiqueta": ".list-row",
       "nombre": "Filas con cifra",
-      "html": "<div class=\"list-row\"><span class=\"icon-circle\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-maiz\"/></svg></span><span><b>Choclo</b><br><span class=\"caption\">quintal</span></span><span class=\"tabular\">$ 28,00</span></div><div class=\"list-row\"><span class=\"icon-circle\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-semilla\"/></svg></span><span><b>Papa chola</b><br><span class=\"caption\">quintal</span></span><span class=\"tabular\">$ 19,50</span></div>"
+      "rejilla": "sb-grid",
+      "html": "<div class=\"list-row\"><span class=\"icon-circle\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-maiz\"/></svg></span><span><b>Choclo</b><br><span class=\"caption\">quintal</span></span><span class=\"tabular\">$ 28,00</span>\n</div>\n<div class=\"list-row\"><span class=\"icon-circle\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-semilla\"/></svg></span><span><b>Papa chola</b><br><span class=\"caption\">quintal</span></span><span class=\"tabular\">$ 19,50</span>\n</div>"
     },
     {
       "id": "tabla",
       "seccion": "listas",
       "grupo": "Moléculas",
+      "etiqueta": ".tabla",
       "nombre": "Tabla",
-      "html": "<div class=\"tabla-env\"><table class=\"tabla tabla--cebra\"><thead><tr><th>Proyecto</th><th>Tipo</th><th class=\"num\">Visitas</th></tr></thead><tbody><tr><td>EL MERCIO.</td><td>periódico</td><td class=\"num\">18 420</td></tr><tr><td>Quanto</td><td>app</td><td class=\"num\">2 311</td></tr><tr><td>Estado Decepción</td><td>juego</td><td class=\"num\">9 870</td></tr></tbody></table></div>"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"tabla-env\">\n  <table class=\"tabla tabla--cebra\">\n    <thead>\n      <tr>\n        <th>Proyecto</th>\n        <th>Tipo</th>\n        <th class=\"num\">Visitas</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr>\n        <td>EL MERCIO.</td>\n        <td>periódico</td>\n        <td class=\"num\">18 420</td>\n      </tr>\n      <tr>\n        <td>Quanto</td>\n        <td>app</td>\n        <td class=\"num\">2 311</td>\n      </tr>\n      <tr>\n        <td>Estado Decepción</td>\n        <td>juego</td>\n        <td class=\"num\">9 870</td>\n      </tr>\n    </tbody>\n  </table>\n</div>"
     },
     {
       "id": "lista-agrupada",
       "seccion": "app",
       "grupo": "Organismos",
+      "etiqueta": ".lista-agrupada",
       "nombre": "Lista agrupada",
-      "html": "<div class=\"grupo\"><p class=\"grupo__titulo\">Cuenta</p><ul class=\"lista-agrupada\"><li><a class=\"fila-app\" href=\"#app\"><span class=\"fila-app__icono\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-usuario\"/></svg></span><span class=\"fila-app__texto\"><b>Perfil</b><small>Fran Maldonado</small></span><span></span><svg class=\"icono fila-app__chevron\" aria-hidden=\"true\"><use href=\"#i-chevron-der\"/></svg></a></li><li><a class=\"fila-app\" href=\"#app\"><span class=\"fila-app__icono fila-app__icono--tono\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-campana\"/></svg></span><span class=\"fila-app__texto\"><b>Avisos</b></span><span class=\"fila-app__valor\">Solo riego</span><svg class=\"icono fila-app__chevron\" aria-hidden=\"true\"><use href=\"#i-chevron-der\"/></svg></a></li><li><label class=\"fila-app\"><span class=\"fila-app__icono fila-app__icono--tono\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-nube\"/></svg></span><span class=\"fila-app__texto\"><b>Sin conexión</b><small>Guarda el último clima</small></span><span></span><span class=\"interruptor\"><input type=\"checkbox\" checked></span></label></li></ul><p class=\"grupo__nota\">Todo se guarda en tu teléfono. No pedimos cuenta.</p></div>"
+      "desc": "La de los ajustes del teléfono. Con icono, valor, chevrón o interruptor.",
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"grupo\">\n  <p class=\"grupo__titulo\">Cuenta</p>\n  <ul class=\"lista-agrupada\">\n    <li><a class=\"fila-app\" href=\"#app\"><span class=\"fila-app__icono\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-usuario\"/></svg></span><span class=\"fila-app__texto\"><b>Perfil</b><small>Fran Maldonado</small></span><span></span><svg class=\"icono fila-app__chevron\" aria-hidden=\"true\"><use href=\"#i-chevron-der\"/></svg></a>\n    </li>\n    <li><a class=\"fila-app\" href=\"#app\"><span class=\"fila-app__icono fila-app__icono--tono\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-campana\"/></svg></span><span class=\"fila-app__texto\"><b>Avisos</b></span><span class=\"fila-app__valor\">Solo riego</span><svg class=\"icono fila-app__chevron\" aria-hidden=\"true\"><use href=\"#i-chevron-der\"/></svg></a>\n    </li>\n    <li><label class=\"fila-app\"><span class=\"fila-app__icono fila-app__icono--tono\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-nube\"/></svg></span><span class=\"fila-app__texto\"><b>Sin conexión</b><small>Guarda el último clima</small></span><span></span><span class=\"interruptor\"><input type=\"checkbox\" checked></span></label>\n    </li>\n  </ul>\n  <p class=\"grupo__nota\">Todo se guarda en tu teléfono. No pedimos cuenta.</p>\n</div>"
     },
     {
       "id": "titulo-grande",
       "seccion": "app",
       "grupo": "Organismos",
+      "etiqueta": ".titulo-grande",
       "nombre": "Título grande",
-      "html": "<p class=\"titulo-grande\" style=\"padding-left:0\">Para sembrar en agosto<small>Sierra · 2 850 m · huerto familiar</small></p>"
+      "rejilla": "sb-grid",
+      "html": "<p class=\"titulo-grande\" style=\"padding-left:0\">Para sembrar en agosto<small>Sierra · 2 850 m · huerto familiar</small>\n</p>"
     },
     {
       "id": "tarjeta-app",
       "seccion": "app",
       "grupo": "Organismos",
+      "etiqueta": ".tarjeta-app",
       "nombre": "Tarjeta de app",
-      "html": "<div class=\"tarjeta-app\"><div class=\"fila fila--entre\"><span class=\"kicker\">Hoy</span><span class=\"badge badge-ok\">Buen día de siembra</span></div><p class=\"display-num\">14<small>°C</small></p><p class=\"caption\">Lluvia ligera por la tarde. Cubre el semillero.</p></div>"
+      "html": "<div class=\"tarjeta-app\">\n  <div class=\"fila fila--entre\"><span class=\"kicker\">Hoy</span><span class=\"badge badge-ok\">Buen día de siembra</span>\n  </div>\n  <p class=\"display-num\">14<small>°C</small>\n  </p>\n  <p class=\"caption\">Lluvia ligera por la tarde. Cubre el semillero.</p>\n</div>"
     },
     {
       "id": "em-header",
       "seccion": "prensa",
       "grupo": "Organismos",
+      "etiqueta": ".em-header",
       "nombre": "Cabecera y marca",
-      "html": "<div class=\"em-header\" style=\"position:static\"><a class=\"em-logo\" href=\"#prensa\">EL MERCIO<span class=\"em-logo-dot\">.</span></a><nav class=\"em-nav\" id=\"em-nav-demo\"><a href=\"#prensa\">Desinformación</a><a href=\"#prensa\">Opinión</a><a href=\"#prensa\">Necflis</a><a href=\"#prensa\">Podcast</a></nav><button class=\"em-menu-toggle\" type=\"button\" data-alterna=\"#em-nav-demo\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-menu\"/></svg> Menú</button><a class=\"em-btn\" href=\"#prensa\">Suscríbete</a></div>"
+      "desc": "La marca es Montserrat a tamaño display; el punto va en rojo.",
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"em-header\" style=\"position:static\"><a class=\"em-logo\" href=\"#prensa\">EL MERCIO<span class=\"em-logo-dot\">.</span></a>\n  <nav class=\"em-nav\" id=\"em-nav-demo\"><a href=\"#prensa\">Desinformación</a><a href=\"#prensa\">Opinión</a><a href=\"#prensa\">Necflis</a><a href=\"#prensa\">Podcast</a>\n  </nav><button class=\"em-menu-toggle\" type=\"button\" data-alterna=\"#em-nav-demo\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-menu\"/></svg>Menú</button><a class=\"em-btn\" href=\"#prensa\">Suscríbete</a>\n</div>"
     },
     {
       "id": "em-cards-4up",
       "seccion": "prensa",
       "grupo": "Organismos",
+      "etiqueta": ".em-cards-4up",
       "nombre": "Rejilla de noticias",
-      "html": "<div class=\"em-section-header-row\"><h2><a href=\"#prensa\">Desinformación</a></h2><p class=\"em-section-description\">Noticias que no pasaron, contadas como si hubieran pasado.</p></div><div class=\"em-cards em-cards-4up\" style=\"margin-top:var(--em-24)\"><article class=\"em-card\"><div class=\"em-card__img\" style=\"background:linear-gradient(135deg,#c53b2b,#141414)\"></div><div class=\"em-card__body\"><span class=\"em-kicker\">Política</span><h3><a href=\"#prensa\">Gobierno anuncia que el apagón fue una campaña de ahorro energético voluntaria</a></h3><p class=\"em-card__excerpt\">Según el ministerio, los ecuatorianos «eligieron» la oscuridad para reconectar con la familia.</p><p class=\"em-meta\">22 ago · 3 min</p></div></article><article class=\"em-card\"><div class=\"em-card__img\" style=\"background:linear-gradient(45deg,#a6c7f2,#282828)\"></div><div class=\"em-card__body\"><span class=\"em-kicker\">Economía</span><h3><a href=\"#prensa\">Quito inaugura el primer semáforo que también cobra peaje</a></h3><p class=\"em-card__excerpt\">Funciona en rojo, en verde y en «lo que usted guste aportar».</p><p class=\"em-meta\">21 ago · 2 min</p></div></article><article class=\"em-card\"><div class=\"em-card__img\" style=\"background:linear-gradient(160deg,#646464,#f3f3f3)\"></div><div class=\"em-card__body\"><span class=\"em-kicker\">Cultura</span><h3><a href=\"#prensa\">Reggaetonero honesto vende 999 999 copias y se niega a redondear</a></h3><p class=\"em-card__excerpt\">«El millón no me lo gané», declaró, y la industria entró en pánico.</p><p class=\"em-meta\">20 ago · 4 min</p></div></article></div>"
+      "desc": "Titulares a dos líneas y entradillas a tres para que la fila comparta base.",
+      "html": "<div class=\"em-section-header-row\">\n  <h2><a href=\"#prensa\">Desinformación</a>\n  </h2>\n  <p class=\"em-section-description\">Noticias que no pasaron, contadas como si hubieran pasado.</p>\n</div>\n<div class=\"em-cards em-cards-4up\" style=\"margin-top:var(--em-24)\">\n  <article class=\"em-card\">\n    <div class=\"em-card__img\" style=\"background:linear-gradient(135deg,#c53b2b,#141414)\">\n    </div>\n    <div class=\"em-card__body\"><span class=\"em-kicker\">Política</span>\n      <h3><a href=\"#prensa\">Gobierno anuncia que el apagón fue una campaña de ahorro energético voluntaria</a>\n      </h3>\n      <p class=\"em-card__excerpt\">Según el ministerio, los ecuatorianos «eligieron» la oscuridad para reconectar con la familia.</p>\n      <p class=\"em-meta\">22 ago · 3 min</p>\n    </div>\n  </article>\n  <article class=\"em-card\">\n    <div class=\"em-card__img\" style=\"background:linear-gradient(45deg,#a6c7f2,#282828)\">\n    </div>\n    <div class=\"em-card__body\"><span class=\"em-kicker\">Economía</span>\n      <h3><a href=\"#prensa\">Quito inaugura el primer semáforo que también cobra peaje</a>\n      </h3>\n      <p class=\"em-card__excerpt\">Funciona en rojo, en verde y en «lo que usted guste aportar».</p>\n      <p class=\"em-meta\">21 ago · 2 min</p>\n    </div>\n  </article>\n  <article class=\"em-card\">\n    <div class=\"em-card__img\" style=\"background:linear-gradient(160deg,#646464,#f3f3f3)\">\n    </div>\n    <div class=\"em-card__body\"><span class=\"em-kicker\">Cultura</span>\n      <h3><a href=\"#prensa\">Reggaetonero honesto vende 999 999 copias y se niega a redondear</a>\n      </h3>\n      <p class=\"em-card__excerpt\">«El millón no me lo gané», declaró, y la industria entró en pánico.</p>\n      <p class=\"em-meta\">20 ago · 4 min</p>\n    </div>\n  </article>\n</div>"
     },
     {
       "id": "em-opinion-list",
       "seccion": "prensa",
       "grupo": "Organismos",
+      "etiqueta": ".em-opinion-list",
       "nombre": "Columnas más discutidas",
-      "html": "<ol class=\"em-opinion-list\"><li class=\"em-opinion-list-item\" style=\"display:flex;gap:var(--em-16);padding:var(--em-16) 0;border-bottom:1px solid var(--em-border)\"><span class=\"em-opinion-list-number\" aria-hidden=\"true\"></span><div><a class=\"em-opinion-headline\" href=\"#prensa\">Lo que el apagón nos enseñó sobre nosotros mismos</a><p class=\"em-meta\">Paqui Mal</p></div></li><li class=\"em-opinion-list-item\" style=\"display:flex;gap:var(--em-16);padding:var(--em-16) 0;border-bottom:1px solid var(--em-border)\"><span class=\"em-opinion-list-number\" aria-hidden=\"true\"></span><div><a class=\"em-opinion-headline\" href=\"#prensa\">Cartas a un país que no lee las cartas</a><p class=\"em-meta\">Fran Maldonado</p></div></li><li class=\"em-opinion-list-item\" style=\"display:flex;gap:var(--em-16);padding:var(--em-16) 0;border-bottom:1px solid var(--em-border)\"><span class=\"em-opinion-list-number\" aria-hidden=\"true\"></span><div><a class=\"em-opinion-headline\" href=\"#prensa\">El silencio también es una postura editorial</a><p class=\"em-meta\">La redacción</p></div></li></ol>"
+      "desc": "Se numera con un contador de CSS: reordena los posts y los números siguen bien.",
+      "rejilla": "sb-grid",
+      "html": "<ol class=\"em-opinion-list\">\n  <li class=\"em-opinion-list-item\" style=\"display:flex;gap:var(--em-16);padding:var(--em-16) 0;border-bottom:1px solid var(--em-border)\"><span class=\"em-opinion-list-number\" aria-hidden=\"true\"></span>\n    <div><a class=\"em-opinion-headline\" href=\"#prensa\">Lo que el apagón nos enseñó sobre nosotros mismos</a>\n      <p class=\"em-meta\">Paqui Mal</p>\n    </div>\n  </li>\n  <li class=\"em-opinion-list-item\" style=\"display:flex;gap:var(--em-16);padding:var(--em-16) 0;border-bottom:1px solid var(--em-border)\"><span class=\"em-opinion-list-number\" aria-hidden=\"true\"></span>\n    <div><a class=\"em-opinion-headline\" href=\"#prensa\">Cartas a un país que no lee las cartas</a>\n      <p class=\"em-meta\">Fran Maldonado</p>\n    </div>\n  </li>\n  <li class=\"em-opinion-list-item\" style=\"display:flex;gap:var(--em-16);padding:var(--em-16) 0;border-bottom:1px solid var(--em-border)\"><span class=\"em-opinion-list-number\" aria-hidden=\"true\"></span>\n    <div><a class=\"em-opinion-headline\" href=\"#prensa\">El silencio también es una postura editorial</a>\n      <p class=\"em-meta\">La redacción</p>\n    </div>\n  </li>\n</ol>"
     },
     {
       "id": "em-podcast-rss / .em-necflis-badge",
       "seccion": "prensa",
       "grupo": "Organismos",
+      "etiqueta": ".em-podcast-rss / .em-necflis-badge",
       "nombre": "Podcast y Necflis",
-      "html": "<ul class=\"em-podcast-rss\" style=\"margin-bottom:var(--em-24)\"><li><a href=\"#prensa\">Ep. 41 · El país de las mil comisiones</a><time>18 ago</time></li><li><a href=\"#prensa\">Ep. 40 · Fiscalía, la serie</a><time>11 ago</time></li><li><a href=\"#prensa\">Ep. 39 · Subsidios para todos (menos para ti)</a><time>4 ago</time></li></ul><div class=\"em-necflis-thumb-wrap\" style=\"aspect-ratio:16/9;background:linear-gradient(135deg,#141414,#3a3a3a)\"><span class=\"em-badge em-necflis-badge\">Necflis</span></div>"
+      "html": "<ul class=\"em-podcast-rss\" style=\"margin-bottom:var(--em-24)\">\n  <li><a href=\"#prensa\">Ep. 41 · El país de las mil comisiones</a><time>18 ago</time>\n  </li>\n  <li><a href=\"#prensa\">Ep. 40 · Fiscalía, la serie</a><time>11 ago</time>\n  </li>\n  <li><a href=\"#prensa\">Ep. 39 · Subsidios para todos (menos para ti)</a><time>4 ago</time>\n  </li>\n</ul>\n<div class=\"em-necflis-thumb-wrap\" style=\"aspect-ratio:16/9;background:linear-gradient(135deg,#141414,#3a3a3a)\"><span class=\"em-badge em-necflis-badge\">Necflis</span>\n</div>"
     },
     {
       "id": "em-article",
       "seccion": "prensa",
       "grupo": "Organismos",
+      "etiqueta": ".em-article",
       "nombre": "Artículo",
-      "html": "<article class=\"em-article\"><div class=\"em-prosa\"><p>Nadie sabe con certeza cuándo empezó el apagón, pero todos recuerdan dónde estaban cuando se enteraron de que era «voluntario». La versión oficial llegó a las nueve de la noche, por radio, porque la televisión también se había apuntado al ahorro.</p><figure style=\"margin:0\"><div style=\"aspect-ratio:16/9;background:var(--em-surface)\"></div><figcaption>La plaza Grande durante la «hora de reconexión familiar». / Foto: archivo</figcaption></figure><blockquote class=\"em-quote\">Los ecuatorianos eligieron la oscuridad para reconectar con la familia.</blockquote><p>El ministerio no aclaró cómo se votó, pero insistió en que la participación fue «masiva y entusiasta».</p></div><nav class=\"em-post-nav\" style=\"margin-top:var(--em-32)\"><a href=\"#prensa\"><span aria-hidden=\"true\">←</span><span><span class=\"em-post-nav__label\">Anterior</span>Semáforo con peaje</span></a><a class=\"em-post-nav__next\" href=\"#prensa\"><span aria-hidden=\"true\">→</span><span><span class=\"em-post-nav__label\">Siguiente</span>Reggaetonero honesto</span></a></nav></article>"
+      "desc": "Capitular en el primer párrafo, medida de 68 caracteres, pie de foto en Montserrat y cita con comilla.",
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<article class=\"em-article\">\n  <div class=\"em-prosa\">\n    <p>Nadie sabe con certeza cuándo empezó el apagón, pero todos recuerdan dónde estaban cuando se enteraron de que era «voluntario». La versión oficial llegó a las nueve de la noche, por radio, porque la televisión también se había apuntado al ahorro.</p>\n    <figure style=\"margin:0\">\n      <div style=\"aspect-ratio:16/9;background:var(--em-surface)\">\n      </div><figcaption>La plaza Grande durante la «hora de reconexión familiar». / Foto: archivo</figcaption>\n    </figure>\n    <blockquote class=\"em-quote\">Los ecuatorianos eligieron la oscuridad para reconectar con la familia.</blockquote>\n    <p>El ministerio no aclaró cómo se votó, pero insistió en que la participación fue «masiva y entusiasta».</p>\n  </div>\n  <nav class=\"em-post-nav\" style=\"margin-top:var(--em-32)\"><a href=\"#prensa\"><span aria-hidden=\"true\">←</span><span><span class=\"em-post-nav__label\">Anterior</span>Semáforo con peaje</span></a><a class=\"em-post-nav__next\" href=\"#prensa\"><span aria-hidden=\"true\">→</span><span><span class=\"em-post-nav__label\">Siguiente</span>Reggaetonero honesto</span></a>\n  </nav>\n</article>"
     },
     {
       "id": "em-dark / .em-revista-portada",
       "seccion": "prensa",
       "grupo": "Organismos",
+      "etiqueta": ".em-dark / .em-revista-portada",
       "nombre": "Banda oscura con revista",
-      "html": "<div class=\"em-dark em-section-padded\" style=\"display:grid;grid-template-columns:minmax(160px,1fr) 2fr;gap:var(--em-32);align-items:center\"><div class=\"em-revista-portada\"><img src=\"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 4 5%27%3E%3Crect width=%274%27 height=%275%27 fill=%27%23c53b2b%27/%3E%3Crect x=%27.4%27 y=%27.4%27 width=%273.2%27 height=%273%27 fill=%27%23141414%27/%3E%3C/svg%3E\" alt=\"Portada de La Re-bestia\" width=\"400\" height=\"500\"></div><div><span class=\"em-badge\">La Re-bestia</span><h2 style=\"margin-top:var(--em-12)\">Edición de agosto: el número del apagón</h2><p class=\"em-meta\" style=\"margin-top:var(--em-8)\">48 páginas · ilustrada a oscuras</p><p style=\"margin-top:var(--em-16)\"><a class=\"em-btn\" href=\"#prensa\">Leer la edición</a></p></div></div>"
+      "desc": "La portada se muestra entera, con sombra y lomo, sobre la banda. Solo se remapean los tokens de texto.",
+      "html": "<div class=\"em-dark em-section-padded\" style=\"display:grid;grid-template-columns:minmax(160px,1fr) 2fr;gap:var(--em-32);align-items:center\">\n  <div class=\"em-revista-portada\"><img src=\"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 4 5%27%3E%3Crect width=%274%27 height=%275%27 fill=%27%23c53b2b%27/%3E%3Crect x=%27.4%27 y=%27.4%27 width=%273.2%27 height=%273%27 fill=%27%23141414%27/%3E%3C/svg%3E\" alt=\"Portada de La Re-bestia\" width=\"400\" height=\"500\">\n  </div>\n  <div><span class=\"em-badge\">La Re-bestia</span>\n    <h2 style=\"margin-top:var(--em-12)\">Edición de agosto: el número del apagón</h2>\n    <p class=\"em-meta\" style=\"margin-top:var(--em-8)\">48 páginas · ilustrada a oscuras</p>\n    <p style=\"margin-top:var(--em-16)\"><a class=\"em-btn\" href=\"#prensa\">Leer la edición</a>\n    </p>\n  </div>\n</div>"
     },
     {
       "id": "mind-map-container",
       "seccion": "mapa-mental",
       "grupo": "Organismos",
+      "etiqueta": ".mind-map-container",
       "nombre": ".mind-map-container",
-      "html": "<div class=\"mind-map-container\" style=\"max-width:600px;margin:40px auto\"><svg class=\"mind-map-svg\" viewBox=\"0 0 600 400\" aria-hidden=\"true\"></svg><div class=\"mind-map-center\">#MalPensamientos</div><a href=\"https://maldonado.pro/tag/diseno\" class=\"mind-map-node category\">Diseño</a><a href=\"https://maldonado.pro/tag/estrategia\" class=\"mind-map-node category\">Estrategia</a><a href=\"https://maldonado.pro/tag/producto\" class=\"mind-map-node category\">Producto</a><a href=\"https://maldonado.pro/tag/ux-ui\" class=\"mind-map-node\">UX/UI</a><a href=\"https://maldonado.pro/tag/mentoria\" class=\"mind-map-node\">Mentoría</a><a href=\"https://maldonado.pro/tag/divulgacion\" class=\"mind-map-node\">Divulgación</a></div>"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"mind-map-container\" style=\"max-width:600px;margin:40px auto\"><svg class=\"mind-map-svg\" viewBox=\"0 0 600 400\" aria-hidden=\"true\"></svg>\n  <div class=\"mind-map-center\">#MalPensamientos</div><a href=\"https://maldonado.pro/tag/diseno\" class=\"mind-map-node category\">Diseño</a><a href=\"https://maldonado.pro/tag/estrategia\" class=\"mind-map-node category\">Estrategia</a><a href=\"https://maldonado.pro/tag/producto\" class=\"mind-map-node category\">Producto</a><a href=\"https://maldonado.pro/tag/ux-ui\" class=\"mind-map-node\">UX/UI</a><a href=\"https://maldonado.pro/tag/mentoria\" class=\"mind-map-node\">Mentoría</a><a href=\"https://maldonado.pro/tag/divulgacion\" class=\"mind-map-node\">Divulgación</a>\n</div>"
     },
     {
       "id": "ticket",
       "seccion": "carne",
       "grupo": "Organismos",
+      "etiqueta": ".ticket",
       "nombre": ".ticket",
-      "html": "<div class=\"fondo--malla\" style=\"padding:32px;border-radius:var(--mal-r);display:grid;place-items:center\"><div class=\"ticket\"><div class=\"ticket-photo-full\"><img src=\"/img/francisco-maldonado.jpg\" alt=\"Francisco Maldonado\"></div><div class=\"ticket-content\"><div class=\"ticket-group\"><span class=\"ticket-label-sm\">Nombre</span><div class=\"ticket-value-sm\">FRAN MALDONADO</div></div><div class=\"ticket-group\"><span class=\"ticket-label-sm\">Rol</span><div class=\"ticket-value-sm\" style=\"font-size:16px;opacity:.7\">PRODUCT DESIGNER</div></div><svg class=\"ticket-signature-svg\" viewBox=\"0 0 100 40\" fill=\"none\" aria-hidden=\"true\"><path d=\"M10 25C15 22 25 15 35 20C45 25 55 35 65 30C75 25 85 15 90 20\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"/></svg><hr class=\"ticket-separator\"><div class=\"ticket-bottom-row\"><div><span class=\"ticket-label-sm\">Desde</span><span class=\"ticket-value-sm\" style=\"font-size:14px\">2010</span></div><div><span class=\"ticket-label-sm\">Ubicación</span><span class=\"ticket-value-sm\" style=\"font-size:14px\">Quito</span></div></div></div></div></div>"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"fondo--malla\" style=\"padding:32px;border-radius:var(--mal-r);display:grid;place-items:center\">\n  <div class=\"ticket\">\n    <div class=\"ticket-photo-full\"><img src=\"/img/francisco-maldonado.jpg\" alt=\"Francisco Maldonado\">\n    </div>\n    <div class=\"ticket-content\">\n      <div class=\"ticket-group\"><span class=\"ticket-label-sm\">Nombre</span>\n        <div class=\"ticket-value-sm\">FRAN MALDONADO</div>\n      </div>\n      <div class=\"ticket-group\"><span class=\"ticket-label-sm\">Rol</span>\n        <div class=\"ticket-value-sm\" style=\"font-size:16px;opacity:.7\">PRODUCT DESIGNER</div>\n      </div><svg class=\"ticket-signature-svg\" viewBox=\"0 0 100 40\" fill=\"none\" aria-hidden=\"true\"><path d=\"M10 25C15 22 25 15 35 20C45 25 55 35 65 30C75 25 85 15 90 20\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"/></svg><hr class=\"ticket-separator\">\n      <div class=\"ticket-bottom-row\">\n        <div><span class=\"ticket-label-sm\">Desde</span><span class=\"ticket-value-sm\" style=\"font-size:14px\">2010</span>\n        </div>\n        <div><span class=\"ticket-label-sm\">Ubicación</span><span class=\"ticket-value-sm\" style=\"font-size:14px\">Quito</span>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>"
     },
     {
       "id": "carousel-container",
       "seccion": "social",
       "grupo": "Organismos",
+      "etiqueta": ".carousel-container",
       "nombre": "Carrusel",
-      "html": "<div class=\"carousel-container\"><div class=\"carousel-track\"><div class=\"social-card accent\"><div class=\"social-card-body\">«Francisco fue puntual y estratégico en su valoración sobre mi case study.»</div><div class=\"social-card-footer\"><span class=\"avatar\">NS</span><div class=\"social-info\"><span class=\"social-name\">Nataly E. Sandoya</span><span class=\"social-handle\">UX/UI Designer · Ecuador</span></div></div></div><div class=\"social-card\"><div class=\"social-card-body\">«Va al tema que querés saber y te ayuda muchísimo. Es claro, conciso.»</div><div class=\"social-card-footer\"><span class=\"avatar\">MA</span><div class=\"social-info\"><span class=\"social-name\">Marina Aizen</span><span class=\"social-handle\">Illustrator · España</span></div></div></div><div class=\"social-card pro\"><div class=\"social-card-body\">«Superó completamente mis expectativas.»</div><div class=\"social-card-footer\"><span class=\"avatar\">JV</span><div class=\"social-info\"><span class=\"social-name\">Julver</span><span class=\"social-handle\">UI Designer · Perú</span></div></div></div><div class=\"social-card\"><div class=\"social-card-body\">«Muy paciente y flexible; me dio muchísimas alternativas.»</div><div class=\"social-card-footer\"><span class=\"avatar\">NM</span><div class=\"social-info\"><span class=\"social-name\">Nora Itzel Martínez</span><span class=\"social-handle\">UX/UI Designer · México</span></div></div></div></div></div>"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"carousel-container\">\n  <div class=\"carousel-track\">\n    <div class=\"social-card accent\">\n      <div class=\"social-card-body\">«Francisco fue puntual y estratégico en su valoración sobre mi case study.»</div>\n      <div class=\"social-card-footer\"><span class=\"avatar\">NS</span>\n        <div class=\"social-info\"><span class=\"social-name\">Nataly E. Sandoya</span><span class=\"social-handle\">UX/UI Designer · Ecuador</span>\n        </div>\n      </div>\n    </div>\n    <div class=\"social-card\">\n      <div class=\"social-card-body\">«Va al tema que querés saber y te ayuda muchísimo. Es claro, conciso.»</div>\n      <div class=\"social-card-footer\"><span class=\"avatar\">MA</span>\n        <div class=\"social-info\"><span class=\"social-name\">Marina Aizen</span><span class=\"social-handle\">Illustrator · España</span>\n        </div>\n      </div>\n    </div>\n    <div class=\"social-card pro\">\n      <div class=\"social-card-body\">«Superó completamente mis expectativas.»</div>\n      <div class=\"social-card-footer\"><span class=\"avatar\">JV</span>\n        <div class=\"social-info\"><span class=\"social-name\">Julver</span><span class=\"social-handle\">UI Designer · Perú</span>\n        </div>\n      </div>\n    </div>\n    <div class=\"social-card\">\n      <div class=\"social-card-body\">«Muy paciente y flexible; me dio muchísimas alternativas.»</div>\n      <div class=\"social-card-footer\"><span class=\"avatar\">NM</span>\n        <div class=\"social-info\"><span class=\"social-name\">Nora Itzel Martínez</span><span class=\"social-handle\">UX/UI Designer · México</span>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>"
     },
     {
       "id": "portfolio-case",
       "seccion": "casos",
       "grupo": "Organismos",
+      "etiqueta": ".portfolio-case",
       "nombre": ".portfolio-case",
-      "html": "<div class=\"portfolio-case\"><div class=\"case-content\"><span class=\"case-tag\">Fintech / Payments</span><h3 class=\"case-title\">Deuna!</h3><p class=\"case-desc\">Pagar y cobrar sin efectivo, en un país que adora el efectivo.</p><div class=\"case-metrics-grid\"><div class=\"kpi\"><span class=\"kpi__etiqueta\">años</span><span class=\"kpi__valor\">+14</span></div><div class=\"kpi\"><span class=\"kpi__etiqueta\">industrias</span><span class=\"kpi__valor\">3</span></div></div><div class=\"pagination-wrap\"><div class=\"nav-arrow\">←</div><div class=\"pagination-dots\"><div class=\"dot-indicator active\"></div><div class=\"dot-indicator\"></div></div><div class=\"nav-arrow\">→</div></div></div><div class=\"portfolio-stack\"><div class=\"portfolio-card\" style=\"background:linear-gradient(135deg,var(--mal-primary),var(--mal-tertiary))\"></div><div class=\"portfolio-card\" style=\"background:var(--mal-bg-2)\"></div></div></div>"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"portfolio-case\">\n  <div class=\"case-content\"><span class=\"case-tag\">Fintech / Payments</span>\n    <h3 class=\"case-title\">Deuna!</h3>\n    <p class=\"case-desc\">Pagar y cobrar sin efectivo, en un país que adora el efectivo.</p>\n    <div class=\"case-metrics-grid\">\n      <div class=\"kpi\"><span class=\"kpi__etiqueta\">años</span><span class=\"kpi__valor\">+14</span>\n      </div>\n      <div class=\"kpi\"><span class=\"kpi__etiqueta\">industrias</span><span class=\"kpi__valor\">3</span>\n      </div>\n    </div>\n    <div class=\"pagination-wrap\">\n      <div class=\"nav-arrow\">←</div>\n      <div class=\"pagination-dots\">\n        <div class=\"dot-indicator active\">\n        </div>\n        <div class=\"dot-indicator\">\n        </div>\n      </div>\n      <div class=\"nav-arrow\">→</div>\n    </div>\n  </div>\n  <div class=\"portfolio-stack\">\n    <div class=\"portfolio-card\" style=\"background:linear-gradient(135deg,var(--mal-primary),var(--mal-tertiary))\">\n    </div>\n    <div class=\"portfolio-card\" style=\"background:var(--mal-bg-2)\">\n    </div>\n  </div>\n</div>"
     },
     {
       "id": "terminal",
       "seccion": "terminal",
       "grupo": "Organismos",
+      "etiqueta": ".terminal",
       "nombre": ".terminal",
-      "html": "<div class=\"terminal\"><div class=\"terminal-header\"><span class=\"dot dot-red\"></span><span class=\"dot dot-yellow\"></span><span class=\"dot dot-green\"></span></div><div class=\"terminal-body\" data-auto><div class=\"t-line\"><span class=\"t-prompt\">$</span><span data-escribir=\"git clone https://github.com/franciscombp/mal ds\"></span></div><div class=\"t-line info\"><span></span><span>Cloning into 'ds'…</span></div><div class=\"t-line success\"><span></span><span>listo · 1 sistema, 4 temas, 8 fuentes</span></div><div class=\"t-line\"><span class=\"t-prompt\">$</span><span>_</span></div></div></div>"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"terminal\">\n  <div class=\"terminal-header\"><span class=\"dot dot-red\"></span><span class=\"dot dot-yellow\"></span><span class=\"dot dot-green\"></span>\n  </div>\n  <div class=\"terminal-body\" data-auto>\n    <div class=\"t-line\"><span class=\"t-prompt\">$</span><span data-escribir=\"git clone https://github.com/franciscombp/mal ds\"></span>\n    </div>\n    <div class=\"t-line info\"><span></span><span>Cloning into 'ds'…</span>\n    </div>\n    <div class=\"t-line success\"><span></span><span>listo · 1 sistema, 4 temas, 8 fuentes</span>\n    </div>\n    <div class=\"t-line\"><span class=\"t-prompt\">$</span><span>_</span>\n    </div>\n  </div>\n</div>"
     },
     {
       "id": "blog-card",
       "seccion": "blog",
       "grupo": "Organismos",
+      "etiqueta": ".blog-card",
       "nombre": "Tarjetas de entrada",
-      "html": "<div style=\"display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))\"><a href=\"#blog\" class=\"blog-card\"><div class=\"blog-card-image\"><div style=\"width:100%;height:100%;background:linear-gradient(135deg,var(--mal-primary),var(--mal-tertiary))\"></div></div><div class=\"blog-card-content\"><div class=\"blog-card-meta\"><span>UX/UI</span><span>5 min</span></div><h3 class=\"blog-card-title\">Cuando el «buen diseño» falla en el mundo real</h3><p class=\"blog-card-excerpt\">A veces seguir las mejores prácticas deja un producto sin alma.</p><div class=\"author-meta\"><span class=\"avatar avatar--s\">FM</span><div class=\"author-info\"><span class=\"author-name\">Francisco Maldonado</span><span class=\"author-date\">14 de octubre de 2026</span></div></div></div></a><a href=\"#blog\" class=\"blog-card\"><div class=\"blog-card-image\"><div style=\"width:100%;height:100%;background:linear-gradient(45deg,var(--mal-warn),var(--mal-primary))\"></div></div><div class=\"blog-card-content\"><div class=\"blog-card-meta\"><span>Gestión</span><span>8 min</span></div><h3 class=\"blog-card-title\">Sobrevivir a la deuda técnica de diseño</h3><p class=\"blog-card-excerpt\">El diseño también acumula atajos. Cómo nombrarlos y pagarlos.</p><div class=\"author-meta\"><span class=\"avatar avatar--s\">FM</span><div class=\"author-info\"><span class=\"author-name\">Francisco Maldonado</span><span class=\"author-date\">2 de septiembre de 2026</span></div></div></div></a></div>"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div style=\"display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))\"><a href=\"#blog\" class=\"blog-card\">\n  <div class=\"blog-card-image\">\n    <div style=\"width:100%;height:100%;background:linear-gradient(135deg,var(--mal-primary),var(--mal-tertiary))\">\n    </div>\n  </div>\n  <div class=\"blog-card-content\">\n    <div class=\"blog-card-meta\"><span>UX/UI</span><span>5 min</span>\n    </div>\n    <h3 class=\"blog-card-title\">Cuando el «buen diseño» falla en el mundo real</h3>\n    <p class=\"blog-card-excerpt\">A veces seguir las mejores prácticas deja un producto sin alma.</p>\n    <div class=\"author-meta\"><span class=\"avatar avatar--s\">FM</span>\n      <div class=\"author-info\"><span class=\"author-name\">Francisco Maldonado</span><span class=\"author-date\">14 de octubre de 2026</span>\n      </div>\n    </div>\n  </div></a><a href=\"#blog\" class=\"blog-card\">\n  <div class=\"blog-card-image\">\n    <div style=\"width:100%;height:100%;background:linear-gradient(45deg,var(--mal-warn),var(--mal-primary))\">\n    </div>\n  </div>\n  <div class=\"blog-card-content\">\n    <div class=\"blog-card-meta\"><span>Gestión</span><span>8 min</span>\n    </div>\n    <h3 class=\"blog-card-title\">Sobrevivir a la deuda técnica de diseño</h3>\n    <p class=\"blog-card-excerpt\">El diseño también acumula atajos. Cómo nombrarlos y pagarlos.</p>\n    <div class=\"author-meta\"><span class=\"avatar avatar--s\">FM</span>\n      <div class=\"author-info\"><span class=\"author-name\">Francisco Maldonado</span><span class=\"author-date\">2 de septiembre de 2026</span>\n      </div>\n    </div>\n  </div></a>\n</div>"
     },
     {
       "id": "filter-bar",
       "seccion": "blog",
       "grupo": "Organismos",
+      "etiqueta": ".filter-bar",
       "nombre": "Filtros",
-      "html": "<div class=\"filter-bar\"><a href=\"#blog\" class=\"filter-chip active\">Todos</a><a href=\"#blog\" class=\"filter-chip\">Diseño de producto</a><a href=\"#blog\" class=\"filter-chip\">UX/UI</a><a href=\"#blog\" class=\"filter-chip\">Gestión</a></div>"
+      "html": "<div class=\"filter-bar\"><a href=\"#blog\" class=\"filter-chip active\">Todos</a><a href=\"#blog\" class=\"filter-chip\">Diseño de producto</a><a href=\"#blog\" class=\"filter-chip\">UX/UI</a><a href=\"#blog\" class=\"filter-chip\">Gestión</a>\n</div>"
     },
     {
       "id": "indice",
       "seccion": "blog",
       "grupo": "Organismos",
+      "etiqueta": ".indice",
       "nombre": "Índice",
-      "html": "<nav class=\"indice\" style=\"position:static\"><p class=\"indice__titulo\">En este artículo</p><a href=\"#blog\" aria-current=\"true\">La mentira de los cero clics</a><a href=\"#blog\">Fricción que sirve</a><a href=\"#blog\">Tres lecciones</a></nav>"
+      "desc": "Marca la sección visible mientras lees (mal.js).",
+      "rejilla": "sb-grid",
+      "html": "<nav class=\"indice\" style=\"position:static\">\n  <p class=\"indice__titulo\">En este artículo</p><a href=\"#blog\" aria-current=\"true\">La mentira de los cero clics</a><a href=\"#blog\">Fricción que sirve</a><a href=\"#blog\">Tres lecciones</a>\n</nav>"
     },
     {
       "id": "figura / .nota-pie",
       "seccion": "blog",
       "grupo": "Organismos",
+      "etiqueta": ".figura / .nota-pie",
       "nombre": "Figura y notas",
       "html": "<figure class=\"figura\" style=\"margin:0\"><div style=\"aspect-ratio:16/9;background:var(--mal-bg-2);border-radius:var(--mal-r)\"></div><figcaption>El flujo de pago antes del rediseño. / Fuente: propia</figcaption></figure><div class=\"nota-pie\"><ol><li>Kahneman, D. (2011). <i>Pensar rápido, pensar despacio</i>.</li><li>Datos internos del equipo, 2024.</li></ol></div>"
     },
@@ -537,92 +862,115 @@
       "id": "suscribir",
       "seccion": "blog",
       "grupo": "Organismos",
+      "etiqueta": ".suscribir",
       "nombre": "Suscripción",
-      "html": "<div class=\"suscribir\"><h3>Mal Pensamientos</h3><p>Crítica sin filtro sobre diseño, producto e innovación. Los lunes.</p><form onsubmit=\"return false\"><input type=\"email\" placeholder=\"tu@correo\" aria-label=\"Correo\"><button class=\"btn btn--rojo\" type=\"submit\">Suscribirme</button></form></div>"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"suscribir\">\n  <h3>Mal Pensamientos</h3>\n  <p>Crítica sin filtro sobre diseño, producto e innovación. Los lunes.</p>\n  <form onsubmit=\"return false\"><input type=\"email\" placeholder=\"tu@correo\" aria-label=\"Correo\"><button class=\"btn btn--rojo\" type=\"submit\">Suscribirme</button>\n  </form>\n</div>"
     },
     {
       "id": "compartir / .lectura-meta",
       "seccion": "blog",
       "grupo": "Organismos",
+      "etiqueta": ".compartir / .lectura-meta",
       "nombre": "Compartir y metadatos",
-      "html": "<div class=\"pila\"><p class=\"lectura-meta\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-reloj\"/></svg> 5 min de lectura <span>·</span> <svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-calendario\"/></svg> 14 de octubre de 2026 <span>·</span> <svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-etiqueta\"/></svg> UX/UI</p><div class=\"compartir\"><span class=\"compartir__etiqueta\">Compartir</span><button class=\"icon-btn\" type=\"button\" aria-label=\"Copiar enlace\" data-pista=\"Copiar enlace\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-enlace\"/></svg></button><button class=\"icon-btn\" type=\"button\" aria-label=\"Correo\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-correo\"/></svg></button><button class=\"icon-btn\" type=\"button\" aria-label=\"Compartir\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-compartir\"/></svg></button></div></div>"
+      "rejilla": "sb-grid",
+      "html": "<div class=\"pila\">\n  <p class=\"lectura-meta\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-reloj\"/></svg>5 min de lectura<span>·</span><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-calendario\"/></svg>14 de octubre de 2026<span>·</span><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-etiqueta\"/></svg>UX/UI\n  </p>\n  <div class=\"compartir\"><span class=\"compartir__etiqueta\">Compartir</span><button class=\"icon-btn\" type=\"button\" aria-label=\"Copiar enlace\" data-pista=\"Copiar enlace\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-enlace\"/></svg></button><button class=\"icon-btn\" type=\"button\" aria-label=\"Correo\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-correo\"/></svg></button><button class=\"icon-btn\" type=\"button\" aria-label=\"Compartir\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-compartir\"/></svg></button>\n  </div>\n</div>"
     },
     {
       "id": "relacionados / .continuar",
       "seccion": "blog",
       "grupo": "Organismos",
+      "etiqueta": ".relacionados / .continuar",
       "nombre": "Relacionados y seguir leyendo",
-      "html": "<div class=\"relacionados\"><a class=\"relacionado\" href=\"#blog\"><div class=\"relacionado__img\"></div><h4>Agilidad sin estrategia</h4><span class=\"caption\">6 min</span></a><a class=\"relacionado\" href=\"#blog\"><div class=\"relacionado__img\"></div><h4>Sobrevivir tu primer año</h4><span class=\"caption\">9 min</span></a><a class=\"relacionado\" href=\"#blog\"><div class=\"relacionado__img\"></div><h4>El render bonito</h4><span class=\"caption\">4 min</span></a></div><nav class=\"continuar\"><a href=\"#blog\"><span class=\"micro\">Anterior</span><b>El render bonito que esconde un producto roto</b></a><a href=\"#blog\"><span class=\"micro\">Siguiente</span><b>Agilidad sin estrategia es correr al mismo muro</b></a></nav>"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"relacionados\"><a class=\"relacionado\" href=\"#blog\">\n  <div class=\"relacionado__img\">\n  </div>\n  <h4>Agilidad sin estrategia</h4><span class=\"caption\">6 min</span></a><a class=\"relacionado\" href=\"#blog\">\n  <div class=\"relacionado__img\">\n  </div>\n  <h4>Sobrevivir tu primer año</h4><span class=\"caption\">9 min</span></a><a class=\"relacionado\" href=\"#blog\">\n  <div class=\"relacionado__img\">\n  </div>\n  <h4>El render bonito</h4><span class=\"caption\">4 min</span></a>\n</div>\n<nav class=\"continuar\"><a href=\"#blog\"><span class=\"micro\">Anterior</span><b>El render bonito que esconde un producto roto</b></a><a href=\"#blog\"><span class=\"micro\">Siguiente</span><b>Agilidad sin estrategia es correr al mismo muro</b></a>\n</nav>"
     },
     {
       "id": "comentario",
       "seccion": "blog",
       "grupo": "Organismos",
+      "etiqueta": ".comentario",
       "nombre": "Comentarios",
-      "html": "<div class=\"comentario\"><span class=\"avatar\">LR</span><div><div class=\"comentario__cab\"><b>Lucía R.</b><time>hace 2 días</time></div><p>Me pasó exactamente esto en el rediseño de un checkout. Gracias por ponerle nombre.</p></div></div><div class=\"comentario comentario--respuesta\"><span class=\"avatar avatar--s\">FM</span><div><div class=\"comentario__cab\"><b>Fran</b><span class=\"badge badge-info\">autor</span><time>hace 1 día</time></div><p>Y seguro que el dato de soporte lo confirmó. Cuéntame.</p></div></div>"
+      "html": "<div class=\"comentario\"><span class=\"avatar\">LR</span>\n  <div>\n    <div class=\"comentario__cab\"><b>Lucía R.</b><time>hace 2 días</time>\n    </div>\n    <p>Me pasó exactamente esto en el rediseño de un checkout. Gracias por ponerle nombre.</p>\n  </div>\n</div>\n<div class=\"comentario comentario--respuesta\"><span class=\"avatar avatar--s\">FM</span>\n  <div>\n    <div class=\"comentario__cab\"><b>Fran</b><span class=\"badge badge-info\">autor</span><time>hace 1 día</time>\n    </div>\n    <p>Y seguro que el dato de soporte lo confirmó. Cuéntame.</p>\n  </div>\n</div>"
     },
     {
       "id": "prose",
       "seccion": "articulo",
       "grupo": "Organismos",
+      "etiqueta": ".prose",
       "nombre": ".prose",
+      "rejilla": "sb-grid sb-grid--ancha",
       "html": "<div class=\"article-container\"><div class=\"article-meta\"><span>UX/UI</span><span>·</span><span>5 min</span></div><h3 class=\"article-title\">Cuando el «buen diseño» falla</h3><p class=\"article-subtitle\">Seguir las mejores prácticas al pie de la letra deja, a veces, un producto sin alma.</p><div class=\"prose\" style=\"margin-top:28px\"><p>Nos enseñaron que el minimalismo siempre gana y que la fricción es el enemigo. La verdad incómoda es otra: <strong>el buen diseño, aplicado a ciegas, hace daño.</strong></p><h2>La mentira de los cero clics</h2><p>Donde el riesgo es alto, la velocidad es peligrosa.</p><blockquote>La fricción no es un error cuando sirve para que el usuario despierte.</blockquote><ul><li>El minimalismo no es ausencia de información, es claridad.</li><li>Los flujos sin costuras sirven para consumir, no para decidir.</li></ul></div><div class=\"article-author-box\"><span class=\"avatar avatar--l\">FM</span><div class=\"author-box-content\"><span class=\"author-box-name\">Francisco Maldonado</span><p class=\"author-box-bio\">Product designer en Quito y mentor en ADPList.</p></div></div></div>"
     },
     {
       "id": "HUD",
       "seccion": "juego",
       "grupo": "Organismos",
+      "etiqueta": "HUD",
       "nombre": "Sobre el lienzo",
-      "html": "<div class=\"fondo--aurora\" style=\"position:relative;aspect-ratio:16/9;min-height:300px;border-radius:var(--mal-r);overflow:hidden;display:grid;place-items:center\"><div style=\"position:absolute;top:16px;left:16px;display:flex;gap:12px;align-items:center\"><div class=\"panel panel--compacto\"><p class=\"marcador\">18 420<small>puntos</small></p></div><span class=\"badge badge-info\">Escenario 2 · Apagón</span></div><div style=\"position:absolute;top:16px;right:16px;display:flex;gap:12px;align-items:center\"><span class=\"badge\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-documento\"/></svg> 34</span><div class=\"vidas\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg><svg class=\"icono perdida\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg></div></div><div style=\"position:absolute;bottom:16px;left:16px;width:220px\"><p class=\"micro\" style=\"margin-bottom:6px\">Evidencia</p><div class=\"medidor\"><i class=\"lleno\"></i><i class=\"lleno\"></i><i class=\"lleno\"></i><i class=\"lleno\"></i><i></i><i></i></div></div><div class=\"vidrio\" style=\"padding:24px;width:min(100% - 32px, 340px);text-align:center;display:flex;flex-direction:column;gap:10px\"><p class=\"kicker\" style=\"justify-content:center\">Pausa</p><h3>¿Seguimos documentando?</h3><button class=\"btn btn--rojo boton-juego btn-block\" type=\"button\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-play\"/></svg> Reanudar</button><button class=\"btn btn-block\" type=\"button\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-salir\"/></svg> Salir</button></div></div>"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"fondo--aurora\" style=\"position:relative;aspect-ratio:16/9;min-height:300px;border-radius:var(--mal-r);overflow:hidden;display:grid;place-items:center\">\n  <div style=\"position:absolute;top:16px;left:16px;display:flex;gap:12px;align-items:center\">\n    <div class=\"panel panel--compacto\">\n      <p class=\"marcador\">18 420<small>puntos</small>\n      </p>\n    </div><span class=\"badge badge-info\">Escenario 2 · Apagón</span>\n  </div>\n  <div style=\"position:absolute;top:16px;right:16px;display:flex;gap:12px;align-items:center\"><span class=\"badge\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-documento\"/></svg>34</span>\n    <div class=\"vidas\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg><svg class=\"icono perdida\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg>\n    </div>\n  </div>\n  <div style=\"position:absolute;bottom:16px;left:16px;width:220px\">\n    <p class=\"micro\" style=\"margin-bottom:6px\">Evidencia</p>\n    <div class=\"medidor\"><i class=\"lleno\"></i><i class=\"lleno\"></i><i class=\"lleno\"></i><i class=\"lleno\"></i><i></i><i></i>\n    </div>\n  </div>\n  <div class=\"vidrio\" style=\"padding:24px;width:min(100% - 32px, 340px);text-align:center;display:flex;flex-direction:column;gap:10px\">\n    <p class=\"kicker\" style=\"justify-content:center\">Pausa</p>\n    <h3>¿Seguimos documentando?</h3><button class=\"btn btn--rojo boton-juego btn-block\" type=\"button\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-play\"/></svg>Reanudar</button><button class=\"btn btn-block\" type=\"button\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-salir\"/></svg>Salir</button>\n  </div>\n</div>"
     },
     {
       "id": "marcador / .medidor / .vidas",
       "seccion": "juego",
       "grupo": "Organismos",
+      "etiqueta": ".marcador / .medidor / .vidas",
       "nombre": "Las piezas sueltas",
-      "html": "<div class=\"pila\"><p class=\"marcador\">42 180<small>récord de la semana</small></p><div class=\"medidor\"><i class=\"lleno\"></i><i class=\"lleno\"></i><i class=\"lleno\"></i><i></i><i></i></div><div class=\"vidas\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg><svg class=\"icono perdida\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg><svg class=\"icono perdida\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg></div><div class=\"fila\"><button class=\"chip\" type=\"button\" aria-pressed=\"true\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-rayo\"/></svg> Prisa</button><button class=\"chip\" type=\"button\" aria-pressed=\"false\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-escudo\"/></svg> Escudo</button><button class=\"chip\" type=\"button\" aria-pressed=\"false\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-altavoz\"/></svg> Ruido</button></div></div>"
+      "rejilla": "sb-grid",
+      "html": "<div class=\"pila\">\n  <p class=\"marcador\">42 180<small>récord de la semana</small>\n  </p>\n  <div class=\"medidor\"><i class=\"lleno\"></i><i class=\"lleno\"></i><i class=\"lleno\"></i><i></i><i></i>\n  </div>\n  <div class=\"vidas\"><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg><svg class=\"icono\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg><svg class=\"icono perdida\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg><svg class=\"icono perdida\" aria-hidden=\"true\"><use href=\"#i-vida\"/></svg>\n  </div>\n  <div class=\"fila\"><button class=\"chip\" type=\"button\" aria-pressed=\"true\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-rayo\"/></svg>Prisa</button><button class=\"chip\" type=\"button\" aria-pressed=\"false\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-escudo\"/></svg>Escudo</button><button class=\"chip\" type=\"button\" aria-pressed=\"false\"><svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-altavoz\"/></svg>Ruido</button>\n  </div>\n</div>"
     },
     {
       "id": "vibrant-tag",
       "seccion": "cluster",
       "grupo": "Organismos",
+      "etiqueta": ".vibrant-tag",
       "nombre": ".vibrant-tag",
-      "html": "<div style=\"padding:40px 20px;display:flex;flex-direction:column;align-items:center\"><div class=\"text-cluster-row\"><span class=\"text-cluster-base\">Todo lo que</span><span class=\"vibrant-tag verde\">hace</span></div><div class=\"text-cluster-row\"><span class=\"vibrant-tag acento\">MAL</span><span class=\"text-cluster-base\">está aquí</span></div></div>"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div style=\"padding:40px 20px;display:flex;flex-direction:column;align-items:center\">\n  <div class=\"text-cluster-row\"><span class=\"text-cluster-base\">Todo lo que</span><span class=\"vibrant-tag verde\">hace</span>\n  </div>\n  <div class=\"text-cluster-row\"><span class=\"vibrant-tag acento\">MAL</span><span class=\"text-cluster-base\">está aquí</span>\n  </div>\n</div>"
     },
     {
       "id": "hud",
       "seccion": "cascara",
       "grupo": "Identidad",
+      "etiqueta": ".hud",
       "nombre": "Cabecera del sitio",
-      "html": "<div style=\"border:var(--mal-borde);border-radius:var(--mal-r);overflow:hidden\"><header class=\"hud\" style=\"position:static\"><div class=\"wrap hud__in\"><a class=\"hud__marca\" href=\"#cascara\"><span class=\"hud__punto\" aria-hidden=\"true\"></span><b>UNA</b><span>una.red</span></a><nav aria-label=\"Ejemplo\"><a href=\"#cascara\">Apps</a><a href=\"#cascara\">Juegos</a><a href=\"#cascara\">Blogs</a></nav></div></header></div>"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div style=\"border:var(--mal-borde);border-radius:var(--mal-r);overflow:hidden\">\n  <header class=\"hud\" style=\"position:static\">\n    <div class=\"wrap hud__in\"><a class=\"hud__marca\" href=\"#cascara\"><span class=\"hud__punto\" aria-hidden=\"true\"></span><b>UNA</b><span>una.red</span></a>\n      <nav aria-label=\"Ejemplo\"><a href=\"#cascara\">Apps</a><a href=\"#cascara\">Juegos</a><a href=\"#cascara\">Blogs</a>\n      </nav>\n    </div>\n  </header>\n</div>"
     },
     {
       "id": "nav-glass",
       "seccion": "cascara",
       "grupo": "Identidad",
+      "etiqueta": ".nav-glass",
       "nombre": "Navegación flotante",
-      "html": "<nav class=\"nav-glass\"><span class=\"logo\">MAL</span><div class=\"nav-links-scroll\"><a href=\"#cascara\">Proyectos</a><a href=\"#cascara\">Sobre mí</a><a href=\"#cascara\">Mentorías</a></div><button class=\"btn btn-primary btn--sm\" type=\"button\">Charlemos</button></nav>"
+      "html": "<nav class=\"nav-glass\"><span class=\"logo\">MAL</span>\n  <div class=\"nav-links-scroll\"><a href=\"#cascara\">Proyectos</a><a href=\"#cascara\">Sobre mí</a><a href=\"#cascara\">Mentorías</a>\n  </div><button class=\"btn btn-primary btn--sm\" type=\"button\">Charlemos</button>\n</nav>"
     },
     {
       "id": "pie",
       "seccion": "cascara",
       "grupo": "Identidad",
+      "etiqueta": ".pie",
       "nombre": "Pie",
-      "html": "<footer class=\"pie\" style=\"border-top:0\"><div class=\"wrap pie__in\"><p>UNA · una.red · Quito, Ecuador</p><ul><li><a href=\"#cascara\">EL MERCIO.</a></li><li><a href=\"#cascara\">GitHub</a></li></ul></div></footer>"
+      "html": "<footer class=\"pie\" style=\"border-top:0\">\n  <div class=\"wrap pie__in\">\n    <p>UNA · una.red · Quito, Ecuador</p>\n    <ul>\n      <li><a href=\"#cascara\">EL MERCIO.</a>\n      </li>\n      <li><a href=\"#cascara\">GitHub</a>\n      </li>\n    </ul>\n  </div>\n</footer>"
     },
     {
       "id": "red",
       "seccion": "mapa",
       "grupo": "Identidad",
+      "etiqueta": ".red",
       "nombre": ".red",
-      "html": "<div style=\"max-width:420px;margin-inline:auto\"><svg class=\"red\" viewBox=\"0 0 300 300\" role=\"img\" aria-label=\"Ejemplo del mapa\"><circle class=\"anillo\" cx=\"150\" cy=\"150\" r=\"55\"/><circle class=\"anillo\" cx=\"150\" cy=\"150\" r=\"105\"/><line x1=\"150\" y1=\"150\" x2=\"150\" y2=\"95\"/><line x1=\"150\" y1=\"150\" x2=\"198\" y2=\"178\"/><line x1=\"150\" y1=\"150\" x2=\"102\" y2=\"178\"/><line x1=\"150\" y1=\"150\" x2=\"150\" y2=\"45\"/><line x1=\"150\" y1=\"150\" x2=\"241\" y2=\"203\"/><line x1=\"150\" y1=\"150\" x2=\"59\" y2=\"203\"/><circle class=\"n n--medio\" cx=\"150\" cy=\"95\" r=\"5\"/><circle class=\"n n--medio\" cx=\"198\" cy=\"178\" r=\"5\"/><circle class=\"n n--medio\" cx=\"102\" cy=\"178\" r=\"5\"/><circle class=\"n n--app\" cx=\"150\" cy=\"45\" r=\"5\"/><circle class=\"n n--juego\" cx=\"241\" cy=\"203\" r=\"5\"/><circle class=\"n n--app\" cx=\"59\" cy=\"203\" r=\"5\"/><circle class=\"centro-c\" cx=\"150\" cy=\"150\" r=\"30\"/><text class=\"centro\" x=\"150\" y=\"150\" text-anchor=\"middle\" dy=\".36em\">MAL</text></svg></div>"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div style=\"max-width:420px;margin-inline:auto\"><svg class=\"red\" viewBox=\"0 0 300 300\" role=\"img\" aria-label=\"Ejemplo del mapa\"><circle class=\"anillo\" cx=\"150\" cy=\"150\" r=\"55\"/><circle class=\"anillo\" cx=\"150\" cy=\"150\" r=\"105\"/><line x1=\"150\" y1=\"150\" x2=\"150\" y2=\"95\"/><line x1=\"150\" y1=\"150\" x2=\"198\" y2=\"178\"/><line x1=\"150\" y1=\"150\" x2=\"102\" y2=\"178\"/><line x1=\"150\" y1=\"150\" x2=\"150\" y2=\"45\"/><line x1=\"150\" y1=\"150\" x2=\"241\" y2=\"203\"/><line x1=\"150\" y1=\"150\" x2=\"59\" y2=\"203\"/><circle class=\"n n--medio\" cx=\"150\" cy=\"95\" r=\"5\"/><circle class=\"n n--medio\" cx=\"198\" cy=\"178\" r=\"5\"/><circle class=\"n n--medio\" cx=\"102\" cy=\"178\" r=\"5\"/><circle class=\"n n--app\" cx=\"150\" cy=\"45\" r=\"5\"/><circle class=\"n n--juego\" cx=\"241\" cy=\"203\" r=\"5\"/><circle class=\"n n--app\" cx=\"59\" cy=\"203\" r=\"5\"/><circle class=\"centro-c\" cx=\"150\" cy=\"150\" r=\"30\"/><text class=\"centro\" x=\"150\" y=\"150\" text-anchor=\"middle\" dy=\".36em\">MAL</text></svg>\n</div>"
     },
     {
       "id": "marco",
       "seccion": "marco",
       "grupo": "Identidad",
+      "etiqueta": ".marco",
       "nombre": ".marco",
-      "html": "<div class=\"marco\"><div class=\"marco__barra\"><span class=\"marco__luces\" aria-hidden=\"true\"><i></i><i></i><i></i></span><span class=\"marco__url\">https://franciscombp.github.io/quanto/</span><span class=\"marco__acc\"><a href=\"#marco\">Pantalla completa <svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-externo\"/></svg></a></span></div><div style=\"height:150px;display:grid;place-items:center;background:var(--mal-bg-2);font-family:var(--mal-mono);font-size:11px;color:var(--mal-on-surface-3)\">aquí va el iframe</div></div>"
+      "rejilla": "sb-grid sb-grid--ancha",
+      "html": "<div class=\"marco\">\n  <div class=\"marco__barra\"><span class=\"marco__luces\" aria-hidden=\"true\"><i></i><i></i><i></i></span><span class=\"marco__url\">https://franciscombp.github.io/quanto/</span><span class=\"marco__acc\"><a href=\"#marco\">Pantalla completa<svg class=\"icono icono--s\" aria-hidden=\"true\"><use href=\"#i-externo\"/></svg></a></span>\n  </div>\n  <div style=\"height:150px;display:grid;place-items:center;background:var(--mal-bg-2);font-family:var(--mal-mono);font-size:11px;color:var(--mal-on-surface-3)\">aquí va el iframe</div>\n</div>"
     }
   ]
 }
