@@ -203,6 +203,12 @@ servir: `main` sigue siendo lo que sirve una.red, sin build.
 - **Nada de emojis en la interfaz**: para eso está el sprite.
 - **`mal/index.html` es generado.** Un componente se toca en `componentes.json` y se corre
   `npm run genera`. Editar el HTML a mano lo deja desviado hasta la siguiente generación.
+- **Todo el sitio enlaza en relativo**, nunca en absoluto desde la raíz (`href="ds/"`, no
+  `href="/ds/"`). Así una misma página funciona igual en `una.red` (raíz de dominio) y en
+  un *project site* de GitHub Pages, que cuelga de un subdirectorio (`/mal/`). La única
+  excepción es `404.html`: el servidor lo devuelve para cualquier ruta rota, a cualquier
+  profundidad, así que necesita rutas absolutas para resolver bien sin importar desde dónde
+  falló la petición.
 - **La fuente de verdad de EL MERCIO. es el `theme.json`** del tema en producción. Si un
   token se mueve allí, cópialo aquí; nunca al revés.
 
