@@ -44,6 +44,13 @@ La **capa de expresión** es lo que hace que dos temas no se parezcan aunque com
 componente: `--ref-radio`, `--ref-borde`, `--ref-densidad`, `--ref-tap`, `--ref-elev-1/2`,
 `--ref-relleno`, `--ref-salto`, `--ref-presion`, `--ref-grano`.
 
+El color de marca va además **en RGB** (`--ref-marca-rgb`, rol `--mal-primary-rgb`), que es
+lo que hace falta para graduarlo: un halo, una selección o un tinte al 12 % piden `rgba()`, y
+sin el triplete hay que volver a escribir el hexadecimal — justo lo que los tokens vienen a
+evitar. Y hay tres **pasteles de fondo de caja** (`--mal-pastel-lila|verde|azul`) para
+distinguir dos cosas sin gastar el rojo, más `--mal-primary-en-tinta`: el acento aclarado
+para cuando el fondo es tinta, porque el rojo sobre negro no llega ni a 3 : 1.
+
 Para hacer un tema nuevo se redefine la capa 1 y ya:
 
 ```css
@@ -84,6 +91,30 @@ que sigue al scroll y unas cuantas piezas de escaparate.
 window.malDS = { init, aviso, abrir, iconos, quieto }
 ```
 
+## Para juegos
+
+La sección `juego` trae las piezas del HUD (`.marcador`, `.medidor`, `.vidas`, `.chip`,
+`.boton-juego`), **el contenedor que las reparte** (`.hud-juego`, con sus zonas seguras y
+sus dos filas) y **la pantalla de premio** (`.premio`), que es lo que sale cuando un juego
+desbloquea algo: pantalla entera, abanico de rayos, la pieza en el centro y un toque para
+seguir.
+
+El medidor viene en dos: `.medidor` reparte **tramos** —vidas, munición, turnos: lo que
+se cuenta— y `.medidor--continuo` es una **barra que se llena** —aguante, carga, lo que
+falta para llegar—. Misma clase base, mismo sitio en el HUD; el ancho del relleno lo
+escribe quien lo pinta, en línea, y el color sale de `--mal-relleno-medidor`.
+
+```html
+<div class="medidor"><i class="lleno"></i><i class="lleno"></i><i></i></div>
+<div class="medidor medidor--continuo medidor--fino" style="--mal-relleno-medidor:var(--mal-verde)">
+  <i style="width:62%"></i>
+</div>
+```
+
+`.hud-juego` se llama así y no `.hud` porque `.hud` es la cabecera del sitio. No es un
+capricho: el `background` de aquella, aplicado a un contenedor a `inset: 0`, tapa el juego
+entero con una sábana.
+
 ## Dentro de otro framework
 
 Si el sistema va a vivir dentro de algo que ya maqueta —WordPress, por ejemplo— hay que
@@ -104,7 +135,9 @@ repositorio del hub entero ([una.red](https://una.red)). El sistema es su carpet
 ```
 franciscombp/mal
 ├── ds/            ← esto es el paquete
-│   ├── mal/       mal.css · mal.js · iconos.svg · compat.css
+│   ├── mal/       mal.css · mal.js · iconos.svg · compat.css · index.html (generado)
+│   ├── herramientas/  genera.mjs · plantilla.html
+│   ├── componentes.json   ← la fuente de verdad del catálogo
 │   └── fonts/
 ├── apps/  img/  renuncia/  index.html   ← el resto del hub
 ```
@@ -146,10 +179,45 @@ los roles actuales sin tocar el marcado.
 
 ## Consumo programático
 
-`componentes.json` lleva todos los componentes con su HTML, agrupados por sección — para
+`componentes.json` lleva los 87 componentes con su HTML, agrupados en 30 secciones — para
 generar plantillas, alimentar un editor o comprobar que un proyecto no se ha desviado.
 `version.json` lleva la versión y el hash de cada hoja; `version.js` avisa por consola a
 una copia que se haya quedado atrás.
+
+Cada componente trae:
+
+| Campo | Qué es |
+|---|---|
+| `id` · `seccion` · `grupo` | dónde vive en el catálogo |
+| `etiqueta` · `nombre` | el rótulo de clase y el título legible |
+| `html` | **el marcado, y la única fuente de verdad** |
+| `desc` | una línea de contexto, si la necesita |
+| `demo` | escaparate solo para el storybook, cuando enseñar es distinto de copiar |
+| `codigo` | `false` si la pieza no lleva bloque de código |
+| `lienzo` · `rejilla` · `nota` | colocación en la página |
+
+## El storybook se genera
+
+`mal/index.html` **no se edita a mano**: sale de `componentes.json` con la plantilla de
+`herramientas/plantilla.html`, que es lo único escrito a mano (la cabecera, el hero y el
+pie). El 98% de la página es catálogo.
+
+```bash
+npm run genera      # reescribe mal/index.html desde el JSON
+npm run verifica    # falla si el fichero no está al día — para CI
+```
+
+El HTML de cada componente se escribe **una vez** y se usa dos: crudo para la muestra viva
+y escapado para el bloque de código. Por eso **lo que se copia es exactamente lo que se
+ve**; antes vivía tres veces —demo, `<pre>` y JSON— y ya se había desviado en siete piezas
+y una sección entera.
+
+`demo` es la excepción a propósito, y son tres: el muestrario de los 81 iconos, la tabla de
+los cuatro temas y los avisos de `retro`, donde el escaparate enseña más de lo que se copia.
+
+Al generar también se comprueba que cada componente apunte a una sección que existe, que no
+haya identificadores repetidos y que la etiqueta cuadre con el `id`. Nada de esto corre al
+servir: `main` sigue siendo lo que sirve una.red, sin build.
 
 ## Reglas de la casa
 
@@ -164,6 +232,14 @@ una copia que se haya quedado atrás.
   descarta la declaración entera, en silencio.
 - **Nunca un color literal**: todo sale de las variables, que traen su pareja en modo oscuro.
 - **Nada de emojis en la interfaz**: para eso está el sprite.
+- **`mal/index.html` es generado.** Un componente se toca en `componentes.json` y se corre
+  `npm run genera`. Editar el HTML a mano lo deja desviado hasta la siguiente generación.
+- **Todo el sitio enlaza en relativo**, nunca en absoluto desde la raíz (`href="ds/"`, no
+  `href="/ds/"`). Así una misma página funciona igual en `una.red` (raíz de dominio) y en
+  un *project site* de GitHub Pages, que cuelga de un subdirectorio (`/mal/`). La única
+  excepción es `404.html`: el servidor lo devuelve para cualquier ruta rota, a cualquier
+  profundidad, así que necesita rutas absolutas para resolver bien sin importar desde dónde
+  falló la petición.
 - **La fuente de verdad de EL MERCIO. es el `theme.json`** del tema en producción. Si un
   token se mueve allí, cópialo aquí; nunca al revés.
 

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MAL · sistema de diseño · UNA</title>
+<meta name="description" content="Storybook del sistema de diseño MAL de MAL: un sistema, cuatro temas.">
+<link rel="canonical" href="https://una.red/ds/mal/">
+<meta name="theme-color" content="#EFEFEC" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#131312" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="UNA">
+<meta property="og:title" content="MAL · un sistema de diseño de MAL">
+<meta property="og:description" content="Storybook del sistema de diseño MAL de MAL: un sistema, cuatro temas.">
+<meta property="og:url" content="https://una.red/ds/mal/">
+<meta property="og:image" content="https://una.red/img/og.jpg">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../img/icono-32.png" sizes="32x32" type="image/png">
+<link rel="preload" href="../../ds/fonts/syne.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../ds/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<!-- primero el sistema que se documenta, después el chrome: ver storybook.css -->
+<link rel="stylesheet" href="../../ds/mal/mal.css?v=1.0.15">
+<link rel="stylesheet" href="../../ds/storybook.css?v=1.0.15">
+</head>
+<body>
+<a class="sb-salta" href="#principal">Saltar al contenido</a>
+
+<header class="sb-topbar">
+  <a class="sb-volver" href="../.."><span aria-hidden="true">←</span> <b>UNA</b> <span>una.red</span></a>
+  <nav class="sb-tabs" aria-label="Demos">
+    <span class="sb-tabs__t">Ver aplicado:</span>
+    <a href="../../ds/demos/mal/">Portafolio</a>
+    <a href="../../ds/demos/mercio/">Periódico</a>
+    <a href="../../ds/demos/apps/">Onboarding</a>
+    <a href="../../ds/demos/juegos/">HUD</a>
+  </nav>
+  <div class="sb-acc">
+    <select class="sb-sel" id="sb-marca" data-propia="mal" aria-label="Tema de marca">
+      <option value="mal">Tema MAL</option>
+      <option value="mercio">Tema EL MERCIO.</option>
+      <option value="apps">Tema APPS</option>
+      <option value="juegos">Tema Juegos</option>
+    </select>
+    <a class="sb-btn sb-btn--oculta" href="../../ds/version.json" title="Versión del paquete">v1.0.15</a>
+    <a class="sb-btn sb-btn--oculta" href="../../ds/mal/mal.css">CSS</a>
+    <a class="sb-btn sb-btn--oculta" href="https://github.com/franciscombp/mal">Repo</a>
+    <button class="sb-btn" id="sb-tema" type="button"><svg class="icono icono--s" aria-hidden="true"><use href="#i-monitor"/></svg> Sistema</button>
+  </div>
+</header>
+
+<!--{{NAV}}-->
+
+<main class="sb-content" id="principal">
+  <div class="sb-intro">
+    <p class="sb-eyebrow">Un sistema, cuatro temas</p>
+    <h1 class="display sb-intro__t">MAL</h1>
+    <p>Un solo juego de componentes para todo lo que firma MAL, con cuatro pieles: la marca, el periódico, las apps y los juegos. Cambia `data-marca` en la raíz y cambian color, tipografía, forma, borde, elevación y densidad; el marcado no se toca.</p>
+    <ul class="sb-datos"><li>Cuatro temas, un CSS</li><li>Syne · Inter · JetBrains Mono</li><li>Claro y oscuro</li><li>Sin dependencias</li></ul>
+    <div class="sb-code" style="margin-top:20px">
+      <button class="btn-copy" type="button">Copiar</button>
+      <pre>&lt;link rel="stylesheet" href="https://una.red/ds/mal/mal.css"&gt;</pre>
+    </div>
+  </div>
+  <!--{{SECCIONES}}-->
+  <footer class="sb-pie">
+    <p><b>UNA</b> · <a href="../..">una.red</a> · <a href="../../ds/">el sistema de MAL</a> ·
+    <a href="https://github.com/franciscombp/mal">clonar el paquete</a></p>
+  </footer>
+</main>
+
+<script src="../../ds/mal/mal.js?v=1.0.15" defer></script>
+<script src="../../ds/storybook.js?v=1.0.15" defer></script>
+</body>
+</html>

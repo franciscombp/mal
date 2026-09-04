@@ -10,6 +10,10 @@
   },
   "author": "Francisco Maldonado",
   "license": "UNLICENSED",
+  "scripts": {
+    "genera": "node herramientas/genera.mjs",
+    "verifica": "node herramientas/genera.mjs --verifica"
+  },
   "style": "./mal/mal.css",
   "files": [
     "mal",
