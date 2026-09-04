@@ -44,6 +44,13 @@ La **capa de expresión** es lo que hace que dos temas no se parezcan aunque com
 componente: `--ref-radio`, `--ref-borde`, `--ref-densidad`, `--ref-tap`, `--ref-elev-1/2`,
 `--ref-relleno`, `--ref-salto`, `--ref-presion`, `--ref-grano`.
 
+El color de marca va además **en RGB** (`--ref-marca-rgb`, rol `--mal-primary-rgb`), que es
+lo que hace falta para graduarlo: un halo, una selección o un tinte al 12 % piden `rgba()`, y
+sin el triplete hay que volver a escribir el hexadecimal — justo lo que los tokens vienen a
+evitar. Y hay tres **pasteles de fondo de caja** (`--mal-pastel-lila|verde|azul`) para
+distinguir dos cosas sin gastar el rojo, más `--mal-primary-en-tinta`: el acento aclarado
+para cuando el fondo es tinta, porque el rojo sobre negro no llega ni a 3 : 1.
+
 Para hacer un tema nuevo se redefine la capa 1 y ya:
 
 ```css
@@ -83,6 +90,30 @@ que sigue al scroll y unas cuantas piezas de escaparate.
 ```js
 window.malDS = { init, aviso, abrir, iconos, quieto }
 ```
+
+## Para juegos
+
+La sección `juego` trae las piezas del HUD (`.marcador`, `.medidor`, `.vidas`, `.chip`,
+`.boton-juego`), **el contenedor que las reparte** (`.hud-juego`, con sus zonas seguras y
+sus dos filas) y **la pantalla de premio** (`.premio`), que es lo que sale cuando un juego
+desbloquea algo: pantalla entera, abanico de rayos, la pieza en el centro y un toque para
+seguir.
+
+El medidor viene en dos: `.medidor` reparte **tramos** —vidas, munición, turnos: lo que
+se cuenta— y `.medidor--continuo` es una **barra que se llena** —aguante, carga, lo que
+falta para llegar—. Misma clase base, mismo sitio en el HUD; el ancho del relleno lo
+escribe quien lo pinta, en línea, y el color sale de `--mal-relleno-medidor`.
+
+```html
+<div class="medidor"><i class="lleno"></i><i class="lleno"></i><i></i></div>
+<div class="medidor medidor--continuo medidor--fino" style="--mal-relleno-medidor:var(--mal-verde)">
+  <i style="width:62%"></i>
+</div>
+```
+
+`.hud-juego` se llama así y no `.hud` porque `.hud` es la cabecera del sitio. No es un
+capricho: el `background` de aquella, aplicado a un contenedor a `inset: 0`, tapa el juego
+entero con una sábana.
 
 ## Dentro de otro framework
 
@@ -148,7 +179,7 @@ los roles actuales sin tocar el marcado.
 
 ## Consumo programático
 
-`componentes.json` lleva los 85 componentes con su HTML, agrupados en 30 secciones — para
+`componentes.json` lleva los 87 componentes con su HTML, agrupados en 30 secciones — para
 generar plantillas, alimentar un editor o comprobar que un proyecto no se ha desviado.
 `version.json` lleva la versión y el hash de cada hoja; `version.js` avisa por consola a
 una copia que se haya quedado atrás.
