@@ -5,7 +5,7 @@ que se ponen con un atributo en la raíz. La usa [una.red](https://una.red), mal
 de WordPress de EL MERCIO.; cualquier proyecto puede clonarla o enlazarla.
 
 ```html
-<link rel="stylesheet" href="https://una.red/ds/mal/mal.css">
+<link rel="stylesheet" href="https://franciscombp.github.io/mal/ds/mal/mal.css">
 ```
 
 Las fuentes van dentro del paquete (`fonts/`) y el CSS las pide con rutas relativas, así

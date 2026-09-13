@@ -1,13 +1,13 @@
 {
   "nombre": "mal-ds",
   "version": "1.0.15",
-  "url": "https://una.red/ds/",
+  "url": "https://franciscombp.github.io/mal/ds/",
   "repo": "https://github.com/franciscombp/mal",
   "licencia": "sin definir",
   "css": "/ds/mal/mal.css",
   "js": "/ds/mal/mal.js",
   "iconos": "/ds/mal/iconos.svg",
-  "storybook": "https://una.red/ds/mal/",
+  "storybook": "https://franciscombp.github.io/mal/ds/mal/",
   "temas": [
     {
       "id": "mal",
@@ -15,7 +15,7 @@
       "nombre": "MAL",
       "uso": "una.red, maldonado.pro",
       "caracter": "crema cálida, filete de 1 px y sombra blanda",
-      "demo": "https://una.red/ds/demos/mal/"
+      "demo": "https://franciscombp.github.io/mal/ds/demos/mal/"
     },
     {
       "id": "mercio",
@@ -23,7 +23,7 @@
       "nombre": "EL MERCIO.",
       "uso": "el periódico",
       "caracter": "página blanca, serif, radio 0 y sin sombras",
-      "demo": "https://una.red/ds/demos/mercio/"
+      "demo": "https://franciscombp.github.io/mal/ds/demos/mercio/"
     },
     {
       "id": "apps",
@@ -31,7 +31,7 @@
       "nombre": "APPS",
       "uso": "Quanto, Mi Huerto, Jacky, Test CDS",
       "caracter": "app nativa: controles de 52 px, responde al pulsar",
-      "demo": "https://una.red/ds/demos/apps/"
+      "demo": "https://franciscombp.github.io/mal/ds/demos/apps/"
     },
     {
       "id": "juegos",
@@ -39,7 +39,7 @@
       "nombre": "Juegos",
       "uso": "los siete juegos del hub",
       "caracter": "volumétrico: sombra dura, borde de 2 px y relleno en degradado",
-      "demo": "https://una.red/ds/demos/juegos/"
+      "demo": "https://franciscombp.github.io/mal/ds/demos/juegos/"
     }
   ],
   "secciones": [
@@ -281,7 +281,7 @@
       "nombre": "Bloque de código",
       "desc": "Un <code>pre</code> con su botón de copiar. El botón es hermano del <code>pre</code>, no hijo: mal.js lo sabe.",
       "rejilla": "sb-grid sb-grid--ancha",
-      "html": "<div class=\"codigo-bloque\"><button class=\"btn-copy\" type=\"button\" data-copiar>Copiar</button>\n  <pre>&lt;link rel=\"stylesheet\" href=\"https://una.red/ds/mal/mal.css\"&gt;\n&lt;script src=\"https://una.red/ds/mal/mal.js\" defer&gt;&lt;/script&gt;</pre>\n</div>"
+      "html": "<div class=\"codigo-bloque\"><button class=\"btn-copy\" type=\"button\" data-copiar>Copiar</button>\n  <pre>&lt;link rel=\"stylesheet\" href=\"https://franciscombp.github.io/mal/ds/mal/mal.css\"&gt;\n&lt;script src=\"https://franciscombp.github.io/mal/ds/mal/mal.js\" defer&gt;&lt;/script&gt;</pre>\n</div>"
     },
     {
       "id": "Roles",

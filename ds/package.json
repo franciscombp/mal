@@ -1,8 +1,8 @@
 {
   "name": "mal-ds",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "El sistema de diseño de MAL: un CSS, cuatro temas (la marca, EL MERCIO., las apps y los juegos).",
-  "homepage": "https://una.red/ds/",
+  "homepage": "https://franciscombp.github.io/mal/ds/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/franciscombp/mal.git",

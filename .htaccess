@@ -1,5 +1,13 @@
-# una.red — landing de MAL (estática)
-# Antes (hasta 2026-08-22): RewriteRule ^(.*)$ https://elmercio.com/$1 [R=301,L]  — todo el dominio a elmercio.com
+# una.red — LA LANDING DEL ESTUDIO, y nada más (estática)
+#
+# Historia del dominio:
+#   hasta 2026-08-22  todo el dominio era un 301 a elmercio.com
+#   2026-08-23        pasó a ser el hub: landing + /apps/ + /ds/ + /renuncia/
+#   2026-09-13        el hub se mudó a GitHub Pages y aquí queda solo la landing
+#
+# El sistema de diseño y las páginas de proyecto viven ahora en
+# franciscombp.github.io/mal/, que es lo que sirve el repo. Lo que salió de
+# aquí se va con 301, no con 404: son URLs que estaban en el sitemap.
 Options -Indexes
 AddDefaultCharset UTF-8
 DirectoryIndex index.html
@@ -9,6 +17,13 @@ RewriteEngine On
 # www → apex. Cloudflare termina el TLS: no redirigir http→https aquí para no crear bucles.
 RewriteCond %{HTTP_HOST} ^www\.una\.red$ [NC]
 RewriteRule ^ https://una.red%{REQUEST_URI} [R=301,L]
+
+# Lo que se mudó al repo. `ds/` incluye el storybook y las demos.
+RewriteRule ^(ds/.*)$      https://franciscombp.github.io/mal/$1 [R=301,L]
+RewriteRule ^(apps/.*)$    https://franciscombp.github.io/mal/$1 [R=301,L]
+RewriteRule ^(renuncia/.*)$ https://franciscombp.github.io/mal/$1 [R=301,L]
+RewriteRule ^ds$           https://franciscombp.github.io/mal/ds/ [R=301,L]
+RewriteRule ^renuncia$     https://franciscombp.github.io/mal/renuncia/ [R=301,L]
 
 <IfModule mod_headers.c>
   Header set X-Content-Type-Options "nosniff"

@@ -1,12 +1,12 @@
 {
   "nombre": "mal-ds",
-  "version": "1.0.15",
-  "fecha": "2026-08-23",
-  "url": "https://una.red/ds/",
+  "version": "1.0.16",
+  "fecha": "2026-09-13",
+  "url": "https://franciscombp.github.io/mal/ds/",
   "hojas": {
     "mal/mal.css": {
-      "sha": "960f4de332ce",
-      "bytes": 152475
+      "sha": "002ab4a5479f",
+      "bytes": 162232
     },
     "mal/compat.css": {
       "sha": "af1779ccf6ba",

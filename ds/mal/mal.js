@@ -1,6 +1,6 @@
 /* ══════════════════════════════════════════════════════════════
    MAL DS · comportamientos
-   https://una.red/ds/mal/mal.js
+   https://franciscombp.github.io/mal/ds/mal/mal.js
 
    El JavaScript de los componentes que no se resuelven solo con CSS.
    Tres reglas:
@@ -10,7 +10,7 @@
      · Respeta `prefers-reduced-motion`: lo que se mueve solo, se para.
 
    Uso:
-       <script src="https://una.red/ds/mal/mal.js" defer></script>
+       <script src="https://franciscombp.github.io/mal/ds/mal/mal.js" defer></script>
 
    Arranque manual:
        <script src="…/mal.js" data-mal-auto="no" defer></script>

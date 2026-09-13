@@ -1,10 +1,10 @@
 /* mal-ds · comprobador de versión
-   https://una.red/ds/version.js
+   https://franciscombp.github.io/mal/ds/version.js
 
    Opcional, para las copias del sistema que viven fuera de este paquete.
    Se incluye así:
 
-       <script src="https://una.red/ds/version.js" data-mal-ds="1.0.0" defer></script>
+       <script src="https://franciscombp.github.io/mal/ds/version.js" data-mal-ds="1.0.0" defer></script>
 
    y si el central va por delante lo dice en la consola. No pinta nada en la
    página, no manda datos a ningún sitio y falla en silencio si no hay red.
@@ -18,7 +18,7 @@
   'use strict';
   const guion = document.currentScript;
   const mia = (guion && guion.dataset.malDs) || null;
-  const base = (guion && guion.src ? guion.src.replace(/version\.js.*$/, '') : 'https://una.red/ds/');
+  const base = (guion && guion.src ? guion.src.replace(/version\.js.*$/, '') : 'https://franciscombp.github.io/mal/ds/');
 
   const estado = { version: mia, central: null, alDia: null, url: base };
   window.malDS = estado;

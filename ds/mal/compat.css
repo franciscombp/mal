@@ -1,7 +1,7 @@
-/* mal-ds v1.0.15 · https://una.red/ds/ */
+/* mal-ds v1.0.16 · https://franciscombp.github.io/mal/ds/ */
 /* ══════════════════════════════════════════════════════════════
    MAL DS · capa de compatibilidad con el storybook de maldonado.pro
-   https://una.red/ds/mal/compat.css
+   https://franciscombp.github.io/mal/ds/mal/compat.css
 
    PARA QUÉ. `maldonado.pro` nació con su propia hoja (`index.css`)
    antes de que el sistema se centralizara. Su HTML habla en tokens
@@ -12,8 +12,8 @@
 
    CÓMO SE USA — las dos hojas, en este orden:
 
-       <link rel="stylesheet" href="https://una.red/ds/mal/mal.css">
-       <link rel="stylesheet" href="https://una.red/ds/mal/compat.css">
+       <link rel="stylesheet" href="https://franciscombp.github.io/mal/ds/mal/mal.css">
+       <link rel="stylesheet" href="https://franciscombp.github.io/mal/ds/mal/compat.css">
 
    y se puede borrar `index.css`.
 
