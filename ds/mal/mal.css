@@ -1,4 +1,4 @@
-/* mal-ds v1.0.16 · https://franciscombp.github.io/mal/ds/ */
+/* mal-ds v1.0.17 · https://franciscombp.github.io/mal/ds/ */
 /* ══════════════════════════════════════════════════════════════
    MAL DESIGN SYSTEM · v2
    https://franciscombp.github.io/mal/ds/mal/mal.css
@@ -636,6 +636,15 @@ p{text-wrap:pretty}
 }
 .btn--fantasma{background:transparent}
 .btn--sm{padding:.5rem .85rem;font-size:var(--mal-t-caption)}
+/* Botón de solo icono: cuadrado, no pastilla. El `.btn` normal reparte el
+   relleno a los lados para acompañar a una palabra; con un icono dentro y
+   nada más, eso deja una barra ancha con un dibujo pequeño en medio. El
+   tamaño lo pone `--ref-tap`, que es lo que cada tema considera un objetivo
+   táctil decente. Lleva `aria-label`: sin texto, es lo único que lo nombra. */
+.btn--icono{
+  padding:0;width:var(--ref-tap, 44px);height:var(--ref-tap, 44px);
+  display:inline-grid;place-items:center;flex:none;
+}
 
 /* ─── secciones ───────────────────────────────────────────── */
 .sec{padding-block:calc(clamp(3.5rem, 8vw, 6.5rem) * var(--ref-densidad));border-top:var(--mal-borde)}
