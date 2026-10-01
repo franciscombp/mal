@@ -1,0 +1,447 @@
+/* Fran en papel · boceto.
+
+   Un diorama de papel que se camina. TODO el mundo se pinta con los
+   roles de mal-ds (--mal-*): por eso el cajón del archivo puede cambiarle
+   el tema y la noche es el modo oscuro del sistema. Lo que el sistema no
+   tiene —la piel de Fran, la noche, el filo del recorte— se declara aquí
+   como referencia propia, con su pareja oscura, igual que la capa 1.
+
+   De día: Paper Mario, papel crema y filo blanco.
+   De noche: Limbo, siluetas y ventanas encendidas. */
+
+:root{
+  /* ── referencia propia del juego ── */
+  --pp-noche:0;
+  --pp-f-piel:#C68A64;
+  --pp-f-pelo:#1E1B1A;
+  --pp-f-sueter:#A3A19B;
+  --pp-f-pantalon:#36342F;
+  --pp-f-tinta:#1E1B1A;
+  --pp-f-gafas:#B08A34;
+  --pp-f-ojo:#1E1B1A;
+  --pp-sombra:rgba(60,40,20,.22);
+
+  /* ── el mundo, derivado de los roles ── */
+  --pp-corte:var(--mal-surface);
+  --pp-cielo-alto:color-mix(in srgb, var(--mal-primary) 9%, var(--mal-bg));
+  --pp-cielo-bajo:var(--mal-bg);
+  --pp-astro:var(--mal-primary);
+  --pp-lejos:color-mix(in srgb, var(--mal-on-surface) 8%, var(--mal-bg));
+  --pp-lejos-2:color-mix(in srgb, var(--mal-on-surface) 13%, var(--mal-bg));
+  --pp-ciudad:color-mix(in srgb, var(--mal-on-surface) 20%, var(--mal-bg));
+  --pp-ventana:color-mix(in srgb, var(--mal-on-surface) 7%, var(--mal-surface));
+  --pp-papel:var(--mal-surface);
+  --pp-papel-2:var(--mal-surface-alt);
+  --pp-muro:color-mix(in srgb, var(--mal-on-surface) 4%, var(--mal-surface-alt));
+  --pp-tinta:var(--mal-on-surface);
+  --pp-marca:var(--mal-primary);
+  --pp-marca-suave:color-mix(in srgb, var(--mal-primary) 32%, var(--mal-surface));
+  --pp-madera:color-mix(in srgb, var(--mal-warn) 34%, var(--mal-surface));
+  --pp-suelo:var(--mal-surface-alt);
+  --pp-frente:color-mix(in srgb, var(--mal-on-surface) 78%, var(--mal-bg));
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-tema="claro"]){
+    --pp-noche:1;
+    --pp-f-piel:#0B0B0A; --pp-f-pelo:#0B0B0A; --pp-f-sueter:#0B0B0A; --pp-f-pantalon:#0B0B0A;
+    --pp-f-tinta:#0B0B0A; --pp-f-gafas:#F2C25B; --pp-f-ojo:#F7F1E3;
+    --pp-sombra:rgba(0,0,0,.55);
+    --pp-corte:color-mix(in srgb, var(--mal-on-surface) 26%, var(--mal-bg));
+    --pp-cielo-alto:color-mix(in srgb, var(--mal-info) 10%, var(--mal-bg));
+    --pp-cielo-bajo:color-mix(in srgb, var(--mal-on-surface) 9%, var(--mal-bg));
+    --pp-astro:color-mix(in srgb, var(--mal-on-surface) 88%, var(--mal-bg));
+    --pp-ventana:color-mix(in srgb, var(--mal-warn) 78%, var(--mal-surface));
+    --pp-frente:var(--mal-bg);
+  }
+}
+:root[data-tema="oscuro"]{
+  --pp-noche:1;
+  --pp-f-piel:#0B0B0A; --pp-f-pelo:#0B0B0A; --pp-f-sueter:#0B0B0A; --pp-f-pantalon:#0B0B0A;
+  --pp-f-tinta:#0B0B0A; --pp-f-gafas:#F2C25B; --pp-f-ojo:#F7F1E3;
+  --pp-sombra:rgba(0,0,0,.55);
+  --pp-corte:color-mix(in srgb, var(--mal-on-surface) 26%, var(--mal-bg));
+  --pp-cielo-alto:color-mix(in srgb, var(--mal-info) 10%, var(--mal-bg));
+  --pp-cielo-bajo:color-mix(in srgb, var(--mal-on-surface) 9%, var(--mal-bg));
+  --pp-astro:color-mix(in srgb, var(--mal-on-surface) 88%, var(--mal-bg));
+  --pp-ventana:color-mix(in srgb, var(--mal-warn) 78%, var(--mal-surface));
+  --pp-frente:var(--mal-bg);
+}
+
+/* ─── la página: una sola pantalla, sin scroll ──────────────── */
+html,body{height:100%}
+body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--mal-bg);color:var(--mal-on-surface)}
+.papel [hidden]{display:none !important}
+.papel-defs{position:absolute;width:0;height:0;overflow:hidden}
+.filtro-corte{flood-color:var(--pp-corte)}
+.filtro-sombra{flood-color:var(--pp-sombra)}
+.rayas-a{fill:var(--pp-marca)}
+.rayas-b{fill:var(--pp-papel)}
+.adoquin{fill:none;stroke:var(--pp-tinta);stroke-width:1.2;opacity:.16}
+.halo-a{stop-color:var(--mal-warn);stop-opacity:.5}
+.halo-b{stop-color:var(--mal-warn);stop-opacity:0}
+
+.escenario{
+  position:fixed;inset:0;overflow:hidden;cursor:pointer;
+  -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  background:linear-gradient(to bottom, var(--pp-cielo-alto), var(--pp-cielo-bajo) 72%);
+}
+.cielo{position:absolute;inset:0;pointer-events:none}
+.cielo__astro{
+  position:absolute;right:14%;top:17%;width:clamp(64px, 9vw, 128px);aspect-ratio:1;border-radius:50%;
+  background:var(--pp-astro);box-shadow:0 0 0 6px var(--pp-corte), 0 10px 14px 6px var(--pp-sombra);
+}
+.cielo__estrellas{
+  position:absolute;inset:0 0 45% 0;opacity:var(--pp-noche);transition:opacity .6s;
+  background-image:
+    radial-gradient(1.6px 1.6px at 8% 22%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 19% 48%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1.8px 1.8px at 31% 14%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 44% 36%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1.6px 1.6px at 57% 9%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 66% 52%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1.4px 1.4px at 78% 30%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1.8px 1.8px at 91% 58%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 96% 12%, var(--mal-on-surface) 50%, transparent 52%);
+}
+
+/* El mundo mide 6400 × 720 unidades y se escala entero a la pantalla.
+   Cada capa se desplaza a su ritmo (data-p): eso es el paralaje. */
+.mundo{position:absolute;left:0;top:0;width:6400px;height:720px;transform-origin:0 0}
+.capa{position:absolute;left:0;top:0;height:720px;will-change:transform}
+.capa--suelo{width:6400px}
+.fondo,.suelo{display:block;height:720px;overflow:visible}
+.suelo{position:absolute;left:0;top:0}
+.suelo__tierra{fill:var(--pp-suelo)}
+.suelo__bordillo{fill:none;stroke:var(--pp-tinta);stroke-width:2.5}
+.suelo__piedra{fill:url(#adoquin)}
+.suelo__costura{fill:none;stroke:var(--pp-tinta);stroke-width:1.5;stroke-dasharray:12 10;opacity:.35}
+
+/* los fondos los genera papel.js */
+.f-lejos{fill:var(--pp-lejos)}
+.f-lejos-2{fill:var(--pp-lejos-2)}
+.f-nieve{fill:var(--pp-papel)}
+.f-ciudad{fill:var(--pp-ciudad)}
+.f-ventana{fill:var(--pp-ventana)}
+.f-frente{fill:var(--pp-frente)}
+.f-cable{fill:none;stroke:var(--pp-ciudad);stroke-width:1.5}
+.f-cabina{fill:var(--pp-marca-suave)}
+.f-nube{fill:var(--pp-papel)}
+.f-halo{fill:url(#halo);opacity:var(--pp-noche);transition:opacity .6s}
+.f-farol{fill:var(--pp-ventana)}
+
+/* ─── las piezas recortadas ─────────────────────────────────── */
+.corte{filter:url(#recorte)}
+.estacion{position:absolute;bottom:120px}
+.arte{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.arte :is(rect,circle,ellipse,path,polygon,line,polyline){
+  fill:var(--pp-papel);stroke:var(--pp-tinta);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round;
+}
+.arte .sin{stroke:none}
+.arte .fino{stroke-width:1.5}
+.arte .grueso{stroke-width:4}
+.arte .hueco{fill:none}
+.arte .p2{fill:var(--pp-papel-2)}
+.arte .muro{fill:var(--pp-muro)}
+.arte .r{fill:var(--pp-marca)}
+.arte .rs{fill:var(--pp-marca-suave)}
+.arte .o{fill:var(--pp-tinta)}
+.arte .v{fill:var(--pp-ventana)}
+.arte .m{fill:var(--pp-madera)}
+.arte .az{fill:var(--mal-pastel-azul)}
+.arte .ve{fill:var(--mal-pastel-verde)}
+.arte .li{fill:var(--mal-pastel-lila)}
+.arte .toldo{fill:url(#rayas)}
+.arte .trazo-papel{stroke:var(--pp-papel)}
+.arte .trazo-claro{stroke:var(--pp-papel-2)}
+.arte .trazo-marca{stroke:var(--pp-marca)}
+.arte text{stroke:none;fill:var(--pp-tinta);font-family:var(--mal-mono);font-weight:600;letter-spacing:.04em}
+.arte text.d{font-family:var(--mal-display);font-weight:var(--ref-peso-display);letter-spacing:var(--ref-tracking)}
+.arte text.n{font-family:var(--mal-texto);font-weight:800;letter-spacing:-.01em}
+.arte text.sobre{fill:var(--mal-on-primary)}
+.arte text.claro{fill:var(--pp-papel)}
+.arte text.en-tinta{fill:var(--mal-primary-en-tinta)}
+.arte text.serif{font-family:"PT Serif",Georgia,serif;font-weight:700;letter-spacing:0}
+.arte text.tiza{fill:var(--pp-papel);font-family:"PT Serif",Georgia,serif;font-style:italic;font-weight:400;letter-spacing:0}
+.arte .punto-em{fill:var(--mal-morado)}
+.arte .vapor{stroke-width:2;opacity:.55;animation:papel-vapor 2.6s ease-in-out infinite}
+.arte .vapor--2{animation-delay:-1.3s}
+@keyframes papel-vapor{0%,100%{transform:translateY(0);opacity:.15}50%{transform:translateY(-6px);opacity:.6}}
+
+/* El libro desplegable: cada estación está tumbada en el suelo y se
+   levanta cuando la cámara llega. Sin JS, todo está de pie. */
+.papel-js .estacion{transform:perspective(1400px) rotateX(84deg);transform-origin:50% 100%;
+  transition:transform .8s cubic-bezier(.22,1.5,.38,1)}
+.papel-js .estacion.abierta{transform:none}
+
+/* Los puntos que se miran: botones invisibles sobre el dibujo.
+   Cerca, al pasar o con el foco, se marca la línea de recorte. */
+.punto{position:absolute;padding:0;border:0;background:transparent;border-radius:16px;cursor:pointer}
+.punto:is(:hover,.activo){outline:3px dashed var(--pp-marca);outline-offset:6px}
+.punto:focus-visible{outline:4px solid var(--pp-marca);outline-offset:6px}
+.punto.visto::after{
+  content:"";position:absolute;top:-4px;right:-4px;width:22px;height:22px;border-radius:50%;
+  background:var(--pp-marca);box-shadow:0 0 0 3px var(--pp-corte);
+}
+
+/* ─── Fran ──────────────────────────────────────────────────── */
+.fran{position:absolute;left:0;top:0;width:110px;height:170px;pointer-events:none;will-change:transform}
+.fran__giro{width:100%;height:100%;transform:scaleX(var(--dir, 1));transition:transform .26s cubic-bezier(.3,1.6,.5,1)}
+.fran svg{width:100%;height:100%;overflow:visible}
+.fran :is(rect,circle,ellipse,path){stroke:var(--pp-f-tinta);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.f-piel{fill:var(--pp-f-piel)}
+.f-pelo{fill:var(--pp-f-pelo)}
+.f-sueter{fill:var(--pp-f-sueter)}
+.f-pantalon{fill:var(--pp-f-pantalon)}
+.f-zapato,.f-bufanda{fill:var(--pp-marca)}
+.f-linea{fill:none;stroke-width:1.2 !important;opacity:.4}
+.fran .f-ojo{fill:var(--pp-f-ojo);stroke:none}
+.fran .f-gafas{fill:none;stroke:var(--pp-f-gafas);stroke-width:1.8}
+.fran .f-boca{fill:none;stroke-width:1.5}
+.pierna--i{transform-origin:47px 110px}
+.pierna--d{transform-origin:62px 110px}
+.brazo--i{transform-origin:32px 68px}
+.brazo--d{transform-origin:78px 68px}
+.fran__ojos{transform-origin:55px 40px;animation:papel-parpadeo 4.6s infinite}
+.fran--anda .pierna--i{animation:papel-paso var(--paso, .42s) ease-in-out infinite alternate}
+.fran--anda .pierna--d{animation:papel-paso var(--paso, .42s) ease-in-out infinite alternate-reverse}
+.fran--anda .brazo--i{animation:papel-braceo var(--paso, .42s) ease-in-out infinite alternate-reverse}
+.fran--anda .brazo--d{animation:papel-braceo var(--paso, .42s) ease-in-out infinite alternate}
+.fran--anda .fran__cuerpo{animation:papel-rebote calc(var(--paso, .42s) / 2) ease-in-out infinite alternate}
+@keyframes papel-paso{from{transform:rotate(-24deg)}to{transform:rotate(24deg)}}
+@keyframes papel-braceo{from{transform:rotate(-20deg)}to{transform:rotate(20deg)}}
+@keyframes papel-rebote{from{transform:translateY(0)}to{transform:translateY(-4px)}}
+@keyframes papel-parpadeo{0%,93%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+
+/* ─── la nota al pie ────────────────────────────────────────── */
+.asterisco{position:absolute;left:0;top:0;width:56px;height:56px;pointer-events:none;will-change:transform}
+.asterisco svg{width:100%;height:100%;overflow:visible}
+.asterisco__brazos path{fill:none;stroke:var(--pp-marca);stroke-width:8;stroke-linecap:round}
+.asterisco__brazos{transform-origin:28px 28px;animation:papel-girar 16s linear infinite}
+.asterisco__cara{fill:var(--pp-marca)}
+.asterisco__ojo{fill:var(--mal-on-primary);transform-origin:28px 27px;animation:papel-parpadeo 5.3s infinite}
+.asterisco--habla svg{animation:papel-salto .5s ease-in-out infinite alternate}
+@keyframes papel-girar{to{transform:rotate(360deg)}}
+@keyframes papel-salto{from{transform:translateY(0) scale(1)}to{transform:translateY(-5px) scale(1.06)}}
+
+/* ─── delante ───────────────────────────────────────────────── */
+.capa--frente{pointer-events:none}
+
+/* ─── HUD ───────────────────────────────────────────────────── */
+.papel-hud{
+  position:fixed;z-index:8;top:0;left:0;right:0;
+  display:grid;grid-template-columns:auto minmax(0, 1fr) auto;align-items:center;gap:var(--mal-e3);
+  padding:calc(env(safe-area-inset-top, 0px) + 14px) 16px 0;pointer-events:none;
+}
+.papel-hud > *{pointer-events:auto}
+.papel-marca{
+  display:inline-flex;align-items:baseline;gap:.45rem;text-decoration:none;color:var(--mal-on-surface);
+  font-family:var(--mal-display);font-weight:var(--ref-peso-display);font-size:1.3rem;letter-spacing:var(--ref-tracking);
+}
+.papel-marca i{align-self:center;width:.7rem;height:.7rem;border-radius:50%;background:var(--mal-primary)}
+.papel-marca span{font-family:var(--mal-mono);font-weight:600;font-size:var(--mal-t-mini);letter-spacing:.1em;text-transform:uppercase;color:var(--mal-on-surface-3)}
+.papel-hud__acc{display:flex;align-items:center;gap:var(--mal-e2)}
+.papel-progreso{
+  display:flex;align-items:center;gap:.6rem;padding:.45rem .75rem;min-height:36px;
+  background:var(--mal-surface);border:var(--mal-borde);border-radius:var(--mal-r-full);
+  font-family:var(--mal-mono);font-size:var(--mal-t-mini);font-weight:700;font-variant-numeric:tabular-nums;
+}
+.papel-progreso .medidor{width:64px}
+.papel-mapa{
+  justify-self:center;display:flex;gap:2px;padding:4px;max-width:100%;overflow-x:auto;scrollbar-width:none;
+  background:var(--mal-surface);border:var(--mal-borde);border-radius:var(--mal-r-full);box-shadow:var(--mal-elev-1);
+}
+.papel-mapa::-webkit-scrollbar{display:none}
+.papel-mapa button{
+  display:inline-flex;align-items:center;gap:.45rem;min-height:34px;padding:0 .8rem;white-space:nowrap;cursor:pointer;
+  border:0;border-radius:var(--mal-r-full);background:transparent;color:var(--mal-on-surface-2);
+  font-family:var(--mal-texto);font-size:var(--mal-t-caption);font-weight:600;
+}
+.papel-mapa button::before{content:"";flex:none;width:.5rem;height:.5rem;border-radius:50%;border:1.5px solid currentColor}
+.papel-mapa button.hecho::before{background:var(--mal-primary);border-color:var(--mal-primary)}
+.papel-mapa button:hover{color:var(--mal-on-surface)}
+.papel-mapa button[aria-current]{background:var(--mal-on-surface);color:var(--mal-surface)}
+.papel-mapa button:focus-visible{outline:3px solid var(--mal-primary);outline-offset:1px}
+
+.papel kbd{
+  display:inline-grid;place-items:center;min-width:1.8em;height:1.8em;padding:0 .4em;
+  font-family:var(--mal-mono);font-size:.78rem;font-weight:700;line-height:1;color:var(--mal-on-surface);
+  background:var(--mal-surface);border:1.5px solid var(--mal-on-surface);border-bottom-width:3px;border-radius:6px;
+}
+.papel-ayuda{
+  position:fixed;z-index:7;left:16px;bottom:calc(env(safe-area-inset-bottom, 0px) + 16px);
+  display:flex;align-items:center;gap:.9rem;padding:.4rem .65rem;
+  font-family:var(--mal-texto);font-size:var(--mal-t-mini);color:var(--mal-on-surface-2);
+  background:color-mix(in srgb, var(--mal-surface) 82%, transparent);border-radius:var(--mal-r-s);
+}
+.papel-ayuda span,.portada__teclas span{display:inline-flex;align-items:center;gap:.25rem}
+
+/* «Mirar»: el aviso de acción de cualquier juego, abajo y al centro.
+   También es un botón: en el teléfono se toca. */
+.papel-accion{
+  position:fixed;z-index:7;left:50%;bottom:calc(env(safe-area-inset-bottom, 0px) + 18px);transform:translateX(-50%);
+  display:inline-flex;align-items:center;gap:.55rem;max-width:calc(100vw - 32px);
+  padding:.5rem 1.1rem .5rem .5rem;min-height:46px;cursor:pointer;white-space:nowrap;
+  font-family:var(--mal-texto);font-size:var(--mal-t-caption);font-weight:600;
+  color:var(--mal-surface);background:var(--mal-on-surface);border:0;border-radius:var(--mal-r-full);
+  box-shadow:0 5px 0 var(--pp-sombra);animation:papel-brota .3s var(--mal-ease);
+}
+.papel-accion b{font-weight:800;overflow:hidden;text-overflow:ellipsis}
+.papel-accion kbd{background:var(--mal-surface);color:var(--mal-on-surface);border-color:var(--mal-surface)}
+.papel-accion .icono{color:var(--mal-surface)}
+.papel-accion:focus-visible{outline:3px solid var(--mal-primary);outline-offset:3px}
+@keyframes papel-brota{from{transform:translateX(-50%) translateY(12px) scale(.9);opacity:0}}
+
+/* ─── los globos de diálogo ─────────────────────────────────── */
+.globo{
+  position:fixed;z-index:6;left:0;top:0;width:max-content;max-width:min(21rem, calc(100vw - 32px));
+  padding:.65rem 1rem .75rem;pointer-events:none;
+  color:var(--mal-on-surface);background:var(--mal-surface);
+  border:2px solid var(--mal-on-surface);border-radius:18px;box-shadow:0 5px 0 var(--pp-sombra);
+  font-family:var(--mal-texto);font-size:var(--mal-t-cuerpo);line-height:1.4;
+}
+.globo::after{
+  content:"";position:absolute;bottom:-10px;left:calc(var(--cola, 50%) - 9px);width:16px;height:16px;
+  background:inherit;border-right:2px solid var(--mal-on-surface);border-bottom:2px solid var(--mal-on-surface);
+  transform:rotate(45deg);border-bottom-right-radius:3px;
+}
+.globo__quien{display:block;margin-bottom:.15rem;font-family:var(--mal-mono);font-size:var(--mal-t-mini);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mal-primary-txt)}
+.globo p{margin:0}
+/* la nota al pie habla en cursiva y con serifa: la voz del margen */
+.globo--nota{background:color-mix(in srgb, var(--mal-primary) 9%, var(--mal-surface))}
+.globo--nota p{font-family:"PT Serif",Georgia,serif;font-style:italic;font-size:var(--mal-t-lede);line-height:1.35}
+.globo--entra{animation:papel-globo .3s var(--mal-ease)}
+@keyframes papel-globo{from{opacity:0;scale:.85}}
+
+/* ─── la portada ───────────────────────────────────────────── */
+.portada{
+  position:fixed;z-index:9;left:max(16px, 4vw);top:calc(env(safe-area-inset-top, 0px) + 84px);
+  width:min(30rem, calc(100vw - 32px));padding:var(--mal-e5) var(--mal-e5) var(--mal-e5);
+  display:flex;flex-direction:column;gap:var(--mal-e3);
+  background:var(--mal-surface);border:2px solid var(--mal-on-surface);border-radius:6px;
+  box-shadow:0 0 0 6px var(--pp-corte), 0 14px 0 6px var(--pp-sombra);
+  transform:rotate(-1.2deg);transition:transform .45s var(--mal-ease), opacity .3s;
+}
+/* la cinta que lo sujeta */
+.portada::before{
+  content:"";position:absolute;top:-16px;left:50%;width:110px;height:30px;transform:translateX(-50%) rotate(3deg);
+  background:color-mix(in srgb, var(--mal-pastel-azul) 80%, transparent);border-radius:2px;
+}
+.portada--fuera{transform:translateY(-120%) rotate(-8deg);opacity:0;pointer-events:none}
+.portada__t{
+  font-family:var(--mal-display);font-weight:var(--ref-peso-display);letter-spacing:-.05em;line-height:.9;
+  font-size:clamp(2.8rem, 2rem + 4vw, 4.6rem);text-wrap:balance;
+}
+.portada__lede{font-family:"PT Serif",Georgia,serif;font-style:italic;font-size:var(--mal-t-lede);line-height:1.4;color:var(--mal-on-surface-2);max-width:30ch}
+.portada__teclas{display:flex;align-items:center;flex-wrap:wrap;gap:.4rem 1rem;font-size:var(--mal-t-caption);color:var(--mal-on-surface-2)}
+.portada__acc{display:flex;flex-wrap:wrap;gap:var(--mal-e2);margin-top:var(--mal-e2)}
+.papel-solo-tactil{display:none}
+@media (pointer:coarse){
+  .papel-solo-tactil{display:flex}
+  .papel-solo-teclado{display:none}
+  .papel-ayuda{display:none}
+}
+
+/* ─── el panel de cada cosa ─────────────────────────────────── */
+.papel-panel{max-width:min(calc(100vw - 32px), 620px);max-height:min(86dvh, 780px);overflow:auto}
+.papel-panel__cab{
+  position:sticky;top:0;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:var(--mal-e3);
+  padding:var(--mal-e3) var(--mal-e3) var(--mal-e2) var(--mal-e5);background:var(--mal-relleno);
+  font-family:var(--mal-mono);font-size:var(--mal-t-mini);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mal-on-surface-3);
+}
+.papel-panel__cuerpo{display:flex;flex-direction:column;gap:var(--mal-e4);padding:var(--mal-e2) var(--mal-e5) var(--mal-e5)}
+.papel-panel__cuerpo > *{min-width:0}
+.papel-panel__titulo{
+  font-family:var(--mal-display);font-weight:var(--ref-peso-display);letter-spacing:var(--ref-tracking);
+  font-size:var(--mal-t-h2);line-height:1.02;text-wrap:balance;color:var(--mal-on-surface);
+}
+.papel-panel__titulo--grande{font-size:clamp(2.2rem, 1.5rem + 3vw, 3.4rem);line-height:.95}
+.papel-mercio{font-family:"PT Serif",Georgia,serif;letter-spacing:-.01em}
+.papel-mercio span{color:var(--mal-morado)}
+.papel-resultado{
+  display:flex;align-items:center;gap:.6rem;padding:var(--mal-e3) var(--mal-e4);
+  font-weight:600;color:var(--mal-primary-txt);background:color-mix(in srgb, var(--mal-primary) 8%, var(--mal-surface));
+  border-radius:var(--mal-r-s);
+}
+.papel-resultado .icono{flex:none}
+.papel-pendiente{
+  font-family:var(--mal-mono);font-size:var(--mal-t-mini);letter-spacing:.04em;color:var(--mal-on-surface-3);
+  padding:var(--mal-e3);border:1.5px dashed var(--mal-outline-2);border-radius:var(--mal-r-s);
+}
+.papel-acc{display:flex;flex-wrap:wrap;gap:var(--mal-e2)}
+.papel-dos{display:grid;grid-template-columns:repeat(auto-fit, minmax(14rem, 1fr));gap:var(--mal-e3)}
+.papel-carne{display:grid;grid-template-columns:auto minmax(0, 1fr);gap:var(--mal-e5);align-items:start}
+.papel-carne .ticket{width:220px;transform:rotate(-2deg)}
+.papel-carne .ticket-photo-full{height:180px}
+.papel-carne .ticket-content{padding:16px}
+.papel-carne .ticket-value-sm{font-size:1.05rem}
+.papel-carne .enlaces{margin-top:0}
+@media (max-width:620px){
+  .papel-carne{grid-template-columns:1fr}
+  .papel-carne .ticket{margin-inline:auto}
+}
+.papel-lista{display:flex;flex-direction:column;list-style:none;margin:0;padding:0;border-top:var(--mal-separador)}
+.papel-lista a{
+  display:flex;flex-direction:column;gap:.15rem;padding:var(--mal-e3) var(--mal-e2);
+  text-decoration:none;color:var(--mal-on-surface);border-bottom:var(--mal-separador);
+}
+.papel-lista a:hover{background:color-mix(in srgb, var(--mal-primary) 6%, transparent)}
+.papel-lista b{display:flex;align-items:baseline;gap:.5rem;font-weight:700}
+.papel-lista b::after{content:"→";margin-left:auto;color:var(--mal-primary-txt)}
+.papel-lista small{font-family:var(--mal-mono);font-size:var(--mal-t-mini);font-weight:600;color:var(--mal-on-surface-3);text-transform:uppercase;letter-spacing:.06em}
+.papel-lista span{font-size:var(--mal-t-caption);color:var(--mal-on-surface-2)}
+.papel-cajones{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:var(--mal-e2)}
+.papel-cajon{
+  display:flex;flex-direction:column;align-items:flex-start;gap:.15rem;padding:var(--mal-e3) var(--mal-e4);cursor:pointer;text-align:left;
+  color:var(--mal-on-surface);background:var(--mal-surface);border:var(--mal-borde-fuerte);border-radius:var(--mal-r-s);
+  font-family:var(--mal-texto);
+}
+.papel-cajon b{font-family:var(--mal-mono);font-size:var(--mal-t-caption);letter-spacing:.06em}
+.papel-cajon span{font-size:var(--mal-t-mini);color:var(--mal-on-surface-3)}
+.papel-cajon[aria-pressed="true"]{border-color:var(--mal-primary);box-shadow:inset 0 0 0 1px var(--mal-primary);background:color-mix(in srgb, var(--mal-primary) 7%, var(--mal-surface))}
+.papel-cajon:focus-visible{outline:3px solid var(--mal-primary);outline-offset:2px}
+
+/* ─── el premio ────────────────────────────────────────────── */
+.papel-premio{position:fixed;inset:0;z-index:20}
+.papel-premio .premio{min-height:100%;padding:calc(env(safe-area-inset-top, 0px) + 40px) 16px calc(env(safe-area-inset-bottom, 0px) + 32px)}
+.papel-premio .kicker{position:relative;justify-content:center}
+.papel-premio__icono{width:96px;height:96px}
+.papel-premio .btn{margin-top:var(--mal-e3)}
+
+/* ─── pantallas estrechas ───────────────────────────────────── */
+@media (max-width:900px){
+  .papel-hud{grid-template-columns:auto minmax(0, 1fr);row-gap:var(--mal-e2)}
+  .papel-hud__acc{justify-self:end}
+  .papel-mapa{grid-column:1 / -1;grid-row:2;justify-self:stretch}
+  .portada{top:calc(env(safe-area-inset-top, 0px) + 128px)}
+  .papel-ayuda{display:none}
+}
+@media (max-width:560px){
+  .papel-hud{column-gap:var(--mal-e2)}
+  .papel-marca span,.papel-texto span{display:none}
+  .papel-progreso{padding-inline:.6rem}
+  .papel-progreso .medidor{width:28px}
+  .portada{padding:var(--mal-e4)}
+}
+@media (max-width:360px){
+  .papel-progreso .medidor{display:none}
+}
+/* teléfono acostado: una sola fila de HUD y la portada más compacta */
+@media (max-height:520px){
+  .papel-hud{grid-template-columns:auto minmax(0, 1fr) auto;padding-top:calc(env(safe-area-inset-top, 0px) + 10px)}
+  .papel-mapa{grid-column:auto;grid-row:auto;justify-self:center}
+  .papel-progreso{display:none}
+  .portada{top:calc(env(safe-area-inset-top, 0px) + 66px);gap:var(--mal-e2);padding:var(--mal-e4);width:min(26rem, calc(100vw - 32px))}
+  .portada__t{font-size:2.2rem}
+  .portada__t br{display:none}
+  .portada__lede{font-size:var(--mal-t-cuerpo)}
+  .portada__acc{margin-top:0}
+}
+
+/* ─── menos movimiento ──────────────────────────────────────── */
+@media (prefers-reduced-motion:reduce){
+  .papel-js .estacion{transition:none}
+  .fran__giro{transition:none}
+  .fran--anda :is(.pierna--i,.pierna--d,.brazo--i,.brazo--d,.fran__cuerpo),
+  .asterisco__brazos,.asterisco--habla svg,.arte .vapor,.fran__ojos,.asterisco__ojo{animation:none}
+  .globo--entra,.papel-accion{animation:none}
+}
