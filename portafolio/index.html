@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Fran en papel</title>
-<meta name="description" content="Boceto: el portafolio de Fran Maldonado como un diorama de papel que se camina con el teclado o tocando la pantalla.">
+<meta name="description" content="Boceto: el portafolio de Francisco Maldonado como un recorrido de seis salas de papel, con el teclado o tocando la pantalla.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../ds/mal/mal.css?v=1.0.17">
@@ -13,649 +13,571 @@
 <body class="papel">
 <a class="salta" href="../ds/demos/mal/">Saltar a la versión en texto</a>
 
-<!-- Los filtros y patrones de todo el mundo. El «recorte» es lo que hace
-     que cada pieza parezca papel troquelado: un filo claro alrededor y
-     una sombra que la despega del fondo. Los colores salen de CSS. -->
+<!-- La sombra que despega cada capa de papel de la de atrás. Su color sale de CSS. -->
 <svg class="papel-defs" width="0" height="0" aria-hidden="true" focusable="false">
   <defs>
-    <filter id="recorte" x="-15%" y="-15%" width="130%" height="135%" color-interpolation-filters="sRGB">
-      <feMorphology in="SourceAlpha" operator="dilate" radius="3.5" result="gordo"/>
-      <feFlood class="filtro-corte" result="c"/>
-      <feComposite in="c" in2="gordo" operator="in" result="filo"/>
-      <feOffset in="gordo" dy="6" result="bajo"/>
-      <feFlood class="filtro-sombra" result="s"/>
-      <feComposite in="s" in2="bajo" operator="in" result="sombra"/>
-      <feGaussianBlur in="sombra" stdDeviation="3.5" result="sombra-blanda"/>
-      <feMerge><feMergeNode in="sombra-blanda"/><feMergeNode in="filo"/><feMergeNode in="SourceGraphic"/></feMerge>
+    <filter id="sombra" x="-10%" y="-10%" width="120%" height="130%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="5"/>
+      <feOffset dy="4" result="desenfoque"/>
+      <feFlood class="filtro-sombra"/>
+      <feComposite in2="desenfoque" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
-    <pattern id="rayas" width="40" height="10" patternUnits="userSpaceOnUse">
-      <rect class="rayas-a" width="20" height="10"/><rect class="rayas-b" x="20" width="20" height="10"/>
-    </pattern>
-    <pattern id="adoquin" width="48" height="26" patternUnits="userSpaceOnUse">
-      <ellipse class="adoquin" cx="12" cy="7" rx="10" ry="4.5"/><ellipse class="adoquin" cx="36" cy="20" rx="10" ry="4.5"/>
-    </pattern>
-    <radialGradient id="halo">
-      <stop offset="0" class="halo-a"/><stop offset="1" class="halo-b"/>
-    </radialGradient>
+    <radialGradient id="halo"><stop offset="0" class="halo-a"/><stop offset="1" class="halo-b"/></radialGradient>
   </defs>
 </svg>
 
-<!-- ─── HUD ─────────────────────────────────────────────────── -->
+<!-- ─── la barra de arriba ──────────────────────────────────── -->
 <header class="papel-hud">
-  <a class="papel-marca" href="#" id="marca"><i aria-hidden="true"></i>FRAN<span>en papel</span></a>
-  <nav class="papel-mapa" id="mapa" aria-label="Ir a un lugar"></nav>
+  <a class="papel-marca" href="#" id="marca"><i aria-hidden="true"></i><span class="papel-marca__nombre">Francisco Maldonado</span><span class="papel-marca__rol">Product designer</span></a>
+  <nav class="papel-capitulos" id="capitulos" aria-label="Salas"></nav>
   <div class="papel-hud__acc">
-    <div class="papel-progreso" title="Cosas vistas">
-      <span id="visto">0/12</span>
-      <div class="medidor medidor--continuo medidor--fino" aria-hidden="true"><i id="visto-barra" style="width:0%"></i></div>
-    </div>
-    <button class="btn btn--sm btn--icono" id="tema" type="button" aria-label="Pasar a la noche"><svg class="icono" aria-hidden="true"><use href="#i-luna"/></svg></button>
-    <a class="btn btn--sm papel-texto" href="../ds/demos/mal/"><svg class="icono icono--s" aria-hidden="true"><use href="#i-documento"/></svg><span>En texto</span></a>
+    <button class="btn btn--sm papel-indice-btn" id="abrir-indice" type="button" aria-haspopup="dialog">
+      <svg class="icono icono--s" aria-hidden="true"><use href="#i-lista"/></svg><span class="papel-indice-btn__t">Índice</span><span class="papel-indice-btn__n" id="visto">0/12</span>
+    </button>
+    <button class="btn btn--sm btn--icono" id="tema" type="button" aria-label="Pasar a la noche"><svg class="icono icono--s" aria-hidden="true"><use href="#i-luna"/></svg></button>
+    <a class="btn btn--sm papel-texto" href="../ds/demos/mal/" aria-label="Versión en texto"><svg class="icono icono--s" aria-hidden="true"><use href="#i-documento"/></svg><span>Versión en texto</span></a>
   </div>
 </header>
 
+<!-- ─── la portada ──────────────────────────────────────────── -->
 <section class="portada" id="portada" aria-labelledby="portada-t">
-  <p class="kicker">maldonado.pro · Quito, Ecuador</p>
-  <h1 class="portada__t" id="portada-t">Fran,<br>en papel.</h1>
-  <p class="portada__lede">Un portafolio que se camina. Doce cosas que mirar y un café al final.</p>
-  <p class="portada__teclas papel-solo-teclado"><span><kbd>←</kbd><kbd>→</kbd> caminar</span><span><kbd>E</kbd> mirar</span><span><kbd>Tab</kbd> saltar</span></p>
-  <p class="portada__teclas papel-solo-tactil">Toca el suelo para caminar y las cosas para mirarlas.</p>
+  <p class="kicker">Portafolio · Quito, Ecuador</p>
+  <h1 class="portada__t" id="portada-t">Diseño producto. Y escribo sobre él.</h1>
+  <p class="portada__lede">Catorce años en fintech, e-commerce y entretenimiento, contados como un recorrido de seis salas.</p>
+  <ul class="cifras portada__cifras" aria-label="En números">
+    <li>desde <b>2010</b></li>
+    <li><b>3</b> industrias</li>
+    <li><b>11</b> reseñas</li>
+    <li>mentoría <b>gratis</b></li>
+  </ul>
   <p class="portada__acc">
-    <button class="btn btn--rojo" id="empezar" type="button"><svg class="icono" aria-hidden="true"><use href="#i-play"/></svg>Empezar a caminar</button>
-    <a class="btn" href="../ds/demos/mal/">Prefiero leerlo</a>
+    <button class="btn btn--rojo" id="empezar" type="button">Comenzar el recorrido<svg class="icono icono--s" aria-hidden="true"><use href="#i-flecha-der"/></svg></button>
+    <a class="btn" href="../ds/demos/mal/">Versión en texto</a>
   </p>
+  <p class="portada__ayuda papel-solo-teclado"><span><kbd>←</kbd><kbd>→</kbd> caminar</span><span><kbd>E</kbd> ver</span><span><kbd>Tab</kbd> de pieza en pieza</span></p>
+  <p class="portada__ayuda papel-solo-tactil">Toca una pieza para acercarte; la ficha de abajo te deja abrirla.</p>
 </section>
 
 <div class="escenario" id="escenario">
   <div class="cielo" aria-hidden="true"><div class="cielo__estrellas"></div><div class="cielo__astro"></div></div>
 
   <div class="mundo" id="mundo" data-ancho="6400">
-    <!-- Lejos: el Pichincha, el Cotopaxi y las nubes. Lo dibuja papel.js -->
+    <!-- Lejos: el Pichincha y el Cotopaxi. Medio: Quito a línea. Los dibuja papel.js -->
     <div class="capa" data-p=".12" aria-hidden="true"><svg class="fondo" id="fondo-lejos"></svg></div>
-    <!-- Medio: Quito, con la Basílica y el Panecillo -->
     <div class="capa" data-p=".35" aria-hidden="true"><svg class="fondo" id="fondo-medio"></svg></div>
 
-    <!-- El suelo, a escala 1: aquí camina Fran y aquí están las cosas -->
     <div class="capa capa--suelo" data-p="1">
       <svg class="suelo" viewBox="0 0 6400 720" width="6400" height="720" aria-hidden="true">
-        <path class="suelo__tierra" d="M0 601 Q800 596 1600 602 T3200 600 T4800 603 T6400 600 V720 H0 Z"/>
-        <path class="suelo__bordillo" d="M0 601 Q800 596 1600 602 T3200 600 T4800 603 T6400 600"/>
-        <rect class="suelo__piedra" x="0" y="652" width="6400" height="68"/>
-        <path class="suelo__costura" d="M0 638 H6400"/>
+        <rect class="suelo__tierra" x="-200" y="600" width="6800" height="900"/>
+        <path class="suelo__filo" d="M-200 600 H6600"/>
+        <path class="suelo__linea" d="M-200 652 H6600"/>
       </svg>
 
-      <!-- ───────── INICIO · el letrero y la cabina de fotos ───────── -->
-      <div class="estacion abierta" data-id="inicio" data-nombre="Inicio" style="left:420px;width:620px;height:330px">
-        <svg class="arte" viewBox="0 0 620 330" aria-hidden="true">
-          <g class="corte">
-            <rect class="m" x="150" y="80" width="18" height="252" rx="3"/>
-            <rect class="r" x="36" y="34" width="246" height="112" rx="12"/>
-            <text class="d sobre" x="159" y="86" text-anchor="middle" font-size="23">maldonado</text>
-            <text class="sobre" x="159" y="120" text-anchor="middle" font-size="15">.pro · se camina</text>
-            <path d="M64 168 H248 L272 194 L248 220 H64 Z"/>
-            <text x="160" y="200" text-anchor="middle" font-size="15">AL TALLER</text>
+      <!-- ───────── 01 · PRESENTACIÓN ───────── -->
+      <div class="estacion abierta" data-num="01" data-nombre="Presentación" data-lema="Quién es y qué hace."
+        style="left:360px;width:690px;height:380px">
+        <svg class="arte" viewBox="0 0 690 380" aria-hidden="true">
+          <defs><clipPath id="marco-retrato"><rect x="522" y="64" width="128" height="166"/></clipPath></defs>
+          <g class="capa-papel"><rect class="t2" x="0" y="20" width="440" height="360"/></g>
+          <text class="m" x="36" y="72">01 · PRESENTACIÓN</text>
+          <text class="d" x="34" y="138" font-size="42">Francisco</text>
+          <text class="d" x="34" y="184" font-size="42">Maldonado</text>
+          <path class="hueco trazo-ac grueso" d="M36 214 H80"/>
+          <text class="s" x="36" y="252" font-size="20">Diseño producto.</text>
+          <text class="s" x="36" y="278" font-size="20">Y escribo sobre él.</text>
+          <text class="m" x="36" y="346">DESDE 2010 · QUITO, ECUADOR</text>
+
+          <path class="hueco grueso" d="M530 250 L506 380 M642 250 L666 380 M586 236 V380"/>
+          <g class="capa-papel">
+            <rect x="494" y="36" width="184" height="222" rx="2"/>
+            <rect class="t2 fino" x="507" y="49" width="158" height="196"/>
+            <image class="retrato" href="../img/francisco-maldonado.jpg" x="522" y="64" width="128" height="166" preserveAspectRatio="xMidYMid slice" clip-path="url(#marco-retrato)"/>
+            <rect class="hueco fino" x="522" y="64" width="128" height="166"/>
           </g>
-          <g class="corte">
-            <rect class="p2" x="360" y="44" width="200" height="288" rx="10"/>
-            <rect class="o" x="378" y="12" width="164" height="46" rx="8"/>
-            <text class="d claro" x="460" y="45" text-anchor="middle" font-size="27">FOTOS</text>
-            <rect class="o" x="386" y="80" width="120" height="252"/>
-            <path class="hueco trazo-claro grueso" d="M430 262 V330 M470 262 V330 M422 262 H478"/>
-            <path class="r" d="M386 80 H506 V250 q-10 14 -20 0 q-10 14 -20 0 q-10 14 -20 0 q-10 14 -20 0 q-10 14 -20 0 q-10 14 -20 0 Z"/>
-            <path class="hueco fino" d="M410 88 V240 M434 88 V246 M458 88 V240 M482 88 V246"/>
-            <line class="grueso" x1="378" y1="80" x2="514" y2="80"/>
-            <rect class="o" x="518" y="150" width="30" height="7" rx="2"/>
-            <g transform="rotate(4 533 157)">
-              <rect x="522" y="156" width="22" height="80" rx="2"/>
-              <rect class="p2 fino" x="526" y="161" width="14" height="14"/>
-              <rect class="p2 fino" x="526" y="180" width="14" height="14"/>
-              <rect class="p2 fino" x="526" y="199" width="14" height="14"/>
-              <rect class="r fino" x="526" y="218" width="14" height="14"/>
+          <rect class="t3" x="484" y="256" width="204" height="9" rx="2"/>
+        </svg>
+        <button class="punto" type="button" data-id="perfil" data-nombre="Perfil" data-accion="Ver perfil"
+          data-frase="Catorce años diseñando producto dentro del corporativo, y escribiendo sobre él fuera."
+          data-nota="Fintech, e-commerce y entretenimiento, desde 2010."
+          style="left:0;top:20px;width:440px;height:360px" aria-label="Perfil"><span class="punto__marca"></span></button>
+        <button class="punto" type="button" data-id="retrato" data-nombre="Retrato y contacto" data-accion="Ver contacto"
+          data-frase="Product designer en Quito. Mentor en ADPList."
+          data-nota="Correo, LinkedIn, ADPList y GitHub."
+          style="left:480px;top:26px;width:210px;height:354px" aria-label="Retrato y contacto"><span class="punto__marca"></span></button>
+      </div>
+
+      <!-- ───────── 02 · TRABAJO ───────── -->
+      <div class="estacion" data-num="02" data-nombre="Trabajo" data-lema="Lo que hace cuando le pagan."
+        style="left:1200px;width:1150px;height:470px">
+        <svg class="arte" viewBox="0 0 1150 470" aria-hidden="true">
+          <g class="capa-papel"><polygon class="t3" points="0,470 0,130 190,50 190,130 380,50 380,130 570,50 570,130 760,50 760,130 950,50 950,130 1140,50 1140,470"/></g>
+          <path class="hueco fino tenue" d="M190 56 V130 M380 56 V130 M570 56 V130 M760 56 V130 M950 56 V130 M0 130 H1140"/>
+          <text class="m" x="44" y="186">02 · TRABAJO</text>
+          <text class="d" x="42" y="232" font-size="40">Trabajo</text>
+          <text class="s" x="44" y="262" font-size="18">Lo que hace cuando le pagan.</text>
+          <text class="m" x="44" y="300">3 EXPEDIENTES</text>
+
+          <path class="hueco fino" d="M450 130 V158 M720 130 V158 M990 130 V158"/>
+          <polygon class="luz" points="436,172 464,172 548,388 352,388"/>
+          <polygon class="luz" points="706,172 734,172 818,388 622,388"/>
+          <polygon class="luz" points="976,172 1004,172 1088,388 892,388"/>
+          <path class="t4" d="M438 158 H462 L472 172 H428 Z"/>
+          <path class="t4" d="M708 158 H732 L742 172 H698 Z"/>
+          <path class="t4" d="M978 158 H1002 L1012 172 H968 Z"/>
+
+          <g class="capa-papel"><rect x="375" y="388" width="150" height="82"/></g>
+          <text class="n" x="450" y="424" text-anchor="middle" font-size="16">Deuna!</text>
+          <text class="m" x="450" y="446" text-anchor="middle">FINTECH</text>
+          <g class="capa-papel">
+            <rect class="t4" x="405" y="198" width="90" height="182" rx="16"/>
+            <rect x="413" y="212" width="74" height="154" rx="9"/>
+            <g id="qr" transform="translate(425 230)"></g>
+            <rect class="ac sin" x="422" y="318" width="56" height="22" rx="11"/>
+            <text class="m sobre" x="450" y="332.5" text-anchor="middle" font-size="9">PAGAR</text>
+          </g>
+
+          <g class="capa-papel"><rect x="645" y="388" width="150" height="82"/></g>
+          <text class="n" x="720" y="424" text-anchor="middle" font-size="16">KFC Kiosk</text>
+          <text class="m" x="720" y="446" text-anchor="middle">AUTOSERVICIO</text>
+          <g class="capa-papel">
+            <rect class="t3" x="712" y="300" width="16" height="80"/>
+            <rect class="t3" x="688" y="378" width="64" height="10" rx="3"/>
+            <rect class="t4" x="670" y="150" width="100" height="160" rx="10"/>
+            <rect x="679" y="160" width="82" height="130" rx="4"/>
+            <rect class="t2 fino" x="686" y="168" width="68" height="10" rx="2"/>
+            <rect class="t2 fino" x="686" y="184" width="32" height="30" rx="3"/>
+            <rect class="t2 fino" x="722" y="184" width="32" height="30" rx="3"/>
+            <rect class="t2 fino" x="686" y="218" width="32" height="30" rx="3"/>
+            <rect class="t2 fino" x="722" y="218" width="32" height="30" rx="3"/>
+            <rect class="ac sin" x="686" y="258" width="68" height="20" rx="4"/>
+            <rect class="t3 fino" x="704" y="296" width="32" height="6" rx="2"/>
+          </g>
+
+          <g class="capa-papel"><rect x="915" y="388" width="150" height="82"/></g>
+          <text class="n" x="990" y="424" text-anchor="middle" font-size="16">Control Point</text>
+          <text class="m" x="990" y="446" text-anchor="middle">LOGÍSTICA</text>
+          <g class="capa-papel">
+            <rect class="t3" x="966" y="372" width="48" height="16" rx="3"/>
+            <rect class="t4" x="950" y="196" width="80" height="182" rx="14"/>
+            <rect x="959" y="210" width="62" height="102" rx="4"/>
+            <rect class="fino" x="965" y="218" width="10" height="10" rx="2"/><path class="hueco fino tenue" d="M980 223 H1013"/>
+            <rect class="fino" x="965" y="240" width="10" height="10" rx="2"/><path class="hueco fino tenue" d="M980 245 H1008"/>
+            <rect class="fino" x="965" y="262" width="10" height="10" rx="2"/><path class="hueco fino tenue" d="M980 267 H1013"/>
+            <rect class="fino" x="965" y="284" width="10" height="10" rx="2"/><path class="hueco fino tenue" d="M980 289 H1004"/>
+            <path class="hueco trazo-ac grueso" d="M966 223 l3 3 l6 -7 M966 245 l3 3 l6 -7 M966 267 l3 3 l6 -7"/>
+            <rect class="t3 sin" x="962" y="322" width="16" height="10" rx="2"/><rect class="t3 sin" x="982" y="322" width="16" height="10" rx="2"/><rect class="t3 sin" x="1002" y="322" width="16" height="10" rx="2"/>
+            <rect class="t3 sin" x="962" y="338" width="16" height="10" rx="2"/><rect class="t3 sin" x="982" y="338" width="16" height="10" rx="2"/><rect class="t3 sin" x="1002" y="338" width="16" height="10" rx="2"/>
+            <rect class="ac sin" x="976" y="356" width="28" height="9" rx="3"/>
+          </g>
+        </svg>
+        <button class="punto" type="button" data-id="deuna" data-nombre="Deuna!" data-accion="Ver el caso"
+          data-frase="Pagar y cobrar sin efectivo, en un país que adora el efectivo."
+          data-nota="El reto no era la tecnología: era la confianza."
+          style="left:368px;top:186px;width:164px;height:284px" aria-label="Caso Deuna!"><span class="punto__marca"></span></button>
+        <button class="punto" type="button" data-id="kiosk" data-nombre="KFC Kiosk" data-accion="Ver el caso"
+          data-frase="Pedidos sin fila, para dedos con hambre y cero paciencia."
+          data-nota="Nadie lee menús en pantallas."
+          style="left:638px;top:140px;width:164px;height:330px" aria-label="Caso KFC Kiosk"><span class="punto__marca"></span></button>
+        <button class="punto" type="button" data-id="control" data-nombre="Control Point" data-accion="Ver el caso"
+          data-frase="Operación en campo, donde el wifi no llega y nadie perdona."
+          data-nota="Flujos cortos, legibles bajo el sol."
+          style="left:908px;top:186px;width:164px;height:284px" aria-label="Caso Control Point"><span class="punto__marca"></span></button>
+      </div>
+
+      <!-- ───────── 03 · ESCRITURA ───────── -->
+      <div class="estacion" data-num="03" data-nombre="Escritura" data-lema="Un periódico y dos newsletters."
+        style="left:2510px;width:860px;height:440px">
+        <svg class="arte" viewBox="0 0 860 440" aria-hidden="true">
+          <g class="capa-papel">
+            <rect x="0" y="100" width="860" height="340"/>
+            <path class="t3" d="M-16 102 H876 L852 64 H8 Z"/>
+            <rect class="t3" x="0" y="404" width="860" height="36"/>
+          </g>
+          <path class="hueco fino tenue" d="M40 70 v30 m40 -30 v30 m40 -30 v30 m40 -30 v30 m40 -30 v30 m40 -30 v30 m40 -30 v30 m40 -30 v30 m40 -30 v30 m40 -30 v30 m40 -30 v30 m40 -30 v30 m40 -30 v30 m40 -30 v30 m40 -30 v30 m40 -30 v30 m40 -30 v30 m40 -30 v30 m40 -30 v30 m40 -30 v30"/>
+          <text class="m" x="40" y="150">03 · ESCRITURA</text>
+          <text class="d" x="38" y="192" font-size="34">Escritura</text>
+          <text class="s" x="40" y="220" font-size="17">Un periódico y dos newsletters.</text>
+
+          <path class="hueco grueso" d="M300 356 L282 440 M380 356 L398 440"/>
+          <g class="capa-papel">
+            <rect class="t3" x="242" y="350" width="196" height="9" rx="2"/>
+            <g transform="rotate(-2 340 296)">
+              <rect x="252" y="236" width="176" height="116"/>
+              <text class="serif" x="340" y="264" text-anchor="middle" font-size="22">EL MERCIO<tspan class="punto-em">.</tspan></text>
+              <path class="hueco fino" d="M264 274 H416"/>
+              <path class="hueco fino tenue" d="M266 286 H332 M266 296 H328 M266 306 H332 M266 316 H322 M266 326 H332 M266 336 H326"/>
+              <rect class="t2 fino" x="346" y="284" width="70" height="40"/>
+              <path class="hueco fino tenue" d="M346 334 H416 M346 342 H404"/>
             </g>
-            <text x="532" y="304" text-anchor="middle" font-size="11">CARNÉ</text>
+          </g>
+
+          <path class="hueco fino tenue" d="M480 118 H820 M560 118 L500 166 M560 118 L620 166 M730 118 L670 166 M730 118 L790 166"/>
+          <g class="capa-papel">
+            <rect class="t3" x="490" y="166" width="140" height="170"/>
+            <rect x="498" y="174" width="124" height="154"/>
+            <rect class="ac sin" x="498" y="174" width="124" height="6"/>
+            <text class="m" x="508" y="200" font-size="8">NEWSLETTER</text>
+            <text class="serif" x="508" y="228" font-size="16">Mal</text>
+            <text class="serif" x="508" y="248" font-size="16">Pensamientos</text>
+            <path class="hueco fino tenue" d="M508 262 H612"/>
+            <text class="m" x="508" y="314" font-size="8">LOS LUNES</text>
+          </g>
+          <g class="capa-papel">
+            <rect class="t3" x="660" y="166" width="140" height="170"/>
+            <rect class="t4" x="668" y="174" width="124" height="154"/>
+            <text class="m claro" x="678" y="200" font-size="8">NEWSLETTER</text>
+            <text class="serif claro" x="678" y="228" font-size="16">Todo</text>
+            <text class="serif claro" x="678" y="248" font-size="16">Mal</text>
+            <path class="hueco fino trazo-pantalla" d="M678 262 H782"/>
+            <text class="m claro" x="678" y="314" font-size="8">SIN CALENDARIO</text>
           </g>
         </svg>
-        <button class="punto" type="button" data-id="letrero" data-nombre="el letrero"
-          data-frase="Bienvenido. Esto es un portafolio, pero se camina."
-          data-nota="*Nada de shots bonitos que no se pueden programar."
-          style="left:30px;top:28px;width:260px;height:302px" aria-label="Mirar el letrero: quién es Fran"></button>
-        <button class="punto" type="button" data-id="fotomaton" data-nombre="la cabina de fotos"
-          data-frase="Cabina de fotos. Sale el carné, no el filtro."
-          data-nota="*Pelo largo y gafas redondas. Así es en persona."
-          style="left:356px;top:6px;width:210px;height:324px" aria-label="Mirar la cabina de fotos: el carné de Fran"></button>
+        <button class="punto" type="button" data-id="mercio" data-nombre="EL MERCIO." data-accion="Ver más"
+          data-frase="Periódico satírico ecuatoriano, desde 2009."
+          data-nota="Lo real se firma como real; lo inventado se declara inventado."
+          style="left:236px;top:226px;width:210px;height:214px" aria-label="EL MERCIO."><span class="punto__marca"></span></button>
+        <button class="punto" type="button" data-id="newsletters" data-nombre="Newsletters" data-accion="Ver más"
+          data-frase="Diseño, producto y lo que no cabe en LinkedIn."
+          data-nota="Mal Pensamientos sale los lunes. Todo Mal, cuando toca."
+          style="left:480px;top:108px;width:330px;height:236px" aria-label="Newsletters"><span class="punto__marca"></span></button>
       </div>
 
-      <!-- ───────── TALLER · los tres expedientes ───────── -->
-      <div class="estacion" data-id="taller" data-nombre="Taller" style="left:1180px;width:1180px;height:470px">
-        <svg class="arte" viewBox="0 0 1180 470" aria-hidden="true">
-          <g class="corte">
-            <polygon class="muro" points="20,470 20,130 210,50 210,130 400,50 400,130 590,50 590,130 780,50 780,130 970,50 970,130 1160,50 1160,470"/>
-            <path class="hueco fino" d="M210 62 V128 M400 62 V128 M590 62 V128 M780 62 V128 M970 62 V128 M1160 62 V128"/>
-          </g>
-          <g class="corte">
-            <rect class="m" x="60" y="176" width="212" height="142" rx="6"/>
-            <rect x="80" y="194" width="16" height="104" rx="2"/>
-            <path class="hueco fino" d="M80 206 h6 M80 216 h9 M80 226 h6 M80 236 h9 M80 246 h6 M80 256 h9 M80 266 h6 M80 276 h9 M80 286 h6"/>
-            <polygon class="az" points="118,298 118,204 206,298"/>
-            <polygon class="m" points="130,286 130,240 172,286"/>
-            <g transform="rotate(32 232 244)"><rect class="r" x="224" y="200" width="15" height="72"/><polygon points="224,272 239,272 231.5,292"/></g>
-          </g>
-          <path class="hueco grueso" d="M478 56 V98 M702 56 V84"/>
-          <g class="corte">
-            <rect class="r" x="430" y="-36" width="320" height="94" rx="8"/>
-            <text class="d sobre" x="590" y="14" text-anchor="middle" font-size="40">TALLER</text>
-            <text class="sobre" x="590" y="42" text-anchor="middle" font-size="13">lo que hace cuando le pagan</text>
-          </g>
-          <path class="hueco fino" d="M300 130 V156 M880 130 V156"/>
-          <polygon class="o" points="280,156 320,156 332,182 268,182"/><circle class="v" cx="300" cy="188" r="7"/>
-          <polygon class="o" points="860,156 900,156 912,182 848,182"/><circle class="v" cx="880" cy="188" r="7"/>
-          <g class="corte">
-            <rect class="m" x="1030" y="300" width="112" height="12"/>
-            <rect class="r" x="1040" y="250" width="18" height="50"/>
-            <rect class="az" x="1060" y="256" width="16" height="44"/>
-            <rect x="1078" y="248" width="20" height="52"/>
-            <rect class="ve" x="1104" y="262" width="28" height="38" rx="4"/>
-          </g>
+      <!-- ───────── 04 · PROYECTOS ───────── -->
+      <div class="estacion" data-num="04" data-nombre="Proyectos" data-lema="Juegos y apps propios."
+        style="left:3530px;width:860px;height:470px">
+        <svg class="arte" viewBox="0 0 860 470" aria-hidden="true">
+          <g class="capa-papel"><rect class="t3" x="0" y="90" width="860" height="380"/></g>
+          <path class="hueco fino tenue" d="M0 112 H860"/>
+          <text class="m" x="40" y="150">04 · PROYECTOS</text>
+          <text class="d" x="38" y="192" font-size="34">Proyectos</text>
+          <text class="s" x="40" y="220" font-size="17">Siete juegos y cinco apps, en el navegador.</text>
 
-          <!-- Deuna! -->
-          <g class="corte">
-            <rect x="175" y="388" width="150" height="82" rx="4"/>
-            <text class="n" x="250" y="428" text-anchor="middle" font-size="18">Deuna!</text>
-            <text x="250" y="452" text-anchor="middle" font-size="12">FINTECH</text>
+          <g class="capa-papel">
+            <rect class="t4" x="40" y="252" width="84" height="56" rx="3"/>
+            <rect class="t4" x="134" y="252" width="84" height="56" rx="3"/>
+            <rect class="t4" x="228" y="252" width="84" height="56" rx="3"/>
+            <rect class="t4" x="322" y="252" width="84" height="56" rx="3"/>
+            <rect class="t4" x="87" y="318" width="84" height="56" rx="3"/>
+            <rect class="t4" x="181" y="318" width="84" height="56" rx="3"/>
+            <rect class="t4" x="275" y="318" width="84" height="56" rx="3"/>
           </g>
-          <g class="corte">
-            <rect class="o" x="200" y="196" width="100" height="192" rx="18"/>
-            <rect x="209" y="214" width="82" height="152" rx="8"/>
-            <g id="qr" transform="translate(220 232)"></g>
-            <rect class="r" x="220" y="318" width="60" height="22" rx="11"/>
-            <text class="sobre" x="250" y="333" text-anchor="middle" font-size="11">PAGAR</text>
-          </g>
+          <circle class="picto picto--ac" cx="78" cy="268" r="3"/>
+          <path class="picto picto--ac" d="M78 271 L80 282 L74 292 M80 282 L87 291 M79 275 L87 279 M79 275 L72 278 M58 293 H106"/>
+          <path class="picto" d="M176 266 L190 274 L176 282 L162 274 Z M162 274 V288 L176 296 V282 M190 274 V288 L176 296"/>
+          <path class="picto" d="M252 280 H288 Q288 298 270 298 Q252 298 252 280 Z M264 274 q-3 -4 0 -8 M276 274 q-3 -4 0 -8"/>
+          <path class="picto" d="M350 278 H378 V292 Q378 296 374 296 H354 Q350 296 350 292 Z M346 278 H382 M358 274 H370"/>
+          <path class="picto" d="M111 336 Q120 332 129 336 V358 Q120 354 111 358 Z M129 336 Q138 332 147 336 V358 Q138 354 129 358"/>
+          <path class="picto" d="M209 360 V340 L214 332 L219 338 H227 L232 332 L237 340 V360 Z M218 348 h0.5 M228 348 h0.5"/>
+          <path class="picto" d="M302 340 a3 3 0 1 0 6 0 a3 3 0 1 0 -6 0 M314 338 a3 3 0 1 0 6 0 a3 3 0 1 0 -6 0 M326 340 a3 3 0 1 0 6 0 a3 3 0 1 0 -6 0 M299 358 q6 -10 12 0 M311 356 q6 -10 12 0 M323 358 q6 -10 12 0"/>
+          <g class="capa-papel"><rect x="40" y="392" width="170" height="46" rx="2"/></g>
+          <text class="n" x="52" y="412" font-size="14">Juegos</text>
+          <text class="m" x="52" y="429" font-size="9">7 · EN EL NAVEGADOR</text>
 
-          <!-- KFC Kiosk -->
-          <g class="corte">
-            <rect x="515" y="388" width="150" height="82" rx="4"/>
-            <text class="n" x="590" y="428" text-anchor="middle" font-size="18">KFC Kiosk</text>
-            <text x="590" y="452" text-anchor="middle" font-size="12">AUTOSERVICIO</text>
-          </g>
-          <g class="corte">
-            <rect x="545" y="168" width="90" height="220" rx="12"/>
-            <rect class="o" x="555" y="182" width="70" height="112" rx="5"/>
-            <circle class="m" cx="578" cy="220" r="9"/><circle class="m" cx="592" cy="214" r="10"/><circle class="m" cx="605" cy="221" r="8"/>
-            <polygon class="r" points="569,224 611,224 605,276 575,276"/>
-            <path class="hueco grueso trazo-papel" d="M584 228 L585 272 M596 228 L595 272"/>
-            <text class="claro" x="590" y="289" text-anchor="middle" font-size="9">COMBO</text>
-            <rect class="o" x="575" y="312" width="30" height="8" rx="2"/>
-            <rect class="o" x="565" y="338" width="50" height="6" rx="2"/>
-            <path d="M572 344 H608 V372 l-6 -4 l-6 4 l-6 -4 l-6 4 l-6 -4 l-6 4 Z"/>
-          </g>
-
-          <!-- Control Point -->
-          <g class="corte">
-            <rect x="855" y="388" width="150" height="82" rx="4"/>
-            <text class="n" x="930" y="428" text-anchor="middle" font-size="17">Control Point</text>
-            <text x="930" y="452" text-anchor="middle" font-size="12">LOGÍSTICA</text>
-          </g>
-          <g class="corte">
-            <rect class="m" x="880" y="228" width="100" height="150" rx="8"/>
-            <rect x="890" y="250" width="80" height="118" rx="2"/>
-            <rect class="o" x="910" y="218" width="40" height="22" rx="5"/>
-            <rect class="fino" x="898" y="266" width="12" height="12" rx="2"/><line class="fino" x1="916" y1="272" x2="960" y2="272"/>
-            <rect class="fino" x="898" y="290" width="12" height="12" rx="2"/><line class="fino" x1="916" y1="296" x2="956" y2="296"/>
-            <rect class="fino" x="898" y="314" width="12" height="12" rx="2"/><line class="fino" x1="916" y1="320" x2="960" y2="320"/>
-            <rect class="fino" x="898" y="338" width="12" height="12" rx="2"/><line class="fino" x1="916" y1="344" x2="950" y2="344"/>
-            <path class="hueco grueso trazo-marca" d="M899 272 l4 4 l9 -10 M899 296 l4 4 l9 -10 M899 320 l4 4 l9 -10"/>
-          </g>
-          <g class="corte"><circle class="r" cx="1002" cy="196" r="20"/></g>
-          <path class="hueco grueso trazo-marca" d="M1002 164 v-10 M1002 228 v10 M970 196 h-10 M1034 196 h10 M979 173 l-7 -7 M1025 219 l7 7 M1025 173 l7 -7 M979 219 l-7 7"/>
-        </svg>
-        <button class="punto" type="button" data-id="deuna" data-nombre="Deuna!"
-          data-frase="Aquí el reto no era la tecnología. Era la confianza."
-          data-nota="*Pagar con QR en un país que adora el efectivo."
-          style="left:168px;top:188px;width:164px;height:282px" aria-label="Mirar el expediente de Deuna!"></button>
-        <button class="punto" type="button" data-id="kiosk" data-nombre="KFC Kiosk"
-          data-frase="Nadie lee menús en pantallas. Diseñamos para eso."
-          data-nota="*Para dedos con hambre y cero paciencia."
-          style="left:508px;top:160px;width:164px;height:310px" aria-label="Mirar el expediente de KFC Kiosk"></button>
-        <button class="punto" type="button" data-id="control" data-nombre="Control Point"
-          data-frase="Esto va donde el wifi no llega y nadie perdona."
-          data-nota="*Flujos cortos, legibles bajo el sol."
-          style="left:848px;top:166px;width:200px;height:304px" aria-label="Mirar el expediente de Control Point"></button>
-      </div>
-
-      <!-- ───────── IMPRENTA · el periódico y los newsletters ───────── -->
-      <div class="estacion" data-id="imprenta" data-nombre="Imprenta" style="left:2560px;width:920px;height:440px">
-        <svg class="arte" viewBox="0 0 920 440" aria-hidden="true">
-          <g class="corte">
-            <rect x="20" y="110" width="880" height="330"/>
-            <polygon class="rs" points="0,112 920,112 890,64 30,64"/>
-            <path class="hueco fino" d="M60 70 v40 m40 -40 v40 m40 -40 v40 m40 -40 v40 m40 -40 v40 m40 -40 v40 m40 -40 v40 m40 -40 v40 m40 -40 v40 m40 -40 v40 m40 -40 v40 m40 -40 v40 m40 -40 v40 m40 -40 v40 m40 -40 v40 m40 -40 v40 m40 -40 v40 m40 -40 v40 m40 -40 v40 m40 -40 v40 m40 -40 v40"/>
-            <rect class="az" x="20" y="404" width="880" height="36"/>
-          </g>
-          <g class="corte">
-            <rect class="az" x="700" y="128" width="16" height="66"/><rect class="v" x="716" y="128" width="46" height="66"/><rect class="az" x="762" y="128" width="16" height="66"/>
-            <path class="hueco fino" d="M739 128 V194 M716 161 H762"/>
-            <rect class="az" x="808" y="128" width="16" height="66"/><rect class="v" x="824" y="128" width="46" height="66"/><rect class="az" x="870" y="128" width="16" height="66"/>
-            <path class="hueco fino" d="M847 128 V194 M824 161 H870"/>
-          </g>
-          <path class="hueco grueso" d="M530 118 V150"/>
-          <g class="corte">
-            <rect class="o" x="400" y="150" width="260" height="58" rx="6"/>
-            <text class="d claro" x="530" y="189" text-anchor="middle" font-size="27">IMPRENTA</text>
-          </g>
-          <text x="530" y="236" text-anchor="middle" font-size="14">se imprime desde 2009</text>
-
-          <g class="corte">
-            <rect class="o" x="80" y="344" width="280" height="96" rx="6"/>
-            <rect class="p2" x="110" y="276" width="220" height="70" rx="6"/>
-            <rect class="m" x="130" y="300" width="180" height="18" rx="4"/>
-            <circle cx="380" cy="300" r="58"/>
-            <path class="hueco grueso" d="M380 246 V354 M326 300 H434 M342 262 L418 338 M418 262 L342 338"/>
-            <circle class="o" cx="380" cy="300" r="10"/>
-          </g>
-          <g class="corte" transform="rotate(-7 197 232)">
-            <rect x="112" y="176" width="170" height="112" rx="2"/>
-            <text class="serif" x="197" y="207" text-anchor="middle" font-size="22">EL MERCIO<tspan class="punto-em">.</tspan></text>
-            <path class="hueco fino" d="M124 216 H270"/>
-            <path class="hueco fino" d="M126 228 H190 M126 238 H186 M126 248 H190 M126 258 H180 M126 268 H190 M126 278 H184 M204 228 H268 M204 238 H262"/>
-            <rect class="p2 fino" x="204" y="248" width="64" height="30"/>
-          </g>
-
-          <g class="corte">
-            <rect class="m" x="738" y="330" width="16" height="110"/>
-            <rect class="r" x="668" y="236" width="156" height="98" rx="12"/>
-            <rect class="o" x="700" y="256" width="92" height="9" rx="3"/>
-            <g transform="rotate(-10 725 250)"><rect x="705" y="212" width="50" height="36" rx="2"/><path class="hueco fino" d="M705 212 L730 232 L755 212"/></g>
-            <g transform="rotate(8 768 250)"><rect class="az" x="748" y="218" width="46" height="32" rx="2"/><path class="hueco fino" d="M748 218 L771 236 L794 218"/></g>
-            <text class="sobre" x="746" y="296" text-anchor="middle" font-size="12">NEWSLETTERS</text>
-            <text class="sobre" x="746" y="316" text-anchor="middle" font-size="10">lunes · sin calendario</text>
+          <path class="hueco fino" d="M640 112 V158"/>
+          <polygon class="luz" points="626,172 654,172 738,388 542,388"/>
+          <path class="t4" d="M628 158 H652 L662 172 H618 Z"/>
+          <g class="capa-papel"><rect x="565" y="388" width="150" height="82"/></g>
+          <text class="n" x="640" y="424" text-anchor="middle" font-size="16">Apps</text>
+          <text class="m" x="640" y="446" text-anchor="middle">5 HERRAMIENTAS</text>
+          <g class="capa-papel">
+            <rect class="t4" x="595" y="198" width="90" height="182" rx="16"/>
+            <rect x="603" y="212" width="74" height="154" rx="9"/>
+            <rect class="ac sin" x="613" y="230" width="16" height="16" rx="4"/>
+            <rect class="t2 fino" x="632" y="230" width="16" height="16" rx="4"/>
+            <rect class="t3 fino" x="651" y="230" width="16" height="16" rx="4"/>
+            <rect class="t3 fino" x="613" y="254" width="16" height="16" rx="4"/>
+            <rect class="t2 fino" x="632" y="254" width="16" height="16" rx="4"/>
+            <path class="hueco fino tenue" d="M613 292 H667 M613 302 H655 M613 312 H661"/>
+            <rect class="t3 sin" x="628" y="354" width="24" height="4" rx="2"/>
           </g>
         </svg>
-        <button class="punto" type="button" data-id="imprenta" data-nombre="la imprenta"
-          data-frase="EL MERCIO. Desde 2009 riéndonos del poder."
-          data-nota="*Lo inventado se declara inventado. Siempre."
-          style="left:72px;top:160px;width:376px;height:280px" aria-label="Mirar la imprenta: EL MERCIO."></button>
-        <button class="punto" type="button" data-id="buzon" data-nombre="el buzón"
-          data-frase="Dos newsletters. Lo que no cabe en LinkedIn."
-          data-nota="*Uno sale los lunes. El otro, cuando caiga."
-          style="left:658px;top:196px;width:178px;height:244px" aria-label="Mirar el buzón: los newsletters"></button>
+        <button class="punto" type="button" data-id="juegos" data-nombre="Juegos" data-accion="Ver los siete"
+          data-frase="Sátira política, una oficina que no quiere trabajar, cocina ecuatoriana y un gato."
+          data-nota="Se juegan en el navegador; casi todos funcionan sin conexión."
+          style="left:30px;top:240px;width:390px;height:206px" aria-label="Juegos"><span class="punto__marca"></span></button>
+        <button class="punto" type="button" data-id="apps" data-nombre="Apps" data-accion="Ver las cinco"
+          data-frase="Herramientas que resuelven algo concreto."
+          data-nota="Sin cuentas y sin servidores: los datos se quedan en el teléfono."
+          style="left:558px;top:186px;width:164px;height:284px" aria-label="Apps"><span class="punto__marca"></span></button>
       </div>
 
-      <!-- ───────── ARCADE · juegos y apps ───────── -->
-      <div class="estacion" data-id="arcade" data-nombre="Arcade" style="left:3640px;width:820px;height:470px">
-        <svg class="arte" viewBox="0 0 820 470" aria-hidden="true">
-          <g class="corte"><rect class="muro" x="20" y="150" width="780" height="320"/></g>
-          <g class="corte">
-            <rect class="o" x="180" y="80" width="460" height="64" rx="32"/>
-            <text class="d en-tinta" x="410" y="122" text-anchor="middle" font-size="27">SALA DE JUEGOS</text>
+      <!-- ───────── 05 · MENTORÍA ───────── -->
+      <div class="estacion" data-num="05" data-nombre="Mentoría" data-lema="Gratis, y sin adornos."
+        style="left:4550px;width:700px;height:440px">
+        <svg class="arte" viewBox="0 0 700 440" aria-hidden="true">
+          <g class="capa-papel"><rect class="t3" x="0" y="110" width="700" height="330"/></g>
+          <rect class="t2" x="392" y="176" width="250" height="160"/>
+          <path class="hueco fino tenue" d="M475 176 V336 M558 176 V336 M392 256 H642"/>
+          <rect class="t3" x="384" y="334" width="266" height="8" rx="2"/>
+          <g class="capa-papel"><path class="ac" d="M376 172 L390 140 H644 L658 172 Z"/></g>
+          <text class="m" x="40" y="170">05 · MENTORÍA</text>
+          <text class="d" x="38" y="212" font-size="34">Mentoría</text>
+          <text class="s" x="40" y="240" font-size="17">Gratis, y sin adornos.</text>
+          <g class="capa-papel">
+            <path class="hueco grueso" d="M146 440 L152 376 M190 440 L184 376 M140 376 H196 M146 376 L136 304 Q136 292 150 292"/>
+            <path class="hueco grueso" d="M374 440 L368 376 M330 440 L336 376 M324 376 H380 M374 376 L384 304 Q384 292 370 292"/>
+            <rect class="t3" x="188" y="344" width="146" height="8" rx="4"/>
+            <rect class="t4" x="256" y="352" width="10" height="80"/>
+            <rect class="t4" x="226" y="432" width="70" height="8" rx="4"/>
+            <path d="M214 318 H238 V334 Q238 342 230 342 H222 Q214 342 214 334 Z"/>
+            <path class="hueco" d="M238 323 Q248 328 238 334"/>
+            <path class="ac" d="M286 318 H310 V334 Q310 342 302 342 H294 Q286 342 286 334 Z"/>
+            <path class="hueco" d="M310 323 Q320 328 310 334"/>
           </g>
-          <circle class="v" cx="218" cy="66" r="5"/><circle class="v" cx="256" cy="66" r="5"/><circle class="v" cx="294" cy="66" r="5"/><circle class="v" cx="332" cy="66" r="5"/><circle class="v" cx="370" cy="66" r="5"/><circle class="v" cx="408" cy="66" r="5"/><circle class="v" cx="446" cy="66" r="5"/><circle class="v" cx="484" cy="66" r="5"/><circle class="v" cx="522" cy="66" r="5"/><circle class="v" cx="560" cy="66" r="5"/><circle class="v" cx="598" cy="66" r="5"/>
+          <path class="hueco fino tenue vapor" d="M222 310 q-5 -7 0 -14 q5 -7 0 -14"/>
+          <path class="hueco fino tenue vapor vapor--2" d="M298 310 q-5 -7 0 -14 q5 -7 0 -14"/>
+        </svg>
+        <button class="punto" type="button" data-id="mentoria" data-nombre="Mentoría" data-accion="Ver más"
+          data-frase="Reviso portafolios y case studies, sin edulcorar."
+          data-nota="Para quien está cansado de los consejos genéricos de LinkedIn."
+          style="left:128px;top:280px;width:266px;height:160px" aria-label="Mentoría"><span class="punto__marca"></span></button>
+      </div>
 
-          <g class="corte">
-            <path class="r" d="M170 470 V250 L186 170 H314 L330 250 V470 Z"/>
-            <rect class="o" x="186" y="150" width="128" height="42" rx="4"/>
-            <text class="d claro" x="250" y="180" text-anchor="middle" font-size="22">MAL</text>
-            <rect class="o" x="192" y="204" width="116" height="100" rx="6"/>
-            <rect class="az" x="202" y="214" width="96" height="80" rx="3"/>
-            <line class="fino" x1="206" y1="280" x2="294" y2="280"/>
-            <rect class="o sin" x="229" y="250" width="8" height="8"/><rect class="o sin" x="228" y="258" width="10" height="14"/>
-            <rect class="o sin" x="226" y="272" width="4" height="8"/><rect class="o sin" x="236" y="272" width="4" height="8"/>
-            <rect class="r fino" x="268" y="264" width="10" height="16"/>
-            <circle class="v fino" cx="258" cy="240" r="4"/>
-            <polygon class="o" points="170,318 330,318 346,350 154,350"/>
-            <path class="hueco grueso trazo-papel" d="M208 334 L204 316"/>
-            <circle class="r" cx="204" cy="312" r="7"/>
-            <circle class="v" cx="266" cy="334" r="6"/><circle cx="288" cy="330" r="6"/>
-            <rect class="o" x="222" y="386" width="56" height="54" rx="4"/>
-            <rect class="r sin" x="236" y="400" width="6" height="14"/><rect class="r sin" x="258" y="400" width="6" height="14"/>
+      <!-- ───────── 06 · SISTEMA ───────── -->
+      <div class="estacion" data-num="06" data-nombre="Sistema" data-lema="Todo esto está hecho con él."
+        style="left:5410px;width:800px;height:470px">
+        <svg class="arte" viewBox="0 0 800 470" aria-hidden="true">
+          <g class="capa-papel"><rect class="t3" x="0" y="90" width="800" height="380"/></g>
+          <text class="m" x="40" y="150">06 · SISTEMA</text>
+          <text class="d" x="38" y="192" font-size="34">Sistema</text>
+          <text class="s" x="40" y="220" font-size="17">Un sistema de diseño, cuatro temas.</text>
+          <g class="capa-papel">
+            <rect class="t2" x="60" y="262" width="280" height="208" rx="3"/>
+            <rect x="72" y="272" width="256" height="40" rx="2"/><rect class="fino" x="175" y="279" width="50" height="12" rx="1"/><text class="m" x="200" y="288" text-anchor="middle" font-size="7">MAL</text><rect class="t4 sin" x="181" y="298" width="38" height="5" rx="2.5"/>
+            <rect x="72" y="320" width="256" height="40" rx="2"/><rect class="fino" x="175" y="327" width="50" height="12" rx="1"/><text class="m" x="200" y="336" text-anchor="middle" font-size="7">MERCIO</text><rect class="t4 sin" x="181" y="346" width="38" height="5" rx="2.5"/>
+            <rect x="72" y="368" width="256" height="40" rx="2"/><rect class="fino" x="175" y="375" width="50" height="12" rx="1"/><text class="m" x="200" y="384" text-anchor="middle" font-size="7">APPS</text><rect class="t4 sin" x="181" y="394" width="38" height="5" rx="2.5"/>
+            <rect x="72" y="416" width="256" height="40" rx="2"/><rect class="fino" x="175" y="423" width="50" height="12" rx="1"/><text class="m" x="200" y="432" text-anchor="middle" font-size="7">JUEGOS</text><rect class="t4 sin" x="181" y="442" width="38" height="5" rx="2.5"/>
           </g>
-
-          <g class="corte">
-            <rect x="470" y="176" width="200" height="294" rx="10"/>
-            <rect class="ve" x="470" y="176" width="200" height="46" rx="10"/>
-            <text class="d" x="570" y="209" text-anchor="middle" font-size="25">APPS</text>
-            <rect class="v" x="484" y="234" width="128" height="170" rx="4"/>
-            <path class="hueco fino" d="M484 292 H612 M484 348 H612"/>
-            <rect class="r" x="494" y="262" width="22" height="30" rx="3"/>
-            <rect class="az" x="524" y="258" width="22" height="34" rx="3"/>
-            <rect class="ve" x="556" y="266" width="22" height="26" rx="3"/>
-            <rect class="li" x="586" y="262" width="20" height="30" rx="3"/>
-            <rect class="m" x="500" y="318" width="26" height="30" rx="3"/>
-            <rect class="p2" x="538" y="322" width="26" height="26" rx="3"/>
-            <text x="551" y="341" text-anchor="middle" font-size="13">?</text>
-            <rect class="o" x="622" y="240" width="38" height="58" rx="3"/>
-            <path class="hueco fino trazo-papel" d="M630 252 h4 m8 0 h4 m8 0 h4 M630 264 h4 m8 0 h4 m8 0 h4 M630 276 h4 m8 0 h4 m8 0 h4 M630 288 h4 m8 0 h4 m8 0 h4"/>
-            <rect class="o" x="632" y="312" width="18" height="30" rx="3"/>
-            <rect class="o" x="490" y="418" width="116" height="34" rx="4"/>
+          <g class="capa-papel">
+            <rect class="t4" x="520" y="170" width="170" height="300"/>
+            <polygon class="luz-puerta" points="634,182 676,176 676,470 634,470"/>
+            <polygon points="532,182 634,196 634,460 532,470"/>
+            <circle class="t4 sin" cx="620" cy="330" r="4"/>
+          </g>
+          <g class="capa-papel">
+            <rect x="536" y="124" width="138" height="32" rx="3"/>
+            <text class="m" x="594" y="144" text-anchor="middle" font-size="10">SALIDA · UNA</text>
+            <path class="hueco trazo-ac" d="M646 140 H662 M657 135 L662 140 L657 145"/>
           </g>
         </svg>
-        <button class="punto" type="button" data-id="arcade" data-nombre="la máquina de juegos"
-          data-frase="Siete juegos. Se juegan aquí mismo, en el navegador."
-          data-nota="*Incluido uno sobre un gato. Trae pañuelos."
-          style="left:150px;top:140px;width:200px;height:330px" aria-label="Mirar la máquina de juegos"></button>
-        <button class="punto" type="button" data-id="maquina" data-nombre="la máquina de apps"
-          data-frase="Apps que resuelven algo concreto, y ya."
-          data-nota="*Sin cuentas y sin servidores. Tus datos no salen del teléfono."
-          style="left:462px;top:168px;width:212px;height:302px" aria-label="Mirar la máquina de apps"></button>
+        <button class="punto" type="button" data-id="sistema" data-nombre="mal-ds" data-accion="Probar los temas"
+          data-frase="Un CSS y cuatro temas: la marca, el periódico, las apps y los juegos."
+          data-nota="Este recorrido está pintado con él. Cambia el tema y míralo."
+          style="left:50px;top:250px;width:300px;height:220px" aria-label="Sistema de diseño mal-ds"><span class="punto__marca"></span></button>
+        <button class="punto" type="button" data-id="salida" data-nombre="Salida a UNA" data-accion="Ver la salida"
+          data-frase="El resto del trabajo vive en UNA, el hub de MAL."
+          data-nota="O vuelve al principio con el índice."
+          style="left:510px;top:116px;width:190px;height:354px" aria-label="Salida a UNA"><span class="punto__marca"></span></button>
       </div>
 
-      <!-- ───────── CAFÉ · la mentoría ───────── -->
-      <div class="estacion" data-id="cafe" data-nombre="Café" style="left:4580px;width:780px;height:460px">
-        <svg class="arte" viewBox="0 0 780 460" aria-hidden="true">
-          <g class="corte">
-            <rect class="muro" x="40" y="120" width="700" height="340"/>
-            <rect class="v" x="330" y="228" width="190" height="112" rx="4"/>
-            <path class="hueco fino" d="M425 228 V340"/>
-            <rect class="m" x="560" y="238" width="130" height="222" rx="4"/>
-            <rect class="v" x="584" y="258" width="82" height="84" rx="41"/>
-            <circle cx="672" cy="366" r="5"/>
-          </g>
-          <g class="corte">
-            <path class="toldo" d="M20 150 L60 92 H700 L740 150 Z"/>
-            <path class="r" d="M20 150 a20 20 0 0 0 40 0 a20 20 0 0 0 40 0 a20 20 0 0 0 40 0 a20 20 0 0 0 40 0 a20 20 0 0 0 40 0 a20 20 0 0 0 40 0 a20 20 0 0 0 40 0 a20 20 0 0 0 40 0 a20 20 0 0 0 40 0 a20 20 0 0 0 40 0 a20 20 0 0 0 40 0 a20 20 0 0 0 40 0 a20 20 0 0 0 40 0 a20 20 0 0 0 40 0 a20 20 0 0 0 40 0 a20 20 0 0 0 40 0 a20 20 0 0 0 40 0 a20 20 0 0 0 40 0 Z"/>
-          </g>
-          <text class="d" x="200" y="214" text-anchor="middle" font-size="40">CAFÉ</text>
-          <text x="200" y="240" text-anchor="middle" font-size="13">mentoría · gratis</text>
-          <g class="corte">
-            <path class="hueco grueso" d="M86 460 L110 262 M194 460 L170 262"/>
-            <rect class="o" x="76" y="270" width="128" height="116" rx="4"/>
-            <text class="tiza" x="140" y="302" text-anchor="middle" font-size="17">hoy:</text>
-            <text class="tiza" x="140" y="327" text-anchor="middle" font-size="17">café gratis</text>
-            <text class="tiza" x="140" y="352" text-anchor="middle" font-size="13">y opiniones</text>
-            <text class="tiza" x="140" y="370" text-anchor="middle" font-size="13">sin edulcorar</text>
-          </g>
-          <g class="corte">
-            <path class="hueco grueso" d="M272 460 L278 394 M318 460 L312 394 M266 394 H324 M272 394 L262 318 Q262 306 276 306"/>
-            <path class="hueco grueso" d="M510 460 L504 394 M464 460 L470 394 M458 394 H516 M510 394 L520 318 Q520 306 506 306"/>
-            <rect class="m" x="318" y="352" width="146" height="12" rx="6"/>
-            <rect class="o" x="385" y="364" width="12" height="86"/>
-            <rect class="o" x="356" y="448" width="70" height="12" rx="6"/>
-            <path d="M334 326 H360 V344 Q360 352 352 352 H342 Q334 352 334 344 Z"/>
-            <path class="hueco" d="M360 331 Q371 336 360 344"/>
-            <path class="r" d="M418 326 H444 V344 Q444 352 436 352 H426 Q418 352 418 344 Z"/>
-            <path class="hueco" d="M444 331 Q455 336 444 344"/>
-          </g>
-          <path class="hueco fino vapor" d="M342 318 q-6 -8 0 -16 q6 -8 0 -16"/>
-          <path class="hueco fino vapor vapor--2" d="M352 318 q-6 -8 0 -16 q6 -8 0 -16"/>
-          <path class="hueco fino vapor vapor--2" d="M426 318 q-6 -8 0 -16 q6 -8 0 -16"/>
-          <path class="hueco fino vapor" d="M436 318 q-6 -8 0 -16 q6 -8 0 -16"/>
-        </svg>
-        <button class="punto" type="button" data-id="cafe" data-nombre="la mesa del café"
-          data-frase="¿Un café? Reviso tu portafolio sin edulcorar."
-          data-nota="*Gratis. De verdad gratis."
-          style="left:252px;top:270px;width:282px;height:190px" aria-label="Mirar la mesa del café: mentoría"></button>
-      </div>
-
-      <!-- ───────── ARCHIVO · el sistema y la salida ───────── -->
-      <div class="estacion" data-id="archivo" data-nombre="Archivo" style="left:5500px;width:780px;height:470px">
-        <svg class="arte" viewBox="0 0 780 470" aria-hidden="true">
-          <g class="corte"><rect class="muro" x="20" y="92" width="740" height="378"/></g>
-          <text class="d" x="220" y="138" text-anchor="middle" font-size="26">ARCHIVO</text>
-          <g class="corte">
-            <rect class="p2" x="130" y="176" width="180" height="294" rx="6"/>
-            <rect class="r" x="176" y="162" width="30" height="16" rx="2"/><rect class="az" x="214" y="158" width="30" height="20" rx="2"/><rect class="ve" x="252" y="164" width="30" height="14" rx="2"/>
-            <rect x="142" y="188" width="156" height="60" rx="4"/>
-            <rect class="fino" x="190" y="196" width="60" height="16" rx="2"/><text x="220" y="208" text-anchor="middle" font-size="10">MAL</text>
-            <rect class="o" x="196" y="224" width="48" height="9" rx="4"/>
-            <rect x="142" y="258" width="156" height="60" rx="4"/>
-            <rect class="fino" x="190" y="266" width="60" height="16" rx="2"/><text x="220" y="278" text-anchor="middle" font-size="10">MERCIO</text>
-            <rect class="o" x="196" y="294" width="48" height="9" rx="4"/>
-            <rect x="142" y="328" width="156" height="60" rx="4"/>
-            <rect class="fino" x="190" y="336" width="60" height="16" rx="2"/><text x="220" y="348" text-anchor="middle" font-size="10">APPS</text>
-            <rect class="o" x="196" y="364" width="48" height="9" rx="4"/>
-            <rect x="142" y="398" width="156" height="60" rx="4"/>
-            <rect class="fino" x="190" y="406" width="60" height="16" rx="2"/><text x="220" y="418" text-anchor="middle" font-size="10">JUEGOS</text>
-            <rect class="o" x="196" y="434" width="48" height="9" rx="4"/>
-          </g>
-          <g class="corte">
-            <rect class="o" x="480" y="160" width="170" height="310" rx="4"/>
-            <polygon class="v" points="600,172 640,168 640,470 600,466"/>
-            <polygon class="r" points="492,172 600,190 600,462 492,470"/>
-            <circle cx="584" cy="330" r="6"/>
-            <rect x="500" y="110" width="130" height="42" rx="8"/>
-            <text class="d" x="552" y="140" text-anchor="middle" font-size="24">UNA</text>
-            <path class="hueco grueso" d="M592 131 H614 M606 123 L614 131 L606 139"/>
-          </g>
-        </svg>
-        <button class="punto" type="button" data-id="archivo" data-nombre="el archivo"
-          data-frase="El archivo: un sistema de diseño, cuatro temas."
-          data-nota="*Abre un cajón y mira qué le pasa al mundo."
-          style="left:124px;top:150px;width:192px;height:320px" aria-label="Mirar el archivo: el sistema de diseño"></button>
-        <button class="punto" type="button" data-id="puerta" data-nombre="la puerta a UNA"
-          data-frase="Por aquí se sale a UNA, donde está todo lo demás."
-          data-nota="*O vuelve a caminar. Aquí no cobran por hora."
-          style="left:474px;top:104px;width:182px;height:366px" aria-label="Mirar la puerta a UNA"></button>
-      </div>
-
-      <!-- La nota al pie: el asterisco que acompaña a Fran -->
-      <div class="asterisco" id="asterisco" aria-hidden="true">
-        <svg viewBox="0 0 56 56">
-          <g class="corte">
-            <g class="asterisco__brazos">
-              <path d="M28 6 V50 M8.95 17 L47.05 39 M8.95 39 L47.05 17"/>
-            </g>
-            <circle class="asterisco__cara" cx="28" cy="28" r="10"/>
-            <circle class="asterisco__ojo" cx="24.5" cy="27" r="1.9"/><circle class="asterisco__ojo" cx="31.5" cy="27" r="1.9"/>
-          </g>
-        </svg>
-      </div>
-
-      <!-- Fran, recortado. Vista de tres cuartos: al girar se voltea como una hoja -->
+      <!-- Fran, recortado. De tres cuartos: al girar se voltea como una hoja -->
       <div class="fran" id="fran" aria-hidden="true">
         <div class="fran__giro">
-          <svg viewBox="0 0 110 170">
-            <g class="corte">
-              <g class="fran__cuerpo">
-                <path class="f-pelo" d="M30 40 Q28 18 55 13 Q82 18 80 40 L85 104 Q70 110 55 106 Q40 110 25 104 Z"/>
-                <g class="pierna pierna--i"><rect class="f-pantalon" x="41" y="108" width="13" height="46" rx="5"/><rect class="f-zapato" x="37" y="150" width="20" height="11" rx="4"/></g>
-                <g class="pierna pierna--d"><rect class="f-pantalon" x="56" y="108" width="13" height="46" rx="5"/><rect class="f-zapato" x="54" y="150" width="20" height="11" rx="4"/></g>
-                <g class="brazo brazo--i"><rect class="f-sueter" x="26" y="66" width="12" height="44" rx="6"/><circle class="f-piel" cx="32" cy="112" r="6"/></g>
-                <path class="f-sueter" d="M34 63 Q55 55 76 63 L80 116 Q55 122 30 116 Z"/>
-                <path class="f-linea" d="M55 70 V114"/>
-                <rect class="f-piel" x="50" y="50" width="10" height="12" rx="3"/>
-                <path class="f-bufanda" d="M37 58 Q55 67 73 58 L74 67 Q55 77 36 67 Z"/>
-                <rect class="f-bufanda" x="60" y="66" width="10" height="30" rx="3" transform="rotate(8 65 66)"/>
-                <ellipse class="f-piel" cx="55" cy="38" rx="17" ry="20"/>
-                <path class="f-pelo" d="M37 38 Q37 15 55 15 Q73 15 73 38 Q67 26 56 24 L55 30 L54 24 Q43 26 37 38 Z"/>
-                <path class="f-pelo" d="M38 33 Q34 60 32 92 L40 90 Q41 60 43 37 Z"/>
-                <path class="f-pelo" d="M72 33 Q76 60 78 92 L70 90 Q69 60 67 37 Z"/>
-                <g class="fran__ojos"><circle class="f-ojo" cx="48" cy="40" r="1.6"/><circle class="f-ojo" cx="62" cy="40" r="1.6"/></g>
-                <circle class="f-gafas" cx="48" cy="40" r="6.5"/><circle class="f-gafas" cx="62" cy="40" r="6.5"/>
-                <path class="f-gafas" d="M54.5 40 H55.5"/>
-                <path class="f-boca" d="M51 49 Q55 51.5 59 49"/>
-                <g class="brazo brazo--d"><rect class="f-sueter" x="72" y="66" width="12" height="44" rx="6"/><circle class="f-piel" cx="78" cy="112" r="6"/></g>
-              </g>
+          <svg viewBox="0 0 80 180">
+            <ellipse class="f-sombra" cx="40" cy="176" rx="19" ry="3.2"/>
+            <g class="fran__cuerpo">
+              <path class="f-pelo" d="M29 20 Q29 6 40 6 Q51 6 51 20 L53 62 Q40 66 27 62 Z"/>
+              <g class="pierna pierna--i"><rect class="f-pantalon" x="33" y="90" width="9" height="80" rx="4"/><path class="f-zapato" d="M31 168 H43 Q47 168 47 172 V175 H31 Z"/></g>
+              <g class="pierna pierna--d"><rect class="f-pantalon" x="39" y="90" width="9" height="80" rx="4"/><path class="f-zapato" d="M37 168 H49 Q53 168 53 172 V175 H37 Z"/></g>
+              <g class="brazo brazo--i"><rect class="f-sueter" x="25" y="40" width="8" height="48" rx="4"/><circle class="f-piel" cx="29" cy="90" r="3.6"/></g>
+              <path class="f-sueter" d="M28 40 Q40 34 52 40 L53 96 Q40 99 27 96 Z"/>
+              <path class="f-camiseta" d="M36 37 Q40 44 44 37 Z"/>
+              <rect class="f-piel" x="37" y="28" width="6" height="9" rx="2"/>
+              <ellipse class="f-piel" cx="40" cy="21" rx="8.5" ry="10.5"/>
+              <path class="f-pelo" d="M31 22 Q30 9 40 9 Q50 9 49 22 Q46 14 40.5 13.5 L40 17 L39.5 13.5 Q34 14 31 22 Z"/>
+              <path class="f-pelo" d="M31.5 18 Q29.5 40 28.5 60 L33 59 Q33.5 38 34.5 22 Z"/>
+              <path class="f-pelo" d="M48.5 18 Q50.5 40 51.5 60 L47 59 Q46.5 38 45.5 22 Z"/>
+              <circle class="f-gafas" cx="36.6" cy="22" r="3"/><circle class="f-gafas" cx="43.4" cy="22" r="3"/><path class="f-gafas" d="M39.6 22 H40.4"/>
+              <g class="brazo brazo--d"><rect class="f-sueter" x="47" y="40" width="8" height="48" rx="4"/><circle class="f-piel" cx="51" cy="90" r="3.6"/></g>
             </g>
           </svg>
         </div>
       </div>
     </div>
 
-    <!-- Delante: faroles, pencos y hierba, más rápido que Fran -->
+    <!-- Delante: faroles y algo de vegetación, más rápido que Fran -->
     <div class="capa capa--frente" data-p="1.3" aria-hidden="true"><svg class="fondo" id="fondo-frente"></svg></div>
   </div>
 </div>
 
-
-<div class="papel-ayuda" id="ayuda" aria-hidden="true"><span><kbd>←</kbd><kbd>→</kbd> caminar</span><span><kbd>E</kbd> mirar</span><span><kbd>Tab</kbd> saltar de cosa en cosa</span></div>
-<button class="papel-accion" id="accion" type="button" hidden></button>
-
-<div class="globo" id="globo" hidden><b class="globo__quien" id="globo-quien"></b><p id="globo-texto"></p></div>
-<p class="sr-only" id="voz" aria-live="polite"></p>
-
-
-<dialog class="modal papel-panel" id="panel" aria-labelledby="panel-lugar">
-  <div class="papel-panel__cab">
-    <span id="panel-lugar"></span>
-    <button class="btn btn--sm btn--icono" type="button" data-cierra aria-label="Cerrar"><svg class="icono" aria-hidden="true"><use href="#i-cerrar"/></svg></button>
+<!-- ─── la ficha de abajo: lo que hay cerca y cómo moverse ───── -->
+<div class="ficha" id="ficha" data-oculta>
+  <button class="ficha__flecha ficha__flecha--ant" id="ficha-ant" type="button" aria-label="Pieza anterior"><svg class="icono" aria-hidden="true"><use href="#i-chevron-izq"/></svg></button>
+  <div class="ficha__cuerpo" id="ficha-cuerpo" aria-live="polite">
+    <p class="ficha__sala" id="ficha-sala"></p>
+    <p class="ficha__titulo" id="ficha-titulo"></p>
+    <p class="ficha__frase" id="ficha-frase"></p>
+    <p class="ficha__nota" id="ficha-nota"></p>
   </div>
-  <div class="papel-panel__cuerpo" id="panel-cuerpo"></div>
-</dialog>
-
-<div class="papel-premio" id="premio" hidden>
-  <div class="premio">
-    <div class="premio__rayos"></div>
-    <p class="kicker">Lo viste todo</p>
-    <div class="premio__escena">
-      <div class="premio__pieza premio__pieza--entra"><div class="premio__disco"><svg class="icono icono--xl papel-premio__icono" aria-hidden="true"><use href="#i-cafe"/></svg></div></div>
-      <div class="premio__texto">
-        <p class="micro">Desbloqueaste</p>
-        <h2 class="premio__nombre">Un café con Fran</h2>
-        <p class="premio__desc">Media hora, gratis y sin adornos. Trae el portafolio que quieras que te revise.</p>
-        <a class="btn btn--rojo" id="premio-cta" href="https://adplist.org/mentors/francisco-maldonado">Agendar en ADPList</a>
-      </div>
-    </div>
-    <p class="premio__pie">Toca para seguir caminando</p>
-  </div>
+  <button class="btn btn--rojo btn--sm ficha__ver" id="ficha-ver" type="button"><span id="ficha-ver-t">Ver</span><svg class="icono icono--s" aria-hidden="true"><use href="#i-flecha-der"/></svg></button>
+  <a class="btn btn--rojo btn--sm ficha__ver" id="ficha-cta" href="https://adplist.org/mentors/francisco-maldonado" hidden>Agendar un café<svg class="icono icono--s" aria-hidden="true"><use href="#i-calendario"/></svg></a>
+  <button class="ficha__flecha ficha__flecha--sig" id="ficha-sig" type="button" aria-label="Pieza siguiente"><svg class="icono" aria-hidden="true"><use href="#i-chevron-der"/></svg></button>
 </div>
 
-<!-- ─── Lo que hay dentro de cada cosa ───────────────────────────
-     Un <template> por punto, con el mismo id que su data-id. -->
-<template id="t-letrero">
-  <p class="kicker">Product designer · Quito, Ecuador</p>
-  <h2 class="papel-panel__titulo papel-panel__titulo--grande">Diseño producto.<br>Y escribo sobre él.</h2>
-  <p class="lede">De día diseño productos dentro del corporativo. De noche escribo sobre por qué casi todo lo que ese mundo vende como innovación es humo con buen render.</p>
+<!-- ─── la hoja: lo que hay dentro de cada pieza ─────────────── -->
+<dialog class="hoja" id="panel" aria-labelledby="panel-lugar">
+  <div class="hoja__cab">
+    <p class="hoja__lugar" id="panel-lugar"></p>
+    <button class="btn btn--sm btn--icono" type="button" data-cerrar aria-label="Cerrar"><svg class="icono" aria-hidden="true"><use href="#i-cerrar"/></svg></button>
+  </div>
+  <div class="hoja__cuerpo" id="panel-cuerpo"></div>
+  <div class="hoja__pie">
+    <button class="btn btn--sm" id="panel-ant" type="button"><svg class="icono icono--s" aria-hidden="true"><use href="#i-chevron-izq"/></svg>Anterior</button>
+    <span class="hoja__n" id="panel-n"></span>
+    <button class="btn btn--sm" id="panel-sig" type="button">Siguiente<svg class="icono icono--s" aria-hidden="true"><use href="#i-chevron-der"/></svg></button>
+  </div>
+</dialog>
+
+<dialog class="hoja hoja--indice" id="indice" aria-labelledby="indice-t">
+  <div class="hoja__cab">
+    <p class="hoja__lugar" id="indice-t">Índice del recorrido</p>
+    <button class="btn btn--sm btn--icono" type="button" data-cerrar aria-label="Cerrar"><svg class="icono" aria-hidden="true"><use href="#i-cerrar"/></svg></button>
+  </div>
+  <div class="hoja__cuerpo"><ol class="indice" id="indice-lista"></ol></div>
+</dialog>
+
+<!-- ─── lo que hay dentro de cada pieza ─────────────────────────
+     Un <template> por punto, con el id t-{data-id}. -->
+<template id="t-perfil">
+  <p class="hoja__kicker">Product designer · Quito, Ecuador</p>
+  <h2 class="hoja__titulo hoja__titulo--grande">Diseño producto. Y escribo sobre él.</h2>
+  <p class="hoja__lede">De día diseño productos dentro del corporativo. De noche escribo sobre por qué casi todo lo que ese mundo vende como innovación es humo con buen render.</p>
   <ul class="cifras" aria-label="En números">
     <li>desde <b>2010</b></li>
     <li><b>3</b> industrias</li>
-    <li><b>11</b> reseñas <svg class="icono icono--s" aria-hidden="true"><use href="#i-estrella"/></svg></li>
-    <li>mentorías <b>gratis</b></li>
+    <li><b>11</b> reseñas</li>
+    <li>mentoría <b>gratis</b></li>
   </ul>
+  <blockquote class="cita">Casi todo lo que el corporativo vende como innovación es humo con buen render.<cite>Fran, en cualquier reunión</cite></blockquote>
 </template>
 
-<template id="t-fotomaton">
-  <div class="papel-carne">
-    <div class="ticket">
-      <div class="ticket-photo-full"><img src="../img/francisco-maldonado.jpg" alt="Francisco Maldonado" width="320" height="320"></div>
-      <div class="ticket-content">
-        <div class="ticket-group"><span class="ticket-label-sm">Nombre</span><div class="ticket-value-sm">FRAN MALDONADO</div></div>
-        <div class="ticket-group"><span class="ticket-label-sm">Rol</span><div class="ticket-value-sm">PRODUCT DESIGNER</div></div>
-        <hr class="ticket-separator">
-        <div class="ticket-bottom-row">
-          <div><span class="ticket-label-sm">Desde</span><span class="ticket-value-sm">2010</span></div>
-          <div><span class="ticket-label-sm">Ubicación</span><span class="ticket-value-sm">Quito</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="pila">
-      <p class="kicker">Quién</p>
-      <h2 class="papel-panel__titulo">Francisco Maldonado</h2>
-      <p>Catorce años en producto —fintech, e-commerce, entretenimiento— y una manía: preguntar para qué sirve cada cosa antes de dibujarla.</p>
-      <blockquote class="cita">Casi todo lo que el corporativo vende como innovación es humo con buen render.<cite>Fran, en cualquier reunión</cite></blockquote>
-      <ul class="enlaces">
-        <li><a href="mailto:francisco@maldonado.pro"><svg class="icono icono--s" aria-hidden="true"><use href="#i-correo"/></svg> francisco@maldonado.pro</a></li>
-        <li><a href="https://www.linkedin.com/in/franmaldonadoc/"><svg class="icono icono--s" aria-hidden="true"><use href="#i-enlace"/></svg> LinkedIn</a></li>
-        <li><a href="https://adplist.org/mentors/francisco-maldonado"><svg class="icono icono--s" aria-hidden="true"><use href="#i-usuario"/></svg> ADPList</a></li>
-        <li><a href="https://github.com/franciscombp"><svg class="icono icono--s" aria-hidden="true"><use href="#i-codigo"/></svg> GitHub</a></li>
-      </ul>
+<template id="t-retrato">
+  <div class="hoja__perfil">
+    <img class="hoja__foto" src="../img/francisco-maldonado.jpg" alt="Francisco Maldonado" width="320" height="320">
+    <div>
+      <h2 class="hoja__titulo">Francisco Maldonado</h2>
+      <p class="hoja__rol">Product designer · Quito, Ecuador</p>
     </div>
   </div>
+  <p>Catorce años en producto —fintech, e-commerce, entretenimiento— y una manía: preguntar para qué sirve cada cosa antes de dibujarla.</p>
+  <dl class="hoja__datos">
+    <div><dt>Correo</dt><dd><a href="mailto:francisco@maldonado.pro">francisco@maldonado.pro</a></dd></div>
+    <div><dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/franmaldonadoc/">in/franmaldonadoc</a></dd></div>
+    <div><dt>Mentoría</dt><dd><a href="https://adplist.org/mentors/francisco-maldonado">ADPList</a></dd></div>
+    <div><dt>Código</dt><dd><a href="https://github.com/franciscombp">github.com/franciscombp</a></dd></div>
+  </dl>
 </template>
 
 <template id="t-deuna">
-  <p class="kicker">Expediente 1 de 3 · Fintech · Payments</p>
-  <h2 class="papel-panel__titulo">Deuna!</h2>
-  <p class="lede">Pagar y cobrar sin efectivo, en un país que adora el efectivo. El reto no era la tecnología: era la confianza.</p>
-  <ul class="tarj__tags"><li>onboarding</li><li>QR</li><li>casos de error</li></ul>
-  <p class="papel-resultado"><svg class="icono" aria-hidden="true"><use href="#i-grafica"/></svg>La mayor red de comercios digitales del país</p>
-  <p class="papel-pendiente">Boceto · aquí va el caso entero: el problema, lo que se probó y lo que llegó a producción.</p>
+  <p class="hoja__kicker">Caso 1 de 3 · Fintech · Payments</p>
+  <h2 class="hoja__titulo">Deuna!</h2>
+  <p class="hoja__lede">Pagar y cobrar sin efectivo, en un país que adora el efectivo. El reto no era la tecnología: era la confianza.</p>
+  <dl class="hoja__datos">
+    <div><dt>Resultado</dt><dd>La mayor red de comercios digitales del país</dd></div>
+    <div><dt>Áreas</dt><dd>Onboarding · QR · Casos de error</dd></div>
+  </dl>
+  <p class="hoja__pendiente">Caso completo en preparación: el problema, lo que se probó y lo que llegó a producción.</p>
 </template>
 
 <template id="t-kiosk">
-  <p class="kicker">Expediente 2 de 3 · QSR · Autoservicio</p>
-  <h2 class="papel-panel__titulo">KFC Kiosk</h2>
-  <p class="lede">Pedidos sin fila, para dedos con hambre y cero paciencia. Nadie lee menús en pantallas.</p>
-  <ul class="tarj__tags"><li>kioscos</li><li>combos</li><li>pago</li></ul>
-  <p class="papel-resultado"><svg class="icono" aria-hidden="true"><use href="#i-grafica"/></svg>Menos fila, mayor ticket, menos errores</p>
-  <p class="papel-pendiente">Boceto · aquí va el caso entero: el problema, lo que se probó y lo que llegó a producción.</p>
+  <p class="hoja__kicker">Caso 2 de 3 · QSR · Autoservicio</p>
+  <h2 class="hoja__titulo">KFC Kiosk</h2>
+  <p class="hoja__lede">Pedidos sin fila, para dedos con hambre y cero paciencia. Nadie lee menús en pantallas.</p>
+  <dl class="hoja__datos">
+    <div><dt>Resultado</dt><dd>Menos fila, mayor ticket, menos errores</dd></div>
+    <div><dt>Áreas</dt><dd>Kioscos · Combos · Pago</dd></div>
+  </dl>
+  <p class="hoja__pendiente">Caso completo en preparación: el problema, lo que se probó y lo que llegó a producción.</p>
 </template>
 
 <template id="t-control">
-  <p class="kicker">Expediente 3 de 3 · Ops · Logística</p>
-  <h2 class="papel-panel__titulo">Control Point</h2>
-  <p class="lede">Operación en campo, donde el wifi no llega y nadie perdona. Flujos cortos y legibles bajo el sol.</p>
-  <ul class="tarj__tags"><li>offline</li><li>una mano</li></ul>
-  <p class="papel-resultado"><svg class="icono" aria-hidden="true"><use href="#i-check"/></svg>Control fiable donde antes había papel</p>
-  <p class="papel-pendiente">Boceto · aquí va el caso entero: el problema, lo que se probó y lo que llegó a producción.</p>
+  <p class="hoja__kicker">Caso 3 de 3 · Ops · Logística</p>
+  <h2 class="hoja__titulo">Control Point</h2>
+  <p class="hoja__lede">Operación en campo, donde el wifi no llega y nadie perdona. Flujos cortos y legibles bajo el sol.</p>
+  <dl class="hoja__datos">
+    <div><dt>Resultado</dt><dd>Control fiable donde antes había papel</dd></div>
+    <div><dt>Áreas</dt><dd>Sin conexión · Uso con una mano</dd></div>
+  </dl>
+  <p class="hoja__pendiente">Caso completo en preparación: el problema, lo que se probó y lo que llegó a producción.</p>
 </template>
 
-<template id="t-imprenta">
-  <p class="kicker">Periódico satírico · desde 2009</p>
-  <h2 class="papel-panel__titulo papel-mercio">EL MERCIO<span>.</span></h2>
+<template id="t-mercio">
+  <p class="hoja__kicker">Periódico satírico · desde 2009</p>
+  <h2 class="hoja__titulo hoja__titulo--serif">EL MERCIO<span>.</span></h2>
   <blockquote class="cita">Las noticias, el entretenimiento y la desinformación de ayer.</blockquote>
   <p>Más de novecientos artículos y tres registros que nunca se mezclan: opinión firmada con nombre propio, humor sobre noticias reales y desinformación declarada como tal.</p>
-  <p class="papel-acc"><a class="btn btn--rojo" href="https://elmercio.com/">Leer EL MERCIO.</a></p>
+  <p class="hoja__acc"><a class="btn btn--rojo" href="https://elmercio.com/">Leer EL MERCIO.</a></p>
 </template>
 
-<template id="t-buzon">
-  <p class="kicker">Newsletters</p>
-  <h2 class="papel-panel__titulo">Lo que no cabe en LinkedIn.</h2>
-  <ul class="papel-lista">
+<template id="t-newsletters">
+  <p class="hoja__kicker">Newsletters</p>
+  <h2 class="hoja__titulo">Lo que no cabe en LinkedIn.</h2>
+  <ul class="hoja__lista">
     <li><a href="https://malpensamientos.substack.com/"><b>Mal Pensamientos <small>los lunes</small></b><span>Diseño, producto y tecnología sin el barniz corporativo, escrito desde adentro del corporativo.</span></a></li>
     <li><a href="https://franmaldonado.substack.com/"><b>Todo Mal <small>sin calendario</small></b><span>Política, farándula, papers, organizaciones y lo que caiga esa semana.</span></a></li>
   </ul>
 </template>
 
-<template id="t-arcade">
-  <p class="kicker">Siete juegos · en el navegador</p>
-  <h2 class="papel-panel__titulo">Sala de juegos</h2>
-  <ul class="papel-lista">
+<template id="t-juegos">
+  <p class="hoja__kicker">Siete juegos · en el navegador</p>
+  <h2 class="hoja__titulo">Juegos</h2>
+  <ul class="hoja__lista">
     <li><a href="../apps/estadodecepcion/"><b>Estado Decepción</b><span>Endless runner satírico: corres y documentas mientras el poder te pisa los talones.</span></a></li>
-    <li><a href="../apps/modo-incognito/"><b>Modo Incógnito</b><span>Intenta no trabajar en el Piso 10 mientras el jefe patrulla la planta.</span></a></li>
-    <li><a href="../apps/fanesca/"><b>La fanesca</b><span>Los doce granos, con los dedos. Pensado para una señora de setenta desde el sillón.</span></a></li>
-    <li><a href="../apps/pambamesa/"><b>Pambamesa</b><span>Junta lo que hay en tu cocina: 21 platillos de Costa, Sierra y Oriente.</span></a></li>
-    <li><a href="../apps/huecas/"><b>Huecas</b><span>Una hueca heredada y un cuaderno de recetas en acertijos.</span></a></li>
-    <li><a href="../apps/nero/"><b>Nero</b><span>Un gato en una casa que no estaba vacía. Diez episodios.</span></a></li>
+    <li><a href="../apps/modo-incognito/"><b>Modo Incógnito</b><span>Sátira de oficina en isométrico: no trabajar mientras el jefe patrulla la planta.</span></a></li>
+    <li><a href="../apps/fanesca/"><b>La fanesca</b><span>Los doce granos, con los dedos. Pensado para que lo juegue una señora de setenta.</span></a></li>
+    <li><a href="../apps/pambamesa/"><b>Pambamesa</b><span>Combina lo que hay en tu cocina: 21 platillos de Costa, Sierra y Oriente.</span></a></li>
+    <li><a href="../apps/huecas/"><b>Huecas</b><span>Una hueca heredada y un cuaderno de recetas escrito en acertijos.</span></a></li>
+    <li><a href="../apps/nero/"><b>Nero</b><span>Narrativo: un gato en una casa que no estaba vacía. Diez episodios.</span></a></li>
     <li><a href="../apps/tanfacil/"><b>No es tan fácil</b><span>Narrativo cooperativo para cincuenta personas que votan cada decisión.</span></a></li>
   </ul>
 </template>
 
-<template id="t-maquina">
-  <p class="kicker">Cinco apps · sin cuenta</p>
-  <h2 class="papel-panel__titulo">Herramientas que resuelven algo concreto.</h2>
-  <ul class="papel-lista">
+<template id="t-apps">
+  <p class="hoja__kicker">Cinco apps · sin cuenta</p>
+  <h2 class="hoja__titulo">Herramientas que resuelven algo concreto.</h2>
+  <ul class="hoja__lista">
     <li><a href="../apps/quanto/"><b>Quanto</b><span>El precio real por cada 100 g, con escáner de etiquetas y memoria de precios.</span></a></li>
     <li><a href="../apps/agro/"><b>Mi Huerto</b><span>Qué sembrar y criar en tu zona, por altitud, clima y heladas.</span></a></li>
-    <li><a href="../apps/jacky/"><b>Jacky</b><span>Una receta casera o una recomendación para tu perro o gato.</span></a></li>
+    <li><a href="../apps/jacky/"><b>Jacky</b><span>Una receta casera o una recomendación comercial para tu perro o gato.</span></a></li>
     <li><a href="../apps/test-cds/"><b>Test CDS</b><span>La escala CDS de 66 ítems, para profesionales, con PDF y CSV.</span></a></li>
-    <li><a href="../renuncia/"><b>Cartas de renuncia</b><span>La carta que llevas meses redactando en la cabeza, lista para exportar.</span></a></li>
+    <li><a href="../renuncia/"><b>Cartas de renuncia</b><span>Un asistente paso a paso que deja la carta lista para exportar.</span></a></li>
   </ul>
 </template>
 
-<template id="t-cafe">
-  <p class="kicker">Mentoría · gratis</p>
-  <h2 class="papel-panel__titulo">Gratis, y sin adornos.</h2>
+<template id="t-mentoria">
+  <p class="hoja__kicker">Mentoría · gratis</p>
+  <h2 class="hoja__titulo">Gratis, y sin adornos.</h2>
   <p>Si estás cansado de los consejos genéricos de LinkedIn o necesitas que alguien revise tu portafolio sin edulcorar, agarra un café y charlamos.</p>
-  <div class="papel-dos">
-    <div class="social-card"><div class="social-card-body">Francisco fue puntual y estratégico en su valoración sobre mi case study.</div>
-      <div class="social-card-footer"><div class="social-avatar">NS</div><div class="social-info"><span class="social-name">Nataly E. Sandoya</span><span class="social-handle">UX/UI Designer · Ecuador</span></div></div></div>
-    <div class="social-card"><div class="social-card-body">Va al tema que querés saber y te ayuda muchísimo. Es claro, conciso.</div>
-      <div class="social-card-footer"><div class="social-avatar">MA</div><div class="social-info"><span class="social-name">Marina Aizen</span><span class="social-handle">Illustrator · España</span></div></div></div>
+  <div class="hoja__citas">
+    <figure><blockquote>Francisco fue puntual y estratégico en su valoración sobre mi case study.</blockquote><figcaption><b>Nataly E. Sandoya</b> · UX/UI Designer, Ecuador</figcaption></figure>
+    <figure><blockquote>Va al tema que querés saber y te ayuda muchísimo. Es claro, conciso.</blockquote><figcaption><b>Marina Aizen</b> · Illustrator, España</figcaption></figure>
   </div>
-  <p class="papel-acc"><a class="btn btn--rojo" href="https://adplist.org/mentors/francisco-maldonado"><svg class="icono" aria-hidden="true"><use href="#i-calendario"/></svg>Agendar un café</a></p>
+  <p class="hoja__acc"><a class="btn btn--rojo" href="https://adplist.org/mentors/francisco-maldonado"><svg class="icono icono--s" aria-hidden="true"><use href="#i-calendario"/></svg>Agendar en ADPList</a></p>
 </template>
 
-<template id="t-archivo">
-  <p class="kicker">Sistema de diseño · mal-ds</p>
-  <h2 class="papel-panel__titulo">Un sistema, cuatro temas.</h2>
-  <p>Este mundo está pintado con las mismas variables que el periódico, las apps y los juegos. Abre un cajón: cambia la piel y el HTML no se toca.</p>
-  <div class="papel-cajones" role="group" aria-label="Temas">
-    <button class="papel-cajon" type="button" data-marca-pon="mal" aria-pressed="true"><b>MAL</b><span>crema y filete fino</span></button>
-    <button class="papel-cajon" type="button" data-marca-pon="mercio" aria-pressed="false"><b>EL MERCIO.</b><span>página blanca y serif</span></button>
-    <button class="papel-cajon" type="button" data-marca-pon="apps" aria-pressed="false"><b>APPS</b><span>controles grandes</span></button>
-    <button class="papel-cajon" type="button" data-marca-pon="juegos" aria-pressed="false"><b>Juegos</b><span>sombra dura, de juguete</span></button>
+<template id="t-sistema">
+  <p class="hoja__kicker">Sistema de diseño · mal-ds</p>
+  <h2 class="hoja__titulo">Un sistema, cuatro temas.</h2>
+  <p>Este recorrido está pintado con las mismas variables que el periódico, las apps y los juegos. Cambia el tema: el mundo cambia de piel y el HTML no se toca.</p>
+  <div class="hoja__temas" role="group" aria-label="Tema">
+    <button class="hoja__tema" type="button" data-marca-pon="mal" aria-pressed="true"><b>MAL</b><span>Crema y filete fino</span></button>
+    <button class="hoja__tema" type="button" data-marca-pon="mercio" aria-pressed="false"><b>EL MERCIO.</b><span>Página blanca y serif</span></button>
+    <button class="hoja__tema" type="button" data-marca-pon="apps" aria-pressed="false"><b>APPS</b><span>Controles grandes</span></button>
+    <button class="hoja__tema" type="button" data-marca-pon="juegos" aria-pressed="false"><b>Juegos</b><span>Contorno y sombra dura</span></button>
   </div>
-  <p class="papel-acc"><a class="btn" href="../ds/">Ver el sistema</a></p>
+  <p class="hoja__acc"><a class="btn" href="../ds/">Ver el sistema</a></p>
 </template>
 
-<template id="t-puerta">
-  <p class="kicker">Fin del paseo</p>
-  <h2 class="papel-panel__titulo">Afuera está UNA.</h2>
+<template id="t-salida">
+  <p class="hoja__kicker">Fin del recorrido</p>
+  <h2 class="hoja__titulo">El resto está en UNA.</h2>
   <p>El hub de MAL: las apps, los juegos, el periódico y los newsletters, todo junto. Si buscas la versión para RR. HH., está en texto plano.</p>
-  <p class="papel-acc">
-    <a class="btn btn--rojo" href="../">Salir a UNA</a>
+  <p class="hoja__acc">
+    <a class="btn btn--rojo" href="../">Ir a UNA</a>
     <a class="btn" href="../ds/demos/mal/">Versión en texto</a>
   </p>
-  <p class="micro">Correo · francisco@maldonado.pro</p>
+  <p class="hoja__nota">Correo · francisco@maldonado.pro</p>
 </template>
 
 <script src="../ds/mal/mal.js?v=1.0.17" defer></script>

@@ -1,17 +1,25 @@
-/* Fran en papel · boceto. El motor: cámara, paralaje, caminar, mirar
-   y hablar. Sin dependencias: de mal.js solo hace falta el sprite.
+/* Fran en papel · boceto, segunda vuelta. El motor: cámara, paralaje,
+   caminar, elegir una pieza y abrirla. Sin dependencias: de mal.js solo
+   hace falta el sprite de iconos.
 
-   El mundo mide 6400 × 720 unidades. Todo lo que se mueve vive en esas
-   unidades y la pantalla las escala de una vez (`s`); los globos y el
-   aviso de «Mirar» van en píxeles de pantalla para que se lean igual en
-   un teléfono que en un monitor. */
+   El mundo mide 6400 × 720 unidades y se escala entero a la pantalla
+   (`s`). La escala se calcula para que entre la franja que importa
+   —de los rótulos de las salas a los pies de Fran— entre la barra de
+   arriba y la ficha de abajo, así nada queda tapado en ningún tamaño.
+
+   Tocar una pieza NO la abre: Fran va hasta ella y la ficha de abajo
+   la presenta. Se abre con el botón de la ficha, con un segundo toque
+   sobre la pieza o con E / Enter. Así, en el teléfono, explorar y
+   abrir son dos gestos distintos. */
 (() => {
   'use strict';
 
-  const H = 720;          // alto del mundo
-  const PIE = 628;        // dónde pisa Fran
-  const VEL = 330;        // al paso, unidades por segundo
-  const CERCA = 120;      // desde dónde se puede mirar una cosa
+  const H = 720;              // alto del mundo
+  const PIE = 628;            // dónde pisa Fran
+  const VEL = 300;            // al paso, unidades por segundo
+  const CERCA = 110;          // desde dónde una pieza está «a mano»
+  const VISIBLE = [86, 652];  // la franja del mundo que tiene que verse entera
+  const LADO = 80;            // a qué distancia de la pieza se para Fran
 
   const raiz = document.documentElement;
   raiz.classList.add('papel-js');
@@ -21,6 +29,7 @@
   const quieto = matchMedia('(prefers-reduced-motion: reduce)');
   const tactil = matchMedia('(pointer: coarse)');
   const oscuroSO = matchMedia('(prefers-color-scheme: dark)');
+  const ancha = matchMedia('(min-width: 900px)');
 
   const esc = $('#escenario');
   const mundo = $('#mundo');
@@ -28,66 +37,81 @@
   const capas = $$('.capa', mundo).map((el) => ({ el, p: +el.dataset.p }));
   const franEl = $('#fran');
   const giro = $('.fran__giro', franEl);
-  const astEl = $('#asterisco');
-  const globo = $('#globo');
-  const globoQuien = $('#globo-quien');
-  const globoTexto = $('#globo-texto');
-  const voz = $('#voz');
-  const accion = $('#accion');
+  const hud = $('.papel-hud');
   const portada = $('#portada');
+  const ficha = $('#ficha');
+  const fichaSala = $('#ficha-sala');
+  const fichaTitulo = $('#ficha-titulo');
+  const fichaFrase = $('#ficha-frase');
+  const fichaNota = $('#ficha-nota');
+  const fichaVer = $('#ficha-ver');
+  const fichaVerT = $('#ficha-ver-t');
+  const fichaCta = $('#ficha-cta');
+  const fichaAnt = $('#ficha-ant');
+  const fichaSig = $('#ficha-sig');
   const panel = $('#panel');
   const panelCuerpo = $('#panel-cuerpo');
   const panelLugar = $('#panel-lugar');
-  const premio = $('#premio');
-  const mapa = $('#mapa');
+  const panelN = $('#panel-n');
+  const panelAnt = $('#panel-ant');
+  const panelSig = $('#panel-sig');
+  const indice = $('#indice');
+  const indiceLista = $('#indice-lista');
+  const capitulos = $('#capitulos');
   const temaBtn = $('#tema');
-  const hud = $('.papel-hud');
 
-  /* ─── el inventario: estaciones y puntos, leídos del HTML ───── */
-  const estaciones = $$('.estacion', mundo).map((el) => ({
+  /* ─── el inventario: salas y piezas, leídas del HTML ────────── */
+  const salas = $$('.estacion', mundo).map((el) => ({
     el,
+    num: el.dataset.num,
     nombre: el.dataset.nombre,
+    lema: el.dataset.lema,
     x0: el.offsetLeft,
     x1: el.offsetLeft + el.offsetWidth,
     abierta: el.classList.contains('abierta'),
-    puntos: [],
+    piezas: [],
     boton: null,
   }));
-  const puntos = $$('.punto', mundo).map((el) => {
-    const est = estaciones.find((e) => e.el.contains(el));
+  const piezas = $$('.punto', mundo).map((el) => {
+    const sala = salas.find((e) => e.el.contains(el));
     const p = {
-      el, est,
+      el, sala,
       id: el.dataset.id,
       nombre: el.dataset.nombre,
+      accion: el.dataset.accion || 'Ver',
       frase: el.dataset.frase,
-      nota: el.dataset.nota,
-      x: est.x0 + el.offsetLeft + el.offsetWidth / 2,
-      dicho: false,
+      nota: el.dataset.nota || '',
+      x: sala.x0 + el.offsetLeft + el.offsetWidth / 2,
       visto: false,
     };
-    est.puntos.push(p);
+    sala.piezas.push(p);
     return p;
-  });
+  }).sort((a, b) => a.x - b.x);
 
   const st = {
-    x: 300, dir: 1, meta: null, vel: VEL, abrirAl: null,
+    x: 240, dir: 1, meta: null, vel: VEL,
     cam: 0, izq: false, der: false, andando: false,
-    activo: null, portada: true, movido: false, habla: null, pendiente: null,
+    cerca: null,        // la pieza a mano, por proximidad
+    sel: null,          // la pieza elegida (tocada, Tab, flechas de la ficha)
+    selDesde: 0,
+    abierta: null,      // la pieza que muestra la hoja
+    portada: true,
+    fin: false,         // ya se vio todo: la ficha lo dice una vez
+    finDicho: false,
   };
-  const ast = { x: 230, y: PIE - 205 };
 
   /* ─── escala ─────────────────────────────────────────────────── */
-  let s = 1, vw = 0, vh = 0, verAncho = 0, offY = 0, techo = 0;
+  let s = 1, vw = 0, vh = 0, verAncho = 0, offY = 0;
   function medir() {
     vw = esc.clientWidth;
     vh = esc.clientHeight;
-    /* en vertical se acerca un poco: se ve menos mundo, pero se lee */
-    s = limita(Math.min(vh / H, vw / (vw < vh ? 460 : 520)), 0.45, 1.6);
+    const arriba = hud.getBoundingClientRect().bottom + 10;
+    const abajo = vh - ficha.offsetHeight - 30;
+    const franja = VISIBLE[1] - VISIBLE[0];
+    s = limita(Math.min((abajo - arriba) / franja, vw / (vw < vh ? 430 : 520)), 0.4, 1.6);
     verAncho = vw / s;
-    offY = vh - H * s;
-    techo = hud.getBoundingClientRect().bottom + 8;
+    offY = abajo - VISIBLE[1] * s;
     mundo.style.transform = `translate3d(0,${offY.toFixed(1)}px,0) scale(${s.toFixed(4)})`;
-    if (!globo.hidden) medirGlobo();
   }
 
   /* ─── los fondos, generados ──────────────────────────────────── */
@@ -111,102 +135,86 @@
     svg.parentElement.style.width = ancho + 'px';
     svg.innerHTML = html;
   }
-  /* una cresta cerrada por abajo, muestreada cada `paso` unidades */
   function cresta(ancho, y, paso = 40) {
     let d = `M0 ${H} `;
     for (let x = 0; x <= ancho + paso; x += paso) d += `L${x} ${n1(y(x))} `;
     return d + `L${ancho + paso} ${H} Z`;
   }
-  /* la nieve: el trozo de cresta por encima de `cota`, con el borde
-     de abajo en dientes de sierra */
   function nieve(y, desde, hasta, cota) {
     const arriba = [];
     for (let x = desde; x <= hasta; x += 6) if (y(x) < cota) arriba.push([x, y(x)]);
     if (arriba.length < 2) return '';
-    const [xa] = arriba[0];
-    const [xb] = arriba[arriba.length - 1];
+    const xa = arriba[0][0];
+    const xb = arriba[arriba.length - 1][0];
     let d = `M${xa} ${cota} `;
     for (const [x, yy] of arriba) d += `L${x} ${n1(yy)} `;
-    for (let x = xb, i = 0; x > xa; x -= 18, i++) d += `L${x} ${cota + (i % 2 ? 16 : 2)} `;
+    for (let x = xb, i = 0; x > xa; x -= 16, i++) d += `L${x} ${cota + (i % 2 ? 12 : 2)} `;
     return `<path class="f-nieve" d="${d}Z"/>`;
   }
 
   function fondoLejos() {
     const ancho = Math.ceil(W * 0.12 + 6400);
-    /* fila de atrás: el Cotopaxi, cono casi perfecto, y el Antisana */
+    /* atrás, el Cotopaxi —un cono casi perfecto— y el Antisana */
     const yA = (x) => {
       const base = 400 + 22 * Math.sin(x / 290) + 12 * Math.sin(x / 97 + 2) - bulto(x, 5200, 190, 260);
-      const cono = 150 + Math.max(0, Math.abs(x - 2000) - 14) * 0.55;
-      return Math.min(base, cono);
+      return Math.min(base, 150 + Math.max(0, Math.abs(x - 2000) - 14) * 0.55);
     };
-    /* fila de delante: el Pichincha, Rucu y Guagua, detrás de la ciudad */
+    /* delante, el Pichincha detrás de la ciudad */
     const yB = (x) => 470 + 30 * Math.sin(x / 340 + 1) + 16 * Math.sin(x / 120)
       - bulto(x, 700, 230, 150) - bulto(x, 960, 200, 120)
       - bulto(x, 3600, 150, 260) - bulto(x, 6200, 170, 220);
     let html = `<path class="f-lejos" d="${cresta(ancho, yA)}"/>`;
-    html += nieve(yA, 1700, 2300, 214) + nieve(yA, 4800, 5600, 238);
-    html += `<path class="f-lejos-2" d="${cresta(ancho, yB)}"/>`;
+    html += nieve(yA, 1700, 2300, 212) + nieve(yA, 4800, 5600, 236);
+    html += `<path class="f-lejos-2 capa-papel" d="${cresta(ancho, yB)}"/>`;
     /* el TelefériQo sube por la ladera */
     const [x0, y0, x1, y1] = [430, yB(430) + 4, 650, yB(650) - 6];
     html += `<path class="f-cable" d="M${x0} ${n1(y0)} L${x1} ${n1(y1)}"/>`;
-    for (const t of [0.28, 0.55, 0.8]) {
+    for (const t of [0.3, 0.62]) {
       const cx = x0 + (x1 - x0) * t;
       const cy = y0 + (y1 - y0) * t;
-      html += `<path class="f-cable" d="M${n1(cx)} ${n1(cy)} v8"/><rect class="f-cabina" x="${n1(cx - 6)}" y="${n1(cy + 8)}" width="12" height="9" rx="2"/>`;
-    }
-    /* nubes de papel */
-    const r = azar(5);
-    for (let i = 0; i < 7; i++) {
-      const cx = 260 + i * 1050 + r() * 300;
-      const cy = 110 + r() * 110;
-      const k = 0.7 + r() * 0.6;
-      html += `<g class="corte"><path class="f-nube" d="M${n1(cx - 70 * k)} ${n1(cy + 18 * k)} `
-        + `a${n1(26 * k)} ${n1(26 * k)} 0 0 1 ${n1(34 * k)} -${n1(30 * k)} `
-        + `a${n1(36 * k)} ${n1(36 * k)} 0 0 1 ${n1(66 * k)} -${n1(8 * k)} `
-        + `a${n1(26 * k)} ${n1(26 * k)} 0 0 1 ${n1(40 * k)} ${n1(38 * k)} Z"/></g>`;
+      html += `<path class="f-cable" d="M${n1(cx)} ${n1(cy)} v6 M${n1(cx - 5)} ${n1(cy + 6)} h10 v8 h-10 Z"/>`;
     }
     lienzo('#fondo-lejos', ancho, html);
   }
 
+  /* Quito, a línea: casas, la Basílica y el Panecillo */
   function basilica(x) {
     return `<path class="f-ciudad" d="M${x - 110} 600 V450 L${x} 410 L${x + 110} 450 V600 Z`
       + ` M${x - 112} 600 V334 H${x - 68} V600 Z M${x + 68} 600 V334 H${x + 112} V600 Z`
       + ` M${x - 116} 334 L${x - 90} 262 L${x - 64} 334 Z M${x + 64} 334 L${x + 90} 262 L${x + 116} 334 Z`
-      + ` M${x - 8} 420 V380 H${x + 8} V420 Z"/>`
-      + `<circle class="f-ventana" cx="${x}" cy="476" r="15"/>`
-      + `<rect class="f-ventana" x="${x - 96}" y="360" width="12" height="24" rx="6"/>`
-      + `<rect class="f-ventana" x="${x + 84}" y="360" width="12" height="24" rx="6"/>`;
+      + ` M${x - 8} 420 V384 H${x + 8} V420 Z"/>`
+      + `<circle class="f-ciudad" cx="${x}" cy="476" r="15"/>`
+      + `<path class="f-ciudad" d="M${x - 96} 360 h12 v24 h-12 Z M${x + 84} 360 h12 v24 h-12 Z M${x - 96} 420 h12 v24 h-12 Z M${x + 84} 420 h12 v24 h-12 Z"/>`;
   }
   function panecillo(x) {
-    return `<path class="f-ciudad" d="M${x - 340} 600 Q${x} 470 ${x + 340} 600 Z`
-      + ` M${x - 8} 538 V506 H${x + 8} V538 Z`
-      + ` M${x - 9} 506 L${x - 4} 468 H${x + 4} L${x + 9} 506 Z`
-      + ` M${x - 4} 478 L${x - 24} 460 L${x - 7} 492 Z M${x + 4} 478 L${x + 24} 460 L${x + 7} 492 Z"/>`
-      + `<circle class="f-ciudad" cx="${x}" cy="463" r="5"/>`;
+    return `<path class="f-ciudad" d="M${x - 340} 600 Q${x} 470 ${x + 340} 600"/>`
+      + `<path class="f-ciudad" d="M${x - 8} 538 V506 H${x + 8} V538 Z M${x - 9} 506 L${x - 4} 470 H${x + 4} L${x + 9} 506 Z`
+      + ` M${x - 4} 480 L${x - 22} 463 L${x - 7} 492 Z M${x + 4} 480 L${x + 22} 463 L${x + 7} 492 Z"/>`
+      + `<circle class="f-ciudad" cx="${x}" cy="465" r="5"/>`;
   }
   function fondoMedio() {
     const ancho = Math.ceil(W * 0.35 + 6400);
     const hitos = [[820, 'b'], [2300, 'p'], [4700, 'b'], [6500, 'p']];
     const r = azar(3);
-    let casas = '', ventanas = '', html = '';
-    for (const [x, t] of hitos) html += t === 'b' ? basilica(x) : panecillo(x);
+    let casas = '', ventanas = '';
     for (let x = -20; x < ancho;) {
-      const w = 40 + r() * 60;
-      const cerca = hitos.find(([hx]) => Math.abs(x + w / 2 - hx) < (Math.abs(x - hx) < 400 ? 150 : 0));
-      const bajo = hitos.some(([hx, t]) => t === 'p' && Math.abs(x + w / 2 - hx) < 220);
-      if (cerca) { x += 40; continue; }
-      const h = bajo ? 28 + r() * 18 : 45 + r() * 85;
+      const w = 44 + r() * 60;
+      const centro = x + w / 2;
+      if (hitos.some(([hx, t]) => t === 'b' && Math.abs(centro - hx) < 150)) { x += 40; continue; }
+      const bajo = hitos.some(([hx, t]) => t === 'p' && Math.abs(centro - hx) < 230);
+      const h = bajo ? 26 + r() * 16 : 42 + r() * 80;
       const y = 600 - h;
-      casas += `M${n1(x)} 600 V${n1(y)} H${n1(x + w)} V600 Z `;
-      if (r() < 0.6) casas += `M${n1(x - 4)} ${n1(y)} L${n1(x + w / 2)} ${n1(y - 16 - r() * 14)} L${n1(x + w + 4)} ${n1(y)} Z `;
-      for (let fy = y + 12; fy < 586; fy += 28) {
-        for (let fx = x + 9; fx < x + w - 14; fx += 20) {
-          if (r() < 0.42) ventanas += `M${n1(fx)} ${n1(fy)} h7 v10 h-7 Z `;
+      casas += `M${n1(x)} 600 V${n1(y)} H${n1(x + w)} V600 `;
+      if (r() < 0.55) casas += `M${n1(x - 3)} ${n1(y)} L${n1(x + w / 2)} ${n1(y - 14 - r() * 12)} L${n1(x + w + 3)} ${n1(y)} `;
+      for (let fy = y + 12; fy < 584; fy += 26) {
+        for (let fx = x + 9; fx < x + w - 14; fx += 19) {
+          if (r() < 0.38) ventanas += `M${n1(fx)} ${n1(fy)} h6 v9 h-6 Z `;
         }
       }
-      if (r() < 0.12) casas += `M${n1(x + w + 10)} 600 V572 h4 V600 Z M${n1(x + w + 12)} 556 m-16 0 a16 16 0 1 0 32 0 a16 16 0 1 0 -32 0 Z `;
-      x += w + r() * 14;
+      x += w + 2 + r() * 12;
     }
+    let html = '';
+    for (const [x, t] of hitos) html += t === 'b' ? basilica(x) : panecillo(x);
     html = `<path class="f-ciudad" d="${casas}"/>` + html + `<path class="f-ventana" d="${ventanas}"/>`;
     lienzo('#fondo-medio', ancho, html);
   }
@@ -215,32 +223,11 @@
     const ancho = Math.ceil(W * 1.3 + 6400);
     const r = azar(9);
     let html = '', d = '';
-    /* faroles coloniales: de noche se encienden */
-    for (let x = 1100; x < ancho; x += 1250 + r() * 400) {
-      html += `<circle class="f-halo" cx="${n1(x + 42)}" cy="420" r="110"/>`;
-      d += `M${n1(x - 5)} 720 V398 H${n1(x + 5)} V720 Z M${n1(x - 13)} 720 V690 H${n1(x + 13)} V720 Z`
-        + ` M${n1(x)} 404 Q${n1(x + 6)} 386 ${n1(x + 42)} 388 V392 Q${n1(x + 10)} 392 ${n1(x + 4)} 408 Z`
-        + ` M${n1(x + 28)} 398 H${n1(x + 56)} L${n1(x + 42)} 380 Z M${n1(x + 30)} 444 H${n1(x + 54)} V450 H${n1(x + 30)} Z `;
-      html += `<path class="f-farol" d="M${n1(x + 30)} 398 H${n1(x + 54)} L${n1(x + 58)} 414 L${n1(x + 52)} 444 H${n1(x + 32)} L${n1(x + 26)} 414 Z"/>`;
-    }
-    /* pencos —el agave de la Sierra— con su chaguarquero de vez en cuando */
-    for (let x = 520; x < ancho; x += 1500 + r() * 700) {
-      for (let i = 0; i < 9; i++) {
-        const a = (-75 + i * 18.75) * Math.PI / 180;
-        const l = 70 + r() * 50;
-        const tx = x + Math.sin(a) * l;
-        const ty = 722 - Math.cos(a) * l;
-        const nx = Math.cos(a) * 9;
-        const ny = Math.sin(a) * 9;
-        d += `M${n1(x - nx)} ${n1(722 - ny)} L${n1(tx)} ${n1(ty)} L${n1(x + nx)} ${n1(722 + ny)} Z `;
-      }
-      if (r() < 0.6) d += `M${n1(x - 3)} 690 L${n1(x - 1)} 470 H${n1(x + 1)} L${n1(x + 3)} 690 Z M${n1(x - 18)} 500 Q${n1(x)} 470 ${n1(x + 18)} 500 Q${n1(x)} 490 ${n1(x - 18)} 500 Z `;
-    }
-    /* hierba */
-    for (let x = 60; x < ancho; x += 150 + r() * 220) {
-      const h = 26 + r() * 26;
-      d += `M${n1(x)} 722 Q${n1(x - 2)} ${n1(722 - h * 0.6)} ${n1(x - 12)} ${n1(722 - h)} Q${n1(x + 3)} ${n1(722 - h * 0.5)} ${n1(x + 6)} 722 Z`
-        + ` M${n1(x + 4)} 722 Q${n1(x + 6)} ${n1(722 - h)} ${n1(x + 16)} ${n1(722 - h * 1.15)} Q${n1(x + 12)} ${n1(722 - h * 0.5)} ${n1(x + 12)} 722 Z `;
+    /* faroles, finos; de noche se encienden */
+    for (let x = 1100; x < ancho; x += 1400 + r() * 500) {
+      html += `<circle class="f-halo" cx="${n1(x + 30)}" cy="420" r="120"/>`;
+      d += `M${n1(x)} 1200 V404 Q${n1(x)} 392 ${n1(x + 12)} 392 H${n1(x + 30)} `;
+      html += `<path class="f-farol" d="M${n1(x + 20)} 398 H${n1(x + 40)} L${n1(x + 43)} 412 L${n1(x + 37)} 434 H${n1(x + 23)} L${n1(x + 17)} 412 Z"/>`;
     }
     html += `<path class="f-frente" d="${d}"/>`;
     lienzo('#fondo-frente', ancho, html);
@@ -251,7 +238,7 @@
     const g = $('#qr');
     if (!g) return;
     const n = 21;
-    const t = 60 / n;
+    const t = 50 / n;
     const r = azar(11);
     const ojos = [[0, 0], [14, 0], [0, 14]];
     let d = '';
@@ -269,57 +256,7 @@
         if (on) d += `M${n1(x * t)} ${n1(y * t)}h${t.toFixed(2)}v${t.toFixed(2)}h-${t.toFixed(2)}Z`;
       }
     }
-    g.innerHTML = `<path class="o sin" d="${d}"/>`;
-  }
-
-  /* ─── hablar ─────────────────────────────────────────────────── */
-  let cola = [];
-  let relojVoz = 0;
-  let globoW = 0, globoH = 0;
-  function decir(lineas) {
-    cola = lineas.filter(Boolean);
-    siguiente();
-  }
-  function callar() {
-    cola = [];
-    clearTimeout(relojVoz);
-    globo.hidden = true;
-    st.habla = null;
-    astEl.classList.remove('asterisco--habla');
-  }
-  function medirGlobo() {
-    globoW = globo.offsetWidth;
-    globoH = globo.offsetHeight;
-  }
-  function siguiente() {
-    clearTimeout(relojVoz);
-    const linea = cola.shift();
-    astEl.classList.remove('asterisco--habla');
-    if (!linea) { globo.hidden = true; st.habla = null; return; }
-    const [quien, texto] = linea;
-    st.habla = quien;
-    globo.className = 'globo globo--' + quien;
-    globoQuien.textContent = quien === 'fran' ? 'Fran' : 'Nota al pie';
-    globoTexto.textContent = texto;
-    voz.textContent = (quien === 'fran' ? 'Fran: ' : 'Nota al pie: ') + texto;
-    globo.hidden = false;
-    void globo.offsetWidth;
-    globo.classList.add('globo--entra');
-    medirGlobo();
-    if (quien === 'nota') astEl.classList.add('asterisco--habla');
-    colocarGlobo();
-    relojVoz = setTimeout(siguiente, limita(texto.length * 62, 2400, 5200));
-  }
-  function colocarGlobo() {
-    const fran = st.habla === 'fran';
-    const ax = fran ? st.x : ast.x;
-    const ay = fran ? PIE - 176 : ast.y - 32;
-    const sx = (ax - st.cam) * s;
-    const sy = offY + ay * s;
-    const left = limita(sx - globoW / 2, 16, Math.max(16, vw - globoW - 16));
-    const top = Math.max(sy - globoH - 14, techo);
-    globo.style.transform = `translate3d(${left.toFixed(1)}px,${top.toFixed(1)}px,0)`;
-    globo.style.setProperty('--cola', limita(sx - left, 22, globoW - 22).toFixed(1) + 'px');
+    g.innerHTML = `<path class="t4 sin" d="${d}"/>`;
   }
 
   /* ─── moverse ────────────────────────────────────────────────── */
@@ -328,38 +265,18 @@
     st.dir = d;
     giro.style.setProperty('--dir', d);
   }
-  function irA(x, abrirAl) {
+  function irA(x) {
     st.meta = limita(x, 50, W - 50);
-    st.abrirAl = abrirAl || null;
-    /* lejos se corre: un viaje largo nunca pasa de un par de segundos */
-    st.vel = limita(Math.abs(st.meta - st.x) * 0.9, VEL, 1700);
-    /* lo que se decía en el sitio de antes se queda allí */
-    if (st.vel > VEL * 1.5) callar();
+    /* lejos se va más rápido: ningún trayecto pasa de un par de segundos */
+    st.vel = limita(Math.abs(st.meta - st.x) * 0.8, VEL, 1400);
   }
-  function ir(p, abrirlo) {
-    empezar();
-    if (abrirlo && Math.abs(p.x - st.x) < 100) {
-      st.meta = null;
-      voltear(Math.sign(p.x - st.x));
-      abrir(p);
-      return;
-    }
-    irA(p.x + (st.x < p.x ? -78 : 78), abrirlo ? p : null);
-  }
-  function llegar() {
-    st.vel = VEL;
-    const p = st.abrirAl;
-    st.abrirAl = null;
-    if (p) {
-      voltear(Math.sign(p.x - st.x));
-      abrir(p);
-    }
+  function parada(p) {
+    return p.x + (st.x <= p.x ? -LADO : LADO);
   }
   function mover(dt) {
     const antes = st.x;
-    if (st.izq !== st.der) {
+    if (st.izq !== st.der && !panel.open) {
       st.meta = null;
-      st.abrirAl = null;
       st.vel = VEL;
       const d = st.der ? 1 : -1;
       voltear(d);
@@ -370,7 +287,10 @@
       if (Math.abs(falta) <= st.vel * dt) {
         st.x = st.meta;
         st.meta = null;
-        llegar();
+        st.vel = VEL;
+        /* al llegar, mira hacia la pieza elegida */
+        const p = st.abierta || st.sel;
+        if (p) voltear(Math.sign(p.x - st.x));
       } else {
         st.x += Math.sign(falta) * st.vel * dt;
       }
@@ -380,65 +300,194 @@
       st.andando = anda;
       franEl.classList.toggle('fran--anda', anda);
     }
-    if (anda) franEl.style.setProperty('--paso', st.vel > 600 ? '.2s' : '.42s');
-    proximidad();
+    if (anda) franEl.style.setProperty('--paso', st.vel > 500 ? '.3s' : '.5s');
   }
   function camara(dt) {
     const max = Math.max(0, W - verAncho);
-    const obj = limita(st.x - verAncho * 0.4, 0, max);
-    st.cam += (obj - st.cam) * (1 - Math.pow(0.002, dt));
+    let obj;
+    if (panel.open && st.abierta && ancha.matches) {
+      /* con la hoja abierta al lado, la pieza se centra en lo que queda */
+      const libre = (vw - panel.offsetWidth) / s;
+      obj = st.abierta.x - libre / 2;
+    } else {
+      obj = st.x - verAncho * 0.42;
+    }
+    obj = limita(obj, 0, max);
+    st.cam += (obj - st.cam) * (1 - Math.pow(0.003, dt));
     if (Math.abs(obj - st.cam) < 0.05) st.cam = obj;
   }
 
-  /* ─── lo que hay cerca ───────────────────────────────────────── */
+  /* ─── qué hay a mano ─────────────────────────────────────────── */
   function proximidad() {
     let mejor = null;
     let dm = CERCA;
-    for (const p of puntos) {
+    for (const p of piezas) {
       const d = Math.abs(p.x - st.x);
       if (d < dm) { dm = d; mejor = p; }
     }
-    if (mejor === st.activo) return;
-    if (st.activo) st.activo.el.classList.remove('activo');
-    st.activo = mejor;
-    if (mejor) {
-      mejor.el.classList.add('activo');
-      /* la frase sale una vez, y no si Fran pasa corriendo */
-      if (!mejor.dicho && !st.portada && st.vel <= VEL && !st.abrirAl) {
-        mejor.dicho = true;
-        decir([['fran', mejor.frase], mejor.nota && ['nota', mejor.nota]]);
+    if (mejor !== st.cerca) {
+      st.cerca = mejor;
+      pintarFicha();
+    }
+  }
+  const actual = () => st.sel || st.cerca;
+  let resaltada = null;
+  function resaltar() {
+    const p = actual();
+    if (p === resaltada) return;
+    if (resaltada) resaltada.el.classList.remove('activo');
+    resaltada = p;
+    if (p) p.el.classList.add('activo');
+  }
+  function vecina(dir) {
+    const base = actual();
+    if (base) return piezas[piezas.indexOf(base) + dir] || null;
+    return dir > 0 ? piezas.find((p) => p.x > st.x + 10) || null
+      : [...piezas].reverse().find((p) => p.x < st.x - 10) || null;
+  }
+
+  /* ─── la ficha de abajo ──────────────────────────────────────── */
+  let fichaClave = '';
+  function pintarFicha() {
+    resaltar();
+    /* al terminar, la ficha lo dice hasta que Fran se mueva o se elija otra pieza */
+    const fin = st.fin && !st.finDicho && !st.sel;
+    const p = fin ? null : actual();
+    const clave = fin ? 'fin' : p ? p.id : 'sala:' + (lugar ? lugar.num : '');
+    if (clave !== fichaClave) {
+      fichaClave = clave;
+      ficha.classList.remove('ficha--cambia');
+      void ficha.offsetWidth;
+      ficha.classList.add('ficha--cambia');
+      if (fin) {
+        fichaSala.textContent = 'Recorrido completo';
+        fichaTitulo.textContent = 'Gracias por llegar hasta aquí.';
+        fichaFrase.textContent = 'Si quieres hablar de producto o de tu portafolio, la mentoría es gratis.';
+        fichaNota.textContent = '';
+      } else if (p) {
+        fichaSala.textContent = p.sala.num + ' · ' + p.sala.nombre;
+        fichaTitulo.textContent = p.nombre;
+        fichaFrase.textContent = p.frase;
+        fichaNota.textContent = p.nota;
+        fichaVerT.textContent = p.accion;
+      } else if (lugar) {
+        fichaSala.textContent = lugar.num + ' · ' + lugar.nombre;
+        fichaTitulo.textContent = lugar.lema;
+        fichaFrase.textContent = tactil.matches
+          ? 'Toca una pieza para acercarte, o pasa de una a otra con las flechas.'
+          : 'Camina con ← →, pasa de pieza en pieza con las flechas de aquí o con Tab.';
+        fichaNota.textContent = '';
       }
     }
-    pintarAccion();
-  }
-  function pintarAccion() {
-    const p = st.activo;
-    if (!p || st.portada || panel.open) { accion.hidden = true; return; }
-    accion.innerHTML = (tactil.matches
-      ? '<svg class="icono" aria-hidden="true"><use href="#i-ojo"/></svg>'
-      : '<kbd>E</kbd>') + 'Mirar <b></b>';
-    accion.querySelector('b').textContent = p.nombre;
-    accion.hidden = false;
+    fichaVer.hidden = !p || fin;
+    fichaCta.hidden = !fin;
+    fichaAnt.disabled = !vecina(-1);
+    fichaSig.disabled = !vecina(1);
   }
 
-  /* ─── el libro desplegable ───────────────────────────────────── */
-  function desplegar() {
-    const izq = st.cam - 200;
-    const der = st.cam + verAncho * 0.92;
-    for (const e of estaciones) {
-      const vista = e.x0 < der && e.x1 > izq;
-      const lejos = e.x1 < st.cam - 700 || e.x0 > st.cam + verAncho + 700;
-      if (vista && !e.abierta) { e.abierta = true; e.el.classList.add('abierta'); }
-      else if (lejos && e.abierta) { e.abierta = false; e.el.classList.remove('abierta'); }
+  /* ─── elegir y abrir ─────────────────────────────────────────── */
+  function elegir(p) {
+    empezar();
+    st.sel = p;
+    st.selDesde = performance.now();
+    st.finDicho = st.fin;
+    const destino = parada(p);
+    if (Math.abs(destino - st.x) > 4 && Math.abs(p.x - st.x) > LADO + 10) irA(destino);
+    else voltear(Math.sign(p.x - st.x));
+    pintarFicha();
+  }
+  function soltar() {
+    const antes = st.sel || (st.fin && !st.finDicho);
+    st.finDicho = st.fin;
+    st.sel = null;
+    if (antes) pintarFicha();
+  }
+  function marcarVisto(p) {
+    if (p.visto) return;
+    p.visto = true;
+    p.el.classList.add('visto');
+    progreso();
+  }
+  function abrir(p) {
+    const t = $('#t-' + p.id);
+    if (!t) return;
+    empezar();
+    st.abierta = p;
+    st.sel = p;
+    st.izq = st.der = false;
+    if (Math.abs(p.x - st.x) > LADO + 10) irA(parada(p));
+    panelCuerpo.replaceChildren(t.content.cloneNode(true));
+    panelLugar.textContent = p.sala.num + ' · ' + p.sala.nombre;
+    const i = piezas.indexOf(p);
+    panelN.textContent = (i + 1) + ' / ' + piezas.length;
+    panelAnt.disabled = i === 0;
+    panelSig.disabled = i === piezas.length - 1;
+    sincronizaTemas();
+    if (!panel.open) {
+      panel.showModal();
+    } else {
+      panelCuerpo.classList.remove('hoja__cuerpo--cambia');
+      void panelCuerpo.offsetWidth;
+      panelCuerpo.classList.add('hoja__cuerpo--cambia');
     }
+    panelCuerpo.scrollTop = 0;
+    marcarVisto(p);
+    pintarFicha();
   }
+  function cerrar(d) {
+    if (!d.open || d.classList.contains('hoja--sale')) return;
+    d.classList.add('hoja--sale');
+    setTimeout(() => {
+      d.classList.remove('hoja--sale');
+      d.close();
+    }, quieto.matches ? 0 : 200);
+  }
+  for (const d of [panel, indice]) {
+    d.addEventListener('cancel', (e) => { e.preventDefault(); cerrar(d); });
+    d.addEventListener('click', (e) => {
+      if (e.target.closest('[data-cerrar]')) { cerrar(d); return; }
+      if (e.target !== d) return;
+      /* clic en el fondo, fuera de la hoja */
+      const r = d.getBoundingClientRect();
+      if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) cerrar(d);
+    });
+  }
+  panel.addEventListener('close', () => {
+    st.abierta = null;
+    if (!st.fin && piezas.every((p) => p.visto)) {
+      st.fin = true;
+      st.sel = null;
+      st.cerca = null;
+    }
+    pintarFicha();
+  });
+  panelAnt.addEventListener('click', () => { const p = piezas[piezas.indexOf(st.abierta) - 1]; if (p) abrir(p); });
+  panelSig.addEventListener('click', () => { const p = piezas[piezas.indexOf(st.abierta) + 1]; if (p) abrir(p); });
+  fichaVer.addEventListener('click', () => { const p = actual(); if (p) abrir(p); });
+  fichaAnt.addEventListener('click', () => { const p = vecina(-1); if (p) elegir(p); });
+  fichaSig.addEventListener('click', () => { const p = vecina(1); if (p) elegir(p); });
 
-  /* ─── el mapa ────────────────────────────────────────────────── */
+  /* los temas del sistema: cambian la piel del mundo entero */
+  function sincronizaTemas() {
+    const m = raiz.dataset.marca || 'mal';
+    $$('[data-marca-pon]', panelCuerpo).forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.marcaPon === m)));
+  }
+  panelCuerpo.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-marca-pon]');
+    if (!b) return;
+    const m = b.dataset.marcaPon;
+    if (m === 'mal') raiz.removeAttribute('data-marca');
+    else raiz.dataset.marca = m;
+    sincronizaTemas();
+    requestAnimationFrame(medir);
+  });
+
+  /* ─── salas: capítulos arriba, índice y progreso ─────────────── */
   let lugar = null;
   function marcarLugar() {
     let mejor = null;
     let dm = Infinity;
-    for (const e of estaciones) {
+    for (const e of salas) {
       const d = st.x < e.x0 ? e.x0 - st.x : st.x > e.x1 ? st.x - e.x1 : 0;
       if (d < dm) { dm = d; mejor = e; }
     }
@@ -446,100 +495,65 @@
     if (lugar) lugar.boton.removeAttribute('aria-current');
     lugar = mejor;
     lugar.boton.setAttribute('aria-current', 'location');
+    if (!actual()) pintarFicha();
   }
-  for (const e of estaciones) {
+  for (const e of salas) {
     const b = document.createElement('button');
     b.type = 'button';
-    b.textContent = e.nombre;
-    b.addEventListener('click', () => {
-      empezar();
-      st.movido = true;
-      irA(e.puntos.length ? e.puntos[0].x - 90 : (e.x0 + e.x1) / 2);
-    });
-    mapa.append(b);
+    b.innerHTML = `<span>${e.num}</span>`;
+    b.append(e.nombre);
+    b.addEventListener('click', () => elegir(e.piezas[0]));
+    capitulos.append(b);
     e.boton = b;
   }
+  function pintarIndice() {
+    indiceLista.replaceChildren(...salas.map((e) => {
+      const li = document.createElement('li');
+      const t = document.createElement('p');
+      t.className = 'indice__sala';
+      t.textContent = e.num + ' · ' + e.nombre;
+      const ul = document.createElement('ul');
+      for (const p of e.piezas) {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = p.nombre;
+        if (p.visto) {
+          b.insertAdjacentHTML('beforeend', '<svg class="icono icono--s" aria-hidden="true"><use href="#i-check"/></svg>');
+          b.setAttribute('aria-label', p.nombre + ', vista');
+        }
+        b.addEventListener('click', () => {
+          cerrar(indice);
+          setTimeout(() => abrir(p), quieto.matches ? 0 : 220);
+        });
+        const item = document.createElement('li');
+        item.append(b);
+        ul.append(item);
+      }
+      li.append(t, ul);
+      return li;
+    }));
+  }
+  $('#abrir-indice').addEventListener('click', () => {
+    pintarIndice();
+    indice.showModal();
+  });
   function progreso() {
-    const n = puntos.filter((p) => p.visto).length;
-    $('#visto').textContent = n + '/' + puntos.length;
-    $('#visto-barra').style.width = (n / puntos.length) * 100 + '%';
-    for (const e of estaciones) e.boton.classList.toggle('hecho', e.puntos.every((p) => p.visto));
+    const n = piezas.filter((p) => p.visto).length;
+    $('#visto').textContent = n + '/' + piezas.length;
+    for (const e of salas) e.boton.classList.toggle('hecha', e.piezas.every((p) => p.visto));
   }
 
-  /* ─── mirar una cosa ─────────────────────────────────────────── */
-  function mirar() {
-    if (!st.activo) return;
-    voltear(Math.sign(st.activo.x - st.x));
-    abrir(st.activo);
-  }
-  function sincronizaCajones() {
-    const m = raiz.dataset.marca || 'mal';
-    $$('[data-marca-pon]', panelCuerpo).forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.marcaPon === m)));
-  }
-  function abrir(p) {
-    const t = $('#t-' + p.id);
-    if (!t) return;
-    callar();
-    st.izq = st.der = false;
-    st.meta = null;
-    panelCuerpo.replaceChildren(t.content.cloneNode(true));
-    panelLugar.textContent = p.est.nombre + ' · ' + p.nombre;
-    sincronizaCajones();
-    accion.hidden = true;
-    panel.showModal();
-    panel.scrollTop = 0;
-    p.dicho = true;
-    if (!p.visto) {
-      p.visto = true;
-      p.el.classList.add('visto');
-      progreso();
+  /* ─── el libro desplegable ───────────────────────────────────── */
+  function desplegar() {
+    const izq = st.cam - 200;
+    const der = st.cam + verAncho * 0.95;
+    for (const e of salas) {
+      const vista = e.x0 < der && e.x1 > izq;
+      const lejos = e.x1 < st.cam - 800 || e.x0 > st.cam + verAncho + 800;
+      if (vista && !e.abierta) { e.abierta = true; e.el.classList.add('abierta'); }
+      else if (lejos && e.abierta) { e.abierta = false; e.el.classList.remove('abierta'); }
     }
   }
-  panel.addEventListener('click', (e) => {
-    if (e.target.closest('[data-cierra]')) { panel.close(); return; }
-    /* clic en el telón de fondo */
-    const r = panel.getBoundingClientRect();
-    if (e.target === panel && (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom)) panel.close();
-  });
-  panel.addEventListener('close', () => {
-    pintarAccion();
-    if (st.pendiente) { decir(st.pendiente); st.pendiente = null; }
-    if (!premiado && puntos.every((p) => p.visto)) {
-      premiado = true;
-      setTimeout(mostrarPremio, 300);
-    }
-  });
-
-  /* los cajones del archivo cambian el tema del sistema entero */
-  const CAJONES = {
-    mal: '*De vuelta a casa: crema, rojo y filete fino.',
-    mercio: '*Tema EL MERCIO.: página blanca, serif y cero sombras.',
-    apps: '*Tema APPS: el de Quanto y Mi Huerto.',
-    juegos: '*Tema Juegos: rosa, contorno grueso, de juguete.',
-  };
-  document.addEventListener('click', (e) => {
-    const b = e.target.closest && e.target.closest('[data-marca-pon]');
-    if (!b) return;
-    const m = b.dataset.marcaPon;
-    if (m === 'mal') raiz.removeAttribute('data-marca');
-    else raiz.dataset.marca = m;
-    sincronizaCajones();
-    st.pendiente = [['nota', CAJONES[m]]];
-    setTimeout(() => panel.close(), 180);
-  });
-
-  /* ─── el premio ──────────────────────────────────────────────── */
-  let premiado = false;
-  function mostrarPremio() {
-    callar();
-    premio.hidden = false;
-    $('#premio-cta').focus({ preventScroll: true });
-  }
-  function cerrarPremio() {
-    premio.hidden = true;
-    decir([['nota', '*Eso era todo. Lo del café va en serio.']]);
-  }
-  premio.addEventListener('click', (e) => { if (!e.target.closest('a')) cerrarPremio(); });
 
   /* ─── día y noche ────────────────────────────────────────────── */
   const esNoche = () => (raiz.dataset.tema ? raiz.dataset.tema === 'oscuro' : oscuroSO.matches);
@@ -550,19 +564,15 @@
     if (uso) uso.setAttribute('href', noche ? '#i-sol' : '#i-luna');
   }
   temaBtn.addEventListener('click', () => {
-    const noche = !esNoche();
-    raiz.dataset.tema = noche ? 'oscuro' : 'claro';
+    raiz.dataset.tema = esNoche() ? 'claro' : 'oscuro';
     try { localStorage.setItem('papel-tema', raiz.dataset.tema); } catch (err) { /* modo privado */ }
     pintarTema();
-    decir(noche
-      ? [['fran', 'De noche escribo.'], ['nota', '*Y el mundo se vuelve Limbo.']]
-      : [['fran', 'De día diseño productos.'], ['nota', '*Vuelve el papel.']]);
   });
   try {
     const t = localStorage.getItem('papel-tema');
     if (t === 'claro' || t === 'oscuro') raiz.dataset.tema = t;
   } catch (err) { /* nada */ }
-  /* Si quien aloja la página marca su propio tema (`data-theme`), se sigue. */
+  /* si quien aloja la página marca su propio tema (`data-theme`), se sigue */
   const espejo = () => {
     const t = raiz.getAttribute('data-theme');
     if (t === 'dark') raiz.dataset.tema = 'oscuro';
@@ -574,58 +584,47 @@
   if (oscuroSO.addEventListener) oscuroSO.addEventListener('change', pintarTema);
 
   /* ─── empezar ────────────────────────────────────────────────── */
-  let relojPista = 0;
   function empezar() {
     if (!st.portada) return;
     st.portada = false;
     portada.classList.add('portada--fuera');
-    setTimeout(() => { portada.hidden = true; }, 460);
-    decir([
-      ['nota', '*Hola. Soy la nota al pie: Fran habla, yo aclaro.'],
-      ['fran', 'Esto es mi portafolio. Se recorre caminando.'],
-    ]);
-    pintarAccion();
-    relojPista = setTimeout(() => {
-      if (st.movido) return;
-      decir([['nota', tactil.matches
-        ? '*Pista: toca el suelo para caminar y las cosas para mirarlas.'
-        : '*Pista: ← → para caminar, E para mirar.']]);
-    }, 9000);
+    setTimeout(() => { portada.hidden = true; }, 500);
+    ficha.removeAttribute('data-oculta');
+    pintarFicha();
   }
   $('#empezar').addEventListener('click', () => {
     empezar();
-    /* el primer paso lo da solo: hasta el letrero */
-    st.movido = true;
-    clearTimeout(relojPista);
-    irA(puntos[0].x - 78);
+    elegir(piezas[0]);
+    fichaVer.focus({ preventScroll: true });
   });
   $('#marca').addEventListener('click', (e) => {
     e.preventDefault();
-    empezar();
-    irA(300);
+    elegir(piezas[0]);
   });
-  accion.addEventListener('click', mirar);
 
   /* ─── teclado ────────────────────────────────────────────────── */
   const IZQ = new Set(['ArrowLeft', 'KeyA']);
   const DER = new Set(['ArrowRight', 'KeyD']);
-  const MIRA = new Set(['KeyE', 'ArrowUp', 'KeyW']);
+  const VER = new Set(['KeyE', 'ArrowUp', 'KeyW']);
   addEventListener('keydown', (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
-    if (!premio.hidden) {
-      if (e.key === 'Escape') cerrarPremio();
+    if (indice.open) return;
+    const sobreControl = e.target.closest && e.target.closest('button, a, input, select, textarea');
+    if (panel.open) {
+      /* con la hoja abierta, las flechas pasan de pieza */
+      if (sobreControl && e.target.closest('.hoja__cuerpo')) return;
+      if (IZQ.has(e.code) && !panelAnt.disabled) { panelAnt.click(); e.preventDefault(); }
+      if (DER.has(e.code) && !panelSig.disabled) { panelSig.click(); e.preventDefault(); }
       return;
     }
-    if (panel.open) return;
-    const sobreControl = e.target.closest && e.target.closest('button, a, input, select, textarea');
     if (IZQ.has(e.code) || DER.has(e.code)) {
       empezar();
-      st.movido = true;
-      clearTimeout(relojPista);
+      soltar();
       if (IZQ.has(e.code)) st.izq = true; else st.der = true;
       e.preventDefault();
-    } else if (MIRA.has(e.code) || (!sobreControl && (e.key === 'Enter' || e.key === ' '))) {
-      if (st.portada) empezar(); else mirar();
+    } else if (VER.has(e.code) || (!sobreControl && (e.key === 'Enter' || e.key === ' '))) {
+      const p = actual();
+      if (st.portada) { $('#empezar').click(); } else if (p) abrir(p);
       e.preventDefault();
     }
   });
@@ -636,20 +635,41 @@
   addEventListener('blur', () => { st.izq = st.der = false; });
 
   /* ─── ratón y dedo ───────────────────────────────────────────── */
+  /* Tocar el suelo lleva a Fran hasta ahí; arrastrar lo lleva de la
+     mano. Las piezas tienen su propio clic. */
+  let arrastre = null;
+  function destino(e) {
+    const r = esc.getBoundingClientRect();
+    irA(st.cam + (e.clientX - r.left) / s);
+  }
   esc.addEventListener('pointerdown', (e) => {
     if (e.button !== 0 || e.target.closest('.punto')) return;
     empezar();
-    st.movido = true;
-    clearTimeout(relojPista);
-    const r = esc.getBoundingClientRect();
-    irA(st.cam + (e.clientX - r.left) / s);
+    soltar();
+    arrastre = e.pointerId;
+    try { esc.setPointerCapture(e.pointerId); } catch (err) { /* sin captura */ }
+    destino(e);
   });
-  let porPuntero = false;
-  for (const p of puntos) {
-    p.el.addEventListener('pointerdown', () => { porPuntero = true; });
-    p.el.addEventListener('click', () => { porPuntero = false; ir(p, true); });
-    /* con Tab, la cámara va a buscar lo que tiene el foco */
-    p.el.addEventListener('focus', () => { if (!porPuntero) ir(p, false); });
+  esc.addEventListener('pointermove', (e) => { if (arrastre === e.pointerId) destino(e); });
+  const suelta = (e) => { if (arrastre === e.pointerId) arrastre = null; };
+  esc.addEventListener('pointerup', suelta);
+  esc.addEventListener('pointercancel', suelta);
+
+  /* El foco solo mueve a Fran cuando se navega con Tab: al cerrar una
+     hoja, el navegador devuelve el foco a la pieza que se tocó al
+     principio, y eso no es una orden de ir hasta ella. */
+  let conTab = false;
+  addEventListener('keydown', (e) => { if (e.key === 'Tab') conTab = true; }, true);
+  addEventListener('pointerdown', () => { conTab = false; }, true);
+  for (const p of piezas) {
+    p.el.addEventListener('click', (e) => {
+      /* con teclado (detail 0), Enter abre; con dedo o ratón, el primer
+         toque elige y acerca, y el segundo —ya allí— abre */
+      const yaAhi = st.sel === p && performance.now() - st.selDesde > 450 && Math.abs(p.x - st.x) <= LADO + 12;
+      if (e.detail === 0 || yaAhi) abrir(p);
+      else elegir(p);
+    });
+    p.el.addEventListener('focus', () => { if (conTab && !panel.open && !indice.open) elegir(p); });
   }
   /* el navegador intenta desplazar el escenario para enseñar el foco:
      de eso se encarga la cámara */
@@ -658,31 +678,29 @@
 
   /* ─── el bucle ───────────────────────────────────────────────── */
   let ultimo = performance.now();
-  function pintar(t, dt) {
+  function pintar() {
     for (const c of capas) c.el.style.transform = `translate3d(${(-st.cam * c.p).toFixed(2)}px,0,0)`;
-    franEl.style.transform = `translate3d(${(st.x - 55).toFixed(2)}px,${PIE - 170}px,0)`;
-    /* la nota al pie va detrás del hombro, con un poco de retraso */
-    const fx = st.x - st.dir * 72;
-    const fy = PIE - 205 + (quieto.matches ? 0 : Math.sin(t / 520) * 7);
-    const k = 1 - Math.pow(0.03, dt);
-    ast.x += (fx - ast.x) * k;
-    ast.y += (fy - ast.y) * k;
-    astEl.style.transform = `translate3d(${(ast.x - 28).toFixed(2)}px,${(ast.y - 28).toFixed(2)}px,0)`;
+    franEl.style.transform = `translate3d(${(st.x - 40).toFixed(2)}px,${PIE - 176}px,0)`;
     desplegar();
     marcarLugar();
-    if (!globo.hidden) colocarGlobo();
   }
   function cuadro(t) {
     const dt = Math.min((t - ultimo) / 1000, 0.05);
     ultimo = t;
-    if (!panel.open && premio.hidden) mover(dt);
+    mover(dt);
+    proximidad();
     camara(dt);
-    pintar(t, dt);
+    pintar();
     requestAnimationFrame(cuadro);
   }
 
   /* ─── arranque ───────────────────────────────────────────────── */
   addEventListener('resize', medir);
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(medir);
+    ro.observe(hud);
+    ro.observe(ficha);
+  }
   medir();
   fondoLejos();
   fondoMedio();
@@ -690,9 +708,9 @@
   qr();
   progreso();
   pintarTema();
-  st.cam = limita(st.x - verAncho * 0.4, 0, Math.max(0, W - verAncho));
-  ast.x = st.x - 72;
-  pintar(performance.now(), 0);
+  st.cam = limita(st.x - verAncho * 0.42, 0, Math.max(0, W - verAncho));
+  pintar();
+  pintarFicha();
   if (window.malDS && window.malDS.iconos) window.malDS.iconos();
   requestAnimationFrame((t) => { ultimo = t; cuadro(t); });
 })();
