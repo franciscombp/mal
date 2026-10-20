@@ -94,12 +94,22 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
   background:linear-gradient(to bottom, var(--pp-cielo-alto), var(--pp-cielo-bajo) 70%);
 }
 .cielo{position:absolute;inset:0;pointer-events:none}
-.cielo__astro{
-  position:absolute;right:13%;top:16%;width:clamp(44px, 5.5vw, 84px);aspect-ratio:1;border-radius:50%;
-  background:var(--pp-astro);
+/* --pp-tarde y --pp-luz-tarde (0 → 1) salen de cuánto se ha caminado;
+   los escribe el JS en el escenario */
+.escenario{--pp-tarde:0;--pp-luz-tarde:0}
+.cielo__tarde{
+  position:absolute;inset:0;opacity:calc(var(--pp-tarde) * (1 - var(--pp-noche)));
+  background:linear-gradient(to bottom,
+    color-mix(in srgb, var(--mal-primary) 14%, var(--mal-bg)) 0%,
+    color-mix(in srgb, var(--mal-warn) 18%, var(--mal-bg)) 62%,
+    var(--mal-bg) 100%);
 }
+/* el astro vive en la capa lejana, en unidades del mundo: sale a la
+   izquierda, cruza y se pone detrás de los volcanes al final del paseo */
+.astro{position:absolute;left:0;top:0;width:84px;height:84px;border-radius:50%;background:var(--pp-astro);will-change:transform}
+.cielo__noche{position:absolute;inset:0 0 40% 0;opacity:var(--pp-noche);transition:opacity .6s}
 .cielo__estrellas{
-  position:absolute;inset:0 0 45% 0;opacity:var(--pp-noche);transition:opacity .6s;
+  position:absolute;inset:0;animation:papel-titila 5s ease-in-out infinite alternate;
   background-image:
     radial-gradient(1.4px 1.4px at 8% 22%, var(--mal-on-surface) 50%, transparent 52%),
     radial-gradient(1px 1px at 19% 48%, var(--mal-on-surface) 50%, transparent 52%),
@@ -110,12 +120,25 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
     radial-gradient(1.2px 1.2px at 78% 30%, var(--mal-on-surface) 50%, transparent 52%),
     radial-gradient(1.6px 1.6px at 91% 58%, var(--mal-on-surface) 50%, transparent 52%);
 }
+.cielo__estrellas--2{
+  animation-delay:-2.5s;animation-duration:7s;
+  background-image:
+    radial-gradient(1.2px 1.2px at 13% 62%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1px 1px at 26% 30%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1.4px 1.4px at 38% 70%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1px 1px at 50% 20%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 62% 42%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1px 1px at 73% 12%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1.4px 1.4px at 85% 44%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1px 1px at 95% 26%, var(--mal-on-surface) 50%, transparent 52%);
+}
+@keyframes papel-titila{from{opacity:.35}to{opacity:1}}
 
 /* El mundo mide 6400 × 720 unidades y se escala entero a la pantalla.
    Cada capa se desplaza a su ritmo (data-p): eso es el paralaje. */
-.mundo{position:absolute;left:0;top:0;width:6400px;height:720px;transform-origin:0 0}
+.mundo{position:absolute;left:0;top:0;width:7800px;height:720px;transform-origin:0 0}
 .capa{position:absolute;left:0;top:0;height:720px;will-change:transform}
-.capa--suelo{width:6400px}
+.capa--suelo{width:7800px}
 .capa--frente{pointer-events:none}
 .fondo,.suelo{display:block;height:720px;overflow:visible}
 .suelo{position:absolute;left:0;top:0}
@@ -132,7 +155,24 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 .f-cable{fill:none;stroke:var(--pp-ciudad-linea);stroke-width:1}
 .f-frente{fill:none;stroke:var(--pp-frente);stroke-width:3;stroke-linecap:round}
 .f-farol{fill:var(--pp-ventana);stroke:var(--pp-frente);stroke-width:2}
-.f-halo{fill:url(#halo);opacity:var(--pp-noche);transition:opacity .6s}
+.f-halo{fill:url(#halo);opacity:max(var(--pp-noche), var(--pp-luz-tarde));transition:opacity .6s}
+.f-ventana-tarde{fill:var(--mal-warn);opacity:calc(var(--pp-luz-tarde) * .7 * (1 - var(--pp-noche)))}
+/* nubes, bandadas y el trolebús son elementos sueltos dentro de su capa:
+   así se animan sin repintar el fondo entero */
+.nube,.bandada,.trole{position:absolute;overflow:visible;will-change:transform}
+.nube{animation:papel-nube var(--dur, 160s) ease-in-out infinite alternate;animation-delay:var(--d, 0s)}
+.nube path{fill:var(--pp-papel);opacity:.9}
+@keyframes papel-nube{to{transform:translateX(-260px)}}
+.bandada{animation:papel-bandada var(--dur, 75s) linear infinite;animation-delay:var(--d, 0s)}
+.bandada path{fill:none;stroke:var(--pp-ciudad-linea);stroke-width:1.4;stroke-linecap:round;
+  transform-box:fill-box;transform-origin:center;animation:papel-aleteo .55s ease-in-out infinite alternate;animation-delay:var(--d, 0s)}
+@keyframes papel-bandada{from{transform:translateX(-160px)}to{transform:translateX(2600px)}}
+@keyframes papel-aleteo{from{transform:scaleY(1)}to{transform:scaleY(.25)}}
+.trole{visibility:hidden}
+.trole--va{visibility:visible}
+.trole__caja{fill:var(--pp-ciudad);stroke:var(--pp-ciudad-linea);stroke-width:1.2;stroke-linejoin:round}
+.trole__ventana{fill:var(--pp-ventana)}
+.trole__linea{fill:none;stroke:var(--pp-ciudad-linea);stroke-width:1}
 
 /* ─── las salas ─────────────────────────────────────────────── */
 .capa-papel{filter:url(#sombra)}
@@ -154,9 +194,12 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 .arte .luz-puerta{fill:var(--pp-luz-puerta);stroke:none}
 .arte .trazo-ac{stroke:var(--pp-marca)}
 .arte .trazo-pantalla{stroke:var(--pp-pantalla-linea);opacity:.5}
+.arte .trazo-papel{stroke:var(--pp-papel)}
+.arte .ok{fill:var(--mal-ok)}
+.arte .rosa{fill:color-mix(in srgb, var(--mal-primary) 55%, var(--mal-morado))}
 .arte .picto{fill:none;stroke:var(--pp-pantalla-linea);stroke-width:1.5}
 .arte .picto--ac{stroke:var(--pp-marca)}
-.arte .retrato{filter:grayscale(1) contrast(1.04)}
+.arte .retrato{filter:grayscale(1) contrast(1.04);transition:filter .9s ease}
 .arte text{stroke:none;fill:var(--pp-tinta);font-family:var(--mal-texto);text-rendering:geometricPrecision}
 .arte text.d{font-family:var(--mal-display);font-weight:var(--ref-peso-display);letter-spacing:var(--ref-tracking)}
 .arte text.n{font-weight:700;letter-spacing:-.01em}
@@ -217,6 +260,11 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 .fran--anda .brazo--i{animation:papel-braceo var(--paso, .5s) ease-in-out infinite alternate-reverse}
 .fran--anda .brazo--d{animation:papel-braceo var(--paso, .5s) ease-in-out infinite alternate}
 .fran--anda .fran__cuerpo{animation:papel-rebote calc(var(--paso, .5s) / 2) ease-in-out infinite alternate}
+.fran__cabeza{transform-origin:40px 34px}
+.fran--espera .fran__cuerpo{animation:papel-respira 3.6s ease-in-out infinite}
+.fran--espera .fran__cabeza{animation:papel-mira 9s ease-in-out infinite}
+@keyframes papel-respira{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.2px)}}
+@keyframes papel-mira{0%,38%,100%{transform:rotate(0)}44%,56%{transform:rotate(-7deg)}62%,80%{transform:rotate(5deg)}}
 @keyframes papel-paso{from{transform:rotate(-17deg)}to{transform:rotate(17deg)}}
 @keyframes papel-braceo{from{transform:rotate(-11deg)}to{transform:rotate(11deg)}}
 @keyframes papel-rebote{from{transform:translateY(0)}to{transform:translateY(-2px)}}
@@ -400,6 +448,67 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 .indice button .icono{color:var(--mal-primary)}
 .indice button:focus-visible{outline:3px solid var(--mal-primary);outline-offset:-3px}
 
+/* ─── entre salas: las escenas de la calle ──────────────────── */
+.prop{position:absolute;bottom:120px}
+.etiqueta{opacity:0;transition:opacity .45s ease .15s}
+.reactivo.cerca .etiqueta{opacity:1}
+/* las palomas levantan el vuelo y vuelven cuando Fran se aleja */
+.paloma{transform-box:fill-box;transform-origin:center;transition:transform 1.1s cubic-bezier(.3,.6,.3,1) var(--d), opacity .5s ease calc(var(--d) + .5s)}
+.reactivo.cerca .paloma{transform:translate(var(--vx), var(--vy)) rotate(-12deg);opacity:0}
+.reactivo.cerca .paloma__ala{animation:papel-aleteo .14s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:bottom}
+/* el gato sigue a Fran con la cabeza; la cola nunca para */
+.gato__cabeza{transform-origin:4px -34px;transform:rotate(var(--mira, 0deg));transition:transform .5s ease}
+.gato__ojo{fill:var(--pp-ventana)}
+.gato__cola{transform-origin:-12px -6px;animation:papel-cola 3.4s ease-in-out infinite}
+@keyframes papel-cola{0%,100%{transform:rotate(0)}50%{transform:rotate(14deg)}}
+/* el mural se enciende nodo a nodo */
+.nodo{fill:var(--pp-papel);stroke:var(--pp-linea);stroke-width:1.5;transition:fill .35s ease var(--d, 0s)}
+.nodo--centro{fill:var(--pp-papel-2)}
+.reactivo.cerca .nodo:not(.nodo--centro){fill:var(--pp-marca)}
+/* el colibrí liba en la flor de arriba y, al llegar Fran, cambia de flor */
+.colibri{transform:translate(95px, 90px);transition:transform 1s cubic-bezier(.4,0,.2,1)}
+.reactivo.cerca .colibri{transform:translate(143px, 112px)}
+.colibri__vuelo{animation:papel-levita 1.6s ease-in-out infinite alternate}
+.colibri__ala{transform-box:fill-box;transform-origin:right bottom;animation:papel-aleteo .09s linear infinite alternate}
+@keyframes papel-levita{from{transform:translateY(0)}to{transform:translateY(-4px)}}
+/* los pájaros del cable se van y vuelven */
+.pajaro{transform-box:fill-box;transform-origin:center;transition:transform 1s cubic-bezier(.3,.6,.3,1) var(--d), opacity .45s ease calc(var(--d) + .4s)}
+.reactivo.cerca .pajaro{transform:translate(var(--vx), var(--vy)) rotate(-10deg);opacity:0}
+/* de noche, luciérnagas en el café */
+.luciernagas{opacity:var(--pp-noche);transition:opacity .6s}
+.luciernaga{fill:var(--mal-warn);stroke:none;animation:papel-luciernaga 5.2s ease-in-out infinite;animation-delay:var(--d, 0s)}
+@keyframes papel-luciernaga{0%,100%{opacity:0;transform:translate(0,0)}20%{opacity:.9}50%{opacity:.4;transform:translate(14px,-18px)}80%{opacity:.85;transform:translate(-6px,-30px)}}
+
+/* ─── dentro de cada sala: lo que responde cuando Fran llega ──── */
+.arte [class*="r-"]{transform-box:fill-box;transform-origin:center}
+.r-perfil{stroke-dasharray:46;stroke-dashoffset:46;transition:stroke-dashoffset .9s ease .2s}
+[data-cerca="perfil"] .r-perfil{stroke-dashoffset:0}
+[data-cerca="retrato"] .retrato{filter:grayscale(0) contrast(1)}
+.r-deuna{transform:scale(0);transition:transform .45s cubic-bezier(.3,1.5,.5,1) .35s}
+[data-cerca="deuna"] .r-deuna{transform:scale(1)}
+[data-cerca="kiosk"] .r-kiosk{animation:papel-casilla 1.8s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes papel-casilla{0%,100%{fill:var(--pp-papel-2)}18%{fill:var(--pp-marca)}36%{fill:var(--pp-papel-2)}}
+.r-control{stroke-dasharray:18;stroke-dashoffset:18;transition:stroke-dashoffset .5s ease .4s}
+[data-cerca="control"] .r-control{stroke-dashoffset:0}
+.r-pantalla{opacity:.3;transition:opacity .6s ease .2s}
+.r-luz{opacity:0;transition:opacity .6s ease}
+[data-cerca="mercio"] .r-pantalla,[data-cerca="mercio"] .r-luz{opacity:1}
+.r-carta{transition:transform .5s ease var(--d)}
+[data-cerca="newsletters"] .r-carta{transform:translateY(-5px)}
+.r-juego{transition:transform .4s cubic-bezier(.3,1.4,.5,1) var(--d)}
+[data-cerca="juegos"] .r-juego{transform:translateY(-6px)}
+.r-apps{transition:transform .6s ease}
+[data-cerca="apps"] .r-apps{animation:papel-lista 3.2s ease-in-out infinite alternate}
+@keyframes papel-lista{from{transform:translateY(0)}to{transform:translateY(-18px)}}
+.r-vapor{transition:transform .8s ease}
+[data-cerca="mentoria"] .r-vapor{transform:scale(1.35)}
+.r-cajon{transition:transform .5s cubic-bezier(.3,1.3,.5,1) var(--d)}
+[data-cerca="sistema"] .r-cajon{transform:translateX(16px)}
+.r-muestra{transition:transform .4s ease var(--d)}
+[data-cerca="sistema"] .r-muestra{transform:translateY(-4px)}
+.luz-puerta{opacity:.55;transition:opacity .7s ease}
+[data-cerca="salida"] .luz-puerta{opacity:1}
+
 /* ─── pantallas medianas y estrechas ────────────────────────── */
 @media (max-width:1460px){
   .papel-marca__rol{display:none}
@@ -455,6 +564,9 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
   .papel-js .estacion{transition:opacity .3s}
   .fran__giro{transition:none}
   .fran--anda :is(.pierna--i,.pierna--d,.brazo--i,.brazo--d,.fran__cuerpo),
+  .fran--espera :is(.fran__cuerpo,.fran__cabeza),.nube,.bandada,.bandada path,.gato__cola,.colibri__vuelo,.colibri__ala,
+  .luciernaga,.cielo__estrellas,[data-cerca] [class*="r-"],
   .arte .vapor,.punto__marca::after{animation:none !important}
+  .paloma,.pajaro,.colibri,.gato__cabeza,[class*="r-"],.retrato{transition:none !important}
   .hoja[open],.hoja.hoja--sale,.ficha--cambia .ficha__cuerpo,.hoja__cuerpo--cambia{animation:none}
 }

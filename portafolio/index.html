@@ -60,18 +60,21 @@
 </section>
 
 <div class="escenario" id="escenario">
-  <div class="cielo" aria-hidden="true"><div class="cielo__estrellas"></div><div class="cielo__astro"></div></div>
+  <div class="cielo" aria-hidden="true">
+    <div class="cielo__tarde"></div>
+    <div class="cielo__noche"><div class="cielo__estrellas"></div><div class="cielo__estrellas cielo__estrellas--2"></div></div>
+  </div>
 
-  <div class="mundo" id="mundo" data-ancho="6400">
+  <div class="mundo" id="mundo" data-ancho="7800">
     <!-- Lejos: el Pichincha y el Cotopaxi. Medio: Quito a línea. Los dibuja papel.js -->
-    <div class="capa" data-p=".12" aria-hidden="true"><svg class="fondo" id="fondo-lejos"></svg></div>
+    <div class="capa" data-p=".12" aria-hidden="true"><div class="astro" id="astro"></div><svg class="fondo" id="fondo-lejos"></svg></div>
     <div class="capa" data-p=".35" aria-hidden="true"><svg class="fondo" id="fondo-medio"></svg></div>
 
     <div class="capa capa--suelo" data-p="1">
-      <svg class="suelo" viewBox="0 0 6400 720" width="6400" height="720" aria-hidden="true">
-        <rect class="suelo__tierra" x="-200" y="600" width="6800" height="900"/>
-        <path class="suelo__filo" d="M-200 600 H6600"/>
-        <path class="suelo__linea" d="M-200 652 H6600"/>
+      <svg class="suelo" viewBox="0 0 7800 720" width="7800" height="720" aria-hidden="true">
+        <rect class="suelo__tierra" x="-200" y="600" width="8200" height="900"/>
+        <path class="suelo__filo" d="M-200 600 H8000"/>
+        <path class="suelo__linea" d="M-200 652 H8000"/>
       </svg>
 
       <!-- ───────── 01 · PRESENTACIÓN ───────── -->
@@ -83,7 +86,7 @@
           <text class="m" x="36" y="72">01 · PRESENTACIÓN</text>
           <text class="d" x="34" y="138" font-size="42">Francisco</text>
           <text class="d" x="34" y="184" font-size="42">Maldonado</text>
-          <path class="hueco trazo-ac grueso" d="M36 214 H80"/>
+          <path class="hueco trazo-ac grueso r-perfil" d="M36 214 H80"/>
           <text class="s" x="36" y="252" font-size="20">Diseño producto.</text>
           <text class="s" x="36" y="278" font-size="20">Y escribo sobre él.</text>
           <text class="m" x="36" y="346">DESDE 2010 · QUITO, ECUADOR</text>
@@ -109,7 +112,7 @@
 
       <!-- ───────── 02 · TRABAJO ───────── -->
       <div class="estacion" data-num="02" data-nombre="Trabajo" data-lema="Lo que hace cuando le pagan."
-        style="left:1200px;width:1150px;height:470px">
+        style="left:1470px;width:1150px;height:470px">
         <svg class="arte" viewBox="0 0 1150 470" aria-hidden="true">
           <g class="capa-papel"><polygon class="t3" points="0,470 0,130 190,50 190,130 380,50 380,130 570,50 570,130 760,50 760,130 950,50 950,130 1140,50 1140,470"/></g>
           <path class="hueco fino tenue" d="M190 56 V130 M380 56 V130 M570 56 V130 M760 56 V130 M950 56 V130 M0 130 H1140"/>
@@ -133,6 +136,7 @@
             <rect class="t4" x="405" y="198" width="90" height="182" rx="16"/>
             <rect x="413" y="212" width="74" height="154" rx="9"/>
             <g id="qr" transform="translate(425 230)"></g>
+            <g class="r-deuna"><circle class="ac sin" cx="480" cy="226" r="9"/><path class="hueco trazo-papel grueso" d="M475.5 226 l3.2 3.2 l6 -6.6"/></g>
             <rect class="ac sin" x="422" y="318" width="56" height="22" rx="11"/>
             <text class="m sobre" x="450" y="332.5" text-anchor="middle" font-size="9">PAGAR</text>
           </g>
@@ -146,10 +150,10 @@
             <rect class="t4" x="670" y="150" width="100" height="160" rx="10"/>
             <rect x="679" y="160" width="82" height="130" rx="4"/>
             <rect class="t2 fino" x="686" y="168" width="68" height="10" rx="2"/>
-            <rect class="t2 fino" x="686" y="184" width="32" height="30" rx="3"/>
-            <rect class="t2 fino" x="722" y="184" width="32" height="30" rx="3"/>
-            <rect class="t2 fino" x="686" y="218" width="32" height="30" rx="3"/>
-            <rect class="t2 fino" x="722" y="218" width="32" height="30" rx="3"/>
+            <rect class="t2 fino r-kiosk" style="--d:0s" x="686" y="184" width="32" height="30" rx="3"/>
+            <rect class="t2 fino r-kiosk" style="--d:.45s" x="722" y="184" width="32" height="30" rx="3"/>
+            <rect class="t2 fino r-kiosk" style="--d:1.35s" x="686" y="218" width="32" height="30" rx="3"/>
+            <rect class="t2 fino r-kiosk" style="--d:.9s" x="722" y="218" width="32" height="30" rx="3"/>
             <rect class="ac sin" x="686" y="258" width="68" height="20" rx="4"/>
             <rect class="t3 fino" x="704" y="296" width="32" height="6" rx="2"/>
           </g>
@@ -166,6 +170,7 @@
             <rect class="fino" x="965" y="262" width="10" height="10" rx="2"/><path class="hueco fino tenue" d="M980 267 H1013"/>
             <rect class="fino" x="965" y="284" width="10" height="10" rx="2"/><path class="hueco fino tenue" d="M980 289 H1004"/>
             <path class="hueco trazo-ac grueso" d="M966 223 l3 3 l6 -7 M966 245 l3 3 l6 -7 M966 267 l3 3 l6 -7"/>
+            <path class="hueco trazo-ac grueso r-control" d="M966 289 l3 3 l6 -7"/>
             <rect class="t3 sin" x="962" y="322" width="16" height="10" rx="2"/><rect class="t3 sin" x="982" y="322" width="16" height="10" rx="2"/><rect class="t3 sin" x="1002" y="322" width="16" height="10" rx="2"/>
             <rect class="t3 sin" x="962" y="338" width="16" height="10" rx="2"/><rect class="t3 sin" x="982" y="338" width="16" height="10" rx="2"/><rect class="t3 sin" x="1002" y="338" width="16" height="10" rx="2"/>
             <rect class="ac sin" x="976" y="356" width="28" height="9" rx="3"/>
@@ -187,7 +192,7 @@
 
       <!-- ───────── 03 · ESCRITURA ───────── -->
       <div class="estacion" data-num="03" data-nombre="Escritura" data-lema="Un periódico y dos newsletters."
-        style="left:2510px;width:860px;height:440px">
+        style="left:3040px;width:860px;height:440px">
         <svg class="arte" viewBox="0 0 860 440" aria-hidden="true">
           <g class="capa-papel">
             <rect x="0" y="100" width="860" height="340"/>
@@ -199,21 +204,27 @@
           <text class="d" x="38" y="192" font-size="34">Escritura</text>
           <text class="s" x="40" y="220" font-size="17">Un periódico y dos newsletters.</text>
 
-          <path class="hueco grueso" d="M300 356 L282 440 M380 356 L398 440"/>
+          <polygon class="luz r-luz" points="416,262 442,252 486,352 352,352"/>
           <g class="capa-papel">
-            <rect class="t3" x="242" y="350" width="196" height="9" rx="2"/>
-            <g transform="rotate(-2 340 296)">
-              <rect x="252" y="236" width="176" height="116"/>
-              <text class="serif" x="340" y="264" text-anchor="middle" font-size="22">EL MERCIO<tspan class="punto-em">.</tspan></text>
-              <path class="hueco fino" d="M264 274 H416"/>
-              <path class="hueco fino tenue" d="M266 286 H332 M266 296 H328 M266 306 H332 M266 316 H322 M266 326 H332 M266 336 H326"/>
-              <rect class="t2 fino" x="346" y="284" width="70" height="40"/>
-              <path class="hueco fino tenue" d="M346 334 H416 M346 342 H404"/>
+            <rect class="t3" x="226" y="346" width="234" height="9" rx="2"/>
+            <path class="hueco grueso" d="M244 355 V440 M442 355 V440 M244 402 H442"/>
+            <path class="t3" d="M270 336 H414 L420 346 H264 Z"/>
+            <rect class="t4" x="282" y="248" width="120" height="90" rx="3"/>
+            <g class="r-pantalla">
+              <rect class="sin" x="290" y="256" width="104" height="74"/>
+              <text class="serif" x="342" y="279" text-anchor="middle" font-size="13">EL MERCIO<tspan class="punto-em">.</tspan></text>
+              <path class="hueco fino" d="M298 286 H386"/>
+              <path class="hueco fino tenue" d="M298 296 H342 M298 304 H338 M298 312 H342 M298 320 H334 M350 296 H386 M350 304 H386"/>
+              <rect class="t2 fino" x="350" y="310" width="36" height="14"/>
             </g>
+            <rect class="t2" x="232" y="334" width="34" height="4"/><rect x="236" y="330" width="34" height="4"/><rect class="t2" x="233" y="326" width="34" height="4"/>
+            <path d="M424 326 H442 V338 Q442 346 435 346 H431 Q424 346 424 338 Z"/><path class="hueco fino" d="M442 330 Q450 334 442 340"/>
+            <path class="hueco grueso" d="M452 346 V262 L424 246"/>
+            <polygon class="t4" points="402,238 428,226 442,252 416,264"/>
           </g>
 
           <path class="hueco fino tenue" d="M480 118 H820 M560 118 L500 166 M560 118 L620 166 M730 118 L670 166 M730 118 L790 166"/>
-          <g class="capa-papel">
+          <g class="capa-papel r-carta" style="--d:0s">
             <rect class="t3" x="490" y="166" width="140" height="170"/>
             <rect x="498" y="174" width="124" height="154"/>
             <rect class="ac sin" x="498" y="174" width="124" height="6"/>
@@ -223,7 +234,7 @@
             <path class="hueco fino tenue" d="M508 262 H612"/>
             <text class="m" x="508" y="314" font-size="8">LOS LUNES</text>
           </g>
-          <g class="capa-papel">
+          <g class="capa-papel r-carta" style="--d:.12s">
             <rect class="t3" x="660" y="166" width="140" height="170"/>
             <rect class="t4" x="668" y="174" width="124" height="154"/>
             <text class="m claro" x="678" y="200" font-size="8">NEWSLETTER</text>
@@ -236,7 +247,7 @@
         <button class="punto" type="button" data-id="mercio" data-nombre="EL MERCIO." data-accion="Ver más"
           data-frase="Periódico satírico ecuatoriano, desde 2009."
           data-nota="Lo real se firma como real; lo inventado se declara inventado."
-          style="left:236px;top:226px;width:210px;height:214px" aria-label="EL MERCIO."><span class="punto__marca"></span></button>
+          style="left:222px;top:222px;width:240px;height:218px" aria-label="EL MERCIO."><span class="punto__marca"></span></button>
         <button class="punto" type="button" data-id="newsletters" data-nombre="Newsletters" data-accion="Ver más"
           data-frase="Diseño, producto y lo que no cabe en LinkedIn."
           data-nota="Mal Pensamientos sale los lunes. Todo Mal, cuando toca."
@@ -245,7 +256,7 @@
 
       <!-- ───────── 04 · PROYECTOS ───────── -->
       <div class="estacion" data-num="04" data-nombre="Proyectos" data-lema="Juegos y apps propios."
-        style="left:3530px;width:860px;height:470px">
+        style="left:4320px;width:860px;height:470px">
         <svg class="arte" viewBox="0 0 860 470" aria-hidden="true">
           <g class="capa-papel"><rect class="t3" x="0" y="90" width="860" height="380"/></g>
           <path class="hueco fino tenue" d="M0 112 H860"/>
@@ -254,13 +265,13 @@
           <text class="s" x="40" y="220" font-size="17">Siete juegos y cinco apps, en el navegador.</text>
 
           <g class="capa-papel">
-            <rect class="t4" x="40" y="252" width="84" height="56" rx="3"/>
-            <rect class="t4" x="134" y="252" width="84" height="56" rx="3"/>
-            <rect class="t4" x="228" y="252" width="84" height="56" rx="3"/>
-            <rect class="t4" x="322" y="252" width="84" height="56" rx="3"/>
-            <rect class="t4" x="87" y="318" width="84" height="56" rx="3"/>
-            <rect class="t4" x="181" y="318" width="84" height="56" rx="3"/>
-            <rect class="t4" x="275" y="318" width="84" height="56" rx="3"/>
+            <rect class="t4 r-juego" style="--d:0.00s" x="40" y="252" width="84" height="56" rx="3"/>
+            <rect class="t4 r-juego" style="--d:0.07s" x="134" y="252" width="84" height="56" rx="3"/>
+            <rect class="t4 r-juego" style="--d:0.14s" x="228" y="252" width="84" height="56" rx="3"/>
+            <rect class="t4 r-juego" style="--d:0.21s" x="322" y="252" width="84" height="56" rx="3"/>
+            <rect class="t4 r-juego" style="--d:0.28s" x="87" y="318" width="84" height="56" rx="3"/>
+            <rect class="t4 r-juego" style="--d:0.35s" x="181" y="318" width="84" height="56" rx="3"/>
+            <rect class="t4 r-juego" style="--d:0.42s" x="275" y="318" width="84" height="56" rx="3"/>
           </g>
           <circle class="picto picto--ac" cx="78" cy="268" r="3"/>
           <path class="picto picto--ac" d="M78 271 L80 282 L74 292 M80 282 L87 291 M79 275 L87 279 M79 275 L72 278 M58 293 H106"/>
@@ -288,7 +299,7 @@
             <rect class="t3 fino" x="651" y="230" width="16" height="16" rx="4"/>
             <rect class="t3 fino" x="613" y="254" width="16" height="16" rx="4"/>
             <rect class="t2 fino" x="632" y="254" width="16" height="16" rx="4"/>
-            <path class="hueco fino tenue" d="M613 292 H667 M613 302 H655 M613 312 H661"/>
+            <g class="r-apps"><path class="hueco fino tenue" d="M613 292 H667 M613 302 H655 M613 312 H661 M613 322 H663 M613 332 H651"/></g>
             <rect class="t3 sin" x="628" y="354" width="24" height="4" rx="2"/>
           </g>
         </svg>
@@ -304,7 +315,7 @@
 
       <!-- ───────── 05 · MENTORÍA ───────── -->
       <div class="estacion" data-num="05" data-nombre="Mentoría" data-lema="Gratis, y sin adornos."
-        style="left:4550px;width:700px;height:440px">
+        style="left:5600px;width:700px;height:440px">
         <svg class="arte" viewBox="0 0 700 440" aria-hidden="true">
           <g class="capa-papel"><rect class="t3" x="0" y="110" width="700" height="330"/></g>
           <rect class="t2" x="392" y="176" width="250" height="160"/>
@@ -325,8 +336,16 @@
             <path class="ac" d="M286 318 H310 V334 Q310 342 302 342 H294 Q286 342 286 334 Z"/>
             <path class="hueco" d="M310 323 Q320 328 310 334"/>
           </g>
-          <path class="hueco fino tenue vapor" d="M222 310 q-5 -7 0 -14 q5 -7 0 -14"/>
-          <path class="hueco fino tenue vapor vapor--2" d="M298 310 q-5 -7 0 -14 q5 -7 0 -14"/>
+          <g class="r-vapor">
+            <path class="hueco fino tenue vapor" d="M222 310 q-5 -7 0 -14 q5 -7 0 -14"/>
+            <path class="hueco fino tenue vapor vapor--2" d="M298 310 q-5 -7 0 -14 q5 -7 0 -14"/>
+          </g>
+          <g class="luciernagas">
+            <circle class="luciernaga" style="--d:0s" cx="90" cy="300" r="2"/>
+            <circle class="luciernaga" style="--d:-1.7s" cx="560" cy="380" r="1.6"/>
+            <circle class="luciernaga" style="--d:-3.1s" cx="470" cy="300" r="2"/>
+            <circle class="luciernaga" style="--d:-4.4s" cx="640" cy="390" r="1.5"/>
+          </g>
         </svg>
         <button class="punto" type="button" data-id="mentoria" data-nombre="Mentoría" data-accion="Ver más"
           data-frase="Reviso portafolios y case studies, sin edulcorar."
@@ -336,7 +355,7 @@
 
       <!-- ───────── 06 · SISTEMA ───────── -->
       <div class="estacion" data-num="06" data-nombre="Sistema" data-lema="Todo esto está hecho con él."
-        style="left:5410px;width:800px;height:470px">
+        style="left:6720px;width:800px;height:470px">
         <svg class="arte" viewBox="0 0 800 470" aria-hidden="true">
           <g class="capa-papel"><rect class="t3" x="0" y="90" width="800" height="380"/></g>
           <text class="m" x="40" y="150">06 · SISTEMA</text>
@@ -344,10 +363,16 @@
           <text class="s" x="40" y="220" font-size="17">Un sistema de diseño, cuatro temas.</text>
           <g class="capa-papel">
             <rect class="t2" x="60" y="262" width="280" height="208" rx="3"/>
-            <rect x="72" y="272" width="256" height="40" rx="2"/><rect class="fino" x="175" y="279" width="50" height="12" rx="1"/><text class="m" x="200" y="288" text-anchor="middle" font-size="7">MAL</text><rect class="t4 sin" x="181" y="298" width="38" height="5" rx="2.5"/>
-            <rect x="72" y="320" width="256" height="40" rx="2"/><rect class="fino" x="175" y="327" width="50" height="12" rx="1"/><text class="m" x="200" y="336" text-anchor="middle" font-size="7">MERCIO</text><rect class="t4 sin" x="181" y="346" width="38" height="5" rx="2.5"/>
-            <rect x="72" y="368" width="256" height="40" rx="2"/><rect class="fino" x="175" y="375" width="50" height="12" rx="1"/><text class="m" x="200" y="384" text-anchor="middle" font-size="7">APPS</text><rect class="t4 sin" x="181" y="394" width="38" height="5" rx="2.5"/>
-            <rect x="72" y="416" width="256" height="40" rx="2"/><rect class="fino" x="175" y="423" width="50" height="12" rx="1"/><text class="m" x="200" y="432" text-anchor="middle" font-size="7">JUEGOS</text><rect class="t4 sin" x="181" y="442" width="38" height="5" rx="2.5"/>
+            <g class="r-cajon" style="--d:0.00s"><rect x="72" y="272" width="256" height="40" rx="2"/><rect class="fino" x="175" y="279" width="50" height="12" rx="1"/><text class="m" x="200" y="288" text-anchor="middle" font-size="7">MAL</text><rect class="t4 sin" x="181" y="298" width="38" height="5" rx="2.5"/></g>
+            <g class="r-cajon" style="--d:0.09s"><rect x="72" y="320" width="256" height="40" rx="2"/><rect class="fino" x="175" y="327" width="50" height="12" rx="1"/><text class="m" x="200" y="336" text-anchor="middle" font-size="7">MERCIO</text><rect class="t4 sin" x="181" y="346" width="38" height="5" rx="2.5"/></g>
+            <g class="r-cajon" style="--d:0.18s"><rect x="72" y="368" width="256" height="40" rx="2"/><rect class="fino" x="175" y="375" width="50" height="12" rx="1"/><text class="m" x="200" y="384" text-anchor="middle" font-size="7">APPS</text><rect class="t4 sin" x="181" y="394" width="38" height="5" rx="2.5"/></g>
+            <g class="r-cajon" style="--d:0.27s"><rect x="72" y="416" width="256" height="40" rx="2"/><rect class="fino" x="175" y="423" width="50" height="12" rx="1"/><text class="m" x="200" y="432" text-anchor="middle" font-size="7">JUEGOS</text><rect class="t4 sin" x="181" y="442" width="38" height="5" rx="2.5"/></g>
+          </g>
+          <g class="capa-papel">
+            <g class="r-muestra" style="--d:0s"><rect x="372" y="262" width="52" height="64" rx="2"/><rect class="ac sin" x="378" y="268" width="40" height="36"/><text class="m" x="398" y="318" text-anchor="middle" font-size="6">MAL</text></g>
+            <g class="r-muestra" style="--d:.08s"><rect x="432" y="262" width="52" height="64" rx="2"/><rect class="t4 sin" x="438" y="268" width="40" height="36"/><text class="m" x="458" y="318" text-anchor="middle" font-size="6">MERCIO</text></g>
+            <g class="r-muestra" style="--d:.16s"><rect x="372" y="336" width="52" height="64" rx="2"/><rect class="ok sin" x="378" y="342" width="40" height="36"/><text class="m" x="398" y="392" text-anchor="middle" font-size="6">APPS</text></g>
+            <g class="r-muestra" style="--d:.24s"><rect x="432" y="336" width="52" height="64" rx="2"/><rect class="rosa sin" x="438" y="342" width="40" height="36"/><text class="m" x="458" y="392" text-anchor="middle" font-size="6">JUEGOS</text></g>
           </g>
           <g class="capa-papel">
             <rect class="t4" x="520" y="170" width="170" height="300"/>
@@ -371,6 +396,117 @@
           style="left:510px;top:116px;width:190px;height:354px" aria-label="Salida a UNA"><span class="punto__marca"></span></button>
       </div>
 
+
+      <!-- ───────── entre salas: la calle ─────────
+           Cosas que no son piezas pero reaccionan cuando Fran pasa. -->
+      <div class="prop reactivo" data-id="parada" data-radio="300" style="left:1110px;width:300px;height:300px">
+        <svg class="arte" viewBox="0 0 300 300" aria-hidden="true">
+          <g class="capa-papel">
+            <rect class="t3" x="26" y="58" width="248" height="12" rx="2"/>
+            <rect x="40" y="70" width="8" height="230"/>
+            <rect x="252" y="70" width="8" height="230"/>
+            <rect class="t2" x="60" y="86" width="122" height="152" rx="2"/>
+            <rect class="t3" x="190" y="232" width="56" height="7" rx="2"/>
+            <path class="hueco grueso" d="M196 239 V300 M240 239 V300"/>
+          </g>
+          <text class="serif" x="121" y="120" text-anchor="middle" font-size="15">EL MERCIO<tspan class="punto-em">.</tspan></text>
+          <path class="hueco fino tenue" d="M74 130 H168"/>
+          <text class="s" x="121" y="152" text-anchor="middle" font-size="9.5">Las noticias, el entretenimiento</text>
+          <text class="s" x="121" y="165" text-anchor="middle" font-size="9.5">y la desinformación de ayer.</text>
+          <text class="m" x="121" y="220" text-anchor="middle" font-size="7">DESDE 2009</text>
+          <g class="palomas">
+            <g class="paloma" style="--vx:-70px;--vy:-150px;--d:0s"><ellipse class="t3" cx="104" cy="292" rx="9" ry="6"/><circle class="t3" cx="112" cy="285" r="3.4"/><path class="hueco fino" d="M115.5 285 l4 1"/><path class="paloma__ala t2" d="M100 290 q4 -8 10 -4 q-6 1 -8 6 Z"/></g>
+            <g class="paloma" style="--vx:-30px;--vy:-170px;--d:.08s"><ellipse class="t3" cx="134" cy="294" rx="9" ry="6"/><circle class="t3" cx="126" cy="287" r="3.4"/><path class="hueco fino" d="M122.5 287 l-4 1"/><path class="paloma__ala t2" d="M138 292 q-4 -8 -10 -4 q6 1 8 6 Z"/></g>
+            <g class="paloma" style="--vx:40px;--vy:-140px;--d:.16s"><ellipse class="t3" cx="166" cy="292" rx="9" ry="6"/><circle class="t3" cx="174" cy="285" r="3.4"/><path class="hueco fino" d="M177.5 285 l4 1"/><path class="paloma__ala t2" d="M162 290 q4 -8 10 -4 q-6 1 -8 6 Z"/></g>
+          </g>
+          <g class="etiqueta"><path class="hueco trazo-ac" d="M136 36 H164"/><text class="m" x="150" y="28" text-anchor="middle" font-size="8">PARADA · QUITO</text></g>
+        </svg>
+      </div>
+
+      <div class="prop reactivo" data-id="gato" data-radio="340" style="left:2650px;width:360px;height:260px">
+        <svg class="arte" viewBox="0 0 360 260" aria-hidden="true">
+          <g class="capa-papel">
+            <rect class="t3" x="286" y="130" width="10" height="130"/>
+            <path class="t2" d="M291 36 C332 36 352 74 342 112 C334 142 302 150 291 142 C280 150 248 142 240 112 C230 74 250 36 291 36 Z"/>
+          </g>
+          <g class="capa-papel">
+            <rect class="t3" x="0" y="188" width="250" height="72"/>
+            <rect class="t2" x="-4" y="180" width="258" height="10" rx="2"/>
+          </g>
+          <path class="hueco fino tenue" d="M0 210 H250 M0 234 H250 M40 190 V210 M110 190 V210 M180 190 V210 M75 210 V234 M145 210 V234 M215 210 V234"/>
+          <g class="gato" transform="translate(140 180)">
+            <path class="gato__cola t4 sin" d="M-14 -2 C-30 -4 -36 -22 -28 -36 C-26 -39 -21 -38 -22 -34 C-28 -24 -25 -11 -12 -8 Z"/>
+            <path class="t4 sin" d="M-16 0 C-18 -24 -8 -40 4 -40 C16 -40 22 -26 20 0 Z"/>
+            <g class="gato__cabeza">
+              <path class="t4 sin" d="M-7 -40 L-11 -58 L-1 -49 H9 L19 -58 L15 -40 Z"/>
+              <circle class="t4 sin" cx="4" cy="-44" r="12"/>
+              <ellipse class="gato__ojo" cx="-1" cy="-46" rx="1.7" ry="2.3"/><ellipse class="gato__ojo" cx="9" cy="-46" rx="1.7" ry="2.3"/>
+            </g>
+          </g>
+          <g class="etiqueta"><path class="hueco trazo-ac" d="M46 166 H74"/><text class="m" x="60" y="158" text-anchor="middle" font-size="8">NERO</text></g>
+        </svg>
+      </div>
+
+      <div class="prop reactivo" data-id="mural" data-radio="320" style="left:3950px;width:320px;height:260px">
+        <svg class="arte" viewBox="0 0 320 260" aria-hidden="true">
+          <g class="capa-papel"><rect class="t3" x="0" y="40" width="320" height="220"/></g>
+          <text class="m" x="160" y="72" text-anchor="middle" font-size="8">UNA.RED · EL HUB DE MAL</text>
+          <g transform="translate(160 158)">
+            <path class="hueco fino tenue" d="M0 0 L-92 -48 M0 0 L-38 -76 M0 0 L52 -72 M0 0 L98 -26 M0 0 L82 52 M0 0 L-72 60 M0 0 L8 86"/>
+            <circle class="nodo" style="--d:0s" cx="-92" cy="-48" r="5"/>
+            <circle class="nodo" style="--d:.1s" cx="-38" cy="-76" r="5"/>
+            <circle class="nodo" style="--d:.2s" cx="52" cy="-72" r="5"/>
+            <circle class="nodo" style="--d:.3s" cx="98" cy="-26" r="5"/>
+            <circle class="nodo" style="--d:.4s" cx="82" cy="52" r="5"/>
+            <circle class="nodo" style="--d:.5s" cx="-72" cy="60" r="5"/>
+            <circle class="nodo" style="--d:.6s" cx="8" cy="86" r="5"/>
+            <circle class="nodo nodo--centro" r="17"/>
+            <text class="m" y="3.5" text-anchor="middle" font-size="9">UNA</text>
+            <text class="m" x="-92" y="-58" text-anchor="middle" font-size="6">MEDIOS</text>
+            <text class="m" x="52" y="-82" text-anchor="middle" font-size="6">APPS</text>
+            <text class="m" x="-72" y="76" text-anchor="middle" font-size="6">JUEGOS</text>
+          </g>
+          <g class="etiqueta"><path class="hueco trazo-ac" d="M146 20 H174"/><text class="m" x="160" y="12" text-anchor="middle" font-size="8">MURAL · UNA.RED</text></g>
+        </svg>
+      </div>
+
+      <div class="prop reactivo" data-id="colibri" data-radio="260" style="left:5280px;width:220px;height:260px">
+        <svg class="arte" viewBox="0 0 220 260" aria-hidden="true">
+          <g class="capa-papel">
+            <path class="t3" d="M40 200 H180 L170 260 H50 Z"/>
+            <path class="t2" d="M110 200 C100 160 70 140 60 120 C90 128 106 150 110 200 Z"/>
+            <path class="t2" d="M110 200 C120 150 150 130 166 112 C150 140 124 160 110 200 Z"/>
+            <path class="t2" d="M110 200 C108 150 112 120 118 90 C126 130 118 160 110 200 Z"/>
+            <path class="t2" d="M110 200 C92 170 56 160 36 162 C66 170 96 180 110 200 Z"/>
+            <path class="t2" d="M110 200 C128 170 164 160 184 162 C154 170 124 180 110 200 Z"/>
+            <circle class="ac sin" cx="62" cy="118" r="4"/><circle class="ac sin" cx="167" cy="110" r="4"/><circle class="ac sin" cx="119" cy="88" r="4"/>
+          </g>
+          <g class="colibri">
+            <g class="colibri__vuelo">
+              <path class="colibri__ala t3 sin" d="M-2 0 C-10 -14 -22 -18 -30 -12 C-20 -6 -10 -2 -2 0 Z"/>
+              <path class="t4 sin" d="M-8 2 C-4 -6 6 -6 10 0 C6 6 -2 6 -8 2 Z"/>
+              <path class="t4 sin" d="M-8 2 L-20 10 L-16 2 Z"/>
+              <path class="hueco fino" d="M10 0 L24 -2"/>
+            </g>
+          </g>
+          <g class="etiqueta"><path class="hueco trazo-ac" d="M96 36 H124"/><text class="m" x="110" y="28" text-anchor="middle" font-size="8">QUINDE · COLIBRÍ</text></g>
+        </svg>
+      </div>
+
+      <div class="prop reactivo" data-id="poste" data-radio="300" style="left:6400px;width:260px;height:320px">
+        <svg class="arte" viewBox="0 0 260 320" aria-hidden="true">
+          <g class="capa-papel"><rect class="t3" x="124" y="40" width="12" height="280"/><rect class="t3" x="70" y="52" width="120" height="6"/></g>
+          <path class="hueco fino tenue" d="M-60 60 Q70 74 130 58 Q190 74 320 60 M-60 72 Q70 86 130 70 Q190 86 320 72"/>
+          <g class="capa-papel"><rect x="140" y="130" width="78" height="24" rx="2"/></g>
+          <text class="m" x="179" y="146" text-anchor="middle" font-size="8">UNA →</text>
+          <g class="pajaros">
+            <g class="pajaro" style="--vx:-90px;--vy:-120px;--d:0s" transform="translate(44 64)"><path class="t4 sin" d="M0 0 C-8 0 -10 -8 -5 -12 C-1 -15 5 -14 7 -9 L12 -14 L8 -6 C7 -2 4 0 0 0 Z"/></g>
+            <g class="pajaro" style="--vx:-50px;--vy:-150px;--d:.1s" transform="translate(92 66)"><path class="t4 sin" d="M0 0 C-8 0 -10 -8 -5 -12 C-1 -15 5 -14 7 -9 L12 -14 L8 -6 C7 -2 4 0 0 0 Z"/></g>
+            <g class="pajaro" style="--vx:70px;--vy:-130px;--d:.05s" transform="translate(206 62) scale(-1 1)"><path class="t4 sin" d="M0 0 C-8 0 -10 -8 -5 -12 C-1 -15 5 -14 7 -9 L12 -14 L8 -6 C7 -2 4 0 0 0 Z"/></g>
+          </g>
+        </svg>
+      </div>
+
       <!-- Fran, recortado. De tres cuartos: al girar se voltea como una hoja -->
       <div class="fran" id="fran" aria-hidden="true">
         <div class="fran__giro">
@@ -383,12 +519,14 @@
               <g class="brazo brazo--i"><rect class="f-sueter" x="25" y="40" width="8" height="48" rx="4"/><circle class="f-piel" cx="29" cy="90" r="3.6"/></g>
               <path class="f-sueter" d="M28 40 Q40 34 52 40 L53 96 Q40 99 27 96 Z"/>
               <path class="f-camiseta" d="M36 37 Q40 44 44 37 Z"/>
-              <rect class="f-piel" x="37" y="28" width="6" height="9" rx="2"/>
-              <ellipse class="f-piel" cx="40" cy="21" rx="8.5" ry="10.5"/>
-              <path class="f-pelo" d="M31 22 Q30 9 40 9 Q50 9 49 22 Q46 14 40.5 13.5 L40 17 L39.5 13.5 Q34 14 31 22 Z"/>
-              <path class="f-pelo" d="M31.5 18 Q29.5 40 28.5 60 L33 59 Q33.5 38 34.5 22 Z"/>
-              <path class="f-pelo" d="M48.5 18 Q50.5 40 51.5 60 L47 59 Q46.5 38 45.5 22 Z"/>
-              <circle class="f-gafas" cx="36.6" cy="22" r="3"/><circle class="f-gafas" cx="43.4" cy="22" r="3"/><path class="f-gafas" d="M39.6 22 H40.4"/>
+              <g class="fran__cabeza">
+                <rect class="f-piel" x="37" y="28" width="6" height="9" rx="2"/>
+                <ellipse class="f-piel" cx="40" cy="21" rx="8.5" ry="10.5"/>
+                <path class="f-pelo" d="M31 22 Q30 9 40 9 Q50 9 49 22 Q46 14 40.5 13.5 L40 17 L39.5 13.5 Q34 14 31 22 Z"/>
+                <path class="f-pelo" d="M31.5 18 Q29.5 40 28.5 60 L33 59 Q33.5 38 34.5 22 Z"/>
+                <path class="f-pelo" d="M48.5 18 Q50.5 40 51.5 60 L47 59 Q46.5 38 45.5 22 Z"/>
+                <circle class="f-gafas" cx="36.6" cy="22" r="3"/><circle class="f-gafas" cx="43.4" cy="22" r="3"/><path class="f-gafas" d="M39.6 22 H40.4"/>
+              </g>
               <g class="brazo brazo--d"><rect class="f-sueter" x="47" y="40" width="8" height="48" rx="4"/><circle class="f-piel" cx="51" cy="90" r="3.6"/></g>
             </g>
           </svg>

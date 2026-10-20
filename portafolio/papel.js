@@ -101,14 +101,23 @@
   };
 
   /* ─── escala ─────────────────────────────────────────────────── */
-  let s = 1, vw = 0, vh = 0, verAncho = 0, offY = 0;
+  let s = 1, s0 = 1, vw = 0, vh = 0, verAncho = 0, offY = 0, abajo = 0;
+  let zoom = 1, zoomPintado = 0;
+  const ZOOM = 1.05;   // cuánto se acerca la cámara al llegar a una pieza
   function medir() {
     vw = esc.clientWidth;
     vh = esc.clientHeight;
     const arriba = hud.getBoundingClientRect().bottom + 10;
-    const abajo = vh - ficha.offsetHeight - 30;
-    const franja = VISIBLE[1] - VISIBLE[0];
-    s = limita(Math.min((abajo - arriba) / franja, vw / (vw < vh ? 430 : 520)), 0.4, 1.6);
+    abajo = vh - ficha.offsetHeight - 30;
+    const franja = (VISIBLE[1] - VISIBLE[0]) * ZOOM;   // con sitio para el acercamiento
+    s0 = limita(Math.min((abajo - arriba) / franja, vw / (vw < vh ? 430 : 520)), 0.4, 1.6);
+    zoomPintado = 0;
+    escala();
+  }
+  function escala() {
+    if (Math.abs(zoom - zoomPintado) < 0.0005) return;
+    zoomPintado = zoom;
+    s = s0 * zoom;
     verAncho = vw / s;
     offY = abajo - VISIBLE[1] * s;
     mundo.style.transform = `translate3d(0,${offY.toFixed(1)}px,0) scale(${s.toFixed(4)})`;
@@ -153,18 +162,18 @@
   }
 
   function fondoLejos() {
-    const ancho = Math.ceil(W * 0.12 + 6400);
+    const ancho = Math.ceil(W * 0.12 + 4200);
     /* atrás, el Cotopaxi —un cono casi perfecto— y el Antisana */
     const yA = (x) => {
-      const base = 400 + 22 * Math.sin(x / 290) + 12 * Math.sin(x / 97 + 2) - bulto(x, 5200, 190, 260);
-      return Math.min(base, 150 + Math.max(0, Math.abs(x - 2000) - 14) * 0.55);
+      const base = 400 + 22 * Math.sin(x / 290) + 12 * Math.sin(x / 97 + 2) - bulto(x, 2000, 190, 260);
+      return Math.min(base, 150 + Math.max(0, Math.abs(x - 1150) - 14) * 0.55);
     };
     /* delante, el Pichincha detrás de la ciudad */
     const yB = (x) => 470 + 30 * Math.sin(x / 340 + 1) + 16 * Math.sin(x / 120)
       - bulto(x, 700, 230, 150) - bulto(x, 960, 200, 120)
       - bulto(x, 3600, 150, 260) - bulto(x, 6200, 170, 220);
     let html = `<path class="f-lejos" d="${cresta(ancho, yA)}"/>`;
-    html += nieve(yA, 1700, 2300, 212) + nieve(yA, 4800, 5600, 236);
+    html += nieve(yA, 850, 1450, 212) + nieve(yA, 1600, 2400, 236);
     html += `<path class="f-lejos-2 capa-papel" d="${cresta(ancho, yB)}"/>`;
     /* el TelefériQo sube por la ladera */
     const [x0, y0, x1, y1] = [430, yB(430) + 4, 650, yB(650) - 6];
@@ -175,6 +184,38 @@
       html += `<path class="f-cable" d="M${n1(cx)} ${n1(cy)} v6 M${n1(cx - 5)} ${n1(cy + 6)} h10 v8 h-10 Z"/>`;
     }
     lienzo('#fondo-lejos', ancho, html);
+    /* nubes de papel y dos bandadas, cada una en su propio elemento */
+    const capa = $('#fondo-lejos').parentElement;
+    const r = azar(5);
+    for (let i = 0; i < 5; i++) {
+      const k = 0.7 + r() * 0.7;
+      const nube = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      nube.setAttribute('class', 'nube');
+      nube.setAttribute('viewBox', '0 0 200 70');
+      nube.setAttribute('width', 200 * k);
+      nube.setAttribute('height', 70 * k);
+      nube.style.left = (120 + i * 520 + r() * 260) + 'px';
+      nube.style.top = (70 + r() * 120) + 'px';
+      nube.style.setProperty('--dur', (140 + r() * 80).toFixed(0) + 's');
+      nube.style.setProperty('--d', (-r() * 120).toFixed(0) + 's');
+      nube.innerHTML = '<path d="M30 60 a24 24 0 0 1 22 -34 a32 32 0 0 1 60 -8 a26 26 0 0 1 42 24 a18 18 0 0 1 16 18 Z"/>';
+      capa.append(nube);
+    }
+    for (let i = 0; i < 2; i++) {
+      const b = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      b.setAttribute('class', 'bandada');
+      b.setAttribute('viewBox', '0 0 90 40');
+      b.setAttribute('width', 90);
+      b.setAttribute('height', 40);
+      b.style.left = '0px';
+      b.style.top = (90 + i * 70) + 'px';
+      b.style.setProperty('--dur', (70 + i * 25) + 's');
+      b.style.setProperty('--d', (-i * 38) + 's');
+      b.innerHTML = '<path style="--d:0s" d="M10 20 q6 -6 12 0 q6 -6 12 0"/>'
+        + '<path style="--d:-.2s" d="M38 10 q6 -6 12 0 q6 -6 12 0"/>'
+        + '<path style="--d:-.35s" d="M58 24 q6 -6 12 0 q6 -6 12 0"/>';
+      capa.append(b);
+    }
   }
 
   /* Quito, a línea: casas, la Basílica y el Panecillo */
@@ -192,9 +233,11 @@
       + ` M${x - 4} 480 L${x - 22} 463 L${x - 7} 492 Z M${x + 4} 480 L${x + 22} 463 L${x + 7} 492 Z"/>`
       + `<circle class="f-ciudad" cx="${x}" cy="465" r="5"/>`;
   }
+  let trole = null;
+  const troleSt = { x: 0, dir: 1, va: false, espera: 6 };
   function fondoMedio() {
-    const ancho = Math.ceil(W * 0.35 + 6400);
-    const hitos = [[820, 'b'], [2300, 'p'], [4700, 'b'], [6500, 'p']];
+    const ancho = Math.ceil(W * 0.35 + 4200);
+    const hitos = [[820, 'b'], [1900, 'p'], [2900, 'b'], [3900, 'p']];
     const r = azar(3);
     let casas = '', ventanas = '';
     for (let x = -20; x < ancho;) {
@@ -215,12 +258,51 @@
     }
     let html = '';
     for (const [x, t] of hitos) html += t === 'b' ? basilica(x) : panecillo(x);
-    html = `<path class="f-ciudad" d="${casas}"/>` + html + `<path class="f-ventana" d="${ventanas}"/>`;
+    html = `<path class="f-ciudad" d="${casas}"/>` + html
+      + `<path class="f-ventana" d="${ventanas}"/><path class="f-ventana-tarde" d="${ventanas}"/>`
+      + `<path class="f-cable" d="M0 524 H${ancho}"/>`;
     lienzo('#fondo-medio', ancho, html);
+    /* el trolebús, que cruza de vez en cuando por la calle de atrás */
+    trole = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    trole.setAttribute('class', 'trole');
+    trole.setAttribute('viewBox', '0 0 240 80');
+    trole.setAttribute('width', 240);
+    trole.setAttribute('height', 80);
+    trole.style.top = '522px';
+    trole.innerHTML = '<path class="trole__linea" d="M60 2 L72 16 M150 2 L162 16"/>'
+      + '<rect class="trole__caja" x="6" y="16" width="228" height="52" rx="7"/>'
+      + '<rect class="trole__ventana" x="16" y="24" width="24" height="18" rx="2"/><rect class="trole__ventana" x="46" y="24" width="24" height="18" rx="2"/>'
+      + '<rect class="trole__ventana" x="76" y="24" width="24" height="18" rx="2"/><rect class="trole__ventana" x="106" y="24" width="24" height="18" rx="2"/>'
+      + '<rect class="trole__ventana" x="136" y="24" width="24" height="18" rx="2"/><rect class="trole__ventana" x="166" y="24" width="24" height="18" rx="2"/>'
+      + '<rect class="trole__ventana" x="196" y="24" width="28" height="18" rx="2"/>'
+      + '<path class="trole__linea" d="M16 52 H224"/>'
+      + '<circle class="trole__caja" cx="52" cy="70" r="7"/><circle class="trole__caja" cx="188" cy="70" r="7"/>';
+    $('#fondo-medio').parentElement.append(trole);
+  }
+  function moverTrole(dt) {
+    if (!trole) return;
+    const vista0 = st.cam * 0.35;
+    const vista1 = vista0 + verAncho;
+    if (!troleSt.va) {
+      troleSt.espera -= dt;
+      if (troleSt.espera > 0) return;
+      troleSt.dir = troleSt.dir > 0 ? -1 : 1;
+      troleSt.x = troleSt.dir > 0 ? vista0 - 300 : vista1 + 60;
+      troleSt.va = true;
+      trole.classList.add('trole--va');
+    }
+    troleSt.x += troleSt.dir * 150 * dt;
+    if ((troleSt.dir > 0 && troleSt.x > vista1 + 60) || (troleSt.dir < 0 && troleSt.x < vista0 - 300)) {
+      troleSt.va = false;
+      troleSt.espera = 16 + Math.random() * 18;
+      trole.classList.remove('trole--va');
+      return;
+    }
+    trole.style.transform = `translate3d(${troleSt.x.toFixed(1)}px,0,0) scaleX(${troleSt.dir})`;
   }
 
   function fondoFrente() {
-    const ancho = Math.ceil(W * 1.3 + 6400);
+    const ancho = Math.ceil(W * 1.3 + 400);
     const r = azar(9);
     let html = '', d = '';
     /* faroles, finos; de noche se encienden */
@@ -299,6 +381,7 @@
     if (anda !== st.andando) {
       st.andando = anda;
       franEl.classList.toggle('fran--anda', anda);
+      if (anda) { quietoDesde = ultimo; franEl.classList.remove('fran--espera'); }
     }
     if (anda) franEl.style.setProperty('--paso', st.vel > 500 ? '.3s' : '.5s');
   }
@@ -315,6 +398,57 @@
     obj = limita(obj, 0, max);
     st.cam += (obj - st.cam) * (1 - Math.pow(0.003, dt));
     if (Math.abs(obj - st.cam) < 0.05) st.cam = obj;
+  }
+
+  /* ─── el día: el astro cruza el cielo mientras se camina ─────── */
+  const astro = $('#astro');
+  let horaPintada = -1;
+  const suave = (a, b, v) => { const t = limita((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+  function dia() {
+    const max = Math.max(1, W - verAncho);
+    const hora = limita(st.cam / max, 0, 1);
+    if (Math.abs(hora - horaPintada) < 0.002) return;
+    horaPintada = hora;
+    /* en coordenadas de la capa lejana: la x sigue a la cámara (que la
+       capa desplaza a 0,12) y recorre el ancho visible; la y hace un arco */
+    const ax = st.cam * 0.12 + (0.08 + 0.84 * hora) * verAncho - 42;
+    const ay = 96 + 110 * (1 - Math.sin(Math.PI * hora)) - 42;
+    astro.style.transform = `translate3d(${ax.toFixed(1)}px,${ay.toFixed(1)}px,0)`;
+    esc.style.setProperty('--pp-tarde', suave(0.5, 1, hora).toFixed(3));
+    esc.style.setProperty('--pp-luz-tarde', suave(0.72, 1, hora).toFixed(3));
+  }
+
+  /* ─── la calle responde: las escenas y lo de cada sala ───────── */
+  const props = $$('.prop.reactivo', mundo).map((el) => ({
+    el, id: el.dataset.id, r: +el.dataset.radio,
+    x: el.offsetLeft + el.offsetWidth / 2, cerca: false, ang: 0,
+  }));
+  let salaCerca = null, idCerca = '';
+  function reacciones() {
+    for (const q of props) {
+      const d = Math.abs(q.x - st.x);
+      const on = q.cerca ? d < q.r + 80 : d < q.r;
+      if (on !== q.cerca) { q.cerca = on; q.el.classList.toggle('cerca', on); }
+      if (q.id === 'gato' && d < 900) {
+        const a = limita((st.x - q.x) / 8, -28, 28);
+        if (Math.abs(a - q.ang) > 0.6) { q.ang = a; q.el.style.setProperty('--mira', a.toFixed(1) + 'deg'); }
+      }
+    }
+    const p = actual();
+    const llego = p && Math.abs(p.x - st.x) <= LADO + 40;
+    const sala = llego ? p.sala : null;
+    const id = llego ? p.id : '';
+    if (sala !== salaCerca || id !== idCerca) {
+      if (salaCerca) delete salaCerca.el.dataset.cerca;
+      salaCerca = sala;
+      idCerca = id;
+      if (sala) sala.el.dataset.cerca = id;
+    }
+    /* la cámara se acerca un poco cuando Fran ya está ante la pieza */
+    const objetivo = llego ? ZOOM : 1;
+    zoom += (objetivo - zoom) * 0.06;
+    if (Math.abs(objetivo - zoom) < 0.0008) zoom = objetivo;
+    escala();
   }
 
   /* ─── qué hay a mano ─────────────────────────────────────────── */
@@ -678,6 +812,7 @@
 
   /* ─── el bucle ───────────────────────────────────────────────── */
   let ultimo = performance.now();
+  let quietoDesde = ultimo;
   function pintar() {
     for (const c of capas) c.el.style.transform = `translate3d(${(-st.cam * c.p).toFixed(2)}px,0,0)`;
     franEl.style.transform = `translate3d(${(st.x - 40).toFixed(2)}px,${PIE - 176}px,0)`;
@@ -689,8 +824,12 @@
     ultimo = t;
     mover(dt);
     proximidad();
+    reacciones();
     camara(dt);
     pintar();
+    dia();
+    moverTrole(dt);
+    if (!st.andando && t - quietoDesde > 3500 && !franEl.classList.contains('fran--espera')) franEl.classList.add('fran--espera');
     requestAnimationFrame(cuadro);
   }
 
