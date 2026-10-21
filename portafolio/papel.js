@@ -16,8 +16,8 @@
 
   const H = 720;              // alto del mundo
   const PIE = 628;            // dónde pisa Fran
-  const VEL = 190;            // al paso, unidades por segundo
-  const ZANCADA = 72;         // lo que avanza un ciclo de dos pasos, en unidades (piernas cortas)
+  const VEL = 215;            // al paso, unidades por segundo
+  const ZANCADA = 116;        // lo que avanza un ciclo de dos pasos, en unidades
   const CERCA = 110;          // desde dónde una pieza está «a mano»
   const VISIBLE = [86, 652];  // la franja del mundo que tiene que verse entera
   const LADO = 80;            // a qué distancia de la pieza se para Fran
@@ -382,7 +382,7 @@
     if (anda !== st.andando) {
       st.andando = anda;
       franEl.classList.toggle('fran--anda', anda);
-      if (anda) { quietoDesde = ultimo; franEl.classList.remove('fran--espera', 'fran--frente'); }
+      if (anda) { quietoDesde = ultimo; franEl.classList.remove('fran--espera', 'fran--frente', 'fran--chill'); }
     }
     /* el ritmo sale de la velocidad: a más prisa, pasos más rápidos;
        en los viajes largos los pies ya no dan abasto y se nota, a propósito */
@@ -818,7 +818,7 @@
   let quietoDesde = ultimo;
   function pintar() {
     for (const c of capas) c.el.style.transform = `translate3d(${(-st.cam * c.p).toFixed(2)}px,0,0)`;
-    franEl.style.transform = `translate3d(${(st.x - 40).toFixed(2)}px,${PIE - 176}px,0)`;
+    franEl.style.transform = `translate3d(${(st.x - 45).toFixed(2)}px,${PIE - 226}px,0)`;
     desplegar();
     marcarLugar();
   }
@@ -835,6 +835,8 @@
     if (!st.andando && t - quietoDesde > 3500 && !franEl.classList.contains('fran--espera')) franEl.classList.add('fran--espera');
     /* seis segundos quieto: se vuelve hacia quien mira y cruza los brazos */
     if (!st.andando && t - quietoDesde > 6000 && !franEl.classList.contains('fran--frente')) franEl.classList.add('fran--frente');
+    /* y al rato se le pasa: manos al bolsillo, silbando */
+    if (!st.andando && t - quietoDesde > 10500 && !franEl.classList.contains('fran--chill')) franEl.classList.add('fran--chill');
     requestAnimationFrame(cuadro);
   }
 

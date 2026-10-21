@@ -507,77 +507,95 @@
         </svg>
       </div>
 
-      <!-- Fran, al estilo Mii: cabeza de huevo que es casi la mitad de la
-           altura, rasgos mínimos, sin cuello, cuerpo pequeño y redondo,
-           brazos cortos con manos de bolita y pies de píldora. El pelo es
-           una pieza sólida de bordes limpios. 1,55 m: la mitad de la
-           puerta de salida. Articulado: cadera, rodilla y tobillo en cada
-           pierna; hombro y codo en cada brazo. De perfil mira a la
-           derecha y al girar se voltea como una hoja; de frente, espera
-           con los brazos cruzados. Los orígenes de giro están en papel.css. -->
+      <!-- Fran, en caricatura chubby con proporciones de Sonic: cabeza
+           grande y redonda con cachetes, nariz de botón y rubor; torso
+           delgado (Fran es flaco); piernas largas y zapatos grandotes. Los
+           brazos y las piernas son trazos redondeados, tipo manguera, con
+           manos de bolita. Mide 215 unidades: a la puerta de salida (300)
+           le saca la proporción de 1,55 m a 2,15 m.
+           Articulado: cadera, rodilla y tobillo en cada pierna; hombro y
+           codo en cada brazo. De perfil mira a la derecha y al girar se
+           voltea como una hoja. De frente, la espera: primero enojado
+           (brazos cruzados, taconeo) y luego tranquilo (manos al bolsillo,
+           silbando). Los orígenes de giro están en papel.css. -->
       <div class="fran" id="fran" aria-hidden="true">
         <div class="fran__giro">
-          <svg viewBox="0 0 80 180">
-            <ellipse class="f-sombra" cx="42" cy="176" rx="22" ry="3.2"/>
+          <svg viewBox="0 0 90 230">
+            <ellipse class="f-sombra" cx="47" cy="226" rx="24" ry="3.4"/>
             <g class="fran__perfil">
             <g class="fran__cuerpo">
-              <g class="brazo lejos"><rect class="f-sueter" x="35" y="96" width="10" height="20" rx="5"/><g class="codo"><rect class="f-sueter" x="35.5" y="112" width="9" height="16" rx="4.5"/><circle class="f-piel" cx="40" cy="131" r="5.5"/></g></g>
-              <g class="pierna lejos"><rect class="f-pantalon" x="33.5" y="130" width="13" height="22" rx="6.5"/><g class="rodilla"><rect class="f-pantalon" x="35" y="148" width="10" height="20" rx="5"/><g class="tobillo"><path class="f-zapato" d="M31 165 H48 Q55 165 55 170 Q55 175 48 175 H31 Z"/></g></g></g>
-              <g class="pierna cerca"><rect class="f-pantalon" x="33.5" y="130" width="13" height="22" rx="6.5"/><g class="rodilla"><rect class="f-pantalon" x="35" y="148" width="10" height="20" rx="5"/><g class="tobillo"><path class="f-zapato" d="M31 165 H48 Q55 165 55 170 Q55 175 48 175 H31 Z"/></g></g></g>
+              <g class="brazo lejos"><path class="t-brazo" stroke-width="10" d="M45 100 V122"/><g class="codo"><path class="t-brazo" stroke-width="9" d="M45 122 V141"/><circle class="f-piel" cx="45" cy="147" r="6.8"/></g></g>
+              <g class="pierna lejos"><path class="t-pierna" stroke-width="13" d="M45 150 V184"/><g class="rodilla"><path class="t-pierna" stroke-width="11" d="M45 184 V210"/><g class="tobillo"><path class="f-zapato" d="M35 212 Q35 204 44 204 H52 Q64 204 68 214 Q70 220 66 221 H35 Z"/><path class="f-suela" d="M34.5 220 H68.5 Q68 225.5 62 225.5 H38.5 Q34.5 225.5 34.5 220 Z"/></g></g></g>
+              <g class="pierna cerca"><path class="t-pierna" stroke-width="13" d="M45 150 V184"/><g class="rodilla"><path class="t-pierna" stroke-width="11" d="M45 184 V210"/><g class="tobillo"><path class="f-zapato" d="M35 212 Q35 204 44 204 H52 Q64 204 68 214 Q70 220 66 221 H35 Z"/><path class="f-suela" d="M34.5 220 H68.5 Q68 225.5 62 225.5 H38.5 Q34.5 225.5 34.5 220 Z"/></g></g></g>
               <g class="fran__tronco">
-                <path class="fran__melena f-pelo" d="M34 30 C20 30 12 46 12 64 C12 84 9 104 12 124 Q14.5 121 16 127 Q18.5 120 21 124 Q23 116 25.5 119 C27 104 28 88 31 76 C34 64 40 40 34 30 Z"/>
-                <path class="f-sueter" d="M26 92 Q42 86 56 92 Q64 110 58 130 Q50 134 40 134 Q30 134 26 130 Q20 110 26 92 Z"/>
+                <path class="fran__melena f-pelo" d="M42 24 C24 24 13 42 13 64 C13 88 10 114 13 138 Q15.5 134 17.5 141 Q20.5 133 23.5 137 Q26 128 29 131 C30 114 31 98 34 86 C38 70 48 40 42 24 Z"/>
+                <path class="f-sueter" d="M33 104 Q35 92 46 91 Q57 92 58 104 Q60 124 58 142 Q57 156 45.5 156 Q34 156 33 142 Q31 124 33 104 Z"/>
                 <g class="fran__cabeza">
-                  <path class="f-piel" d="M20 60 C20 30 32 26 44 26 C58 26 66 40 66 58 C66 76 56 92 42 92 C28 92 20 80 20 60 Z"/>
-                  <path class="f-piel" d="M65.5 60 Q70.5 64 65.5 68 Z"/>
-                  <path class="f-boca" d="M58 76.5 Q61.5 78.5 64.5 75.5"/>
-                  <path class="f-ceja" d="M53 48.5 L60.5 46.5"/>
-                  <ellipse class="f-ojo" cx="56" cy="58" rx="2.1" ry="3.1"/>
-                  <circle class="f-gafas" cx="56" cy="58" r="7.5"/><path class="f-gafas" d="M48.5 57 L36 55"/>
+                  <path class="f-piel" d="M18 56 C18 30 32 18 48 18 C66 18 78 32 78 52 C78 66 74 74 70 80 C64 92 54 98 44 98 C30 98 18 82 18 56 Z"/>
+                  <ellipse class="f-nariz" cx="78.5" cy="57.5" rx="4" ry="3.6"/>
+                  <ellipse class="f-rubor" cx="68" cy="70" rx="5.5" ry="3.2"/>
+                  <path class="f-sonrisa" d="M59 76 Q65.5 84.5 71 75 Q65.5 79 59 76 Z"/>
+                  <path class="f-ceja" d="M61.5 39.5 Q66.5 36.5 73 39"/>
+                  <ellipse class="f-ojo" cx="67" cy="53" rx="2.7" ry="4"/><circle class="f-reflejo" cx="68" cy="51.2" r=".9"/>
+                  <circle class="f-gafas" cx="66" cy="53" r="9"/><path class="f-gafas" d="M57 52 L40 49"/>
                   <!-- el pelo, de una pieza: cubre el cráneo desde la frente, cae
                        en cortina delante de la oreja y tapa media cara; las
                        puntas acaban en mechones, no en un corte recto -->
                   <g class="fran__mechon">
-                    <path class="f-pelo" d="M58 38 C59 28 51 20.5 41 20.5 C28 20.5 18 29 16.5 45 C15 58 17 70 20 80 C22 88 25 96 28 104 Q31 99 33.5 100.5 Q35.5 106 37.5 111 Q39 103 41 101.5 Q43 104 45.5 107 Q46.5 98 47 90 C47.5 76 47 64 48 54 C49 46 53 40.5 58 38 Z"/>
-                    <path class="f-brillo" d="M30 27 Q41 21.5 52 27 Q41 24.5 30 30 Z"/>
-                    <path class="f-hebra" d="M54 30 Q42 24 30 30 M52 36 Q40 31 26 42 M44 50 Q42 76 41.5 100 M38 56 Q35 78 35 102"/>
+                    <path class="f-pelo" d="M71 30 C70 17 58 11 46 11 C30 11 17 21 15 40 C13 56 14 72 17 84 C19 96 22 106 25 116 Q28.5 111 31.5 113 Q34 119 36.5 124 Q38.5 115 41 113.5 Q44 117 47 120 Q49 110 51.5 101 C53 88 53.5 72 55 54 C56 42 62 34 71 30 Z"/>
+                    <path class="f-brillo" d="M32 22 Q46 14 62 22 Q46 18 32 26 Z"/>
+                    <path class="f-hebra" d="M64 24 Q48 16 32 24 M62 31 Q46 24 28 36 M50 60 Q48 90 46 114 M42 64 Q38 92 38 118"/>
                   </g>
                 </g>
               </g>
-              <g class="brazo cerca"><rect class="f-sueter" x="35" y="96" width="10" height="20" rx="5"/><g class="codo"><rect class="f-sueter" x="35.5" y="112" width="9" height="16" rx="4.5"/><circle class="f-piel" cx="40" cy="131" r="5.5"/></g></g>
+              <g class="brazo cerca"><path class="t-brazo" stroke-width="10" d="M45 100 V122"/><g class="codo"><path class="t-brazo" stroke-width="9" d="M45 122 V141"/><circle class="f-piel" cx="45" cy="147" r="6.8"/></g></g>
             </g>
             </g>
-            <!-- De frente, con los brazos cruzados: la pose de esperar. Sale
-                 cuando Fran lleva unos segundos quieto, con un giro de hoja. -->
+            <!-- De frente: la espera. Sale cuando Fran lleva unos segundos
+                 quieto, con un giro de hoja; primero se enoja y luego se relaja. -->
             <g class="fran__frente">
-              <rect class="f-pantalon" x="27" y="132" width="12" height="36" rx="6"/>
-              <rect class="f-pantalon" x="41" y="132" width="12" height="36" rx="6"/>
-              <g class="fran__taconeo"><ellipse class="f-zapato" cx="33" cy="171" rx="9" ry="4.8"/></g>
-              <ellipse class="f-zapato" cx="47" cy="171" rx="9" ry="4.8"/>
-              <path class="f-pelo" d="M18 56 C10 78 8 104 10 128 Q13 124 15 130 Q18 122 21 127 Q23 116 26 114 C26 96 24 76 24 60 Z"/>
-              <path class="f-pelo" d="M62 56 C70 78 72 104 70 128 Q67 124 65 130 Q62 122 59 127 Q57 116 54 114 C54 96 56 76 56 60 Z"/>
-              <path class="f-sueter" d="M22 98 Q40 90 58 98 Q68 114 60 132 Q52 138 40 138 Q28 138 20 132 Q12 114 22 98 Z"/>
-              <!-- brazos cruzados: el antebrazo de atrás mete la mano bajo el
-                   brazo izquierdo; el de delante apoya la mano sobre el derecho -->
-              <g class="fran__brazos">
-                <rect class="f-manga" x="56" y="100" width="11" height="26" rx="5.5"/>
-                <circle class="f-piel" cx="25" cy="126" r="5.2"/>
-                <rect class="f-manga" x="21" y="118" width="38" height="11" rx="5.5" transform="rotate(-8 40 123.5)"/>
-                <rect class="f-manga" x="13" y="100" width="11" height="26" rx="5.5"/>
-                <rect class="f-manga f-manga--delante" x="21" y="114" width="38" height="11" rx="5.5" transform="rotate(8 40 119.5)"/>
-                <circle class="f-piel" cx="57.5" cy="122" r="5.2"/>
+              <path class="f-pantalon" d="M32.5 152 Q38 147 44 151 L42.8 209 Q38.5 213 34.2 209 Z"/>
+              <path class="f-pantalon" d="M46 151 Q52 147 57.5 152 L55.8 209 Q51.5 213 47.2 209 Z"/>
+              <g class="fran__taconeo"><ellipse class="f-zapato" cx="37" cy="216" rx="11" ry="7.5"/><path class="f-suela" d="M26.5 219 H47.5 Q46 224.5 37 224.5 Q28 224.5 26.5 219 Z"/></g>
+              <ellipse class="f-zapato" cx="53" cy="216" rx="11" ry="7.5"/><path class="f-suela" d="M42.5 219 H63.5 Q62 224.5 53 224.5 Q44 224.5 42.5 219 Z"/>
+              <path class="f-pelo" d="M18 60 C9 84 7 116 10 146 Q13 141 15.5 148 Q19 139 22.5 144 Q25 131 29 128 C29 108 27 84 27 64 Z"/>
+              <path class="f-pelo" d="M72 60 C81 84 83 116 80 146 Q77 141 74.5 148 Q71 139 67.5 144 Q65 131 61 128 C61 108 63 84 63 64 Z"/>
+              <path class="f-sueter" d="M31 104 Q33 92 45 92 Q57 92 59 104 Q62 128 59.5 150 Q57 162 45 162 Q33 162 30.5 150 Q28 128 31 104 Z"/>
+              <!-- tranquilo: las manos, al bolsillo del suéter -->
+              <g class="brazos--chill">
+                <path class="t-manga" stroke-width="10" d="M32 103 Q19 126 35 146"/>
+                <path class="t-manga" stroke-width="10" d="M58 103 Q71 126 55 146"/>
+              </g>
+              <path class="f-bolsillo" d="M32.5 137 Q45 133 57.5 137 L59 152 Q45 156 31 152 Z"/>
+              <!-- enojado: brazos cruzados. El antebrazo de atrás mete la mano
+                   bajo el brazo contrario; el de delante apoya la mano encima -->
+              <g class="brazos--enojo">
+                <path class="t-manga" stroke-width="9" d="M28 124 L57 117"/>
+                <path class="t-manga" stroke-width="10" d="M58 102 L62 124"/>
+                <path class="t-manga" stroke-width="10" d="M32 102 L28 124"/>
+                <path class="t-manga t-manga--delante" stroke-width="9" d="M62 124 L34 117"/>
+                <circle class="f-piel" cx="32" cy="116.5" r="6.6"/>
               </g>
               <g class="fran__cara">
-                <path class="f-piel" d="M16 60 C16 30 28 24 40 24 C52 24 64 30 64 60 C64 80 54 94 40 94 C26 94 16 80 16 60 Z"/>
-                <path class="f-boca" d="M38 66 Q40 69 42 66"/>
-                <path class="f-boca" d="M35.5 78.5 H44.5"/>
-                <path class="f-ceja" d="M27.5 46 L35.5 48.5"/>
-                <path class="f-ceja fran__ceja" d="M44.5 48.5 L52.5 46"/>
-                <ellipse class="f-ojo" cx="31" cy="58" rx="2.1" ry="3.1"/><ellipse class="f-ojo" cx="49" cy="58" rx="2.1" ry="3.1"/>
-                <circle class="f-gafas" cx="31" cy="58" r="7.5"/><circle class="f-gafas" cx="49" cy="58" r="7.5"/><path class="f-gafas" d="M38.5 57 H41.5 M23.5 57 L19 55.5 M56.5 57 L61 55.5"/>
-                <path class="f-pelo" d="M40 19.5 C55 19.5 66.5 29 67.5 46 C68.5 62 68 82 69.5 100 Q67.5 103 65.5 102 Q64 108 61.5 110 Q60 103 58.5 102 Q57 105 55.5 106 C56 92 58.2 78 58.2 64 C58.2 50 52.5 37 41 35 Q40.5 32 40 29 Q39.5 32 39 35 C27.5 37 21.8 50 21.8 64 C21.8 78 24 92 24.5 106 Q23 105 21.5 102 Q20 103 18.5 110 Q16 108 14.5 102 Q12.5 103 10.5 100 C12 82 11.5 62 12.5 46 C13.5 29 25 19.5 40 19.5 Z"/>
-                <path class="f-brillo" d="M24 32 Q30 24 38 23 Q30 27 26 35 Z M56 32 Q50 24 42 23 Q50 27 54 35 Z"/>
-                <path class="f-hebra" d="M34 23 Q22 30 16 50 M46 23 Q58 30 64 50 M15 64 Q14 84 15 100 M65 64 Q66 84 65 100 M19 60 Q18.5 82 19.5 104 M61 60 Q61.5 82 60.5 104"/>
+                <path class="f-piel" d="M14 60 C14 30 28 16 45 16 C62 16 76 30 76 60 C76 82 64 100 45 100 C26 100 14 82 14 60 Z"/>
+                <ellipse class="f-rubor" cx="29" cy="76" rx="5" ry="3"/><ellipse class="f-rubor" cx="61" cy="76" rx="5" ry="3"/>
+                <ellipse class="f-nariz" cx="45" cy="67" rx="3.8" ry="3.2"/>
+                <g class="cara--enojo">
+                  <path class="f-ceja" d="M29 45 L40 50"/><path class="f-ceja" d="M61 45 L50 50"/>
+                  <ellipse class="f-ojo" cx="35" cy="58" rx="2.6" ry="3.8"/><ellipse class="f-ojo" cx="55" cy="58" rx="2.6" ry="3.8"/>
+                  <path class="f-boca" d="M39 85 Q45 80.5 51 85"/>
+                  <path class="f-enfado" d="M66 13 Q69.5 16 73 13 M66 21 Q69.5 18 73 21 M65.5 13.5 Q68.5 17 65.5 20.5 M73.5 13.5 Q70.5 17 73.5 20.5"/>
+                </g>
+                <g class="cara--chill">
+                  <path class="f-ceja" d="M29.5 46 Q34.5 42.5 40 45"/><path class="f-ceja" d="M50 45 Q55.5 42.5 60.5 46"/>
+                  <path class="f-ojo-cerrado" d="M31 59.5 Q35 54.5 39 59.5 M51 59.5 Q55 54.5 59 59.5"/>
+                  <path class="f-sonrisa" d="M36 79 Q45 91 54 79 Q45 83.5 36 79 Z"/>
+                  <g class="f-nota"><path class="f-nota__palo" d="M71 30 V17 L79 15 V27"/><ellipse class="f-nota__cabeza" cx="68.6" cy="30" rx="2.8" ry="2.1"/><ellipse class="f-nota__cabeza" cx="76.6" cy="27.5" rx="2.8" ry="2.1"/></g>
+                </g>
+                <circle class="f-gafas" cx="35" cy="58" r="9"/><circle class="f-gafas" cx="55" cy="58" r="9"/><path class="f-gafas" d="M44 57 H46 M26 57 L15 55 M64 57 L75 55"/>
+                <path class="f-pelo" d="M45 11 C64 11 79 23 80 44 C81 64 80 88 82 110 Q79.5 114 77 113 Q75 120 72 122 Q70 114 68 113 Q66 117 64 118 C64.5 100 66.5 82 66.5 66 C66.5 50 59 35 46 33 Q45.5 29.5 45 26 Q44.5 29.5 44 33 C31 35 23.5 50 23.5 66 C23.5 82 25.5 100 26 118 Q24 117 22 113 Q20 114 18 122 Q15 120 13 113 Q10.5 114 8 110 C10 88 9 64 10 44 C11 23 26 11 45 11 Z"/>
+                <path class="f-brillo" d="M27 28 Q35 18 44 17 Q35 22 30 31 Z M63 28 Q55 18 46 17 Q55 22 60 31 Z"/>
+                <path class="f-hebra" d="M38 15 Q24 22 17 46 M52 15 Q66 22 73 46 M14 66 Q13 90 14 110 M76 66 Q77 90 76 110 M19 64 Q18.5 90 19.5 116 M71 64 Q71.5 90 70.5 116"/>
               </g>
             </g>
           </svg>

@@ -19,6 +19,9 @@
   --pp-f-pantalon:#2E2C29;
   --pp-f-zapato:#1D1B19;
   --pp-f-gafas:#A88743;
+  --pp-f-suela:#ECE7DD;
+  --pp-f-rubor:#E8917F;
+  --pp-f-boca:#5A2A22;
   --pp-pantalla:#22211F;
   --pp-pantalla-linea:#E6E2DA;
   --pp-sombra:rgba(50,36,20,.13);
@@ -51,6 +54,7 @@
     --pp-noche:1;
     --pp-f-piel:#0B0B0A; --pp-f-pelo:#0B0B0A; --pp-f-sueter:#0B0B0A; --pp-f-camiseta:#0B0B0A;
     --pp-f-pantalon:#0B0B0A; --pp-f-zapato:#0B0B0A; --pp-f-gafas:#F0C35E;
+    --pp-f-suela:#0B0B0A; --pp-f-rubor:#0B0B0A; --pp-f-boca:#0B0B0A;
     --pp-pantalla:#0E0E0D;
     --pp-sombra:rgba(0,0,0,.5);
     --pp-sombra-suelo:rgba(0,0,0,.45);
@@ -67,6 +71,7 @@
   --pp-noche:1;
   --pp-f-piel:#0B0B0A; --pp-f-pelo:#0B0B0A; --pp-f-sueter:#0B0B0A; --pp-f-camiseta:#0B0B0A;
   --pp-f-pantalon:#0B0B0A; --pp-f-zapato:#0B0B0A; --pp-f-gafas:#F0C35E;
+  --pp-f-suela:#0B0B0A; --pp-f-rubor:#0B0B0A; --pp-f-boca:#0B0B0A;
   --pp-pantalla:#0E0E0D;
   --pp-sombra:rgba(0,0,0,.5);
   --pp-sombra-suelo:rgba(0,0,0,.45);
@@ -239,7 +244,7 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 @keyframes papel-pulso{from{transform:scale(1);opacity:.8}to{transform:scale(2.3);opacity:0}}
 
 /* ─── Fran ──────────────────────────────────────────────────── */
-.fran{position:absolute;left:0;top:0;width:80px;height:180px;pointer-events:none;will-change:transform;--ciclo:.64s}
+.fran{position:absolute;left:0;top:0;width:90px;height:230px;pointer-events:none;will-change:transform;--ciclo:.56s}
 .fran__giro{width:100%;height:100%;transform:scaleX(var(--dir, 1));transition:transform .22s cubic-bezier(.4,0,.2,1)}
 .fran svg{width:100%;height:100%;overflow:visible}
 .fran *{stroke:none}
@@ -247,43 +252,54 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 .f-piel{fill:var(--pp-f-piel)}
 .f-pelo{fill:var(--pp-f-pelo)}
 .f-sueter{fill:var(--pp-f-sueter)}
-.f-camiseta{fill:var(--pp-f-camiseta)}
-.f-pantalon{fill:var(--pp-f-pantalon)}
 .f-zapato{fill:var(--pp-f-zapato)}
-.fran .f-gafas{fill:none;stroke:var(--pp-f-gafas);stroke-width:1.8}
+.f-pantalon{fill:var(--pp-f-pantalon)}
+.f-suela{fill:var(--pp-f-suela)}
+.fran .f-nariz{fill:color-mix(in srgb, var(--pp-f-piel) 86%, var(--pp-f-boca))}
+.fran .f-rubor{fill:var(--pp-f-rubor);opacity:.45}
+.fran .f-gafas{fill:none;stroke:var(--pp-f-gafas);stroke-width:2}
 .fran .f-ojo{fill:var(--pp-f-pelo)}
+.fran .f-reflejo{fill:var(--pp-f-suela)}
+.fran .f-ojo-cerrado{fill:none;stroke:var(--pp-f-pelo);stroke-width:2.2;stroke-linecap:round}
+.fran .f-ceja{fill:none;stroke:var(--pp-f-pelo);stroke-width:3;stroke-linecap:round}
+.fran .f-boca{fill:none;stroke:var(--pp-f-boca);stroke-width:2;stroke-linecap:round}
+.fran .f-sonrisa{fill:var(--pp-f-boca)}
 /* el pelo se lee como pelo por dos detalles: hebras finas que siguen la
    caída y un brillo en la coronilla. De noche se funden con la silueta. */
 .fran .f-hebra{fill:none;stroke:color-mix(in srgb, var(--pp-f-pelo) 68%, var(--pp-f-sueter));stroke-width:.9;stroke-linecap:round;opacity:.75}
 .fran .f-brillo{fill:color-mix(in srgb, var(--pp-f-pelo) 60%, var(--pp-f-sueter));opacity:.8}
-.fran .f-ceja{fill:none;stroke:var(--pp-f-pelo);stroke-width:2.8;stroke-linecap:round}
-.fran .f-boca{fill:none;stroke:color-mix(in srgb, var(--pp-f-piel) 45%, var(--pp-f-pelo));stroke-width:1.7;stroke-linecap:round}
-/* las mangas, un tono aparte del cuerpo para que el brazo se lea sobre la
-   barriga; el lado lejano, un punto más oscuro para que se lea detrás */
-.fran .brazo .f-sueter{fill:color-mix(in srgb, var(--pp-f-sueter) 86%, black)}
-.fran .lejos .f-sueter{fill:color-mix(in srgb, var(--pp-f-sueter) 70%, black)}
-.fran .lejos .f-pantalon{fill:color-mix(in srgb, var(--pp-f-pantalon) 72%, black)}
+/* brazos y piernas: trazos redondeados, tipo manguera. Las mangas van un
+   tono aparte del cuerpo para que el brazo se lea encima; el lado lejano,
+   un punto más oscuro para que se lea detrás */
+.fran :is(.t-brazo,.t-pierna,.t-manga){fill:none;stroke-linecap:round;stroke-linejoin:round}
+.fran .t-pierna{stroke:var(--pp-f-pantalon)}
+.fran .t-brazo,.fran .t-manga{stroke:color-mix(in srgb, var(--pp-f-sueter) 86%, black)}
+.fran .t-manga--delante{stroke:color-mix(in srgb, var(--pp-f-sueter) 94%, black)}
+.fran .f-bolsillo{fill:color-mix(in srgb, var(--pp-f-sueter) 90%, black)}
+.fran .lejos .t-brazo{stroke:color-mix(in srgb, var(--pp-f-sueter) 70%, black)}
+.fran .lejos .t-pierna{stroke:color-mix(in srgb, var(--pp-f-pantalon) 72%, black)}
 .fran .lejos .f-piel{fill:color-mix(in srgb, var(--pp-f-piel) 80%, black)}
 .fran .lejos .f-zapato{fill:color-mix(in srgb, var(--pp-f-zapato) 72%, black)}
+.fran .lejos .f-suela{fill:color-mix(in srgb, var(--pp-f-suela) 80%, black)}
 
 /* El esqueleto: cada articulación gira sobre su punto, en unidades del
    dibujo, y las de abajo heredan el giro de las de arriba (la rodilla
    gira dentro de la cadera; el pie, dentro de la rodilla). */
-.pierna{transform-origin:40px 132px}
-.rodilla{transform-origin:40px 150px}
-.tobillo{transform-origin:40px 166px}
-.brazo{transform-origin:40px 98px}
-.codo{transform-origin:40px 114px}
-.fran__tronco{transform-origin:40px 132px;transition:transform .4s ease}
-.fran__melena{transform-origin:24px 62px}
-.fran__cabeza{transform-origin:42px 90px}
-.fran__mechon{transform-origin:40px 28px}
+.pierna{transform-origin:45px 150px}
+.rodilla{transform-origin:45px 184px}
+.tobillo{transform-origin:45px 210px}
+.brazo{transform-origin:45px 100px}
+.codo{transform-origin:45px 122px}
+.fran__tronco{transform-origin:45px 150px;transition:transform .4s ease}
+.fran__melena{transform-origin:30px 40px}
+.fran__cabeza{transform-origin:46px 96px}
+.fran__mechon{transform-origin:46px 20px}
 .pierna,.rodilla,.tobillo,.brazo,.codo{transition:transform .3s ease}
 /* de pie: el peso en la pierna cercana, la otra un paso atrás, brazos sueltos */
 .pierna.cerca{transform:rotate(-4deg)}
 .pierna.lejos{transform:rotate(6deg)}
 .pierna.lejos .rodilla{transform:rotate(5deg)}
-.codo{transform:rotate(-10deg)}
+.codo{transform:rotate(-12deg)}
 
 /* Andando. Un ciclo (--ciclo) son dos pasos; la pierna lejana y el brazo
    cercano van medio ciclo desfasados (--fase), que es lo que hace que
@@ -298,7 +314,7 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 .fran--anda .brazo{animation:papel-hombro var(--ciclo) ease-in-out infinite;animation-delay:calc(var(--ciclo) * var(--fase, 0))}
 .fran--anda .codo{animation:papel-codo var(--ciclo) ease-in-out infinite;animation-delay:calc(var(--ciclo) * var(--fase, 0))}
 .fran--anda .fran__cuerpo{animation:papel-bote var(--ciclo) ease-in-out infinite}
-.fran--anda .fran__tronco{transform:rotate(-3deg)}
+.fran--anda .fran__tronco{transform:rotate(-4deg)}
 .fran--anda .fran__melena{animation:papel-melena var(--ciclo) ease-in-out infinite}
 .fran--anda .fran__cabeza{animation:papel-nuca var(--ciclo) ease-in-out infinite}
 .fran--anda .fran__mechon{animation:papel-mechon var(--ciclo) ease-in-out infinite}
@@ -310,40 +326,52 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
   90%{transform:rotate(-26deg)}100%{transform:rotate(-30deg)}}
 @keyframes papel-rodilla{
   0%{transform:rotate(5deg)}14%{transform:rotate(18deg)}30%{transform:rotate(8deg)}
-  50%{transform:rotate(14deg)}62%{transform:rotate(46deg)}76%{transform:rotate(66deg)}
+  50%{transform:rotate(14deg)}62%{transform:rotate(48deg)}76%{transform:rotate(70deg)}
   90%{transform:rotate(26deg)}100%{transform:rotate(5deg)}}
 @keyframes papel-tobillo{
   0%{transform:rotate(-14deg)}14%{transform:rotate(0)}30%{transform:rotate(0)}
   50%{transform:rotate(18deg)}62%{transform:rotate(32deg)}76%{transform:rotate(10deg)}
   90%{transform:rotate(-6deg)}100%{transform:rotate(-14deg)}}
-@keyframes papel-hombro{0%{transform:rotate(26deg)}50%{transform:rotate(-30deg)}100%{transform:rotate(26deg)}}
-@keyframes papel-codo{0%{transform:rotate(-10deg)}50%{transform:rotate(-44deg)}100%{transform:rotate(-10deg)}}
-@keyframes papel-bote{0%,50%,100%{transform:translateY(0)}25%,75%{transform:translateY(-4.5px)}}
+@keyframes papel-hombro{0%{transform:rotate(30deg)}50%{transform:rotate(-34deg)}100%{transform:rotate(30deg)}}
+@keyframes papel-codo{0%{transform:rotate(-12deg)}50%{transform:rotate(-50deg)}100%{transform:rotate(-12deg)}}
+@keyframes papel-bote{0%,50%,100%{transform:translateY(0)}25%,75%{transform:translateY(-5px)}}
 @keyframes papel-melena{0%,50%,100%{transform:rotate(5deg)}25%,75%{transform:rotate(-3deg)}}
 /* la cabeza, grande, va un pelín a contratiempo del bote */
 @keyframes papel-nuca{0%,50%,100%{transform:rotate(1.5deg)}25%,75%{transform:rotate(-1.5deg)}}
-@keyframes papel-mechon{0%,50%,100%{transform:rotate(1.4deg)}25%,75%{transform:rotate(-1deg)}}
+@keyframes papel-mechon{0%,50%,100%{transform:rotate(1.2deg)}25%,75%{transform:rotate(-1deg)}}
 
-/* Esperando: respira y mira alrededor. Si sigue quieto, se da la vuelta
-   hacia quien mira —un giro de hoja: el perfil se cierra y se abre el
-   frente—, cruza los brazos, taconea y levanta una ceja. */
-.fran__perfil,.fran__frente{transform-origin:40px 100px}
+/* Esperando, en tres tiempos. Quieto unos segundos, respira y mira
+   alrededor. Luego se da la vuelta hacia quien mira —un giro de hoja: el
+   perfil se cierra y se abre el frente— y se enoja: brazos cruzados,
+   taconeo, cejas fruncidas y la marca de enfado. Al rato se le pasa:
+   manos al bolsillo, ojos felices, se mece y silba. */
+.fran__perfil,.fran__frente{transform-origin:45px 130px}
 .fran__perfil{transform:scaleX(1);transition:transform .16s ease-out .16s}
 .fran__frente{transform:scaleX(0);transition:transform .16s ease-in}
 .fran--frente .fran__perfil{transform:scaleX(0);transition:transform .16s ease-in}
 .fran--frente .fran__frente{transform:scaleX(1);transition:transform .16s ease-out .16s}
-.fran .f-manga{fill:color-mix(in srgb, var(--pp-f-sueter) 86%, black)}
-.fran .f-manga--delante{fill:color-mix(in srgb, var(--pp-f-sueter) 94%, black)}
-.fran__taconeo{transform-origin:33px 171px}
-.fran__ceja{transform-origin:49.5px 47.5px}
-.fran__cara{transform-origin:40px 94px}
-.fran--frente .fran__taconeo{animation:papel-taconeo .56s ease-in-out infinite}
-.fran--frente .fran__ceja{animation:papel-ceja 4.2s ease-in-out infinite}
-.fran--frente .fran__cara{animation:papel-ladeo 5.6s ease-in-out infinite}
-.fran--frente .fran__brazos{animation:papel-respira 3.2s ease-in-out infinite}
-@keyframes papel-taconeo{0%,100%{transform:translateY(0) rotate(0)}35%{transform:translateY(-4px) rotate(-8deg)}}
-@keyframes papel-ceja{0%,68%,100%{transform:translateY(0)}74%,90%{transform:translateY(-2.5px)}}
-@keyframes papel-ladeo{0%,40%,100%{transform:rotate(0)}50%,80%{transform:rotate(-4deg)}}
+.fran .cara--chill,.fran .brazos--chill{display:none}
+.fran--chill .cara--chill,.fran--chill .brazos--chill{display:inline}
+.fran--chill .cara--enojo,.fran--chill .brazos--enojo{display:none}
+.fran .f-enfado{fill:none;stroke:var(--mal-primary);stroke-width:2.2;stroke-linecap:round}
+.fran .f-nota__palo{fill:none;stroke:var(--pp-tinta);stroke-width:1.6;stroke-linejoin:round}
+.fran .f-nota__cabeza{fill:var(--pp-tinta)}
+.fran__taconeo{transform-origin:46px 216px}
+.fran__cara{transform-origin:45px 100px}
+.f-enfado{transform-box:fill-box;transform-origin:center}
+.f-nota{transform-box:fill-box;transform-origin:center}
+.fran--frente:not(.fran--chill) .fran__taconeo{animation:papel-taconeo .5s ease-in-out infinite}
+.fran--frente:not(.fran--chill) .f-enfado{animation:papel-enfado .5s ease-in-out infinite alternate}
+.fran--frente:not(.fran--chill) .brazos--enojo{animation:papel-resopla 1s ease-in-out infinite}
+.fran--chill .fran__frente{animation:papel-mece 2.8s ease-in-out infinite}
+.fran--chill .fran__cara{animation:papel-ladeo-chill 2.8s ease-in-out infinite}
+.fran--chill .f-nota{animation:papel-nota 2.4s ease-out infinite}
+@keyframes papel-taconeo{0%,100%{transform:rotate(0)}40%{transform:rotate(-14deg)}}
+@keyframes papel-enfado{from{transform:scale(.85)}to{transform:scale(1.15)}}
+@keyframes papel-resopla{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.5px)}}
+@keyframes papel-mece{0%,100%{transform:scaleX(1) rotate(-1.6deg)}50%{transform:scaleX(1) rotate(1.6deg)}}
+@keyframes papel-ladeo-chill{0%,100%{transform:rotate(3deg)}50%{transform:rotate(-3deg)}}
+@keyframes papel-nota{0%{transform:translate(0, 6px) scale(.7);opacity:0}25%{opacity:1}100%{transform:translate(8px, -16px) scale(1);opacity:0}}
 /* esperando: respira y mira alrededor */
 .fran--espera .fran__cuerpo{animation:papel-respira 3.6s ease-in-out infinite}
 .fran--espera .fran__cabeza{animation:papel-mira 9s ease-in-out infinite}
@@ -649,6 +677,6 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
   .luciernaga,.cielo__estrellas,[data-cerca] [class*="r-"],
   .arte .vapor,.punto__marca::after{animation:none !important}
   .paloma,.pajaro,.colibri,.gato__cabeza,[class*="r-"],.retrato,.pierna,.rodilla,.tobillo,.brazo,.codo,.fran__tronco,.fran__perfil,.fran__frente{transition:none !important}
-  .fran--frente :is(.fran__taconeo,.fran__ceja,.fran__cara,.fran__brazos){animation:none !important}
+  .fran--frente :is(.fran__taconeo,.f-enfado,.brazos--enojo,.fran__cara,.f-nota),.fran--chill .fran__frente{animation:none !important}
   .hoja[open],.hoja.hoja--sale,.ficha--cambia .ficha__cuerpo,.hoja__cuerpo--cambia{animation:none}
 }
