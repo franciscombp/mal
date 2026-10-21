@@ -1,0 +1,682 @@
+/* Fran en papel · el portafolio de Francisco Maldonado.
+
+   Un recorrido de seis salas en papel, más exposición que tebeo: línea
+   fina, tonos de papel y un solo acento rojo por sala. Todo sale de los
+   roles de mal-ds (--mal-*), así que el tema del sistema viste el mundo
+   entero y la noche es su modo oscuro. Lo que el sistema no tiene —la
+   figura, las pantallas, la luz— se declara aquí como referencia propia,
+   con su pareja oscura, igual que la capa 1.
+
+   De día, papel. De noche, siluetas y ventanas encendidas. */
+
+:root{
+  /* ── referencia propia ── */
+  --pp-noche:0;
+  --pp-f-piel:#BE8A69;
+  --pp-f-pelo:#1D1B19;
+  --pp-f-sueter:#8E8B85;
+  --pp-f-camiseta:#3A3835;
+  --pp-f-pantalon:#2E2C29;
+  --pp-f-zapato:#1D1B19;
+  --pp-f-gafas:#A88743;
+  --pp-f-suela:#ECE7DD;
+  --pp-f-rubor:#E8917F;
+  --pp-f-boca:#5A2A22;
+  --pp-pantalla:#22211F;
+  --pp-pantalla-linea:#E6E2DA;
+  --pp-sombra:rgba(50,36,20,.13);
+  --pp-sombra-suelo:rgba(50,36,20,.16);
+
+  /* ── el mundo, derivado de los roles ── */
+  --pp-cielo-alto:color-mix(in srgb, var(--mal-primary) 5%, var(--mal-bg));
+  --pp-cielo-bajo:var(--mal-bg);
+  --pp-astro:color-mix(in srgb, var(--mal-primary) 88%, var(--mal-bg));
+  --pp-lejos:color-mix(in srgb, var(--mal-on-surface) 6%, var(--mal-bg));
+  --pp-lejos-2:color-mix(in srgb, var(--mal-on-surface) 10%, var(--mal-bg));
+  --pp-ciudad:color-mix(in srgb, var(--mal-on-surface) 4%, var(--mal-bg));
+  --pp-ciudad-linea:color-mix(in srgb, var(--mal-on-surface) 24%, var(--mal-bg));
+  --pp-ventana:color-mix(in srgb, var(--mal-on-surface) 14%, var(--mal-bg));
+  --pp-papel:var(--mal-surface);
+  --pp-papel-2:var(--mal-surface-alt);
+  --pp-muro:color-mix(in srgb, var(--mal-on-surface) 5%, var(--mal-surface-alt));
+  --pp-linea:color-mix(in srgb, var(--mal-on-surface) 78%, var(--mal-surface));
+  --pp-linea-tenue:color-mix(in srgb, var(--mal-on-surface) 30%, var(--mal-surface));
+  --pp-tinta:var(--mal-on-surface);
+  --pp-tinta-2:var(--mal-on-surface-2);
+  --pp-marca:var(--mal-primary);
+  --pp-luz:color-mix(in srgb, var(--mal-warn) 9%, transparent);
+  --pp-luz-puerta:color-mix(in srgb, var(--mal-warn) 30%, var(--mal-surface));
+  --pp-suelo:var(--mal-surface-alt);
+  --pp-frente:color-mix(in srgb, var(--mal-on-surface) 55%, var(--mal-bg));
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-tema="claro"]){
+    --pp-noche:1;
+    --pp-f-piel:#0B0B0A; --pp-f-pelo:#0B0B0A; --pp-f-sueter:#0B0B0A; --pp-f-camiseta:#0B0B0A;
+    --pp-f-pantalon:#0B0B0A; --pp-f-zapato:#0B0B0A; --pp-f-gafas:#F0C35E;
+    --pp-f-suela:#0B0B0A; --pp-f-rubor:#0B0B0A; --pp-f-boca:#0B0B0A;
+    --pp-pantalla:#0E0E0D;
+    --pp-sombra:rgba(0,0,0,.5);
+    --pp-sombra-suelo:rgba(0,0,0,.45);
+    --pp-cielo-alto:color-mix(in srgb, var(--mal-info) 8%, var(--mal-bg));
+    --pp-cielo-bajo:color-mix(in srgb, var(--mal-on-surface) 7%, var(--mal-bg));
+    --pp-astro:color-mix(in srgb, var(--mal-on-surface) 85%, var(--mal-bg));
+    --pp-ventana:color-mix(in srgb, var(--mal-warn) 70%, var(--mal-surface));
+    --pp-luz:color-mix(in srgb, var(--mal-warn) 16%, transparent);
+    --pp-luz-puerta:color-mix(in srgb, var(--mal-warn) 75%, var(--mal-surface));
+    --pp-frente:var(--mal-bg);
+  }
+}
+:root[data-tema="oscuro"]{
+  --pp-noche:1;
+  --pp-f-piel:#0B0B0A; --pp-f-pelo:#0B0B0A; --pp-f-sueter:#0B0B0A; --pp-f-camiseta:#0B0B0A;
+  --pp-f-pantalon:#0B0B0A; --pp-f-zapato:#0B0B0A; --pp-f-gafas:#F0C35E;
+  --pp-f-suela:#0B0B0A; --pp-f-rubor:#0B0B0A; --pp-f-boca:#0B0B0A;
+  --pp-pantalla:#0E0E0D;
+  --pp-sombra:rgba(0,0,0,.5);
+  --pp-sombra-suelo:rgba(0,0,0,.45);
+  --pp-cielo-alto:color-mix(in srgb, var(--mal-info) 8%, var(--mal-bg));
+  --pp-cielo-bajo:color-mix(in srgb, var(--mal-on-surface) 7%, var(--mal-bg));
+  --pp-astro:color-mix(in srgb, var(--mal-on-surface) 85%, var(--mal-bg));
+  --pp-ventana:color-mix(in srgb, var(--mal-warn) 70%, var(--mal-surface));
+  --pp-luz:color-mix(in srgb, var(--mal-warn) 16%, transparent);
+  --pp-luz-puerta:color-mix(in srgb, var(--mal-warn) 75%, var(--mal-surface));
+  --pp-frente:var(--mal-bg);
+}
+
+/* ─── la página: una sola pantalla, sin scroll ──────────────── */
+html,body{height:100%}
+body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--mal-bg);color:var(--mal-on-surface)}
+.papel [hidden]{display:none !important}
+.papel-defs{position:absolute;width:0;height:0;overflow:hidden}
+.filtro-sombra{flood-color:var(--pp-sombra)}
+.halo-a{stop-color:var(--mal-warn);stop-opacity:.4}
+.halo-b{stop-color:var(--mal-warn);stop-opacity:0}
+
+.escenario{
+  position:fixed;inset:0;overflow:hidden;cursor:pointer;touch-action:none;
+  -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;
+  background:linear-gradient(to bottom, var(--pp-cielo-alto), var(--pp-cielo-bajo) 70%);
+}
+.cielo{position:absolute;inset:0;pointer-events:none}
+/* --pp-tarde y --pp-luz-tarde (0 → 1) salen de cuánto se ha caminado;
+   los escribe el JS en el escenario */
+.escenario{--pp-tarde:0;--pp-luz-tarde:0}
+.cielo__tarde{
+  position:absolute;inset:0;opacity:calc(var(--pp-tarde) * (1 - var(--pp-noche)));
+  background:linear-gradient(to bottom,
+    color-mix(in srgb, var(--mal-primary) 14%, var(--mal-bg)) 0%,
+    color-mix(in srgb, var(--mal-warn) 18%, var(--mal-bg)) 62%,
+    var(--mal-bg) 100%);
+}
+/* el astro vive en la capa lejana, en unidades del mundo: sale a la
+   izquierda, cruza y se pone detrás de los volcanes al final del paseo */
+.astro{position:absolute;left:0;top:0;width:84px;height:84px;border-radius:50%;background:var(--pp-astro);will-change:transform}
+.cielo__noche{position:absolute;inset:0 0 40% 0;opacity:var(--pp-noche);transition:opacity .6s}
+.cielo__estrellas{
+  position:absolute;inset:0;animation:papel-titila 5s ease-in-out infinite alternate;
+  background-image:
+    radial-gradient(1.4px 1.4px at 8% 22%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1px 1px at 19% 48%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1.6px 1.6px at 31% 14%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1px 1px at 44% 36%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1.4px 1.4px at 57% 9%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1px 1px at 66% 52%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 78% 30%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1.6px 1.6px at 91% 58%, var(--mal-on-surface) 50%, transparent 52%);
+}
+.cielo__estrellas--2{
+  animation-delay:-2.5s;animation-duration:7s;
+  background-image:
+    radial-gradient(1.2px 1.2px at 13% 62%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1px 1px at 26% 30%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1.4px 1.4px at 38% 70%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1px 1px at 50% 20%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 62% 42%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1px 1px at 73% 12%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1.4px 1.4px at 85% 44%, var(--mal-on-surface) 50%, transparent 52%),
+    radial-gradient(1px 1px at 95% 26%, var(--mal-on-surface) 50%, transparent 52%);
+}
+@keyframes papel-titila{from{opacity:.35}to{opacity:1}}
+
+/* El mundo mide 6400 × 720 unidades y se escala entero a la pantalla.
+   Cada capa se desplaza a su ritmo (data-p): eso es el paralaje. */
+.mundo{position:absolute;left:0;top:0;width:7800px;height:720px;transform-origin:0 0}
+.capa{position:absolute;left:0;top:0;height:720px;will-change:transform}
+.capa--suelo{width:7800px}
+.capa--frente{pointer-events:none}
+.fondo,.suelo{display:block;height:720px;overflow:visible}
+.suelo{position:absolute;left:0;top:0}
+.suelo__tierra{fill:var(--pp-suelo)}
+.suelo__filo{fill:none;stroke:var(--pp-linea);stroke-width:1.5}
+.suelo__linea{fill:none;stroke:var(--pp-linea-tenue);stroke-width:1;opacity:.6}
+
+/* los fondos los genera papel.js */
+.f-lejos{fill:var(--pp-lejos)}
+.f-lejos-2{fill:var(--pp-lejos-2)}
+.f-nieve{fill:var(--pp-papel)}
+.f-ciudad{fill:var(--pp-ciudad);stroke:var(--pp-ciudad-linea);stroke-width:1.2;stroke-linejoin:round}
+.f-ventana{fill:var(--pp-ventana)}
+.f-cable{fill:none;stroke:var(--pp-ciudad-linea);stroke-width:1}
+.f-frente{fill:none;stroke:var(--pp-frente);stroke-width:3;stroke-linecap:round}
+.f-farol{fill:var(--pp-ventana);stroke:var(--pp-frente);stroke-width:2}
+.f-halo{fill:url(#halo);opacity:max(var(--pp-noche), var(--pp-luz-tarde));transition:opacity .6s}
+.f-ventana-tarde{fill:var(--mal-warn);opacity:calc(var(--pp-luz-tarde) * .7 * (1 - var(--pp-noche)))}
+/* nubes, bandadas y el trolebús son elementos sueltos dentro de su capa:
+   así se animan sin repintar el fondo entero */
+.nube,.bandada,.trole{position:absolute;overflow:visible;will-change:transform}
+.nube{animation:papel-nube var(--dur, 160s) ease-in-out infinite alternate;animation-delay:var(--d, 0s)}
+.nube path{fill:var(--pp-papel);opacity:.9}
+@keyframes papel-nube{to{transform:translateX(-260px)}}
+.bandada{animation:papel-bandada var(--dur, 75s) linear infinite;animation-delay:var(--d, 0s)}
+.bandada path{fill:none;stroke:var(--pp-ciudad-linea);stroke-width:1.4;stroke-linecap:round;
+  transform-box:fill-box;transform-origin:center;animation:papel-aleteo .55s ease-in-out infinite alternate;animation-delay:var(--d, 0s)}
+@keyframes papel-bandada{from{transform:translateX(-160px)}to{transform:translateX(2600px)}}
+@keyframes papel-aleteo{from{transform:scaleY(1)}to{transform:scaleY(.25)}}
+.trole{visibility:hidden}
+.trole--va{visibility:visible}
+.trole__caja{fill:var(--pp-ciudad);stroke:var(--pp-ciudad-linea);stroke-width:1.2;stroke-linejoin:round}
+.trole__ventana{fill:var(--pp-ventana)}
+.trole__linea{fill:none;stroke:var(--pp-ciudad-linea);stroke-width:1}
+
+/* ─── las salas ─────────────────────────────────────────────── */
+.capa-papel{filter:url(#sombra)}
+.estacion{position:absolute;bottom:120px}
+.arte{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.arte :is(rect,circle,ellipse,path,polygon,line){
+  fill:var(--pp-papel);stroke:var(--pp-linea);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;
+}
+.arte .sin{stroke:none}
+.arte .fino{stroke-width:1}
+.arte .grueso{stroke-width:2.5}
+.arte .hueco{fill:none}
+.arte .tenue{stroke:var(--pp-linea-tenue)}
+.arte .t2{fill:var(--pp-papel-2)}
+.arte .t3{fill:var(--pp-muro)}
+.arte .t4{fill:var(--pp-pantalla)}
+.arte .ac{fill:var(--pp-marca)}
+.arte .luz{fill:var(--pp-luz);stroke:none}
+.arte .luz-puerta{fill:var(--pp-luz-puerta);stroke:none}
+.arte .trazo-ac{stroke:var(--pp-marca)}
+.arte .trazo-pantalla{stroke:var(--pp-pantalla-linea);opacity:.5}
+.arte .trazo-papel{stroke:var(--pp-papel)}
+.arte .ok{fill:var(--mal-ok)}
+.arte .rosa{fill:color-mix(in srgb, var(--mal-primary) 55%, var(--mal-morado))}
+.arte .picto{fill:none;stroke:var(--pp-pantalla-linea);stroke-width:1.5}
+.arte .picto--ac{stroke:var(--pp-marca)}
+.arte .retrato{filter:grayscale(1) contrast(1.04);transition:filter .9s ease}
+.arte text{stroke:none;fill:var(--pp-tinta);font-family:var(--mal-texto);text-rendering:geometricPrecision}
+.arte text.d{font-family:var(--mal-display);font-weight:var(--ref-peso-display);letter-spacing:var(--ref-tracking)}
+.arte text.n{font-weight:700;letter-spacing:-.01em}
+.arte text.s{font-family:"PT Serif",Georgia,serif;font-style:italic;fill:var(--pp-tinta-2)}
+.arte text.m{font-family:var(--mal-mono);font-weight:600;letter-spacing:.14em;fill:var(--pp-tinta-2)}
+.arte text.m:not([font-size]){font-size:11px}
+.arte text.serif{font-family:"PT Serif",Georgia,serif;font-weight:700}
+.arte text.sobre{fill:var(--mal-on-primary)}
+.arte text.claro{fill:var(--pp-pantalla-linea)}
+.arte .punto-em{fill:var(--mal-morado)}
+.arte .vapor{animation:papel-vapor 3.2s ease-in-out infinite}
+.arte .vapor--2{animation-delay:-1.6s}
+@keyframes papel-vapor{0%,100%{transform:translateY(0);opacity:.2}50%{transform:translateY(-5px);opacity:.7}}
+
+/* Cada sala está tumbada y se levanta cuando la cámara llega, como
+   una página desplegable. Sin rebote: se asienta. Sin JS, todo en pie. */
+.papel-js .estacion{transform:perspective(1600px) rotateX(70deg);transform-origin:50% 100%;opacity:0;
+  transition:transform .9s cubic-bezier(.2,.7,.2,1), opacity .5s ease-out}
+.papel-js .estacion.abierta{transform:none;opacity:1}
+
+/* Las piezas: botones invisibles sobre el dibujo, con una marca roja
+   encima. La marca late hasta que la pieza se ha visto. */
+.punto{position:absolute;padding:0;border:0;background:transparent;border-radius:14px;cursor:pointer}
+.punto:hover,.punto.activo{outline:2px solid color-mix(in srgb, var(--pp-marca) 55%, transparent);outline-offset:8px}
+.punto:focus-visible{outline:3px solid var(--pp-marca);outline-offset:8px}
+.punto__marca{
+  position:absolute;right:-8px;top:-8px;width:16px;height:16px;border-radius:50%;
+  background:var(--pp-marca);box-shadow:0 0 0 5px color-mix(in srgb, var(--pp-marca) 16%, transparent);
+  transition:transform .25s var(--mal-ease);
+}
+.punto:not(.visto) .punto__marca::after{
+  content:"";position:absolute;inset:-5px;border-radius:50%;border:1.5px solid var(--pp-marca);
+  animation:papel-pulso 2.6s ease-out infinite;
+}
+.punto.visto .punto__marca{background:var(--pp-papel);box-shadow:inset 0 0 0 2.5px var(--pp-marca)}
+.punto.activo .punto__marca{transform:scale(1.25)}
+@keyframes papel-pulso{from{transform:scale(1);opacity:.8}to{transform:scale(2.3);opacity:0}}
+
+/* ─── Fran ──────────────────────────────────────────────────── */
+.fran{position:absolute;left:0;top:0;width:90px;height:230px;pointer-events:none;will-change:transform;--ciclo:.56s}
+.fran__giro{width:100%;height:100%;transform:scaleX(var(--dir, 1));transition:transform .22s cubic-bezier(.4,0,.2,1)}
+.fran svg{width:100%;height:100%;overflow:visible}
+.fran *{stroke:none}
+.f-sombra{fill:var(--pp-sombra-suelo)}
+.f-piel{fill:var(--pp-f-piel)}
+.f-pelo{fill:var(--pp-f-pelo)}
+.f-sueter{fill:var(--pp-f-sueter)}
+.f-zapato{fill:var(--pp-f-zapato)}
+.f-pantalon{fill:var(--pp-f-pantalon)}
+.f-suela{fill:var(--pp-f-suela)}
+.fran .f-nariz{fill:color-mix(in srgb, var(--pp-f-piel) 86%, var(--pp-f-boca))}
+.fran .f-rubor{fill:var(--pp-f-rubor);opacity:.45}
+.fran .f-gafas{fill:none;stroke:var(--pp-f-gafas);stroke-width:2}
+.fran .f-ojo{fill:var(--pp-f-pelo)}
+.fran .f-reflejo{fill:var(--pp-f-suela)}
+.fran .f-ojo-cerrado{fill:none;stroke:var(--pp-f-pelo);stroke-width:2.2;stroke-linecap:round}
+.fran .f-ceja{fill:none;stroke:var(--pp-f-pelo);stroke-width:3;stroke-linecap:round}
+.fran .f-boca{fill:none;stroke:var(--pp-f-boca);stroke-width:2;stroke-linecap:round}
+.fran .f-sonrisa{fill:var(--pp-f-boca)}
+/* el pelo se lee como pelo por dos detalles: hebras finas que siguen la
+   caída y un brillo en la coronilla. De noche se funden con la silueta. */
+.fran .f-hebra{fill:none;stroke:color-mix(in srgb, var(--pp-f-pelo) 68%, var(--pp-f-sueter));stroke-width:.9;stroke-linecap:round;opacity:.75}
+.fran .f-brillo{fill:color-mix(in srgb, var(--pp-f-pelo) 60%, var(--pp-f-sueter));opacity:.8}
+/* brazos y piernas: trazos redondeados, tipo manguera. Las mangas van un
+   tono aparte del cuerpo para que el brazo se lea encima; el lado lejano,
+   un punto más oscuro para que se lea detrás */
+.fran :is(.t-brazo,.t-pierna,.t-manga){fill:none;stroke-linecap:round;stroke-linejoin:round}
+.fran .t-pierna{stroke:var(--pp-f-pantalon)}
+.fran .t-brazo,.fran .t-manga{stroke:color-mix(in srgb, var(--pp-f-sueter) 86%, black)}
+.fran .t-manga--delante{stroke:color-mix(in srgb, var(--pp-f-sueter) 94%, black)}
+.fran .f-bolsillo{fill:color-mix(in srgb, var(--pp-f-sueter) 90%, black)}
+.fran .lejos .t-brazo{stroke:color-mix(in srgb, var(--pp-f-sueter) 70%, black)}
+.fran .lejos .t-pierna{stroke:color-mix(in srgb, var(--pp-f-pantalon) 72%, black)}
+.fran .lejos .f-piel{fill:color-mix(in srgb, var(--pp-f-piel) 80%, black)}
+.fran .lejos .f-zapato{fill:color-mix(in srgb, var(--pp-f-zapato) 72%, black)}
+.fran .lejos .f-suela{fill:color-mix(in srgb, var(--pp-f-suela) 80%, black)}
+
+/* El esqueleto: cada articulación gira sobre su punto, en unidades del
+   dibujo, y las de abajo heredan el giro de las de arriba (la rodilla
+   gira dentro de la cadera; el pie, dentro de la rodilla). */
+.pierna{transform-origin:45px 150px}
+.rodilla{transform-origin:45px 184px}
+.tobillo{transform-origin:45px 210px}
+.brazo{transform-origin:45px 100px}
+.codo{transform-origin:45px 122px}
+.fran__tronco{transform-origin:45px 150px;transition:transform .4s ease}
+.fran__melena{transform-origin:30px 40px}
+.fran__cabeza{transform-origin:46px 96px}
+.fran__mechon{transform-origin:46px 20px}
+.pierna,.rodilla,.tobillo,.brazo,.codo{transition:transform .3s ease}
+/* de pie: el peso en la pierna cercana, la otra un paso atrás, brazos sueltos */
+.pierna.cerca{transform:rotate(-4deg)}
+.pierna.lejos{transform:rotate(6deg)}
+.pierna.lejos .rodilla{transform:rotate(5deg)}
+.codo{transform:rotate(-12deg)}
+
+/* Andando. Un ciclo (--ciclo) son dos pasos; la pierna lejana y el brazo
+   cercano van medio ciclo desfasados (--fase), que es lo que hace que
+   los brazos vayan al revés de las piernas. El ritmo lo pone el JS a
+   partir de la velocidad, para que los pies no patinen. */
+.lejos{--fase:-.5}
+.brazo.cerca{--fase:-.5}
+.brazo.lejos{--fase:0}
+.fran--anda .pierna{animation:papel-cadera var(--ciclo) cubic-bezier(.4,0,.6,1) infinite;animation-delay:calc(var(--ciclo) * var(--fase, 0))}
+.fran--anda .rodilla{animation:papel-rodilla var(--ciclo) cubic-bezier(.4,0,.6,1) infinite;animation-delay:calc(var(--ciclo) * var(--fase, 0))}
+.fran--anda .tobillo{animation:papel-tobillo var(--ciclo) cubic-bezier(.4,0,.6,1) infinite;animation-delay:calc(var(--ciclo) * var(--fase, 0))}
+.fran--anda .brazo{animation:papel-hombro var(--ciclo) ease-in-out infinite;animation-delay:calc(var(--ciclo) * var(--fase, 0))}
+.fran--anda .codo{animation:papel-codo var(--ciclo) ease-in-out infinite;animation-delay:calc(var(--ciclo) * var(--fase, 0))}
+.fran--anda .fran__cuerpo{animation:papel-bote var(--ciclo) ease-in-out infinite}
+.fran--anda .fran__tronco{transform:rotate(-4deg)}
+.fran--anda .fran__melena{animation:papel-melena var(--ciclo) ease-in-out infinite}
+.fran--anda .fran__cabeza{animation:papel-nuca var(--ciclo) ease-in-out infinite}
+.fran--anda .fran__mechon{animation:papel-mechon var(--ciclo) ease-in-out infinite}
+/* las fases de la marcha: apoyo del talón (0), carga (14), apoyo medio (30),
+   despegue del talón (50), despegue de la punta (62), balanceo (76), llegada (90) */
+@keyframes papel-cadera{
+  0%{transform:rotate(-30deg)}14%{transform:rotate(-20deg)}30%{transform:rotate(-4deg)}
+  50%{transform:rotate(18deg)}62%{transform:rotate(24deg)}76%{transform:rotate(-6deg)}
+  90%{transform:rotate(-26deg)}100%{transform:rotate(-30deg)}}
+@keyframes papel-rodilla{
+  0%{transform:rotate(5deg)}14%{transform:rotate(18deg)}30%{transform:rotate(8deg)}
+  50%{transform:rotate(14deg)}62%{transform:rotate(48deg)}76%{transform:rotate(70deg)}
+  90%{transform:rotate(26deg)}100%{transform:rotate(5deg)}}
+@keyframes papel-tobillo{
+  0%{transform:rotate(-14deg)}14%{transform:rotate(0)}30%{transform:rotate(0)}
+  50%{transform:rotate(18deg)}62%{transform:rotate(32deg)}76%{transform:rotate(10deg)}
+  90%{transform:rotate(-6deg)}100%{transform:rotate(-14deg)}}
+@keyframes papel-hombro{0%{transform:rotate(30deg)}50%{transform:rotate(-34deg)}100%{transform:rotate(30deg)}}
+@keyframes papel-codo{0%{transform:rotate(-12deg)}50%{transform:rotate(-50deg)}100%{transform:rotate(-12deg)}}
+@keyframes papel-bote{0%,50%,100%{transform:translateY(0)}25%,75%{transform:translateY(-5px)}}
+@keyframes papel-melena{0%,50%,100%{transform:rotate(5deg)}25%,75%{transform:rotate(-3deg)}}
+/* la cabeza, grande, va un pelín a contratiempo del bote */
+@keyframes papel-nuca{0%,50%,100%{transform:rotate(1.5deg)}25%,75%{transform:rotate(-1.5deg)}}
+@keyframes papel-mechon{0%,50%,100%{transform:rotate(1.2deg)}25%,75%{transform:rotate(-1deg)}}
+
+/* Esperando, en tres tiempos. Quieto unos segundos, respira y mira
+   alrededor. Luego se da la vuelta hacia quien mira —un giro de hoja: el
+   perfil se cierra y se abre el frente— y se enoja: brazos cruzados,
+   taconeo, cejas fruncidas y la marca de enfado. Al rato se le pasa:
+   manos al bolsillo, ojos felices, se mece y silba. */
+.fran__perfil,.fran__frente{transform-origin:45px 130px}
+.fran__perfil{transform:scaleX(1);transition:transform .16s ease-out .16s}
+.fran__frente{transform:scaleX(0);transition:transform .16s ease-in}
+.fran--frente .fran__perfil{transform:scaleX(0);transition:transform .16s ease-in}
+.fran--frente .fran__frente{transform:scaleX(1);transition:transform .16s ease-out .16s}
+.fran .cara--chill,.fran .brazos--chill{display:none}
+.fran--chill .cara--chill,.fran--chill .brazos--chill{display:inline}
+.fran--chill .cara--enojo,.fran--chill .brazos--enojo{display:none}
+.fran .f-enfado{fill:none;stroke:var(--mal-primary);stroke-width:2.2;stroke-linecap:round}
+.fran .f-nota__palo{fill:none;stroke:var(--pp-tinta);stroke-width:1.6;stroke-linejoin:round}
+.fran .f-nota__cabeza{fill:var(--pp-tinta)}
+.fran__taconeo{transform-origin:46px 216px}
+.fran__cara{transform-origin:45px 100px}
+.f-enfado{transform-box:fill-box;transform-origin:center}
+.f-nota{transform-box:fill-box;transform-origin:center}
+.fran--frente:not(.fran--chill) .fran__taconeo{animation:papel-taconeo .5s ease-in-out infinite}
+.fran--frente:not(.fran--chill) .f-enfado{animation:papel-enfado .5s ease-in-out infinite alternate}
+.fran--frente:not(.fran--chill) .brazos--enojo{animation:papel-resopla 1s ease-in-out infinite}
+.fran--chill .fran__frente{animation:papel-mece 2.8s ease-in-out infinite}
+.fran--chill .fran__cara{animation:papel-ladeo-chill 2.8s ease-in-out infinite}
+.fran--chill .f-nota{animation:papel-nota 2.4s ease-out infinite}
+@keyframes papel-taconeo{0%,100%{transform:rotate(0)}40%{transform:rotate(-14deg)}}
+@keyframes papel-enfado{from{transform:scale(.85)}to{transform:scale(1.15)}}
+@keyframes papel-resopla{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.5px)}}
+@keyframes papel-mece{0%,100%{transform:scaleX(1) rotate(-1.6deg)}50%{transform:scaleX(1) rotate(1.6deg)}}
+@keyframes papel-ladeo-chill{0%,100%{transform:rotate(3deg)}50%{transform:rotate(-3deg)}}
+@keyframes papel-nota{0%{transform:translate(0, 6px) scale(.7);opacity:0}25%{opacity:1}100%{transform:translate(8px, -16px) scale(1);opacity:0}}
+/* esperando: respira y mira alrededor */
+.fran--espera .fran__cuerpo{animation:papel-respira 3.6s ease-in-out infinite}
+.fran--espera .fran__cabeza{animation:papel-mira 9s ease-in-out infinite}
+@keyframes papel-respira{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.2px)}}
+@keyframes papel-mira{0%,38%,100%{transform:rotate(0)}44%,56%{transform:rotate(-6deg)}62%,80%{transform:rotate(3deg)}}
+
+/* ─── la barra de arriba ────────────────────────────────────── */
+.papel-hud{
+  position:fixed;z-index:8;top:0;left:0;right:0;
+  display:grid;grid-template-columns:auto minmax(0, 1fr) auto;align-items:center;gap:var(--mal-e4);
+  padding:calc(env(safe-area-inset-top, 0px) + 14px) 16px 0;pointer-events:none;
+}
+.papel-hud > *{pointer-events:auto}
+.papel-marca{display:inline-flex;align-items:baseline;gap:.6rem;text-decoration:none;color:var(--mal-on-surface);min-width:0}
+.papel-marca i{align-self:center;flex:none;width:.6rem;height:.6rem;border-radius:50%;background:var(--mal-primary)}
+.papel-marca__nombre{font-family:var(--mal-texto);font-weight:700;font-size:1rem;letter-spacing:-.01em;white-space:nowrap}
+.papel-marca__rol{font-family:var(--mal-mono);font-size:var(--mal-t-mini);font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mal-on-surface-3);white-space:nowrap}
+.papel-capitulos{justify-self:center;display:flex;gap:2px;min-width:0;overflow:hidden}
+.papel-capitulos button{
+  display:inline-flex;align-items:baseline;gap:.4rem;min-height:36px;padding:0 .7rem;cursor:pointer;white-space:nowrap;
+  border:0;border-bottom:2px solid transparent;background:transparent;color:var(--mal-on-surface-3);
+  font-family:var(--mal-texto);font-size:var(--mal-t-caption);font-weight:600;
+}
+.papel-capitulos button span{font-family:var(--mal-mono);font-size:var(--mal-t-mini);font-weight:600}
+.papel-capitulos button:hover{color:var(--mal-on-surface)}
+.papel-capitulos button[aria-current]{color:var(--mal-on-surface);border-bottom-color:var(--mal-primary)}
+.papel-capitulos button.hecha span{color:var(--mal-primary-txt)}
+.papel-capitulos button:focus-visible{outline:3px solid var(--mal-primary);outline-offset:1px}
+.papel-hud__acc{display:flex;align-items:center;gap:var(--mal-e2)}
+.papel-hud .btn{background:var(--mal-surface)}
+.papel-indice-btn{gap:.45rem}
+.papel-indice-btn__n{font-family:var(--mal-mono);font-size:var(--mal-t-mini);font-weight:700;font-variant-numeric:tabular-nums;color:var(--mal-on-surface-3)}
+
+.papel kbd{
+  display:inline-grid;place-items:center;min-width:1.7em;height:1.7em;padding:0 .35em;
+  font-family:var(--mal-mono);font-size:.75rem;font-weight:700;line-height:1;color:var(--mal-on-surface-2);
+  background:var(--mal-surface);border:1px solid var(--mal-outline-2);border-bottom-width:2px;border-radius:5px;
+}
+
+/* ─── la portada ───────────────────────────────────────────── */
+.portada{
+  position:fixed;z-index:9;left:max(16px, 5vw);top:calc(env(safe-area-inset-top, 0px) + 86px);
+  width:min(34rem, calc(100vw - 32px));max-height:calc(100dvh - 110px);overflow:auto;
+  padding:var(--mal-e6);display:flex;flex-direction:column;gap:var(--mal-e4);
+  background:var(--mal-surface);border:var(--mal-borde);border-radius:var(--mal-r);box-shadow:var(--mal-elev-2);
+  transition:transform .5s var(--mal-ease), opacity .35s;
+}
+.portada--fuera{transform:translateY(-16px);opacity:0;pointer-events:none}
+.portada__t{
+  font-family:var(--mal-display);font-weight:var(--ref-peso-display);letter-spacing:var(--ref-tracking);line-height:.98;
+  font-size:clamp(2.1rem, 1.5rem + 2.6vw, 3.4rem);text-wrap:balance;
+}
+.portada__lede{font-family:"PT Serif",Georgia,serif;font-style:italic;font-size:var(--mal-t-lede);line-height:1.45;color:var(--mal-on-surface-2);max-width:34ch}
+.portada__cifras{margin:0}
+.portada__acc{display:flex;flex-wrap:wrap;gap:var(--mal-e2)}
+.portada__ayuda{display:flex;align-items:center;flex-wrap:wrap;gap:.4rem 1.1rem;font-size:var(--mal-t-caption);color:var(--mal-on-surface-3)}
+.portada__ayuda span{display:inline-flex;align-items:center;gap:.25rem}
+.papel-solo-tactil{display:none}
+@media (pointer:coarse){
+  .papel-solo-tactil{display:flex}
+  .papel-solo-teclado{display:none}
+}
+
+/* ─── la ficha de abajo ─────────────────────────────────────── */
+.ficha{
+  position:fixed;z-index:7;left:50%;bottom:calc(env(safe-area-inset-bottom, 0px) + 16px);
+  width:min(680px, calc(100vw - 32px));height:124px;overflow:hidden;transform:translateX(-50%);
+  display:grid;grid-template-columns:auto minmax(0, 1fr) auto auto;align-items:center;gap:var(--mal-e3);
+  padding:var(--mal-e3);
+  background:color-mix(in srgb, var(--mal-surface) 92%, transparent);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  border:var(--mal-borde);border-radius:var(--mal-r);box-shadow:var(--mal-elev-2);
+  transition:opacity .35s, transform .35s var(--mal-ease), visibility 0s;
+}
+.ficha[data-oculta]{opacity:0;visibility:hidden;transform:translate(-50%, 14px);transition:opacity .25s, transform .25s, visibility 0s .25s}
+.ficha__cuerpo{display:flex;flex-direction:column;gap:2px;min-width:0;padding-inline:var(--mal-e1)}
+.ficha--cambia .ficha__cuerpo{animation:papel-ficha .35s var(--mal-ease)}
+@keyframes papel-ficha{from{opacity:0;transform:translateY(4px)}}
+.ficha__sala{font-family:var(--mal-mono);font-size:var(--mal-t-mini);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mal-primary-txt)}
+.ficha__titulo{font-family:var(--mal-texto);font-weight:700;font-size:1.06rem;letter-spacing:-.01em;color:var(--mal-on-surface)}
+.ficha__frase{font-size:var(--mal-t-caption);line-height:1.4;color:var(--mal-on-surface-2);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ficha__nota{font-family:"PT Serif",Georgia,serif;font-style:italic;font-size:var(--mal-t-caption);line-height:1.35;color:var(--mal-on-surface-3);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ficha__nota::before{content:"* ";color:var(--mal-primary-txt);font-style:normal}
+.ficha__nota:empty{display:none}
+.ficha__ver{white-space:nowrap}
+.ficha__flecha{
+  display:grid;place-items:center;width:44px;height:44px;flex:none;cursor:pointer;
+  color:var(--mal-on-surface);background:transparent;border:var(--mal-borde);border-radius:50%;
+}
+.ficha__flecha:hover:not(:disabled){background:var(--mal-surface-alt)}
+.ficha__flecha:disabled{opacity:.35;cursor:default}
+.ficha__flecha:focus-visible{outline:3px solid var(--mal-primary);outline-offset:2px}
+
+/* ─── la hoja: lateral en escritorio, desde abajo en el teléfono ── */
+.hoja{
+  position:fixed;inset:0 0 0 auto;margin:0;padding:0;width:min(480px, 100vw);height:100dvh;max-height:none;max-width:none;
+  display:flex;flex-direction:column;color:var(--mal-on-surface);background:var(--mal-surface);
+  border:0;border-left:var(--mal-borde);box-shadow:var(--mal-elev-2);
+}
+.hoja:not([open]){display:none}
+.hoja::backdrop{background:color-mix(in srgb, var(--mal-bg) 18%, transparent)}
+.hoja[open]{animation:papel-hoja-entra .32s cubic-bezier(.2,.7,.2,1)}
+.hoja.hoja--sale{animation:papel-hoja-sale .22s ease-in forwards}
+@keyframes papel-hoja-entra{from{transform:translateX(100%)}}
+@keyframes papel-hoja-sale{to{transform:translateX(100%)}}
+.hoja__cab{
+  display:flex;align-items:center;justify-content:space-between;gap:var(--mal-e3);
+  padding:calc(env(safe-area-inset-top, 0px) + var(--mal-e4)) var(--mal-e4) var(--mal-e3) var(--mal-e6);border-bottom:var(--mal-separador);
+}
+.hoja__lugar{font-family:var(--mal-mono);font-size:var(--mal-t-mini);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mal-on-surface-3)}
+.hoja__cuerpo{flex:1;overflow:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:var(--mal-e5);padding:var(--mal-e6)}
+.hoja__cuerpo > *{min-width:0}
+.hoja__cuerpo--cambia{animation:papel-ficha .3s var(--mal-ease)}
+.hoja__pie{
+  display:flex;align-items:center;justify-content:space-between;gap:var(--mal-e3);
+  padding:var(--mal-e3) var(--mal-e4) calc(env(safe-area-inset-bottom, 0px) + var(--mal-e3));border-top:var(--mal-separador);
+}
+.hoja__n{font-family:var(--mal-mono);font-size:var(--mal-t-mini);font-weight:700;font-variant-numeric:tabular-nums;color:var(--mal-on-surface-3)}
+.hoja__kicker{font-family:var(--mal-mono);font-size:var(--mal-t-mini);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mal-primary-txt)}
+.hoja__titulo{
+  font-family:var(--mal-display);font-weight:var(--ref-peso-display);letter-spacing:var(--ref-tracking);
+  font-size:clamp(1.7rem, 1.4rem + 1vw, 2.2rem);line-height:1.05;text-wrap:balance;color:var(--mal-on-surface);
+  margin-top:calc(var(--mal-e3) * -1);
+}
+.hoja__titulo--grande{font-size:clamp(2rem, 1.6rem + 1.6vw, 2.7rem)}
+.hoja__titulo--serif{font-family:"PT Serif",Georgia,serif;letter-spacing:-.01em}
+.hoja__titulo--serif span{color:var(--mal-morado)}
+.hoja__lede{font-size:var(--mal-t-lede);line-height:1.45;color:var(--mal-on-surface-2)}
+.hoja__cuerpo > p:not([class]){color:var(--mal-on-surface-2);line-height:1.55}
+.hoja__datos{display:flex;flex-direction:column;margin:0;border-top:var(--mal-separador)}
+.hoja__datos > div{display:grid;grid-template-columns:7.5rem minmax(0, 1fr);gap:var(--mal-e3);padding:var(--mal-e3) 0;border-bottom:var(--mal-separador)}
+.hoja__datos dt{font-family:var(--mal-mono);font-size:var(--mal-t-mini);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mal-on-surface-3);padding-top:.2em}
+.hoja__datos dd{margin:0;font-weight:600;color:var(--mal-on-surface);overflow-wrap:anywhere}
+.hoja__datos a{color:var(--mal-primary-txt)}
+.hoja__pendiente{
+  font-size:var(--mal-t-caption);color:var(--mal-on-surface-3);
+  padding:var(--mal-e3) var(--mal-e4);border:1px dashed var(--mal-outline-2);border-radius:var(--mal-r-s);
+}
+.hoja__nota{font-family:var(--mal-mono);font-size:var(--mal-t-mini);color:var(--mal-on-surface-3)}
+.hoja__acc{display:flex;flex-wrap:wrap;gap:var(--mal-e2)}
+.hoja__perfil{display:flex;align-items:center;gap:var(--mal-e4)}
+.hoja__foto{width:88px;height:88px;flex:none;border-radius:50%;object-fit:cover;filter:grayscale(1)}
+.hoja__rol{font-family:var(--mal-mono);font-size:var(--mal-t-mini);letter-spacing:.08em;text-transform:uppercase;color:var(--mal-on-surface-3);margin-top:.35rem}
+.hoja__perfil .hoja__titulo{margin-top:0;font-size:1.6rem}
+.hoja__lista{display:flex;flex-direction:column;list-style:none;margin:0;padding:0;border-top:var(--mal-separador)}
+.hoja__lista a{
+  display:flex;flex-direction:column;gap:.15rem;padding:var(--mal-e3) var(--mal-e2);
+  text-decoration:none;color:var(--mal-on-surface);border-bottom:var(--mal-separador);
+}
+.hoja__lista a:hover{background:color-mix(in srgb, var(--mal-primary) 5%, transparent)}
+.hoja__lista b{display:flex;align-items:baseline;gap:.5rem;font-weight:700}
+.hoja__lista b::after{content:"→";margin-left:auto;color:var(--mal-primary-txt)}
+.hoja__lista small{font-family:var(--mal-mono);font-size:var(--mal-t-mini);font-weight:600;color:var(--mal-on-surface-3);text-transform:uppercase;letter-spacing:.06em}
+.hoja__lista span{font-size:var(--mal-t-caption);color:var(--mal-on-surface-2)}
+.hoja__citas{display:flex;flex-direction:column;gap:var(--mal-e3)}
+.hoja__citas figure{margin:0;padding:var(--mal-e4);background:var(--mal-surface-alt);border-radius:var(--mal-r-s)}
+.hoja__citas blockquote{margin:0;padding:0;border:0;font-family:"PT Serif",Georgia,serif;font-style:italic;font-size:var(--mal-t-cuerpo);line-height:1.45;color:var(--mal-on-surface)}
+.hoja__citas blockquote::before{content:none}
+.hoja__citas figcaption{margin-top:var(--mal-e2);font-size:var(--mal-t-mini);color:var(--mal-on-surface-3)}
+.hoja__citas figcaption b{color:var(--mal-on-surface-2)}
+.hoja__temas{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:var(--mal-e2)}
+.hoja__tema{
+  display:flex;flex-direction:column;align-items:flex-start;gap:.15rem;padding:var(--mal-e3) var(--mal-e4);cursor:pointer;text-align:left;
+  color:var(--mal-on-surface);background:var(--mal-surface);border:var(--mal-borde-fuerte);border-radius:var(--mal-r-s);font-family:var(--mal-texto);
+}
+.hoja__tema b{font-size:var(--mal-t-caption)}
+.hoja__tema span{font-size:var(--mal-t-mini);color:var(--mal-on-surface-3)}
+.hoja__tema[aria-pressed="true"]{border-color:var(--mal-primary);box-shadow:inset 0 0 0 1px var(--mal-primary)}
+.hoja__tema:focus-visible{outline:3px solid var(--mal-primary);outline-offset:2px}
+
+/* el índice */
+.indice{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--mal-e5)}
+.indice__sala{font-family:var(--mal-mono);font-size:var(--mal-t-mini);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mal-on-surface-3);margin-bottom:var(--mal-e2)}
+.indice ul{list-style:none;margin:0;padding:0;border-top:var(--mal-separador)}
+.indice button{
+  display:flex;align-items:center;justify-content:space-between;gap:var(--mal-e3);width:100%;min-height:48px;padding:0 var(--mal-e2);cursor:pointer;text-align:left;
+  font-family:var(--mal-texto);font-size:var(--mal-t-cuerpo);font-weight:600;color:var(--mal-on-surface);
+  background:transparent;border:0;border-bottom:var(--mal-separador);
+}
+.indice button:hover{background:color-mix(in srgb, var(--mal-primary) 5%, transparent)}
+.indice button .icono{color:var(--mal-primary)}
+.indice button:focus-visible{outline:3px solid var(--mal-primary);outline-offset:-3px}
+
+/* ─── entre salas: las escenas de la calle ──────────────────── */
+.prop{position:absolute;bottom:120px}
+.etiqueta{opacity:0;transition:opacity .45s ease .15s}
+.reactivo.cerca .etiqueta{opacity:1}
+/* las palomas levantan el vuelo y vuelven cuando Fran se aleja */
+.paloma{transform-box:fill-box;transform-origin:center;transition:transform 1.1s cubic-bezier(.3,.6,.3,1) var(--d), opacity .5s ease calc(var(--d) + .5s)}
+.reactivo.cerca .paloma{transform:translate(var(--vx), var(--vy)) rotate(-12deg);opacity:0}
+.reactivo.cerca .paloma__ala{animation:papel-aleteo .14s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:bottom}
+/* el gato sigue a Fran con la cabeza; la cola nunca para */
+.gato__cabeza{transform-origin:4px -34px;transform:rotate(var(--mira, 0deg));transition:transform .5s ease}
+.gato__ojo{fill:var(--pp-ventana)}
+.gato__cola{transform-origin:-12px -6px;animation:papel-cola 3.4s ease-in-out infinite}
+@keyframes papel-cola{0%,100%{transform:rotate(0)}50%{transform:rotate(14deg)}}
+/* el mural se enciende nodo a nodo */
+.nodo{fill:var(--pp-papel);stroke:var(--pp-linea);stroke-width:1.5;transition:fill .35s ease var(--d, 0s)}
+.nodo--centro{fill:var(--pp-papel-2)}
+.reactivo.cerca .nodo:not(.nodo--centro){fill:var(--pp-marca)}
+/* el colibrí liba en la flor de arriba y, al llegar Fran, cambia de flor */
+.colibri{transform:translate(95px, 90px);transition:transform 1s cubic-bezier(.4,0,.2,1)}
+.reactivo.cerca .colibri{transform:translate(143px, 112px)}
+.colibri__vuelo{animation:papel-levita 1.6s ease-in-out infinite alternate}
+.colibri__ala{transform-box:fill-box;transform-origin:right bottom;animation:papel-aleteo .09s linear infinite alternate}
+@keyframes papel-levita{from{transform:translateY(0)}to{transform:translateY(-4px)}}
+/* los pájaros del cable se van y vuelven */
+.pajaro{transform-box:fill-box;transform-origin:center;transition:transform 1s cubic-bezier(.3,.6,.3,1) var(--d), opacity .45s ease calc(var(--d) + .4s)}
+.reactivo.cerca .pajaro{transform:translate(var(--vx), var(--vy)) rotate(-10deg);opacity:0}
+/* de noche, luciérnagas en el café */
+.luciernagas{opacity:var(--pp-noche);transition:opacity .6s}
+.luciernaga{fill:var(--mal-warn);stroke:none;animation:papel-luciernaga 5.2s ease-in-out infinite;animation-delay:var(--d, 0s)}
+@keyframes papel-luciernaga{0%,100%{opacity:0;transform:translate(0,0)}20%{opacity:.9}50%{opacity:.4;transform:translate(14px,-18px)}80%{opacity:.85;transform:translate(-6px,-30px)}}
+
+/* ─── dentro de cada sala: lo que responde cuando Fran llega ──── */
+.arte [class*="r-"]{transform-box:fill-box;transform-origin:center}
+.r-perfil{stroke-dasharray:46;stroke-dashoffset:46;transition:stroke-dashoffset .9s ease .2s}
+[data-cerca="perfil"] .r-perfil{stroke-dashoffset:0}
+[data-cerca="retrato"] .retrato{filter:grayscale(0) contrast(1)}
+.r-deuna{transform:scale(0);transition:transform .45s cubic-bezier(.3,1.5,.5,1) .35s}
+[data-cerca="deuna"] .r-deuna{transform:scale(1)}
+[data-cerca="kiosk"] .r-kiosk{animation:papel-casilla 1.8s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes papel-casilla{0%,100%{fill:var(--pp-papel-2)}18%{fill:var(--pp-marca)}36%{fill:var(--pp-papel-2)}}
+.r-control{stroke-dasharray:18;stroke-dashoffset:18;transition:stroke-dashoffset .5s ease .4s}
+[data-cerca="control"] .r-control{stroke-dashoffset:0}
+.r-pantalla{opacity:.3;transition:opacity .6s ease .2s}
+.r-luz{opacity:0;transition:opacity .6s ease}
+[data-cerca="mercio"] .r-pantalla,[data-cerca="mercio"] .r-luz{opacity:1}
+.r-carta{transition:transform .5s ease var(--d)}
+[data-cerca="newsletters"] .r-carta{transform:translateY(-5px)}
+.r-juego{transition:transform .4s cubic-bezier(.3,1.4,.5,1) var(--d)}
+[data-cerca="juegos"] .r-juego{transform:translateY(-6px)}
+.r-apps{transition:transform .6s ease}
+[data-cerca="apps"] .r-apps{animation:papel-lista 3.2s ease-in-out infinite alternate}
+@keyframes papel-lista{from{transform:translateY(0)}to{transform:translateY(-18px)}}
+.r-vapor{transition:transform .8s ease}
+[data-cerca="mentoria"] .r-vapor{transform:scale(1.35)}
+.r-cajon{transition:transform .5s cubic-bezier(.3,1.3,.5,1) var(--d)}
+[data-cerca="sistema"] .r-cajon{transform:translateX(16px)}
+.r-muestra{transition:transform .4s ease var(--d)}
+[data-cerca="sistema"] .r-muestra{transform:translateY(-4px)}
+.luz-puerta{opacity:.55;transition:opacity .7s ease}
+[data-cerca="salida"] .luz-puerta{opacity:1}
+
+/* ─── pantallas medianas y estrechas ────────────────────────── */
+@media (max-width:1460px){
+  .papel-marca__rol{display:none}
+}
+@media (max-width:1320px){
+  .papel-hud{grid-template-columns:minmax(0, 1fr) auto}
+  .papel-capitulos{display:none}
+}
+@media (max-width:899px){
+  .hoja{inset:auto 0 0 0;width:100%;height:auto;max-height:88dvh;border-left:0;border-top:var(--mal-borde);
+    border-radius:var(--mal-r) var(--mal-r) 0 0}
+  .hoja::before{content:"";display:block;width:38px;height:4px;margin:10px auto 0;border-radius:999px;background:var(--mal-outline-2)}
+  .hoja::backdrop{background:color-mix(in srgb, var(--mal-on-surface) 28%, transparent)}
+  .hoja__cab{padding:var(--mal-e2) var(--mal-e3) var(--mal-e2) var(--mal-e5)}
+  .hoja__cuerpo{padding:var(--mal-e5)}
+  @keyframes papel-hoja-entra{from{transform:translateY(100%)}}
+  @keyframes papel-hoja-sale{to{transform:translateY(100%)}}
+  .papel-marca__rol{display:none}
+}
+@media (max-width:640px){
+  .ficha{
+    grid-template-columns:auto minmax(0, 1fr) auto;
+    grid-template-areas:"cuerpo cuerpo cuerpo" "ant ver sig";
+    row-gap:var(--mal-e3);height:182px;padding:var(--mal-e3);
+  }
+  .ficha__cuerpo{grid-area:cuerpo;padding-inline:var(--mal-e2)}
+  .hoja__datos > div{grid-template-columns:1fr;gap:2px}
+  .ficha__flecha--ant{grid-area:ant}
+  .ficha__flecha--sig{grid-area:sig}
+  .ficha__ver{grid-area:ver;justify-self:stretch;justify-content:center;min-height:44px}
+  .papel-texto span,.papel-indice-btn__t{display:none}
+  .papel-marca{overflow:hidden}
+  .papel-marca__nombre{overflow:hidden;text-overflow:ellipsis}
+  .papel-indice-btn{position:relative;width:var(--ref-tap, 44px);height:var(--ref-tap, 44px);padding:0;justify-content:center}
+  .papel-indice-btn__n{position:absolute;top:-6px;right:-8px;padding:1px 5px;border-radius:999px;font-size:10px;
+    color:var(--mal-on-primary);background:var(--mal-primary)}
+  .papel-hud{column-gap:var(--mal-e2)}
+  .portada{padding:var(--mal-e5);top:calc(env(safe-area-inset-top, 0px) + 72px)}
+}
+/* teléfono acostado */
+@media (max-height:520px){
+  .portada{top:calc(env(safe-area-inset-top, 0px) + 62px);gap:var(--mal-e2);padding:var(--mal-e4);width:min(30rem, calc(100vw - 32px))}
+  .portada__t{font-size:1.8rem}
+  .portada__lede,.portada__cifras{display:none}
+  .ficha{height:88px;width:min(560px, calc(100vw - 32px));grid-template-columns:auto minmax(0, 1fr) auto auto;grid-template-areas:none;bottom:calc(env(safe-area-inset-bottom, 0px) + 10px)}
+  .ficha__cuerpo,.ficha__flecha--ant,.ficha__flecha--sig,.ficha__ver{grid-area:auto}
+  .ficha__frase{-webkit-line-clamp:1}
+  .ficha__nota{display:none}
+}
+
+/* ─── menos movimiento ──────────────────────────────────────── */
+@media (prefers-reduced-motion:reduce){
+  .papel-js .estacion{transition:opacity .3s}
+  .fran__giro{transition:none}
+  .fran--anda :is(.pierna,.rodilla,.tobillo,.brazo,.codo,.fran__cuerpo,.fran__melena,.fran__cabeza,.fran__mechon),
+  .fran--espera :is(.fran__cuerpo,.fran__cabeza),.nube,.bandada,.bandada path,.gato__cola,.colibri__vuelo,.colibri__ala,
+  .luciernaga,.cielo__estrellas,[data-cerca] [class*="r-"],
+  .arte .vapor,.punto__marca::after{animation:none !important}
+  .paloma,.pajaro,.colibri,.gato__cabeza,[class*="r-"],.retrato,.pierna,.rodilla,.tobillo,.brazo,.codo,.fran__tronco,.fran__perfil,.fran__frente{transition:none !important}
+  .fran--frente :is(.fran__taconeo,.f-enfado,.brazos--enojo,.fran__cara,.f-nota),.fran--chill .fran__frente{animation:none !important}
+  .hoja[open],.hoja.hoja--sale,.ficha--cambia .ficha__cuerpo,.hoja__cuerpo--cambia{animation:none}
+}
