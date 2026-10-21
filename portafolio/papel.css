@@ -250,10 +250,10 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 .f-camiseta{fill:var(--pp-f-camiseta)}
 .f-pantalon{fill:var(--pp-f-pantalon)}
 .f-zapato{fill:var(--pp-f-zapato)}
-.fran .f-gafas{fill:none;stroke:var(--pp-f-gafas);stroke-width:1.7}
+.fran .f-gafas{fill:none;stroke:var(--pp-f-gafas);stroke-width:1.8}
 .fran .f-ojo{fill:var(--pp-f-pelo)}
-.fran .f-ceja{fill:none;stroke:var(--pp-f-pelo);stroke-width:1.6;stroke-linecap:round}
-.fran .f-boca{fill:none;stroke:color-mix(in srgb, var(--pp-f-piel) 55%, var(--pp-f-pelo));stroke-width:1.2;stroke-linecap:round}
+.fran .f-ceja{fill:none;stroke:var(--pp-f-pelo);stroke-width:2.8;stroke-linecap:round}
+.fran .f-boca{fill:none;stroke:color-mix(in srgb, var(--pp-f-piel) 45%, var(--pp-f-pelo));stroke-width:1.7;stroke-linecap:round}
 /* las mangas, un tono aparte del cuerpo para que el brazo se lea sobre la
    barriga; el lado lejano, un punto más oscuro para que se lea detrás */
 .fran .brazo .f-sueter{fill:color-mix(in srgb, var(--pp-f-sueter) 86%, black)}
@@ -265,15 +265,15 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 /* El esqueleto: cada articulación gira sobre su punto, en unidades del
    dibujo, y las de abajo heredan el giro de las de arriba (la rodilla
    gira dentro de la cadera; el pie, dentro de la rodilla). */
-.pierna{transform-origin:40px 118px}
-.rodilla{transform-origin:40px 146px}
-.tobillo{transform-origin:40px 168px}
-.brazo{transform-origin:40px 72px}
-.codo{transform-origin:40px 90px}
-.fran__tronco{transform-origin:40px 118px;transition:transform .4s ease}
-.fran__melena{transform-origin:33px 44px}
-.fran__cabeza{transform-origin:40px 62px}
-.fran__mechon{transform-origin:42px 30px}
+.pierna{transform-origin:40px 132px}
+.rodilla{transform-origin:40px 150px}
+.tobillo{transform-origin:40px 166px}
+.brazo{transform-origin:40px 98px}
+.codo{transform-origin:40px 114px}
+.fran__tronco{transform-origin:40px 132px;transition:transform .4s ease}
+.fran__melena{transform-origin:24px 62px}
+.fran__cabeza{transform-origin:42px 90px}
+.fran__mechon{transform-origin:42px 44px}
 .pierna,.rodilla,.tobillo,.brazo,.codo{transition:transform .3s ease}
 /* de pie: el peso en la pierna cercana, la otra un paso atrás, brazos sueltos */
 .pierna.cerca{transform:rotate(-4deg)}
@@ -301,9 +301,9 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 /* las fases de la marcha: apoyo del talón (0), carga (14), apoyo medio (30),
    despegue del talón (50), despegue de la punta (62), balanceo (76), llegada (90) */
 @keyframes papel-cadera{
-  0%{transform:rotate(-27deg)}14%{transform:rotate(-18deg)}30%{transform:rotate(-4deg)}
-  50%{transform:rotate(16deg)}62%{transform:rotate(22deg)}76%{transform:rotate(-5deg)}
-  90%{transform:rotate(-23deg)}100%{transform:rotate(-27deg)}}
+  0%{transform:rotate(-30deg)}14%{transform:rotate(-20deg)}30%{transform:rotate(-4deg)}
+  50%{transform:rotate(18deg)}62%{transform:rotate(24deg)}76%{transform:rotate(-6deg)}
+  90%{transform:rotate(-26deg)}100%{transform:rotate(-30deg)}}
 @keyframes papel-rodilla{
   0%{transform:rotate(5deg)}14%{transform:rotate(18deg)}30%{transform:rotate(8deg)}
   50%{transform:rotate(14deg)}62%{transform:rotate(46deg)}76%{transform:rotate(66deg)}
@@ -317,7 +317,7 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 @keyframes papel-bote{0%,50%,100%{transform:translateY(0)}25%,75%{transform:translateY(-4.5px)}}
 @keyframes papel-melena{0%,50%,100%{transform:rotate(5deg)}25%,75%{transform:rotate(-3deg)}}
 /* la cabeza, grande, va un pelín a contratiempo del bote */
-@keyframes papel-nuca{0%,50%,100%{transform:rotate(2deg)}25%,75%{transform:rotate(-2deg)}}
+@keyframes papel-nuca{0%,50%,100%{transform:rotate(1.5deg)}25%,75%{transform:rotate(-1.5deg)}}
 @keyframes papel-mechon{0%,50%,100%{transform:rotate(3deg)}25%,75%{transform:rotate(-2deg)}}
 
 /* Esperando: respira y mira alrededor. Si sigue quieto, se da la vuelta
@@ -330,9 +330,9 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 .fran--frente .fran__frente{transform:scaleX(1);transition:transform .16s ease-out .16s}
 .fran .f-manga{fill:color-mix(in srgb, var(--pp-f-sueter) 86%, black)}
 .fran .f-manga--delante{fill:color-mix(in srgb, var(--pp-f-sueter) 94%, black)}
-.fran__taconeo{transform-origin:33.5px 171px}
-.fran__ceja{transform-origin:46.5px 36px}
-.fran__cara{transform-origin:40px 62px}
+.fran__taconeo{transform-origin:33px 171px}
+.fran__ceja{transform-origin:49.5px 47.5px}
+.fran__cara{transform-origin:40px 94px}
 .fran--frente .fran__taconeo{animation:papel-taconeo .56s ease-in-out infinite}
 .fran--frente .fran__ceja{animation:papel-ceja 4.2s ease-in-out infinite}
 .fran--frente .fran__cara{animation:papel-ladeo 5.6s ease-in-out infinite}
