@@ -252,6 +252,10 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 .f-zapato{fill:var(--pp-f-zapato)}
 .fran .f-gafas{fill:none;stroke:var(--pp-f-gafas);stroke-width:1.8}
 .fran .f-ojo{fill:var(--pp-f-pelo)}
+/* el pelo se lee como pelo por dos detalles: hebras finas que siguen la
+   caída y un brillo en la coronilla. De noche se funden con la silueta. */
+.fran .f-hebra{fill:none;stroke:color-mix(in srgb, var(--pp-f-pelo) 68%, var(--pp-f-sueter));stroke-width:.9;stroke-linecap:round;opacity:.75}
+.fran .f-brillo{fill:color-mix(in srgb, var(--pp-f-pelo) 60%, var(--pp-f-sueter));opacity:.8}
 .fran .f-ceja{fill:none;stroke:var(--pp-f-pelo);stroke-width:2.8;stroke-linecap:round}
 .fran .f-boca{fill:none;stroke:color-mix(in srgb, var(--pp-f-piel) 45%, var(--pp-f-pelo));stroke-width:1.7;stroke-linecap:round}
 /* las mangas, un tono aparte del cuerpo para que el brazo se lea sobre la
@@ -273,7 +277,7 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 .fran__tronco{transform-origin:40px 132px;transition:transform .4s ease}
 .fran__melena{transform-origin:24px 62px}
 .fran__cabeza{transform-origin:42px 90px}
-.fran__mechon{transform-origin:42px 44px}
+.fran__mechon{transform-origin:40px 28px}
 .pierna,.rodilla,.tobillo,.brazo,.codo{transition:transform .3s ease}
 /* de pie: el peso en la pierna cercana, la otra un paso atrás, brazos sueltos */
 .pierna.cerca{transform:rotate(-4deg)}
@@ -318,7 +322,7 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 @keyframes papel-melena{0%,50%,100%{transform:rotate(5deg)}25%,75%{transform:rotate(-3deg)}}
 /* la cabeza, grande, va un pelín a contratiempo del bote */
 @keyframes papel-nuca{0%,50%,100%{transform:rotate(1.5deg)}25%,75%{transform:rotate(-1.5deg)}}
-@keyframes papel-mechon{0%,50%,100%{transform:rotate(3deg)}25%,75%{transform:rotate(-2deg)}}
+@keyframes papel-mechon{0%,50%,100%{transform:rotate(1.4deg)}25%,75%{transform:rotate(-1deg)}}
 
 /* Esperando: respira y mira alrededor. Si sigue quieto, se da la vuelta
    hacia quien mira —un giro de hoja: el perfil se cierra y se abre el
