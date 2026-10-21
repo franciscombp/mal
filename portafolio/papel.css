@@ -271,6 +271,7 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 .fran__tronco{transform-origin:40px 110px;transition:transform .4s ease}
 .fran__melena{transform-origin:34px 46px}
 .fran__cabeza{transform-origin:40px 62px}
+.fran__mechon{transform-origin:42px 31px}
 .pierna,.rodilla,.tobillo,.brazo,.codo{transition:transform .3s ease}
 /* de pie: el peso en la pierna cercana, la otra un paso atrás, brazos sueltos */
 .pierna.cerca{transform:rotate(-4deg)}
@@ -294,6 +295,7 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 .fran--anda .fran__tronco{transform:rotate(-5deg)}
 .fran--anda .fran__melena{animation:papel-melena var(--ciclo) ease-in-out infinite}
 .fran--anda .fran__cabeza{animation:papel-nuca var(--ciclo) ease-in-out infinite}
+.fran--anda .fran__mechon{animation:papel-mechon var(--ciclo) ease-in-out infinite}
 /* las fases de la marcha: apoyo del talón (0), carga (14), apoyo medio (30),
    despegue del talón (50), despegue de la punta (62), balanceo (76), llegada (90) */
 @keyframes papel-cadera{
@@ -314,6 +316,7 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 @keyframes papel-melena{0%,50%,100%{transform:rotate(5deg)}25%,75%{transform:rotate(-3deg)}}
 /* la cabeza, grande, va un pelín a contratiempo del bote */
 @keyframes papel-nuca{0%,50%,100%{transform:rotate(2deg)}25%,75%{transform:rotate(-2deg)}}
+@keyframes papel-mechon{0%,50%,100%{transform:rotate(3deg)}25%,75%{transform:rotate(-2deg)}}
 
 /* esperando: respira y mira alrededor */
 .fran--espera .fran__cuerpo{animation:papel-respira 3.6s ease-in-out infinite}
@@ -615,7 +618,7 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 @media (prefers-reduced-motion:reduce){
   .papel-js .estacion{transition:opacity .3s}
   .fran__giro{transition:none}
-  .fran--anda :is(.pierna,.rodilla,.tobillo,.brazo,.codo,.fran__cuerpo,.fran__melena,.fran__cabeza),
+  .fran--anda :is(.pierna,.rodilla,.tobillo,.brazo,.codo,.fran__cuerpo,.fran__melena,.fran__cabeza,.fran__mechon),
   .fran--espera :is(.fran__cuerpo,.fran__cabeza),.nube,.bandada,.bandada path,.gato__cola,.colibri__vuelo,.colibri__ala,
   .luciernaga,.cielo__estrellas,[data-cerca] [class*="r-"],
   .arte .vapor,.punto__marca::after{animation:none !important}
