@@ -1,4 +1,4 @@
-/* Fran en papel · boceto, segunda vuelta. El motor: cámara, paralaje,
+/* Fran en papel · el portafolio de Francisco Maldonado. El motor: cámara, paralaje,
    caminar, elegir una pieza y abrirla. Sin dependencias: de mal.js solo
    hace falta el sprite de iconos.
 
