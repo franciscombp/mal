@@ -507,27 +507,31 @@
         </svg>
       </div>
 
-      <!-- Fran, recortado. De tres cuartos: al girar se voltea como una hoja -->
+      <!-- Fran, de perfil y articulado: cadera, rodilla y tobillo en cada
+           pierna; hombro y codo en cada brazo. Mira a la derecha; al girar
+           se voltea como una hoja. El lado lejano va detrás, un poco más
+           oscuro. Los orígenes de giro están en papel.css. -->
       <div class="fran" id="fran" aria-hidden="true">
         <div class="fran__giro">
           <svg viewBox="0 0 80 180">
-            <ellipse class="f-sombra" cx="40" cy="176" rx="19" ry="3.2"/>
+            <ellipse class="f-sombra" cx="42" cy="176" rx="18" ry="3"/>
             <g class="fran__cuerpo">
-              <path class="f-pelo" d="M29 20 Q29 6 40 6 Q51 6 51 20 L53 62 Q40 66 27 62 Z"/>
-              <g class="pierna pierna--i"><rect class="f-pantalon" x="33" y="90" width="9" height="80" rx="4"/><path class="f-zapato" d="M31 168 H43 Q47 168 47 172 V175 H31 Z"/></g>
-              <g class="pierna pierna--d"><rect class="f-pantalon" x="39" y="90" width="9" height="80" rx="4"/><path class="f-zapato" d="M37 168 H49 Q53 168 53 172 V175 H37 Z"/></g>
-              <g class="brazo brazo--i"><rect class="f-sueter" x="25" y="40" width="8" height="48" rx="4"/><circle class="f-piel" cx="29" cy="90" r="3.6"/></g>
-              <path class="f-sueter" d="M28 40 Q40 34 52 40 L53 96 Q40 99 27 96 Z"/>
-              <path class="f-camiseta" d="M36 37 Q40 44 44 37 Z"/>
-              <g class="fran__cabeza">
-                <rect class="f-piel" x="37" y="28" width="6" height="9" rx="2"/>
-                <ellipse class="f-piel" cx="40" cy="21" rx="8.5" ry="10.5"/>
-                <path class="f-pelo" d="M31 22 Q30 9 40 9 Q50 9 49 22 Q46 14 40.5 13.5 L40 17 L39.5 13.5 Q34 14 31 22 Z"/>
-                <path class="f-pelo" d="M31.5 18 Q29.5 40 28.5 60 L33 59 Q33.5 38 34.5 22 Z"/>
-                <path class="f-pelo" d="M48.5 18 Q50.5 40 51.5 60 L47 59 Q46.5 38 45.5 22 Z"/>
-                <circle class="f-gafas" cx="36.6" cy="22" r="3"/><circle class="f-gafas" cx="43.4" cy="22" r="3"/><path class="f-gafas" d="M39.6 22 H40.4"/>
+              <g class="brazo lejos"><rect class="f-sueter" x="36" y="44" width="8" height="30" rx="4"/><g class="codo"><rect class="f-sueter" x="36.5" y="70" width="7" height="26" rx="3.5"/><circle class="f-piel" cx="40" cy="97" r="3.5"/></g></g>
+              <g class="pierna lejos"><rect class="f-pantalon" x="35" y="92" width="10" height="44" rx="5"/><g class="rodilla"><rect class="f-pantalon" x="36" y="132" width="8" height="38" rx="4"/><g class="tobillo"><path class="f-zapato" d="M34 166 H47 Q52 166 52 171 V175 H34 Z"/></g></g></g>
+              <g class="pierna cerca"><rect class="f-pantalon" x="35" y="92" width="10" height="44" rx="5"/><g class="rodilla"><rect class="f-pantalon" x="36" y="132" width="8" height="38" rx="4"/><g class="tobillo"><path class="f-zapato" d="M34 166 H47 Q52 166 52 171 V175 H34 Z"/></g></g></g>
+              <g class="fran__tronco">
+                <path class="fran__melena f-pelo" d="M33 22 Q29 44 31 66 L40 64 Q38 44 41 26 Z"/>
+                <path class="f-sueter" d="M34 40 Q41 34 48 39 L50 68 Q51 90 48 97 H33 Q30 72 33 58 Z"/>
+                <path class="f-camiseta" d="M38 38 Q42 44 46 39 Z"/>
+                <g class="fran__cabeza">
+                  <rect class="f-piel" x="38" y="29" width="7" height="9" rx="2"/>
+                  <ellipse class="f-piel" cx="42" cy="21" rx="9" ry="11"/>
+                  <path class="f-piel" d="M50 19 Q54.5 22.5 50 26 Z"/>
+                  <path class="f-pelo" d="M33 25 Q31 6 43 8 Q53 9 52 19 Q50 12 43 12 Q35 13 35 27 Z"/>
+                  <circle class="f-gafas" cx="47" cy="21.5" r="3.2"/><path class="f-gafas" d="M44 21 L36 20"/>
+                </g>
               </g>
-              <g class="brazo brazo--d"><rect class="f-sueter" x="47" y="40" width="8" height="48" rx="4"/><circle class="f-piel" cx="51" cy="90" r="3.6"/></g>
+              <g class="brazo cerca"><rect class="f-sueter" x="36" y="44" width="8" height="30" rx="4"/><g class="codo"><rect class="f-sueter" x="36.5" y="70" width="7" height="26" rx="3.5"/><circle class="f-piel" cx="40" cy="97" r="3.5"/></g></g>
             </g>
           </svg>
         </div>

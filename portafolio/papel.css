@@ -239,7 +239,7 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 @keyframes papel-pulso{from{transform:scale(1);opacity:.8}to{transform:scale(2.3);opacity:0}}
 
 /* ─── Fran ──────────────────────────────────────────────────── */
-.fran{position:absolute;left:0;top:0;width:80px;height:180px;pointer-events:none;will-change:transform}
+.fran{position:absolute;left:0;top:0;width:80px;height:180px;pointer-events:none;will-change:transform;--ciclo:.64s}
 .fran__giro{width:100%;height:100%;transform:scaleX(var(--dir, 1));transition:transform .22s cubic-bezier(.4,0,.2,1)}
 .fran svg{width:100%;height:100%;overflow:visible}
 .fran *{stroke:none}
@@ -250,24 +250,70 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 .f-camiseta{fill:var(--pp-f-camiseta)}
 .f-pantalon{fill:var(--pp-f-pantalon)}
 .f-zapato{fill:var(--pp-f-zapato)}
-.fran .f-gafas{fill:none;stroke:var(--pp-f-gafas);stroke-width:1}
-.pierna--i{transform-origin:37.5px 92px}
-.pierna--d{transform-origin:43.5px 92px}
-.brazo--i{transform-origin:29px 43px}
-.brazo--d{transform-origin:51px 43px}
-.fran--anda .pierna--i{animation:papel-paso var(--paso, .5s) ease-in-out infinite alternate}
-.fran--anda .pierna--d{animation:papel-paso var(--paso, .5s) ease-in-out infinite alternate-reverse}
-.fran--anda .brazo--i{animation:papel-braceo var(--paso, .5s) ease-in-out infinite alternate-reverse}
-.fran--anda .brazo--d{animation:papel-braceo var(--paso, .5s) ease-in-out infinite alternate}
-.fran--anda .fran__cuerpo{animation:papel-rebote calc(var(--paso, .5s) / 2) ease-in-out infinite alternate}
+.fran .f-gafas{fill:none;stroke:var(--pp-f-gafas);stroke-width:1.1}
+/* el lado lejano, un punto más oscuro para que se lea detrás */
+.fran .lejos .f-sueter{fill:color-mix(in srgb, var(--pp-f-sueter) 78%, black)}
+.fran .lejos .f-pantalon{fill:color-mix(in srgb, var(--pp-f-pantalon) 72%, black)}
+.fran .lejos .f-piel{fill:color-mix(in srgb, var(--pp-f-piel) 80%, black)}
+.fran .lejos .f-zapato{fill:color-mix(in srgb, var(--pp-f-zapato) 72%, black)}
+
+/* El esqueleto: cada articulación gira sobre su punto, en unidades del
+   dibujo, y las de abajo heredan el giro de las de arriba (la rodilla
+   gira dentro de la cadera; el pie, dentro de la rodilla). */
+.pierna{transform-origin:40px 94px}
+.rodilla{transform-origin:40px 134px}
+.tobillo{transform-origin:40px 168px}
+.brazo{transform-origin:40px 46px}
+.codo{transform-origin:40px 72px}
+.fran__tronco{transform-origin:40px 94px;transition:transform .4s ease}
+.fran__melena{transform-origin:36px 24px}
 .fran__cabeza{transform-origin:40px 34px}
+.pierna,.rodilla,.tobillo,.brazo,.codo{transition:transform .3s ease}
+/* de pie: el peso en la pierna cercana, la otra un paso atrás, brazos sueltos */
+.pierna.cerca{transform:rotate(-3deg)}
+.pierna.lejos{transform:rotate(5deg)}
+.pierna.lejos .rodilla{transform:rotate(4deg)}
+.codo{transform:rotate(-8deg)}
+
+/* Andando. Un ciclo (--ciclo) son dos pasos; la pierna lejana y el brazo
+   cercano van medio ciclo desfasados (--fase), que es lo que hace que
+   los brazos vayan al revés de las piernas. El ritmo lo pone el JS a
+   partir de la velocidad, para que los pies no patinen. */
+.lejos{--fase:-.5}
+.brazo.cerca{--fase:-.5}
+.brazo.lejos{--fase:0}
+.fran--anda .pierna{animation:papel-cadera var(--ciclo) cubic-bezier(.4,0,.6,1) infinite;animation-delay:calc(var(--ciclo) * var(--fase, 0))}
+.fran--anda .rodilla{animation:papel-rodilla var(--ciclo) cubic-bezier(.4,0,.6,1) infinite;animation-delay:calc(var(--ciclo) * var(--fase, 0))}
+.fran--anda .tobillo{animation:papel-tobillo var(--ciclo) cubic-bezier(.4,0,.6,1) infinite;animation-delay:calc(var(--ciclo) * var(--fase, 0))}
+.fran--anda .brazo{animation:papel-hombro var(--ciclo) ease-in-out infinite;animation-delay:calc(var(--ciclo) * var(--fase, 0))}
+.fran--anda .codo{animation:papel-codo var(--ciclo) ease-in-out infinite;animation-delay:calc(var(--ciclo) * var(--fase, 0))}
+.fran--anda .fran__cuerpo{animation:papel-bote var(--ciclo) ease-in-out infinite}
+.fran--anda .fran__tronco{transform:rotate(-4deg)}
+.fran--anda .fran__melena{animation:papel-melena var(--ciclo) ease-in-out infinite}
+/* las fases de la marcha: apoyo del talón (0), carga (14), apoyo medio (30),
+   despegue del talón (50), despegue de la punta (62), balanceo (76), llegada (90) */
+@keyframes papel-cadera{
+  0%{transform:rotate(-24deg)}14%{transform:rotate(-16deg)}30%{transform:rotate(-3deg)}
+  50%{transform:rotate(14deg)}62%{transform:rotate(18deg)}76%{transform:rotate(-4deg)}
+  90%{transform:rotate(-21deg)}100%{transform:rotate(-24deg)}}
+@keyframes papel-rodilla{
+  0%{transform:rotate(4deg)}14%{transform:rotate(16deg)}30%{transform:rotate(6deg)}
+  50%{transform:rotate(12deg)}62%{transform:rotate(42deg)}76%{transform:rotate(64deg)}
+  90%{transform:rotate(22deg)}100%{transform:rotate(4deg)}}
+@keyframes papel-tobillo{
+  0%{transform:rotate(-10deg)}14%{transform:rotate(0)}30%{transform:rotate(0)}
+  50%{transform:rotate(16deg)}62%{transform:rotate(26deg)}76%{transform:rotate(8deg)}
+  90%{transform:rotate(-4deg)}100%{transform:rotate(-10deg)}}
+@keyframes papel-hombro{0%{transform:rotate(20deg)}50%{transform:rotate(-24deg)}100%{transform:rotate(20deg)}}
+@keyframes papel-codo{0%{transform:rotate(-8deg)}50%{transform:rotate(-36deg)}100%{transform:rotate(-8deg)}}
+@keyframes papel-bote{0%,50%,100%{transform:translateY(0)}25%,75%{transform:translateY(-2.6px)}}
+@keyframes papel-melena{0%,50%,100%{transform:rotate(3deg)}25%,75%{transform:rotate(-2deg)}}
+
+/* esperando: respira y mira alrededor */
 .fran--espera .fran__cuerpo{animation:papel-respira 3.6s ease-in-out infinite}
 .fran--espera .fran__cabeza{animation:papel-mira 9s ease-in-out infinite}
 @keyframes papel-respira{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.2px)}}
-@keyframes papel-mira{0%,38%,100%{transform:rotate(0)}44%,56%{transform:rotate(-7deg)}62%,80%{transform:rotate(5deg)}}
-@keyframes papel-paso{from{transform:rotate(-17deg)}to{transform:rotate(17deg)}}
-@keyframes papel-braceo{from{transform:rotate(-11deg)}to{transform:rotate(11deg)}}
-@keyframes papel-rebote{from{transform:translateY(0)}to{transform:translateY(-2px)}}
+@keyframes papel-mira{0%,38%,100%{transform:rotate(0)}44%,56%{transform:rotate(-6deg)}62%,80%{transform:rotate(3deg)}}
 
 /* ─── la barra de arriba ────────────────────────────────────── */
 .papel-hud{
@@ -563,10 +609,10 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 @media (prefers-reduced-motion:reduce){
   .papel-js .estacion{transition:opacity .3s}
   .fran__giro{transition:none}
-  .fran--anda :is(.pierna--i,.pierna--d,.brazo--i,.brazo--d,.fran__cuerpo),
+  .fran--anda :is(.pierna,.rodilla,.tobillo,.brazo,.codo,.fran__cuerpo,.fran__melena),
   .fran--espera :is(.fran__cuerpo,.fran__cabeza),.nube,.bandada,.bandada path,.gato__cola,.colibri__vuelo,.colibri__ala,
   .luciernaga,.cielo__estrellas,[data-cerca] [class*="r-"],
   .arte .vapor,.punto__marca::after{animation:none !important}
-  .paloma,.pajaro,.colibri,.gato__cabeza,[class*="r-"],.retrato{transition:none !important}
+  .paloma,.pajaro,.colibri,.gato__cabeza,[class*="r-"],.retrato,.pierna,.rodilla,.tobillo,.brazo,.codo,.fran__tronco{transition:none !important}
   .hoja[open],.hoja.hoja--sale,.ficha--cambia .ficha__cuerpo,.hoja__cuerpo--cambia{animation:none}
 }

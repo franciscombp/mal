@@ -16,7 +16,8 @@
 
   const H = 720;              // alto del mundo
   const PIE = 628;            // dónde pisa Fran
-  const VEL = 300;            // al paso, unidades por segundo
+  const VEL = 210;            // al paso, unidades por segundo
+  const ZANCADA = 124;        // lo que avanza un ciclo de dos pasos, en unidades
   const CERCA = 110;          // desde dónde una pieza está «a mano»
   const VISIBLE = [86, 652];  // la franja del mundo que tiene que verse entera
   const LADO = 80;            // a qué distancia de la pieza se para Fran
@@ -383,7 +384,9 @@
       franEl.classList.toggle('fran--anda', anda);
       if (anda) { quietoDesde = ultimo; franEl.classList.remove('fran--espera'); }
     }
-    if (anda) franEl.style.setProperty('--paso', st.vel > 500 ? '.3s' : '.5s');
+    /* el ritmo sale de la velocidad: a más prisa, pasos más rápidos;
+       en los viajes largos los pies ya no dan abasto y se nota, a propósito */
+    if (anda) franEl.style.setProperty('--ciclo', limita(ZANCADA / st.vel, 0.3, 0.8).toFixed(3) + 's');
   }
   function camara(dt) {
     const max = Math.max(0, W - verAncho);
