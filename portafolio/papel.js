@@ -17,7 +17,7 @@
   const H = 720;              // alto del mundo
   const PIE = 628;            // dónde pisa Fran
   const VEL = 210;            // al paso, unidades por segundo
-  const ZANCADA = 124;        // lo que avanza un ciclo de dos pasos, en unidades
+  const ZANCADA = 118;        // lo que avanza un ciclo de dos pasos, en unidades
   const CERCA = 110;          // desde dónde una pieza está «a mano»
   const VISIBLE = [86, 652];  // la franja del mundo que tiene que verse entera
   const LADO = 80;            // a qué distancia de la pieza se para Fran
