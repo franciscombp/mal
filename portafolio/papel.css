@@ -320,6 +320,26 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 @keyframes papel-nuca{0%,50%,100%{transform:rotate(2deg)}25%,75%{transform:rotate(-2deg)}}
 @keyframes papel-mechon{0%,50%,100%{transform:rotate(3deg)}25%,75%{transform:rotate(-2deg)}}
 
+/* Esperando: respira y mira alrededor. Si sigue quieto, se da la vuelta
+   hacia quien mira —un giro de hoja: el perfil se cierra y se abre el
+   frente—, cruza los brazos, taconea y levanta una ceja. */
+.fran__perfil,.fran__frente{transform-origin:40px 100px}
+.fran__perfil{transform:scaleX(1);transition:transform .16s ease-out .16s}
+.fran__frente{transform:scaleX(0);transition:transform .16s ease-in}
+.fran--frente .fran__perfil{transform:scaleX(0);transition:transform .16s ease-in}
+.fran--frente .fran__frente{transform:scaleX(1);transition:transform .16s ease-out .16s}
+.fran .f-manga{fill:color-mix(in srgb, var(--pp-f-sueter) 86%, black)}
+.fran .f-manga--delante{fill:color-mix(in srgb, var(--pp-f-sueter) 94%, black)}
+.fran__taconeo{transform-origin:33.5px 171px}
+.fran__ceja{transform-origin:46.5px 36px}
+.fran__cara{transform-origin:40px 62px}
+.fran--frente .fran__taconeo{animation:papel-taconeo .56s ease-in-out infinite}
+.fran--frente .fran__ceja{animation:papel-ceja 4.2s ease-in-out infinite}
+.fran--frente .fran__cara{animation:papel-ladeo 5.6s ease-in-out infinite}
+.fran--frente .fran__brazos{animation:papel-respira 3.2s ease-in-out infinite}
+@keyframes papel-taconeo{0%,100%{transform:translateY(0) rotate(0)}35%{transform:translateY(-4px) rotate(-8deg)}}
+@keyframes papel-ceja{0%,68%,100%{transform:translateY(0)}74%,90%{transform:translateY(-2.5px)}}
+@keyframes papel-ladeo{0%,40%,100%{transform:rotate(0)}50%,80%{transform:rotate(-4deg)}}
 /* esperando: respira y mira alrededor */
 .fran--espera .fran__cuerpo{animation:papel-respira 3.6s ease-in-out infinite}
 .fran--espera .fran__cabeza{animation:papel-mira 9s ease-in-out infinite}
@@ -624,6 +644,7 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
   .fran--espera :is(.fran__cuerpo,.fran__cabeza),.nube,.bandada,.bandada path,.gato__cola,.colibri__vuelo,.colibri__ala,
   .luciernaga,.cielo__estrellas,[data-cerca] [class*="r-"],
   .arte .vapor,.punto__marca::after{animation:none !important}
-  .paloma,.pajaro,.colibri,.gato__cabeza,[class*="r-"],.retrato,.pierna,.rodilla,.tobillo,.brazo,.codo,.fran__tronco{transition:none !important}
+  .paloma,.pajaro,.colibri,.gato__cabeza,[class*="r-"],.retrato,.pierna,.rodilla,.tobillo,.brazo,.codo,.fran__tronco,.fran__perfil,.fran__frente{transition:none !important}
+  .fran--frente :is(.fran__taconeo,.fran__ceja,.fran__cara,.fran__brazos){animation:none !important}
   .hoja[open],.hoja.hoja--sale,.ficha--cambia .ficha__cuerpo,.hoja__cuerpo--cambia{animation:none}
 }

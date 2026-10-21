@@ -518,6 +518,7 @@
         <div class="fran__giro">
           <svg viewBox="0 0 80 180">
             <ellipse class="f-sombra" cx="43" cy="176" rx="20" ry="3.2"/>
+            <g class="fran__perfil">
             <g class="fran__cuerpo">
               <g class="brazo lejos"><rect class="f-sueter" x="35" y="70" width="10" height="20" rx="5"/><g class="codo"><rect class="f-sueter" x="35.5" y="88" width="9" height="18" rx="4.5"/><circle class="f-piel" cx="40" cy="108" r="5"/></g></g>
               <g class="pierna lejos"><rect class="f-pantalon" x="33" y="116" width="14" height="30" rx="7"/><g class="rodilla"><rect class="f-pantalon" x="34.5" y="144" width="11" height="26" rx="5.5"/><g class="tobillo"><path class="f-zapato" d="M31 166 H46 Q54 166 54 172 V175 H31 Z"/></g></g></g>
@@ -540,6 +541,44 @@
                 </g>
               </g>
               <g class="brazo cerca"><rect class="f-sueter" x="35" y="70" width="10" height="20" rx="5"/><g class="codo"><rect class="f-sueter" x="35.5" y="88" width="9" height="18" rx="4.5"/><circle class="f-piel" cx="40" cy="108" r="5"/></g></g>
+            </g>
+            </g>
+            <!-- De frente, con los brazos cruzados: la pose de esperar. Sale
+                 cuando Fran lleva unos segundos quieto, con un giro de hoja. -->
+            <g class="fran__frente">
+              <rect class="f-pantalon" x="27" y="114" width="13" height="54" rx="6.5"/>
+              <rect class="f-pantalon" x="41" y="114" width="13" height="54" rx="6.5"/>
+              <g class="fran__taconeo"><ellipse class="f-zapato" cx="33.5" cy="171" rx="8.5" ry="4.5"/></g>
+              <ellipse class="f-zapato" cx="47.5" cy="171" rx="8.5" ry="4.5"/>
+              <path class="f-pelo" d="M23 44 Q13 70 18 110 L31 108 Q28 74 30 50 Z"/>
+              <path class="f-pelo" d="M57 44 Q67 70 62 110 L49 108 Q52 74 50 50 Z"/>
+              <path class="f-sueter" d="M24 74 Q24 60 40 60 Q56 60 56 74 Q66 96 58 118 Q52 124 40 124 Q28 124 22 118 Q14 96 24 74 Z"/>
+              <path class="f-camiseta" d="M34 62 Q40 68 46 62 Z"/>
+              <!-- brazos cruzados: el antebrazo de atrás mete la mano bajo el
+                   brazo izquierdo; el de delante apoya la mano sobre el derecho -->
+              <g class="fran__brazos">
+                <rect class="f-manga" x="54" y="68" width="11" height="30" rx="5.5"/>
+                <circle class="f-piel" cx="25" cy="100" r="4.5"/>
+                <rect class="f-manga" x="21" y="92" width="38" height="11" rx="5.5" transform="rotate(-8 40 97.5)"/>
+                <rect class="f-manga" x="15" y="68" width="11" height="30" rx="5.5"/>
+                <rect class="f-manga f-manga--delante" x="21" y="88" width="38" height="11" rx="5.5" transform="rotate(8 40 93.5)"/>
+                <circle class="f-piel" cx="57.5" cy="95.5" r="4.6"/>
+              </g>
+              <g class="fran__cara">
+                <rect class="f-piel" x="34" y="54" width="12" height="10" rx="3"/>
+                <ellipse class="f-piel" cx="40" cy="42" rx="17" ry="18"/>
+                <circle class="f-piel" cx="26.5" cy="50" r="5"/><circle class="f-piel" cx="53.5" cy="50" r="5"/>
+                <path class="f-boca" d="M35.5 56.5 Q40 55 44.5 56.5"/>
+                <path class="f-boca" d="M37.5 50 Q40 52.5 42.5 50"/>
+                <path class="f-ceja" d="M29 36 Q33.5 34 38 36"/>
+                <path class="f-ceja fran__ceja" d="M42 36 Q46.5 34 51 36"/>
+                <circle class="f-ojo" cx="34" cy="44.5" r="1.5"/><circle class="f-ojo" cx="46" cy="44.5" r="1.5"/>
+                <circle class="f-gafas" cx="33" cy="44.5" r="6.5"/><circle class="f-gafas" cx="47" cy="44.5" r="6.5"/><path class="f-gafas" d="M39.5 44 H40.5 M26.5 43.5 L24 42 M53.5 43.5 L56 42"/>
+                <path class="f-pelo" d="M23 50 Q19 20 39 20 L40 30 Q31 30 27 39 Q24 43 23 50 Z"/>
+                <path class="f-pelo" d="M57 50 Q61 20 41 20 L40 30 Q49 30 53 39 Q56 43 57 50 Z"/>
+                <path class="f-pelo" d="M22 44 Q18 64 20 84 L30 82 Q27 66 30 48 Z"/>
+                <path class="f-pelo" d="M58 44 Q62 64 60 84 L50 82 Q53 66 50 48 Z"/>
+              </g>
             </g>
           </svg>
         </div>

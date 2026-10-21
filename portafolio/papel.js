@@ -382,7 +382,7 @@
     if (anda !== st.andando) {
       st.andando = anda;
       franEl.classList.toggle('fran--anda', anda);
-      if (anda) { quietoDesde = ultimo; franEl.classList.remove('fran--espera'); }
+      if (anda) { quietoDesde = ultimo; franEl.classList.remove('fran--espera', 'fran--frente'); }
     }
     /* el ritmo sale de la velocidad: a más prisa, pasos más rápidos;
        en los viajes largos los pies ya no dan abasto y se nota, a propósito */
@@ -833,6 +833,8 @@
     dia();
     moverTrole(dt);
     if (!st.andando && t - quietoDesde > 3500 && !franEl.classList.contains('fran--espera')) franEl.classList.add('fran--espera');
+    /* seis segundos quieto: se vuelve hacia quien mira y cruza los brazos */
+    if (!st.andando && t - quietoDesde > 6000 && !franEl.classList.contains('fran--frente')) franEl.classList.add('fran--frente');
     requestAnimationFrame(cuadro);
   }
 
