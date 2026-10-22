@@ -21,7 +21,7 @@ viste la página entera, menús incluidos. El de la marca es el que sale sin pon
 | **MAL** | — (por defecto) | una.red, maldonado.pro | crema cálida, filete de 1 px y sombra blanda |
 | **EL MERCIO.** | `data-marca="mercio"` | el periódico | página blanca, serif, radio 0 y sin sombras |
 | **APPS** | `data-marca="apps"` | Quanto, Mi Huerto, Jacky, Test CDS | app nativa: controles de 52 px, responde al pulsar |
-| **Juegos** | `data-marca="juegos"` | los ocho juegos del hub | volumétrico: sombra dura, borde de 2 px y relleno en degradado |
+| **Juegos** | `data-marca="juegos"` | los juegos del hub | volumétrico: sombra dura, borde de 2 px y relleno en degradado |
 
 ```html
 <html lang="es" data-marca="mercio">   <!-- el periódico -->
