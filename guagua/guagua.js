@@ -113,6 +113,9 @@ const VALES = [
   },
 ];
 const enMemoria = (e) => e.t === 'm';
+/* Casi todo se decora de pie; el perrito de pan se queda echado y se mira desde arriba. */
+const echada = (e) => e.f === 'guaguau';
+const posturaDe = (e) => (echada(e) ? { dePie: 0, cabeceo: 0.95 } : { dePie: 1, cabeceo: 0.2 });
 
 /* ─── utilidades ───────────────────────────────────────────── */
 function azar(semilla) {            // mulberry32: el mismo número, la misma grajea
@@ -190,20 +193,20 @@ const MOLDES = {
       bolita(V(0, 3.78, 0.04), V(0.46, 0.48, 0.42)),       // la cabeza
     ];
   },
-  // un perrito echado, con la panza en la lata, de perfil
+  // un perrito echado, con la panza en la lata, visto desde arriba: la cabeza
+  // hacia arriba, las patas de adelante a los lados y la cola enroscada abajo
   guaguau() {
     return [
-      bolita(V(-1.72, 0.36, 0), V(0.26, 0.16, 0.15), 0.12),   // la punta de la cola
-      bolita(V(-1.2, 0.45, 0), V(0.55, 0.3, 0.28), 0.1),      // la cola
-      bolita(V(-0.1, 0.55, 0), V(1.25, 0.53, 0.5)),            // el lomo
-      bolita(V(-0.55, 0.2, 0.3), V(0.32, 0.17, 0.16)),         // la pata de atrás, pegada al lomo
-      // las patitas de adelante salen de debajo del pecho, y la cabeza descansa encima
-      chorizo(0.14, [V(0.35, 0.15, 0.26), V(1.68, 0.14, 0.26)]),
-      chorizo(0.14, [V(0.35, 0.15, -0.22), V(1.62, 0.14, -0.22)]),
-      bolita(V(1.25, 0.66, 0.04), V(0.5, 0.47, 0.46)),         // la cabeza, con la barbilla en las patas
-      bolita(V(1.7, 0.53, 0.04), V(0.27, 0.21, 0.25)),         // el hocico
-      bolita(V(1.08, 0.56, 0.36), V(0.15, 0.33, 0.12), -0.3),  // la oreja que se ve
-      bolita(V(1.08, 0.56, -0.32), V(0.15, 0.33, 0.12), -0.3), // la otra oreja
+      bolita(V(0, 1.55, 0.05), V(0.66, 1.2, 0.48), 0, 0.3),                       // el lomo
+      chorizo(0.11, [V(0.05, 0.6, -0.2), V(0.12, 0.15, -0.2), V(0.4, -0.1, -0.2)]), // la cola
+      bolita(V(0.55, 0.85, -0.18), V(0.24, 0.4, 0.15), -0.35),                    // las patas de atrás
+      bolita(V(-0.55, 0.85, -0.18), V(0.24, 0.4, 0.15), 0.35),
+      chorizo(0.14, [V(0.4, 2.2, -0.17), V(0.36, 3.25, -0.17)]),                  // las de adelante
+      chorizo(0.14, [V(-0.4, 2.2, -0.17), V(-0.36, 3.25, -0.17)]),
+      bolita(V(0, 3.0, 0.12), V(0.52, 0.5, 0.42)),                                // la cabeza
+      bolita(V(0, 3.45, 0.02), V(0.26, 0.22, 0.2)),                               // el hocico
+      bolita(V(0.46, 2.92, 0.08), V(0.16, 0.32, 0.1), 0.25),                      // las orejas caídas
+      bolita(V(-0.46, 2.92, 0.08), V(0.16, 0.32, 0.1), -0.25),
     ];
   },
   caballito() {
@@ -695,7 +698,7 @@ class Visor {
     this.plato.visible = etapa === 'decorar';
     this.lata.visible = etapa !== 'decorar';
     this.mantel.visible = etapa !== 'horno';
-    this.dibujar();
+    if (this.acostada) this.dibujar();   // en el constructor todavía no hay figura
   }
   /* El horno: luz de brasa, la masa se infla y se dora. */
   hornear(k, encendido) {
@@ -1104,8 +1107,8 @@ function foto(e, w, h, extra) {
   estudio.renderer.setSize(w, h, false);
   estudio.camara.aspect = w / h;
   estudio.camara.updateProjectionMatrix();
-  estudio.cabeceo = 0.12;          // de pie y de frente, como en la panadería
-  estudio.dePie = 1;
+  estudio.cabeceo = echada(e) ? 0.85 : 0.12;   // de frente, como en la panadería
+  estudio.dePie = echada(e) ? 0 : 1;
   estudio.cargar(e);
   (extra || []).forEach((op) => estudio.extra.push(op));
   estudio.actualizarBocados();
@@ -1113,6 +1116,118 @@ function foto(e, w, h, extra) {
   const c = lienzo(w, h);
   c.getContext('2d').drawImage(estudio.canvas, 0, 0, w, h);
   return c;
+}
+
+/* ─── el bodegón: la guagua en su plato, con su colada (o su velita) ─── */
+/* Una taza de colada morada de verdad, en 3D: loza con filete fucsia, la
+   colada espesa encima y pedacitos de piña, frutilla y mortiño. */
+function taza3d() {
+  const g = new THREE.Group();
+  const loza = new THREE.MeshPhysicalMaterial({ color: '#f6ede2', roughness: 0.3, clearcoat: 0.7, side: THREE.DoubleSide });
+  const perfil = [[0, 0], [0.5, 0], [0.56, 0.05], [0.6, 0.6], [0.64, 1.15], [0.62, 1.2], [0.58, 1.18], [0.55, 0.15], [0, 0.15]]
+    .map(([x, y]) => new THREE.Vector2(x, y));
+  const cuerpo = new THREE.Mesh(new THREE.LatheGeometry(perfil, 64), loza);
+  const filete = new THREE.Mesh(new THREE.CylinderGeometry(0.627, 0.618, 0.12, 64, 1, true),
+    new THREE.MeshStandardMaterial({ color: '#e01b6a', roughness: 0.35 }));
+  filete.position.y = 0.82;
+  const asa = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.075, 16, 40, Math.PI), loza);
+  asa.rotation.z = -Math.PI / 2; asa.position.set(0.6, 0.64, 0);
+  const colada = new THREE.Mesh(new THREE.CircleGeometry(0.575, 64),
+    new THREE.MeshStandardMaterial({ color: '#3d0a2e', roughness: 0.32, envMapIntensity: 0.25 }));
+  colada.rotation.x = -Math.PI / 2; colada.position.y = 1.07;
+  g.add(cuerpo, filete, asa, colada);
+  const r = azar(11), frutas = ['#f2c14e', '#d7263d', '#2b1d4f', '#f2c14e', '#d7263d'];
+  for (let i = 0; i < 9; i++) {
+    const c = frutas[i % frutas.length], a = r() * Math.PI * 2, d = 0.1 + r() * 0.36;
+    const m = new THREE.Mesh(c === '#2b1d4f' ? new THREE.SphereGeometry(0.045, 12, 8) : new THREE.BoxGeometry(0.09, 0.05, 0.09),
+      new THREE.MeshStandardMaterial({ color: c, roughness: 0.4 }));
+    m.position.set(Math.cos(a) * d, 1.085, Math.sin(a) * d); m.rotation.y = r() * 3;
+    g.add(m);
+  }
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  g.userData.boca = V(0, 1.2, 0);          // de aquí sale el vapor
+  return g;
+}
+/* La velita para las dedicadas: cera, pabilo y una llama que alumbra. */
+function vela3d() {
+  const g = new THREE.Group();
+  const cera = new THREE.MeshStandardMaterial({ color: '#f4ead8', roughness: 0.55 });
+  const platito = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.38, 0.08, 48),
+    new THREE.MeshStandardMaterial({ color: '#e01b6a', roughness: 0.4 }));
+  platito.position.y = 0.04;
+  const cuerpo = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.24, 1.3, 40), cera);
+  cuerpo.position.y = 0.73;
+  const gota = new THREE.Mesh(new THREE.SphereGeometry(0.07, 16, 12), cera);
+  gota.scale.set(1, 2.2, 1); gota.position.set(0.17, 1.22, 0.1);
+  const pabilo = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.12, 8), new THREE.MeshBasicMaterial({ color: '#2e0f36' }));
+  pabilo.position.y = 1.43;
+  const llama = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 16), new THREE.MeshBasicMaterial({ color: '#ffb02e', toneMapped: false }));
+  llama.scale.set(0.075, 0.19, 0.075); llama.position.y = 1.6;
+  const centro = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12), new THREE.MeshBasicMaterial({ color: '#fff6d0', toneMapped: false }));
+  centro.scale.set(0.035, 0.09, 0.035); centro.position.y = 1.55;
+  const luz = new THREE.PointLight('#ffb347', 6, 5, 1.6);
+  luz.position.y = 1.65;
+  g.add(platito, cuerpo, gota, pabilo, llama, centro, luz);
+  [platito, cuerpo, gota].forEach((m) => { m.castShadow = true; m.receiveShadow = true; });
+  g.userData.boca = V(0, 1.6, 0);          // aquí brilla la llama
+  return g;
+}
+let bodega = null;
+/* Renderiza el bodegón y lo recorta a lo que tiene algo: devuelve la
+   imagen y dónde quedó, en ella, la boca de la taza (o la llama). */
+function bodegon(e, lado = 1400) {
+  if (!bodega) {
+    bodega = new Visor(lienzo(lado, lado), { foto: true, giro: 0 });
+    bodega.lata.visible = false; bodega.mantel.visible = false;
+    const piso = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.ShadowMaterial({ opacity: 0.32 }));
+    piso.rotation.x = -Math.PI / 2; piso.position.y = -0.121; piso.receiveShadow = true;
+    bodega.scene.add(piso);
+    bodega.taza = taza3d(); bodega.vela = vela3d();
+    bodega.scene.add(bodega.taza, bodega.vela);
+    Object.assign(bodega.sol.shadow.camera, { left: -6, right: 6, top: 6, bottom: -6 });
+    bodega.sol.shadow.camera.updateProjectionMatrix();
+    bodega.sol.shadow.mapSize.set(2048, 2048);
+  }
+  const b = bodega, memoria = enMemoria(e), cosa = memoria ? b.vela : b.taza;
+  b.renderer.setSize(lado, lado, false);
+  b.camara.aspect = 1; b.camara.updateProjectionMatrix();
+  b.ambiente('decorar'); b.lata.visible = false; b.mantel.visible = false;
+  Object.assign(b, posturaDe(e));
+  b.cabeceo = echada(e) ? 0.75 : 0.32;
+  b.cargar(e);
+  b.ubicar();
+  b.taza.visible = !memoria; b.vela.visible = memoria;
+  // al lado del plato, un poco adelante: a la derecha si cabe, siempre sobre la mesa
+  cosa.position.set(3.25, -0.12, 0.9);
+  cosa.scale.setScalar(1.15);
+  // la cámara encuadra todo lo que hay en la mesa
+  const caja = new THREE.Box3().setFromObject(b.figura).union(new THREE.Box3().setFromObject(b.plato)).union(new THREE.Box3().setFromObject(cosa));
+  const centro = caja.getCenter(V(0, 0, 0)), radio = caja.getSize(V(0, 0, 0)).length() / 2;
+  const d = radio / Math.sin(THREE.MathUtils.degToRad(b.camara.fov / 2)) * 1.02;
+  if (b.camara.view) b.camara.clearViewOffset();
+  b.camara.position.set(centro.x, centro.y + Math.sin(b.cabeceo) * d, centro.z + Math.cos(b.cabeceo) * d);
+  b.camara.lookAt(centro);
+  b.renderer.render(b.scene, b.camara);
+  const boca = cosa.localToWorld(cosa.userData.boca.clone()).project(b.camara);
+  const c = lienzo(lado, lado);
+  const ctx = c.getContext('2d');
+  ctx.drawImage(b.canvas, 0, 0);
+  const r = recorte(c);
+  const out = lienzo(r.w, r.h);
+  out.getContext('2d').drawImage(c, r.x, r.y, r.w, r.h, 0, 0, r.w, r.h);
+  return { img: out, boca: { x: (boca.x + 1) / 2 * lado - r.x, y: (1 - boca.y) / 2 * lado - r.y } };
+}
+/* El rectángulo con algo pintado (la sombra cuenta), con un margen. */
+function recorte(c) {
+  const { width: w, height: h } = c, px = c.getContext('2d').getImageData(0, 0, w, h).data;
+  let x0 = w, y0 = h, x1 = 0, y1 = 0;
+  for (let y = 0; y < h; y += 2) for (let x = 0; x < w; x += 2) {
+    if (px[(y * w + x) * 4 + 3] > 10) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  }
+  if (x1 <= x0) return { x: 0, y: 0, w, h };
+  const m = 6;
+  x0 = Math.max(0, x0 - m); y0 = Math.max(0, y0 - m); x1 = Math.min(w, x1 + m); y1 = Math.min(h, y1 + m);
+  return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
 }
 
 /* ══════════════════ EL ENLACE ═══════════════════════════════ */
@@ -1281,19 +1396,6 @@ function rotuloFinados() {
 }
 
 /* ─── la tarjeta para regalar (1080 × 1350) ───────────────── */
-/* Dónde termina la figura en la foto: la fila más baja con pan, y su ancho. */
-function pie(c) {
-  const { width: w, height: h } = c;
-  const px = c.getContext('2d').getImageData(0, 0, w, h).data;
-  const fila = (y) => { let a = -1, b = -1; for (let x = 0; x < w; x += 4) if (px[(y * w + x) * 4 + 3] > 200) { if (a < 0) a = x; b = x; } return [a, b]; };
-  let y = h - 1;
-  while (y > 0 && fila(y)[0] < 0) y -= 3;
-  if (y <= 0) return { x: w / 2, y: h * 0.93, ancho: w * 0.5 };
-  // el ancho de la base, un poco más arriba de la última fila
-  let a = w, b = 0;
-  for (let yy = y; yy > Math.max(0, y - h * 0.08); yy -= 3) { const [p, q] = fila(yy); if (p >= 0) { a = Math.min(a, p); b = Math.max(b, q); } }
-  return { x: (a + b) / 2, y, ancho: b - a };
-}
 function envolver(ctx, texto, x, y, ancho, alto, max) {
   const lineas = [];
   let l = '';
@@ -1303,27 +1405,6 @@ function envolver(ctx, texto, x, y, ancho, alto, max) {
   });
   if (l) lineas.push(l);
   lineas.slice(0, max).forEach((ln, i) => ctx.fillText(i === max - 1 && lineas.length > max ? ln + '…' : ln, x, y + i * alto));
-}
-/* Una velita encendida, para las que se dedican a quien ya no está. */
-function vela(ctx, x, y, s) {
-  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
-  const brillo = ctx.createRadialGradient(0, -150, 4, 0, -150, 120);
-  brillo.addColorStop(0, 'rgba(255,201,60,.45)'); brillo.addColorStop(1, 'rgba(255,201,60,0)');
-  ctx.fillStyle = brillo; ctx.beginPath(); ctx.arc(0, -150, 120, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = '#f6eadb';
-  ctx.beginPath(); ctx.roundRect(-34, -110, 68, 150, 10); ctx.fill();
-  ctx.fillStyle = 'rgba(0,0,0,.12)'; ctx.fillRect(14, -110, 20, 150);
-  ctx.fillStyle = '#f6eadb';
-  ctx.beginPath(); ctx.ellipse(-10, -110, 12, 20, 0, 0, Math.PI * 2); ctx.fill();   // la cera que chorrea
-  ctx.strokeStyle = '#2e0f36'; ctx.lineWidth = 4;
-  ctx.beginPath(); ctx.moveTo(0, -110); ctx.lineTo(0, -126); ctx.stroke();
-  ctx.fillStyle = '#ffb02e';
-  ctx.beginPath(); ctx.moveTo(0, -186); ctx.bezierCurveTo(22, -150, 16, -124, 0, -124); ctx.bezierCurveTo(-16, -124, -22, -150, 0, -186); ctx.fill();
-  ctx.fillStyle = '#fff3c4';
-  ctx.beginPath(); ctx.ellipse(0, -138, 6, 12, 0, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = '#e01b6a';
-  ctx.beginPath(); ctx.roundRect(-58, 36, 116, 16, 8); ctx.fill();
-  ctx.restore();
 }
 /* El vale, como un sello de papel recortado sobre la tarjeta. */
 function sello(ctx, vale, x, y) {
@@ -1342,46 +1423,35 @@ function sello(ctx, vale, x, y) {
   ctx.fillText(vale.sello[2], 0, 50, 260);
   ctx.restore();
 }
-function colada(ctx, x, y, s) {
-  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
-  ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 6; ctx.lineCap = 'round';
-  [-40, 0, 40].forEach((dx) => {
-    ctx.beginPath(); ctx.moveTo(dx, -40);
-    ctx.bezierCurveTo(dx + 22, -70, dx - 22, -100, dx, -135); ctx.stroke();
-  });
-  ctx.fillStyle = '#f5ece0';
-  ctx.beginPath(); ctx.moveTo(-95, -20); ctx.lineTo(95, -20); ctx.lineTo(78, 110);
-  ctx.quadraticCurveTo(0, 135, -78, 110); ctx.closePath(); ctx.fill();
-  ctx.strokeStyle = '#f5ece0'; ctx.lineWidth = 16;
-  ctx.beginPath(); ctx.arc(102, 40, 32, -Math.PI / 2, Math.PI / 2); ctx.stroke();
-  ctx.fillStyle = '#e01b6a';
-  ctx.fillRect(-88, 30, 176, 12);
-  ctx.fillStyle = '#4b1450';
-  ctx.beginPath(); ctx.ellipse(0, -20, 95, 24, 0, 0, Math.PI * 2); ctx.fill();
-  const rnd = azar(9);
-  for (let i = 0; i < 14; i++) {
-    ctx.fillStyle = elige(['#a1236a', '#d9415f', '#ffcf3d', '#6d1f6f'], rnd);
-    ctx.beginPath(); ctx.arc((rnd() - 0.5) * 150, -20 + (rnd() - 0.5) * 26, 4 + rnd() * 5, 0, Math.PI * 2); ctx.fill();
-  }
-  ctx.restore();
-}
 const queEs = (e) => ({ guagua: 'una guagua', tradicional: 'una guagua', guaguau: 'un guaguau', caballito: 'un caballito', chanchito: 'un chanchito', gallinita: 'una gallinita' }[e.f] || 'un animalito');
 const nombreDe = (e) => e.n || ({ guagua: 'Guagua', tradicional: 'Guagua', guaguau: 'Guaguau', caballito: 'Caballito', chanchito: 'Chanchito', gallinita: 'Gallinita' }[e.f] || 'Animalito');
-async function tarjeta(e) {
+/* Dos formatos: historia (9:16) para los estados y las historias, y
+   cuadrada (1:1) para publicar. Todo se acomoda alrededor del bodegón. */
+const FORMATOS = {
+  historia: { w: 1080, h: 1920, kicker: 300, titulo: [420, 524], fuente: 100, escena: [590, 1380], cinta: 1420, quien: 1530, msg: 1586, lineas: 2, pie: 1700 },
+  cuadrada: { w: 1080, h: 1080, kicker: 74, titulo: [156, 228], fuente: 70, escena: [256, 856], cinta: 880, quien: 980, msg: 1020, lineas: 1, pie: 1060 },
+};
+async function tarjeta(e, formato = 'historia') {
   try { await Promise.all([document.fonts.load('800 80px Syne'), document.fonts.load('600 30px Inter'), document.fonts.load('italic 400 30px Inter')]); } catch (err) { /* sin fuentes, igual sale */ }
-  const c = lienzo(1080, 1350);
+  const F = FORMATOS[formato] || FORMATOS.historia, W = F.w, H = F.h;
+  const c = lienzo(W, H);
   const ctx = c.getContext('2d');
-  const fondo = ctx.createLinearGradient(0, 0, 0, 1350);
+  const fondo = ctx.createLinearGradient(0, 0, 0, H);
   fondo.addColorStop(0, '#2e0f36'); fondo.addColorStop(1, '#5a1c50');
-  ctx.fillStyle = fondo; ctx.fillRect(0, 0, 1080, 1350);
+  ctx.fillStyle = fondo; ctx.fillRect(0, 0, W, H);
   const rnd = azar(e.o.length + 7);
   ctx.fillStyle = 'rgba(255,201,60,.08)';
-  for (let y = 30; y < 1350; y += 54) for (let x = (y / 54 % 2) * 27 + 20; x < 1080; x += 54) {
+  for (let y = 30; y < H; y += 54) for (let x = (y / 54 % 2) * 27 + 20; x < W; x += 54) {
     ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill();
   }
+  // un resplandor tibio detrás de la mesa
+  const [e0, e1] = F.escena, ecy = (e0 + e1) / 2;
+  const luz = ctx.createRadialGradient(W / 2, ecy, 40, W / 2, ecy, (e1 - e0) * 0.75);
+  luz.addColorStop(0, 'rgba(255,170,90,.28)'); luz.addColorStop(1, 'rgba(255,170,90,0)');
+  ctx.fillStyle = luz; ctx.fillRect(0, e0 - 200, W, e1 - e0 + 400);
   ctx.fillStyle = 'rgba(255,201,60,.55)';
-  for (let i = 0; i < 18; i++) {
-    const x = rnd() * 1080, y = 250 + rnd() * 900, r = 3 + rnd() * 5;
+  for (let i = 0; i < 22; i++) {
+    const x = rnd() * W, y = F.kicker + 40 + rnd() * (F.pie - F.kicker - 120), r = 3 + rnd() * 5;
     ctx.beginPath();
     for (let j = 0; j < 8; j++) {
       const a = j / 8 * Math.PI * 2, d = j % 2 ? r * 0.35 : r * 1.6;
@@ -1392,48 +1462,63 @@ async function tarjeta(e) {
   ctx.textAlign = 'center';
   ctx.fillStyle = '#ffc93c';
   ctx.font = '600 30px Inter, system-ui, sans-serif';
-  ctx.fillText('2 DE NOVIEMBRE · DÍA DE DIFUNTOS', 540, 104);
+  ctx.fillText('2 DE NOVIEMBRE · DÍA DE DIFUNTOS', W / 2, F.kicker);
   ctx.fillStyle = '#ffffff';
-  ctx.font = '800 84px Syne, Inter, system-ui, sans-serif';
+  ctx.font = `800 ${F.fuente}px Syne, Inter, system-ui, sans-serif`;
   const que = queEs(e), memoria = enMemoria(e);
+  const titulo = memoria
+    ? (e.p ? ['En memoria', 'de ' + e.p] : ['Para recordar', 'a quien ya no está'])
+    : (e.d ? ['Te regalo', que] : [que.charAt(0).toUpperCase() + que.slice(1), 'para ti']);
+  titulo.forEach((t, i) => ctx.fillText(t, W / 2, F.titulo[i], W - 80));
+
+  // el bodegón 3D, centrado y apoyado abajo en su espacio
+  const { img, boca } = bodegon(e);
+  const k = Math.min((W - 60) / img.width, (e1 - e0) / img.height);
+  const bw = img.width * k, bh = img.height * k, bx = (W - bw) / 2, by = e0 + (e1 - e0 - bh) / 2;
+  ctx.drawImage(img, bx, by, bw, bh);
+  const px = bx + boca.x * k, py = by + boca.y * k;
   if (memoria) {
-    ctx.fillText(e.p ? 'En memoria' : 'Para recordar', 540, 196, 1000);
-    ctx.fillText(e.p ? 'de ' + e.p : 'a quien ya no está', 540, 282, 1000);
+    const brillo = ctx.createRadialGradient(px, py, 4, px, py, 150 * k + 60);
+    brillo.addColorStop(0, 'rgba(255,190,80,.55)'); brillo.addColorStop(1, 'rgba(255,190,80,0)');
+    ctx.fillStyle = brillo; ctx.beginPath(); ctx.arc(px, py, 150 * k + 60, 0, Math.PI * 2); ctx.fill();
   } else {
-    ctx.fillText(e.d ? 'Te regalo' : que.charAt(0).toUpperCase() + que.slice(1), 540, 196, 1000);
-    ctx.fillText(e.d ? que : 'para ti', 540, 282, 1000);
+    // el vapor de la colada
+    ctx.strokeStyle = 'rgba(255,255,255,.4)'; ctx.lineWidth = 5; ctx.lineCap = 'round';
+    [-30, 0, 30].forEach((dx, i) => {
+      const x = px + dx * (0.6 + k), y = py - 10;
+      ctx.beginPath(); ctx.moveTo(x, y);
+      ctx.bezierCurveTo(x + 18, y - 30, x - 18, y - 60 - i * 8, x, y - 95 - i * 10); ctx.stroke();
+    });
   }
-  const alto = 780, ancho = alto * 0.8, gx = 540 - ancho / 2 - 60, gy = 300;
-  // la sombra va donde la figura toca el suelo: un perrito echado no llega hasta abajo
-  const retrato = foto(e, 800, 1000), suelo = pie(retrato);
-  ctx.fillStyle = 'rgba(0,0,0,.35)';
-  ctx.beginPath();
-  ctx.ellipse(gx + suelo.x / 800 * ancho, gy + suelo.y / 1000 * alto - 4, Math.max(80, suelo.ancho / 800 * ancho * 0.6), 22, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.drawImage(retrato, gx, gy, ancho, alto);
-  if (memoria) vela(ctx, 880, 990, 0.9); else colada(ctx, 870, 960, 0.9);
-  if (!memoria && VALES[e.l]) sello(ctx, VALES[e.l], 860, 470);
+  if (!memoria && VALES[e.l]) {
+    ctx.save();
+    if (formato === 'cuadrada') { ctx.translate(W - 175, e0 + 75); ctx.scale(0.8, 0.8); } else ctx.translate(W - 190, e0 + 40);
+    sello(ctx, VALES[e.l], 0, 0);
+    ctx.restore();
+    ctx.textAlign = 'center';
+  }
+
   const nombre = '«' + nombreDe(e) + '»';
-  ctx.font = '800 46px Syne, Inter, system-ui, sans-serif';
-  const an = Math.min(900, ctx.measureText(nombre).width + 80);
+  ctx.font = `800 ${formato === 'cuadrada' ? 40 : 50}px Syne, Inter, system-ui, sans-serif`;
+  const alto = formato === 'cuadrada' ? 64 : 82;
+  const an = Math.min(W - 160, ctx.measureText(nombre).width + 80);
   ctx.fillStyle = '#e01b6a';
-  ctx.beginPath(); ctx.roundRect(540 - an / 2, 1078, an, 76, 38); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(W / 2 - an / 2, F.cinta, an, alto, alto / 2); ctx.fill();
   ctx.fillStyle = '#b01254';
-  ctx.beginPath(); ctx.roundRect(540 - an / 2, 1146, an, 8, 4); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(W / 2 - an / 2, F.cinta + alto - 8, an, 8, 4); ctx.fill();
   ctx.fillStyle = '#fff';
-  ctx.fillText(nombre, 540, 1132, 860);
-  let y = 1206;
+  ctx.fillText(nombre, W / 2, F.cinta + alto * 0.7, W - 200);
   const quien = memoria ? (e.d ? 'Con cariño, de ' + e.d : '') : [e.p && 'Para ' + e.p, e.d && 'de ' + e.d].filter(Boolean).join(' · ');
   if (quien) {
     ctx.font = '600 34px Inter, system-ui, sans-serif'; ctx.fillStyle = '#ffffff';
-    ctx.fillText(quien, 540, y, 960); y += 46;
+    ctx.fillText(quien, W / 2, F.quien, W - 120);
   }
   if (e.m) {
     ctx.font = 'italic 400 30px Inter, system-ui, sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.82)';
-    envolver(ctx, e.m, 540, y, 900, 40, quien ? 1 : 2);
+    envolver(ctx, e.m, W / 2, quien ? F.msg : F.quien, W - 180, 42, F.lineas + (quien ? 0 : 1));
   }
   ctx.font = '600 24px Inter, system-ui, sans-serif'; ctx.fillStyle = 'rgba(255,201,60,.9)';
-  ctx.fillText((memoria ? '¿A quién recuerdas tú? Dedica la tuya en ' : 'Amasa y decora la tuya en ') + DIRECCION, 540, 1322, 1000);
+  ctx.fillText((memoria ? '¿A quién recuerdas tú? Dedica la tuya en ' : 'Amasa y decora la tuya en ') + DIRECCION, W / 2, F.pie, W - 80);
   return c;
 }
 const aBlob = (c) => new Promise((ok) => c.toBlob(ok, 'image/png'));
@@ -1854,8 +1939,9 @@ function irA(etapa) {
     taller.cabeceo = 0.95;
   } else if (etapa === 'decorar') {
     taller.hornear(estado.k / 100, false);
-    taller.postura(1, true);       // sale del horno y se levanta: se decora de pie
-    taller.cabeceo = 0.2;
+    const { dePie, cabeceo } = posturaDe(estado);
+    taller.postura(dePie, true);   // sale del horno y se levanta: se decora de pie (o echada)
+    taller.cabeceo = cabeceo;
     // derecha otra vez (el horno la deja dando vueltas), por el camino corto
     taller.girar(Math.round(taller.giro / (Math.PI * 2)) * Math.PI * 2, true);
   }
@@ -2138,7 +2224,12 @@ function sorpresa() {
 }
 
 /* ─── regalar ──────────────────────────────────────────────── */
-let ultimoEnlace = '', ultimaTarjeta = null, ultimaReceta = '', reloj = null;
+/* Compartir tiene que ocurrir en el mismo toque: Safari y Chrome solo dejan
+   abrir la hoja de compartir (o WhatsApp en otra pestaña) si no se esperó
+   antes a la red ni a renderizar. Por eso la tarjeta, el archivo y el enlace
+   se preparan apenas cambia algo, y el botón solo usa lo que ya está listo. */
+let preparado = null, turnoTarjeta = 0, reloj = null, relojNube = null;
+let formato = almacen.leer('guagua:formato', 'historia');
 const publicados = new Map();      // receta → id del regalo, para no publicar dos veces la misma
 /* Con cuenta, el regalo se publica en /guaguas y el enlace es corto (#g=…).
    Sin cuenta, o si la nube falla, la receta va entera en el enlace (#r=…). */
@@ -2165,6 +2256,7 @@ function pintarTipo() {
   $('#r-vale-campo').hidden = m;
   $('#r-vale-pista').textContent = VALES[estado.l] ? VALES[estado.l].pista : '';
   $('#r-compartir').lastChild.textContent = m ? ' Compartir en redes' : ' Compartir';
+  $$('button[data-formato]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.formato === formato)));
 }
 async function abrirRegalo() {
   const v = veredicto(estado);
@@ -2185,13 +2277,45 @@ function leerFormulario() {
   estado.m = $('#r-mensaje').value.trim().slice(0, 160);
   if (estado.d) almacen.poner('guagua:firma', estado.d);
 }
+function botonesListos(listo) {
+  ['#r-compartir', '#r-whatsapp', '#r-copiar', '#r-descargar'].forEach((b) => {
+    $(b).disabled = !listo;
+    $(b).setAttribute('aria-busy', String(!listo));
+  });
+}
 async function refrescarTarjeta() {
   leerFormulario();
-  ultimaTarjeta = await tarjeta(receta());
-  $('#r-vista').src = ultimaTarjeta.toDataURL('image/jpeg', 0.82);
-  ultimaReceta = await codificar(receta());
-  ultimoEnlace = direccion() + '#r=' + ultimaReceta;
+  const turno = ++turnoTarjeta;
+  preparado = null; botonesListos(false);
+  const r = receta();
+  const cod = await codificar(r);
+  const c = await tarjeta(r, formato);
+  if (turno !== turnoTarjeta) return;
+  $('#r-vista').src = c.toDataURL('image/jpeg', 0.85);
+  $('#r-vista').width = c.width; $('#r-vista').height = c.height;
+  const blob = await aBlob(c);
+  if (turno !== turnoTarjeta) return;
+  const nombre = 'guagua-' + (estado.n || 'de-pan').toLowerCase().replace(/[^a-z0-9áéíóúñü]+/gi, '-') + '-' + formato + '.png';
+  const pr = { cod, blob, archivo: new File([blob], nombre, { type: 'image/png' }), nombre, url: direccion() + '#r=' + cod, id: null, texto: textoRegalo() };
+  preparado = pr;
   guardarBorrador();
+  botonesListos(true);
+  enlaceCorto(pr);
+}
+/* Con cuenta, el enlace corto se publica en cuanto la tarjeta se queda
+   quieta un momento; si no alcanza, se comparte el largo, que también sirve. */
+function enlaceCorto(pr) {
+  if (!nube.actual()) return;
+  const ya = publicados.get(pr.cod);
+  if (ya) { pr.id = ya; pr.url = direccion() + '#g=' + ya; return; }
+  clearTimeout(relojNube);
+  relojNube = setTimeout(async () => {
+    try {
+      const id = await nube.publicarRegalo(pr.cod);
+      publicados.set(pr.cod, id);
+      pr.id = id; pr.url = direccion() + '#g=' + id;
+    } catch (e) { /* se queda el enlace largo */ }
+  }, 1200);
 }
 const textoRegalo = (e = estado) => {
   const que = queEs(e) + ' de pan';
@@ -2208,6 +2332,7 @@ async function copiar(texto) {
 }
 function montarRegalo() {
   $$('#d-regalar input, #d-regalar textarea').forEach((x) => x.addEventListener('input', () => {
+    preparado = null; botonesListos(false);
     clearTimeout(reloj); reloj = setTimeout(refrescarTarjeta, 350);
   }));
   $$('button[data-tipo]').forEach((b) => b.addEventListener('click', () => {
@@ -2221,41 +2346,50 @@ function montarRegalo() {
     estado.l = +b.dataset.vale;
     pintarTipo(); refrescarTarjeta();
   }));
-  const listo = async () => {
-    clearTimeout(reloj);
-    await refrescarTarjeta();
-    const { url, id } = await enlaceDeRegalo(ultimaReceta);
-    ultimoEnlace = url;
-    await guardarMia(id);
-  };
+  $$('button[data-formato]').forEach((b) => b.addEventListener('click', () => {
+    formato = b.dataset.formato;
+    almacen.poner('guagua:formato', formato);
+    pintarTipo(); refrescarTarjeta();
+  }));
+  // lo que pasa después de compartir no hace esperar a la hoja de compartir
+  const despues = (pr) => { guardarMia(pr.id).catch(() => {}); };
   $('#r-entrar').addEventListener('click', () => abrirCuenta());
-  $('#r-compartir').addEventListener('click', async () => {
-    await listo();
-    const texto = textoRegalo();
-    try {
-      const archivo = new File([await aBlob(ultimaTarjeta)], 'guagua-de-pan.png', { type: 'image/png' });
-      if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
-        await navigator.share({ files: [archivo], title: 'Una guagua de pan', text: texto + ' ' + ultimoEnlace });
-        return;
-      }
-      if (navigator.share) { await navigator.share({ title: 'Una guagua de pan', text: texto, url: ultimoEnlace }); return; }
-    } catch (e) {
-      if (e && e.name === 'AbortError') return;
+  $('#r-compartir').addEventListener('click', () => {
+    const pr = preparado;
+    if (!pr) return;
+    const titulo = 'Una guagua de pan';
+    let promesa = null;
+    if (navigator.canShare && navigator.canShare({ files: [pr.archivo] })) {
+      promesa = navigator.share({ files: [pr.archivo], title: titulo, text: pr.texto + ' ' + pr.url });
+    } else if (navigator.share) {
+      promesa = navigator.share({ title: titulo, text: pr.texto, url: pr.url });
     }
-    copiar(ultimoEnlace);
+    if (!promesa) { copiar(pr.url); despues(pr); return; }
+    promesa.then(() => despues(pr)).catch((e) => {
+      if (e && e.name === 'AbortError') return;
+      avisa('Este navegador no dejó compartir. Usa WhatsApp, copia el enlace o descarga la imagen.', 'error');
+    });
   });
-  $('#r-whatsapp').addEventListener('click', async () => {
-    await listo();
-    window.open('https://wa.me/?text=' + encodeURIComponent(textoRegalo() + ' ' + ultimoEnlace), '_blank', 'noopener');
+  $('#r-whatsapp').addEventListener('click', () => {
+    const pr = preparado;
+    if (!pr) return;
+    window.open('https://wa.me/?text=' + encodeURIComponent(pr.texto + ' ' + pr.url), '_blank', 'noopener');
+    despues(pr);
   });
-  $('#r-copiar').addEventListener('click', async () => { await listo(); copiar(ultimoEnlace); });
-  $('#r-descargar').addEventListener('click', async () => {
-    await listo();
+  $('#r-copiar').addEventListener('click', () => {
+    const pr = preparado;
+    if (!pr) return;
+    copiar(pr.url); despues(pr);
+  });
+  $('#r-descargar').addEventListener('click', () => {
+    const pr = preparado;
+    if (!pr) return;
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(await aBlob(ultimaTarjeta));
-    a.download = 'guagua-' + (estado.n || 'de-pan').toLowerCase().replace(/[^a-z0-9áéíóúñü]+/gi, '-') + '.png';
+    a.href = URL.createObjectURL(pr.blob);
+    a.download = pr.nombre;
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    despues(pr);
   });
 }
 
@@ -2311,7 +2445,7 @@ function abrirPieza(item, e) {
   $('#p-editar').hidden = item.t !== 'mia';
   window.malDS.abrir('#d-pieza');
   if (!visorPieza) visorPieza = new Visor($('#p-lienzo'));
-  visorPieza.giro = -0.25; visorPieza.dePie = 1; visorPieza.cabeceo = 0.2;
+  visorPieza.giro = -0.25; Object.assign(visorPieza, posturaDe(e));
   visorPieza.cargar(e);
   visorPieza.medir();
 }
@@ -2326,20 +2460,17 @@ function montarVitrina() {
     $('#d-pieza').close();
     if ($('#d-vitrina').open) $('#d-vitrina').close();
   });
-  $('#p-regalar').addEventListener('click', async () => {
-    const { item } = piezaActual;
-    let enlace;
-    if (item.g) enlace = direccion() + '#g=' + item.g;
-    else {
-      const r = await enlaceDeRegalo(item.e);
-      enlace = r.url;
-      if (r.id && item.t === 'mia') { item.g = r.id; guardarEnVitrina(item); }
-    }
+  $('#p-regalar').addEventListener('click', () => {
+    const { item, e } = piezaActual;
+    // sin esperar a la red: el enlace corto si ya existe, si no el largo
+    const enlace = direccion() + (item.g ? '#g=' + item.g : '#r=' + item.e);
     if (navigator.share) {
-      try { await navigator.share({ title: 'Una guagua de pan', text: textoRegalo(piezaActual.e), url: enlace }); return; }
-      catch (err) { if (err && err.name === 'AbortError') return; }
+      navigator.share({ title: 'Una guagua de pan', text: textoRegalo(e), url: enlace })
+        .catch((err) => { if (!err || err.name !== 'AbortError') copiar(enlace); });
+    } else copiar(enlace);
+    if (!item.g && item.t === 'mia' && nube.actual()) {
+      enlaceDeRegalo(item.e).then((r) => { if (r.id) { item.g = r.id; guardarEnVitrina(item); } });
     }
-    copiar(enlace);
   });
   $('#p-borrar').addEventListener('click', () => {
     if (!confirm('¿Quitar esta guagua de la vitrina? No se puede deshacer.')) return;
@@ -2402,7 +2533,7 @@ async function recibir(cod, regalo) {
       },
     });
   }
-  visorRegalo.giro = -0.25; visorRegalo.dePie = 1; visorRegalo.cabeceo = 0.2;
+  visorRegalo.giro = -0.25; Object.assign(visorRegalo, posturaDe(e));
   visorRegalo.ambiente('decorar');
   visorRegalo.cargar(e);
   visorRegalo.medir();

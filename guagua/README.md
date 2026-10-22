@@ -4,8 +4,8 @@ Una guagua de pan en 3D, en tres actos, para regalar por el Día de Difuntos:
 
 1. **Amasar.** Bolitas (arrastrar hacia el lado las hace anchas; hacia arriba, altas) y chorizos
    (se estiran con el dedo). Lo que cae encima de otra pieza se pega. Hay moldes: guagua,
-   guagua tradicional (más larga, con colita cónica), guaguau (un perrito echado), caballito,
-   chanchito, gallinita y la lata vacía.
+   guagua tradicional (más larga, con colita cónica), guaguau (un perrito echado, que se
+   decora visto desde arriba), caballito, chanchito, gallinita y la lata vacía.
 2. **Hornear.** La masa se infla y se dora en seis segundos; hay que sacarla en su punto. Antes
    queda blanca, después se quema, y la panadera lo comenta.
 3. **Decorar.** Manga de crema con pincel y tres boquillas, rosetas, grageas, pasas, carita y
@@ -15,6 +15,11 @@ Una guagua de pan en 3D, en tres actos, para regalar por el Día de Difuntos:
    invitación a colada morada o la tarea de pasarla; quien la recibe responde con un toque por
    WhatsApp. Una guagua dedicada a quien ya no está sale con su velita, y la tarjeta invita a
    que otros dediquen la suya. En la receta: `t: 'm'` si es dedicada y `l` el vale (1, 2 o 3).
+
+La imagen para compartir sale en dos formatos, historia (9:16) y publicación (1:1). Es un
+bodegón en 3D: la guagua en su plato junto a una taza de colada morada (o una velita, si es
+dedicada). La tarjeta, el archivo y el enlace se preparan apenas cambia algo, porque los
+navegadores solo dejan abrir la hoja de compartir o WhatsApp si el toque no espera a la red.
 
 Vive en `franciscombp.github.io/mal/guagua/` y la carpeta se basta sola: Three.js va en
 `vendor/` (r170, licencia MIT en `vendor/LICENSE-three.txt`) y el sistema de diseño se pide
