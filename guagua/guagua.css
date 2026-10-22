@@ -138,9 +138,6 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 /* las filas que dependen de la herramienta */
 .juego:not([data-herramienta="chorizo"]) .dock__fila[data-con="chorizo"],
 .juego[data-herramienta="chorizo"] .dock__fila[data-sin="chorizo"],
-.juego[data-herramienta="tenir"] .dock__fila[data-sin="chorizo"],
-.juego[data-herramienta="mover"] .dock__fila[data-con="masa"],
-.juego[data-herramienta="quitar"] .dock__fila[data-con="masa"],
 .juego:not([data-herramienta="manga"]):not([data-herramienta="roseta"]) .dock__fila[data-con="manga roseta"],
 .juego:not([data-herramienta="carita"]) .dock__fila[data-con="carita"],
 .juego:not([data-herramienta="grageas"]) .dock__fila[data-con="grageas"],

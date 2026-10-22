@@ -73,6 +73,7 @@ const NOMBRES = {
   gallinita: ['Cocoroca', 'Pinta', 'Pollita', 'Josefina', 'Plumita', 'Clueca'],
   libre: ['Criatura', 'Animalito', 'Sorpresa', 'Bichito', 'Invento', 'Misterio'],
 };
+NOMBRES.envuelta = NOMBRES.guagua;
 const MENSAJES = [
   'Para que este 2 de noviembre no te falte guagua.',
   'Con colada morada sabe mejor. Te la mando para acompañar.',
@@ -144,8 +145,17 @@ const MOLDES = {
   // con la cabeza redonda en la punta.
   guagua() {
     return [
-      chorizo(0.6, [V(0, 0.5, 0), V(0, 2.62, 0)]),       // un solo pan alargado, el cuerpo envuelto
-      bolita(V(0, 2.98, 0.06), V(0.52, 0.54, 0.47)),        // la cabeza en la punta, pegada al cuerpo
+      chorizo(0.5, [V(0, 0.52, 0), V(0, 1.75, 0)]),       // el bulto de los pies, redondeado
+      bolita(V(0, 2.15, 0), V(0.62, 0.95, 0.46)),          // el cuerpo envuelto, con hombros
+      bolita(V(0, 3.08, 0), V(0.27, 0.14, 0.27)),          // el cuello
+      bolita(V(0, 3.48, 0.04), V(0.46, 0.48, 0.42)),       // la cabeza
+    ];
+  },
+  // la de panadería: un solo pan alargado con la cabeza en la punta
+  envuelta() {
+    return [
+      chorizo(0.6, [V(0, 0.5, 0), V(0, 2.62, 0)]),
+      bolita(V(0, 2.98, 0.06), V(0.52, 0.54, 0.47)),
     ];
   },
   caballito() {
@@ -1113,7 +1123,9 @@ function sano(d) {
   const num = (v) => typeof v === 'number' && isFinite(v) && Math.abs(v) <= 3000;
   const txt = (v, n) => (typeof v === 'string' ? v.slice(0, n) : '');
   let puntos = 0;
-  const lista = (x, max) => (Array.isArray(x) ? x.slice(0, max).filter((y) => Array.isArray(y) && y.every(num)) : []);
+  // la semilla de las grageas es un entero grande; lo demás, coordenadas
+  const semilla = (y, v, i) => i === 1 && y[0] === 2 && Number.isInteger(v) && v >= 0 && v < 2 ** 31;
+  const lista = (x, max) => (Array.isArray(x) ? x.slice(0, max).filter((y) => Array.isArray(y) && y.every((v, i) => num(v) || semilla(y, v, i))) : []);
   const a = lista(d.a, MAX_PIEZAS).filter((p) => {
     puntos += p.length;
     if (p[0] === 0) return (p.length === 8 || (p.length === 9 && MASAS[p[8]] && Number.isInteger(p[8]))) && p[4] > 0 && p[5] > 0 && p[6] > 0;
@@ -1168,7 +1180,7 @@ function veredicto(e) {
   else if (grag > trazos + rosetas) frase = 'Llena de grageas: alegre y de fiesta.';
   else if (colores === 1 && trazos > 4) frase = 'Sobria y elegante, de un solo color.';
   else if (e.f === 'libre' && e.a.length > 3) frase = 'Una figura propia, hecha a mano. Así empiezan las tradiciones.';
-  else if (!cara && e.f === 'guagua') frase = 'Bonita, aunque le falta la carita. Toca su cara con Carita y píntale ojos y sonrisa.';
+  else if (!cara && (e.f === 'guagua' || e.f === 'envuelta')) frase = 'Bonita, aunque le falta la carita. Toca su cara con Carita y píntale ojos y sonrisa.';
   else if (e.f === 'caballito') frase = 'Un caballito bien adornado, listo para la mesa.';
   else frase = elige([
     'Muy bonita. Así se decoraban en casa de la abuela.',
@@ -1232,8 +1244,8 @@ function colada(ctx, x, y, s) {
   }
   ctx.restore();
 }
-const queEs = (e) => ({ guagua: 'una guagua', caballito: 'un caballito', chanchito: 'un chanchito', gallinita: 'una gallinita' }[e.f] || 'un animalito');
-const nombreDe = (e) => e.n || ({ guagua: 'Guagua', caballito: 'Caballito', chanchito: 'Chanchito', gallinita: 'Gallinita' }[e.f] || 'Animalito');
+const queEs = (e) => ({ guagua: 'una guagua', envuelta: 'una guagua', caballito: 'un caballito', chanchito: 'un chanchito', gallinita: 'una gallinita' }[e.f] || 'un animalito');
+const nombreDe = (e) => e.n || ({ guagua: 'Guagua', envuelta: 'Guagua', caballito: 'Caballito', chanchito: 'Chanchito', gallinita: 'Gallinita' }[e.f] || 'Animalito');
 async function tarjeta(e) {
   try { await Promise.all([document.fonts.load('800 80px Syne'), document.fonts.load('600 30px Inter'), document.fonts.load('italic 400 30px Inter')]); } catch (err) { /* sin fuentes, igual sale */ }
   const c = lienzo(1080, 1350);
@@ -1753,7 +1765,7 @@ function montarTaller() {
   }));
   grupoDe('data-mano', 'mano');
   const masas = $('#masas');
-  MASAS.forEach((ms, i) => {
+  if (masas) MASAS.forEach((ms, i) => {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'crema masa';
     b.style.setProperty('--crema', ms.dorado);
