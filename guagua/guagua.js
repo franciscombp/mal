@@ -220,13 +220,36 @@ function tubo(puntos, r, estrias = 6) {
   g.computeVertexNormals();
   return g;
 }
+/* La masa se hornea acostada en la lata. La figura se arma de frente (x a lo
+   ancho, y a lo largo, z hacia arriba) y todo lo que queda bajo z = PISO se
+   aplasta contra la lata con una curva suave (softplus): la base queda plana
+   y el canto se redondea, como la masa que se asienta con su propio peso. */
+const PISO = -0.3, BLANDO = 0.07;
+function aplanar(g) {
+  const p = g.attributes.position, n = g.attributes.normal;
+  for (let i = 0; i < p.count; i++) {
+    const d = p.getZ(i) - PISO;
+    if (d > BLANDO * 8) continue;
+    const pendiente = 1 / (1 + Math.exp(-d / BLANDO));
+    p.setZ(i, PISO + BLANDO * Math.log1p(Math.exp(d / BLANDO)));
+    if (n) {                       // la normal sigue a la superficie aplastada
+      const nx = n.getX(i) * pendiente, ny = n.getY(i) * pendiente, nz = n.getZ(i);
+      const l = Math.hypot(nx, ny, nz);
+      if (l < 1e-6) n.setXYZ(i, 0, 0, -1); else n.setXYZ(i, nx / l, ny / l, nz / l);
+    }
+  }
+  p.needsUpdate = true;
+  if (n) n.needsUpdate = true;
+  g.computeBoundingBox(); g.computeBoundingSphere();
+  return g;
+}
 function geometriaPieza(p) {
-  if (p[0] === 0) return elipsoide(V(p[1], p[2], p[3]).divideScalar(Q), V(p[4], p[5], p[6]).divideScalar(Q), p[7] / 100);
+  if (p[0] === 0) return aplanar(elipsoide(V(p[1], p[2], p[3]).divideScalar(Q), V(p[4], p[5], p[6]).divideScalar(Q), p[7] / 100));
   const pts = [];
   for (let i = 2; i < p.length; i += 3) pts.push(V(p[i], p[i + 1], p[i + 2]).divideScalar(Q));
   const r = p[1] / Q;
-  if (pts.length < 2) return elipsoide(pts[0], V(r * 1.2, r * 1.2, r * 1.1));
-  return tubo(pts, r, 0);
+  if (pts.length < 2) return aplanar(elipsoide(pts[0], V(r * 1.2, r * 1.2, r * 1.1)));
+  return aplanar(tubo(pts, r, 0));
 }
 function moverPieza(p, dx, dy) {
   const o = p.slice();
@@ -235,7 +258,7 @@ function moverPieza(p, dx, dy) {
   return o;
 }
 /* El dorado del horno, horneado en los vértices: más tostado en los
-   cantos y abajo, más claro donde le daba el calor de frente. */
+   cantos y en la base que tocó la lata, más claro arriba. */
 const TOSTADO = new THREE.Color('#6a300c'), DORADO = new THREE.Color('#d8913f');
 function dorar(g) {
   const n = g.attributes.normal, p = g.attributes.position;
@@ -243,7 +266,7 @@ function dorar(g) {
   const L = V(0.25, 0.55, 0.8).normalize(), c = new THREE.Color();
   for (let i = 0; i < n.count; i++) {
     const t = 0.5 + 0.5 * (n.getX(i) * L.x + n.getY(i) * L.y + n.getZ(i) * L.z);
-    const piso = limita(p.getY(i) / 0.35, 0, 1);
+    const piso = limita((p.getZ(i) - PISO) / 0.3, 0, 1);
     c.copy(TOSTADO).lerp(DORADO, THREE.MathUtils.smoothstep(t, 0.1, 0.95) * (0.55 + 0.45 * piso));
     col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b;
   }
@@ -485,7 +508,7 @@ class Visor {
     sol.position.set(3, 7, 6);
     sol.castShadow = true;
     sol.shadow.mapSize.set(1024, 1024);
-    Object.assign(sol.shadow.camera, { left: -3, right: 3, top: 4.5, bottom: -1, near: 1, far: 20 });
+    Object.assign(sol.shadow.camera, { left: -3.4, right: 3.4, top: 3.4, bottom: -3.4, near: 1, far: 20 });
     sol.shadow.bias = -0.0004; sol.shadow.normalBias = 0.02; sol.shadow.radius = 4;
     s.add(sol);
     this.sol = sol;
@@ -499,20 +522,20 @@ class Visor {
     if (op.plato !== false) {
       // el plato, para decorar y para servir
       this.plato = new THREE.Group();
-      const loza = new THREE.Mesh(new THREE.CylinderGeometry(2.3, 2.05, 0.12, 72),
+      const loza = new THREE.Mesh(new THREE.CylinderGeometry(2.65, 2.4, 0.12, 72),
         new THREE.MeshPhysicalMaterial({ color: '#fbf7f2', roughness: 0.25, clearcoat: 0.8 }));
       loza.position.y = -0.06; loza.receiveShadow = true;
-      const filete = new THREE.Mesh(new THREE.TorusGeometry(2.12, 0.025, 8, 96),
+      const filete = new THREE.Mesh(new THREE.TorusGeometry(2.47, 0.025, 8, 96),
         new THREE.MeshStandardMaterial({ color: '#e01b6a', roughness: 0.4 }));
       filete.rotation.x = Math.PI / 2; filete.position.y = 0.005;
       this.plato.add(loza, filete);
       // la lata, para amasar y para el horno
       this.lata = new THREE.Group();
       const metal = new THREE.MeshStandardMaterial({ color: '#5b5f66', roughness: 0.45, metalness: 0.75 });
-      const fondo = new THREE.Mesh(new THREE.BoxGeometry(4.8, 0.06, 2.6), metal);
+      const fondo = new THREE.Mesh(new THREE.BoxGeometry(4.4, 0.06, 5), metal);
       fondo.position.y = -0.03; fondo.receiveShadow = true;
       this.lata.add(fondo);
-      [[0, 1.3, 4.8, 0.06], [0, -1.3, 4.8, 0.06], [2.4, 0, 0.06, 2.6], [-2.4, 0, 0.06, 2.6]].forEach(([x, z, w, d]) => {
+      [[0, 2.5, 4.4, 0.06], [0, -2.5, 4.4, 0.06], [2.2, 0, 0.06, 5], [-2.2, 0, 0.06, 5]].forEach(([x, z, w, d]) => {
         const b = new THREE.Mesh(new THREE.BoxGeometry(w, 0.16, d), metal);
         b.position.set(x, 0.02, z);
         this.lata.add(b);
@@ -530,15 +553,21 @@ class Visor {
     this.figura = new THREE.Group();
     this.pan = new THREE.Group();
     this.adornos = new THREE.Group();
-    this.figura.add(this.pan, this.adornos);
+    // `figura` gira como un plato giratorio; `acostada` es la masa boca arriba
+    // sobre la lata: su z local apunta al cielo y su base (z = PISO) toca y = 0.
+    this.acostada = new THREE.Group();
+    this.acostada.rotation.x = -Math.PI / 2;
+    this.acostada.position.set(0, -PISO, 1.6);
+    this.acostada.add(this.pan, this.adornos);
+    this.figura.add(this.acostada);
     s.add(this.figura);
 
     this.objetivo = V(0, 1.9, 0);
     this.giro = op.giro != null ? op.giro : -0.25;
-    this.cabeceo = 0.2;
+    this.cabeceo = 0.9;            // desde arriba y un poco de frente: así se mira una lata
     this.dist = 10.5;
     this.zoom = 1;
-    this.necesita = { alto: 2.4, ancho: 2.4 };          // lo que hay que ver, en medias medidas
+    this.necesita = { radio: 2.4, grosor: 0.7 };       // lo que hay que ver: el largo mayor y el alto
     this.margen = { arriba: 0, abajo: 0, derecha: 0 };   // lo que tapan la barra y el dock
     this.piezas = [];
     this.ops = []; this.objetos = []; this.extra = [];
@@ -574,6 +603,7 @@ class Visor {
     this.U.uCoccion.value = k;
     const inflado = 1 + 0.05 * limita(k, 0, 1);
     this.pan.scale.set(inflado, inflado, inflado);
+    this.pan.position.z = PISO * (1 - inflado);      // se infla sin hundirse en la lata
     this.brasa.intensity = encendido ? 9 : 0;
     this.cielo.color.set(encendido ? '#ffb070' : '#fff1dc');
     this.dibujar();
@@ -622,7 +652,7 @@ class Visor {
       this.piezaPrevia = new THREE.Mesh(geometriaPieza(p), this.mat.previa);
       this.piezaPrevia.castShadow = true;
       this.figura.updateMatrixWorld();
-      this.piezaPrevia.applyMatrix4(this.figura.matrixWorld);
+      this.piezaPrevia.applyMatrix4(this.acostada.matrixWorld);
       this.scene.add(this.piezaPrevia);
     }
     this.dibujar();
@@ -633,13 +663,12 @@ class Visor {
     const caja = new THREE.Box3();
     this.piezas.forEach((p) => caja.union(new THREE.Box3().setFromBufferAttribute(geometriaPieza(p).attributes.position)));
     this.zoom = 1;
-    if (caja.isEmpty()) { this.objetivo.set(0, 1.6, 0); this.necesita = { alto: 2.4, ancho: 2.4 }; return; }
+    this.objetivo.set(0, 0.3, 0);
+    if (caja.isEmpty()) { this.acostada.position.set(0, -PISO, 1.6); this.necesita = { radio: 2.4, grosor: 0.7 }; return; }
     const c = caja.getCenter(V()), t = caja.getSize(V());
-    this.objetivo.set(0, c.y, 0);
-    this.necesita = {
-      alto: t.y / 2 + 0.55,
-      ancho: Math.max(Math.abs(caja.min.x), Math.abs(caja.max.x), Math.abs(caja.min.z), Math.abs(caja.max.z)) + 0.45,
-    };
+    // el centro de la figura, sobre el eje del plato giratorio
+    this.acostada.position.set(-c.x, -PISO, c.y);
+    this.necesita = { radio: Math.max(t.x, t.y) / 2 + 0.45, grosor: Math.max(0.5, caja.max.z - PISO) };
   }
   malla(g, m) {
     const o = new THREE.Mesh(g, m);
@@ -760,8 +789,8 @@ class Visor {
     if (!h) return null;
     const n = h.face.normal.clone().transformDirection(h.object.matrixWorld);
     if (n.dot(dir) > 0) n.negate();
-    const inv = this.figura.quaternion.clone().invert();
-    return { p: this.figura.worldToLocal(h.point.clone()), n: n.applyQuaternion(inv).normalize(), pieza: h.object.userData.pieza };
+    const inv = this.acostada.getWorldQuaternion(new THREE.Quaternion()).invert();
+    return { p: this.acostada.worldToLocal(h.point.clone()), n: n.applyQuaternion(inv).normalize(), pieza: h.object.userData.pieza };
   }
   apuntar(ev) {
     const r = this.canvas.getBoundingClientRect();
@@ -776,23 +805,19 @@ class Visor {
   }
   /* Donde el dedo cruza el plano z = cte de la figura (para amasar en el aire). */
   alPlano(ev, z) {
-    const ray = this.apuntar(ev).applyMatrix4(this.figura.matrixWorld.clone().invert());
+    const ray = this.apuntar(ev).applyMatrix4(this.acostada.matrixWorld.clone().invert());
     return ray.intersectPlane(new THREE.Plane(V(0, 0, 1), -z), V());
   }
   /* Un rayo en coordenadas de la figura: sirve para amoldar la crema a la superficie. */
   rayoLocal(p, dir, soloPan) {
     this.figura.updateMatrixWorld();
-    const o = this.figura.localToWorld(p.clone());
-    const d = dir.clone().applyQuaternion(this.figura.quaternion).normalize();
+    const o = this.acostada.localToWorld(p.clone());
+    const d = dir.clone().applyQuaternion(this.acostada.getWorldQuaternion(new THREE.Quaternion())).normalize();
     return this.rayo(o, d, soloPan);
   }
   /* Para «Sorpréndeme»: tirar un rayo de frente, como si la figura no estuviera girada. */
   deFrente(x, y, soloPan = true) {
-    const g = this.figura.rotation.y;
-    this.figura.rotation.y = 0; this.figura.updateMatrixWorld();
-    const h = this.rayo(V(x, y, 10), V(0, 0, -1), soloPan);
-    this.figura.rotation.y = g; this.figura.updateMatrixWorld();
-    return h;
+    return this.rayoLocal(V(x, y, 10), V(0, 0, -1), soloPan);
   }
 
   /* Los gestos, pensados para el dedo:
@@ -851,7 +876,7 @@ class Visor {
       }
       if (modo === 'gira') {
         this.giro += dx * 0.012;
-        this.cabeceo = limita(this.cabeceo + dy * 0.006, -0.05, 0.95);
+        this.cabeceo = limita(this.cabeceo + dy * 0.006, 0.3, 1.45);
         this.dibujar();
       } else if (modo === 'pinta') {
         this.op.arrastra(e);
@@ -859,7 +884,7 @@ class Visor {
         const k = par();
         if (!this.fijo) {
           this.giro += (k.x - gesto.x) * 0.011;
-          this.cabeceo = limita(this.cabeceo + (k.y - gesto.y) * 0.006, -0.05, 0.95);
+          this.cabeceo = limita(this.cabeceo + (k.y - gesto.y) * 0.006, 0.3, 1.45);
         }
         this.zoom = limita(gesto.zoom * gesto.d / k.d, 0.45, 1.7);
         gesto.x = k.x; gesto.y = k.y;
@@ -916,8 +941,11 @@ class Visor {
     const m = this.margen;
     const libreW = Math.max(160, w - m.derecha), libreH = Math.max(160, h - m.arriba - m.abajo);
     const tan = Math.tan(THREE.MathUtils.degToRad(this.camara.fov / 2));
-    const dv = this.necesita.alto / tan * (h / libreH);
-    const dh = this.necesita.ancho / (tan * (w / h)) * (w / libreW);
+    // acostada, lo que se ve de alto depende de cuán desde arriba se mire
+    const { radio, grosor } = this.necesita;
+    const alto = radio * Math.sin(this.cabeceo) + grosor * Math.cos(this.cabeceo);
+    const dv = alto / tan * (h / libreH);
+    const dh = radio / (tan * (w / h)) * (w / libreW);
     this.dist = Math.max(dv, dh) * this.zoom;
     if (m.arriba || m.abajo || m.derecha) this.camara.setViewOffset(w, h, m.derecha / 2, (m.abajo - m.arriba) / 2, w, h);
     else if (this.camara.view) this.camara.clearViewOffset();
@@ -925,7 +953,7 @@ class Visor {
     this.camara.lookAt(o);
     // los mordiscos viven en la figura: se llevan al mundo en cada cuadro
     this.bocados().forEach((op, i) => {
-      const p = this.figura.localToWorld(V(op[1] / Q, op[2] / Q, op[3] / Q));
+      const p = this.acostada.localToWorld(V(op[1] / Q, op[2] / Q, op[3] / Q));
       this.U.uBocados.value[i].set(p.x, p.y, p.z, MORDIDA);
     });
   }
@@ -944,11 +972,11 @@ class Visor {
 /* ─── la foto: la misma guagua, de frente y sin plato ─────── */
 let estudio = null;
 function foto(e, w, h, extra) {
-  if (!estudio) estudio = new Visor(lienzo(w, h), { foto: true, plato: false, giro: -0.22 });
+  if (!estudio) estudio = new Visor(lienzo(w, h), { foto: true, plato: false, giro: 0 });
   estudio.renderer.setSize(w, h, false);
   estudio.camara.aspect = w / h;
   estudio.camara.updateProjectionMatrix();
-  estudio.cabeceo = 0.12;
+  estudio.cabeceo = 1.12;          // como una foto de la lata, desde arriba
   estudio.cargar(e);
   (extra || []).forEach((op) => estudio.extra.push(op));
   estudio.actualizarBocados();
@@ -1181,9 +1209,11 @@ async function tarjeta(e) {
   ctx.fillText(e.d ? 'Te regalo' : que.charAt(0).toUpperCase() + que.slice(1), 540, 196, 1000);
   ctx.fillText(e.d ? que : 'para ti', 540, 282, 1000);
   const alto = 780, ancho = alto * 0.8, gx = 540 - ancho / 2 - 60, gy = 300;
-  ctx.fillStyle = 'rgba(0,0,0,.35)';
-  ctx.beginPath(); ctx.ellipse(gx + ancho / 2, gy + alto - 70, ancho * 0.34, 24, 0, 0, Math.PI * 2); ctx.fill();
+  // vista desde arriba: la sombra sigue la silueta del pan, un poco corrida
+  ctx.save();
+  ctx.shadowColor = 'rgba(10,0,12,.55)'; ctx.shadowBlur = 36; ctx.shadowOffsetY = 18;
   ctx.drawImage(foto(e, 800, 1000), gx, gy, ancho, alto);
+  ctx.restore();
   colada(ctx, 870, 960, 0.9);
   const nombre = '«' + nombreDe(e) + '»';
   ctx.font = '800 46px Syne, Inter, system-ui, sans-serif';
@@ -1335,7 +1365,7 @@ function tocarMasa(ev) {
     estirarBolita(c);
   } else {
     const r = GROSORES[estado.grosor];
-    const p = hit ? hit.p.clone().addScaledVector(hit.n, -r * 0.35) : taller.alPlano(ev, 0);
+    const p = hit ? hit.p.clone().addScaledVector(hit.n, -r * 0.35) : taller.alPlano(ev, PISO + r * 0.8);
     if (!p) return true;
     amase = { mano, r, pts: [p] };
     taller.previaPieza(chorizo(r, amase.pts));
@@ -1348,7 +1378,7 @@ function estirarBolita(q) {
   // hacia el lado se hace ancha; hacia arriba, alta; en diagonal, redonda
   const rx = Math.max(dx, d * 0.6, 0.12), ry = Math.max(dy, d * 0.6, 0.12);
   const rz = Math.min(0.75, Math.min(rx, ry) * 0.7);
-  const z = amase.sobre ? c.z - rz * 0.35 : 0;
+  const z = amase.sobre ? c.z - rz * 0.35 : PISO + rz * 0.8;   // en la lata, apoyada
   amase.pieza = bolita(V(c.x, c.y, z), V(rx, ry, rz));
   taller.previaPieza(amase.pieza);
 }
@@ -1360,7 +1390,7 @@ function arrastrarMasa(ev) {
   } else if (amase.mano === 'chorizo') {
     const hit = taller.tocar(ev, true);
     const ultimo = amase.pts[amase.pts.length - 1];
-    const p = hit ? hit.p.clone().addScaledVector(hit.n, -amase.r * 0.35) : taller.alPlano(ev, 0);
+    const p = hit ? hit.p.clone().addScaledVector(hit.n, -amase.r * 0.35) : taller.alPlano(ev, PISO + amase.r * 0.8);
     if (!p || p.distanceTo(ultimo) < amase.r * 0.5 || amase.pts.length > 120) return;
     amase.pts.push(p);
     taller.previaPieza(chorizo(amase.r, amase.pts));
@@ -1380,7 +1410,7 @@ function soltarMasa() {
   if (m.mano === 'bolita' && m.pieza) {
     recordar();
     // un toque, sin estirar: una bolita mediana
-    const pieza = m.estirada ? m.pieza : (() => { const r = 0.3, z = m.sobre ? m.c.z - r * 0.25 : 0; return bolita(V(m.c.x, m.c.y, z), V(r, r, r * 0.75)); })();
+    const pieza = m.estirada ? m.pieza : (() => { const r = 0.3, z = m.sobre ? m.c.z - r * 0.25 : PISO + r * 0.6; return bolita(V(m.c.x, m.c.y, z), V(r, r, r * 0.75)); })();
     vibra();
     const a = estado.a.concat([pieza]);
     taller.ponerMasa(a); cambiarMasa(a);
@@ -1592,13 +1622,15 @@ function irA(etapa) {
   taller.ambiente(etapa);
   if (etapa === 'amasar') {
     taller.hornear(0, false);
-    taller.cabeceo = 0.12;
+    taller.cabeceo = 1.3;          // casi desde arriba, como sobre la mesa
     taller.girar(0, true);
+  } else if (etapa === 'horno') {
+    taller.cabeceo = 0.95;
   } else if (etapa === 'decorar') {
     taller.hornear(estado.k / 100, false);
-    taller.cabeceo = 0.2;
-    // de frente otra vez (el horno la deja dando vueltas), por el camino corto
-    taller.girar(-0.25 + Math.round((taller.giro + 0.25) / (Math.PI * 2)) * Math.PI * 2, true);
+    taller.cabeceo = 0.95;
+    // derecha otra vez (el horno la deja dando vueltas), por el camino corto
+    taller.girar(Math.round(taller.giro / (Math.PI * 2)) * Math.PI * 2, true);
   }
   requestAnimationFrame(medirTaller);
   guardarBorrador(); actualizarEtiqueta();
@@ -1997,7 +2029,7 @@ function abrirPieza(item, e) {
   $('#p-editar').hidden = item.t !== 'mia';
   window.malDS.abrir('#d-pieza');
   if (!visorPieza) visorPieza = new Visor($('#p-lienzo'));
-  visorPieza.giro = -0.25;
+  visorPieza.giro = 0;
   visorPieza.cargar(e);
   visorPieza.medir();
 }
@@ -2073,7 +2105,7 @@ async function recibir(cod, regalo) {
       },
     });
   }
-  visorRegalo.giro = -0.25;
+  visorRegalo.giro = 0;
   visorRegalo.ambiente('decorar');
   visorRegalo.cargar(e);
   visorRegalo.medir();
