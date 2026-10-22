@@ -108,14 +108,21 @@ function frenteDe(c, s, x, y) {      // la z de la cara de adelante de un elipso
 const CUERPO = { c: V(0, 1.463, 0), s: V(1.042, 1.463, 0.62) };
 const CABEZA = { c: V(0, 3.212, 0.03), s: V(0.72, 0.69, 0.52) };
 
+/* La guagua de la primera versión traía los brazos cruzados; solo se
+   usa para abrir los enlaces de entonces, que pueden tener crema encima. */
+function guaguaConBrazos() {
+  const brazos = [[[182, 372], [336, 452]], [[418, 372], [264, 452]]].map(([a, b]) => {
+    const A = G(a[0], a[1]), B = G(b[0], b[1]);
+    A.z = frenteDe(CUERPO.c, CUERPO.s, A.x, A.y) - 0.05; B.z = frenteDe(CUERPO.c, CUERPO.s, B.x, B.y) - 0.05;
+    return chorizo(30 * SG, [A, B]);
+  });
+  return MOLDES.guagua().concat(brazos);
+}
+
 const MOLDES = {
+  // la guagua simple: cuerpo y cabeza. Los brazos, si los quiere, se los amasa.
   guagua() {
-    const brazos = [[[182, 372], [336, 452]], [[418, 372], [264, 452]]].map(([a, b]) => {
-      const A = G(a[0], a[1]), B = G(b[0], b[1]);
-      A.z = frenteDe(CUERPO.c, CUERPO.s, A.x, A.y) - 0.05; B.z = frenteDe(CUERPO.c, CUERPO.s, B.x, B.y) - 0.05;
-      return chorizo(30 * SG, [A, B]);
-    });
-    return [bolita(CUERPO.c, CUERPO.s), bolita(CABEZA.c, CABEZA.s), ...brazos];
+    return [bolita(CUERPO.c, CUERPO.s), bolita(CABEZA.c, CABEZA.s)];
   },
   caballito() {
     const pata = (a, b, z) => chorizo(30 * SC, [C(a[0], a[1], z), C(b[0], b[1], z)]);
@@ -258,6 +265,43 @@ function poros() {
   _poros.repeat.set(4, 3);
   _poros.colorSpace = THREE.SRGBColorSpace;
   return _poros;
+}
+
+/* ─── el mantel bordado, con flores en anillos ─────────────
+   Se desvanece hacia el borde para fundirse con el fondo morado. */
+let _mantel = null;
+function mantel() {
+  if (_mantel) return _mantel;
+  const N = 1024, c = lienzo(N, N), x = c.getContext('2d'), M = N / 2;
+  x.fillStyle = '#5a1c5e'; x.fillRect(0, 0, N, N);
+  const hilos = ['#e01b6a', '#ffc93c', '#93c84a', '#8fd0f2', '#ff77ab'];
+  for (let a = 1; a <= 9; a++) {
+    const r = a * 54, n = Math.floor((Math.PI * 2 * r) / 52);
+    if (a % 2) {
+      for (let i = 0; i < n; i++) {
+        const t = (i / n) * Math.PI * 2, fx = M + Math.cos(t) * r, fy = M + Math.sin(t) * r;
+        x.fillStyle = hilos[(i + a) % hilos.length];
+        for (let k = 0; k < 5; k++) {
+          const q = (k / 5) * Math.PI * 2 + t;
+          x.beginPath(); x.arc(fx + Math.cos(q) * 7, fy + Math.sin(q) * 7, 5, 0, Math.PI * 2); x.fill();
+        }
+        x.fillStyle = '#ffe9a8';
+        x.beginPath(); x.arc(fx, fy, 3.5, 0, Math.PI * 2); x.fill();
+      }
+    } else {
+      x.strokeStyle = 'rgba(255,201,60,.55)'; x.lineWidth = 3; x.setLineDash([9, 7]);
+      x.beginPath(); x.arc(M, M, r, 0, Math.PI * 2); x.stroke();
+      x.setLineDash([]);
+    }
+  }
+  const g = x.createRadialGradient(M, M, M * 0.45, M, M, M);
+  g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+  x.globalCompositeOperation = 'destination-in';
+  x.fillStyle = g; x.fillRect(0, 0, N, N);
+  _mantel = new THREE.CanvasTexture(c);
+  _mantel.colorSpace = THREE.SRGBColorSpace;
+  _mantel.anisotropy = 8;
+  return _mantel;
 }
 
 /* ─── la carita de yeso ───────────────────────────────────────
@@ -472,8 +516,13 @@ class Visor {
         b.position.set(x, 0.02, z);
         this.lata.add(b);
       });
-      s.add(this.plato, this.lata);
-      this.usar('plato');
+      this.mantel = new THREE.Mesh(new THREE.CircleGeometry(9, 96),
+        new THREE.MeshStandardMaterial({ map: mantel(), transparent: true, roughness: 0.95, depthWrite: false }));
+      this.mantel.rotation.x = -Math.PI / 2;
+      this.mantel.position.y = -0.13;
+      this.mantel.receiveShadow = true;
+      s.add(this.mantel, this.plato, this.lata);
+      this.ambiente('decorar');
     }
 
     this.camara = new THREE.PerspectiveCamera(30, 0.8, 0.1, 60);
@@ -487,6 +536,9 @@ class Visor {
     this.giro = op.giro != null ? op.giro : -0.25;
     this.cabeceo = 0.2;
     this.dist = 10.5;
+    this.zoom = 1;
+    this.necesita = { alto: 2.4, ancho: 2.4 };          // lo que hay que ver, en medias medidas
+    this.margen = { arriba: 0, abajo: 0, derecha: 0 };   // lo que tapan la barra y el dock
     this.piezas = [];
     this.ops = []; this.objetos = []; this.extra = [];
     this.previa = null; this.piezaPrevia = null;
@@ -507,10 +559,14 @@ class Visor {
     this.camara.updateProjectionMatrix();
     this.dibujar();
   }
-  usar(cual) {
+  /* Se amasa y se hornea en la lata; se decora y se sirve en el plato,
+     sobre el mantel bordado. Dentro del horno no hay mantel. */
+  ambiente(etapa) {
     if (!this.plato) return;
-    this.plato.visible = cual === 'plato';
-    this.lata.visible = cual === 'lata';
+    this.plato.visible = etapa === 'decorar';
+    this.lata.visible = etapa !== 'decorar';
+    this.mantel.visible = etapa !== 'horno';
+    this.dibujar();
   }
   /* El horno: luz de brasa, la masa se infla y se dora. */
   hornear(k, encendido) {
@@ -575,13 +631,14 @@ class Visor {
   encuadrar() {
     const caja = new THREE.Box3();
     this.piezas.forEach((p) => caja.union(new THREE.Box3().setFromBufferAttribute(geometriaPieza(p).attributes.position)));
-    if (caja.isEmpty()) { this.objetivo.set(0, 1.6, 0); this.dist = 10.5; return; }
+    this.zoom = 1;
+    if (caja.isEmpty()) { this.objetivo.set(0, 1.6, 0); this.necesita = { alto: 2.4, ancho: 2.4 }; return; }
     const c = caja.getCenter(V()), t = caja.getSize(V());
     this.objetivo.set(0, c.y, 0);
-    const vert = (t.y / 2 + 0.9) / Math.tan(THREE.MathUtils.degToRad(15));
-    const horiz = (Math.max(Math.abs(caja.min.x), Math.abs(caja.max.x), Math.abs(caja.min.z), Math.abs(caja.max.z)) + 0.7)
-      / (Math.tan(THREE.MathUtils.degToRad(15)) * Math.min(1, this.camara.aspect || 0.8));
-    this.dist = limita(Math.max(vert, horiz), 6, 14);
+    this.necesita = {
+      alto: t.y / 2 + 0.55,
+      ancho: Math.max(Math.abs(caja.min.x), Math.abs(caja.max.x), Math.abs(caja.min.z), Math.abs(caja.max.z)) + 0.45,
+    };
   }
   malla(g, m) {
     const o = new THREE.Mesh(g, m);
@@ -730,55 +787,100 @@ class Visor {
     return h;
   }
 
+  /* Los gestos, pensados para el dedo:
+       · un dedo sobre la figura: amasa, pinta o muerde (lo decide `op.toca`);
+       · un dedo fuera de ella: gira (salvo al amasar, que es de frente);
+       · dos dedos: giran y acercan a la vez, como en cualquier app de 3D.
+     El primer dedo espera un instante antes de pintar: si en ese rato
+     llega el segundo, era un gesto y no se mancha nada. Con el ratón no
+     se espera: el clic derecho gira y la rueda acerca.                 */
   gestos() {
     const c = this.canvas, ptrs = new Map();
-    let modo = null, pellizco = null;
-    const separacion = () => { const [a, b] = [...ptrs.values()]; return Math.hypot(a.x - b.x, a.y - b.y); };
+    let modo = null, gesto = null, espera = null;
+    const ESPERA = 110, HOLGURA = 9;
+    const copia = (e) => ({ clientX: e.clientX, clientY: e.clientY, pointerId: e.pointerId, pointerType: e.pointerType });
+    const par = () => {
+      const [a, b] = [...ptrs.values()];
+      return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, d: Math.max(10, Math.hypot(a.x - b.x, a.y - b.y)) };
+    };
+    const decidir = (e) => {
+      if (espera) { clearTimeout(espera.t); espera = null; }
+      if (this.op.toca && this.op.toca(e)) { modo = this.op.arrastra ? 'pinta' : 'nada'; return; }
+      modo = this.fijo ? 'nada' : 'gira';
+      if (modo === 'gira') c.classList.add('girando');
+    };
     c.addEventListener('contextmenu', (e) => e.preventDefault());
     c.addEventListener('pointerdown', (e) => {
       e.preventDefault();
       c.setPointerCapture(e.pointerId);
       ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
       if (ptrs.size === 2) {
+        if (espera) { clearTimeout(espera.t); espera = null; }
         if (modo === 'pinta' && this.op.cancela) this.op.cancela();
-        modo = 'pellizco'; pellizco = { d: separacion(), dist: this.dist };
+        modo = 'dos'; gesto = Object.assign(par(), { zoom: this.zoom });
         return;
       }
       if (ptrs.size > 2) return;
-      if (e.button === 2) { modo = this.fijo ? 'nada' : 'gira'; return; }
-      if (this.op.toca && this.op.toca(e)) { modo = this.op.arrastra ? 'pinta' : 'nada'; return; }
-      modo = this.fijo ? 'nada' : 'gira';
-      if (modo === 'gira') c.classList.add('girando');
+      if (e.pointerType === 'mouse') {
+        if (e.button === 2) { modo = this.fijo ? 'nada' : 'gira'; return; }
+        decidir(e);
+        return;
+      }
+      modo = 'espera';
+      const ini = copia(e);
+      espera = { e: ini, t: setTimeout(() => { if (modo === 'espera') decidir(ini); }, ESPERA) };
     });
     c.addEventListener('pointermove', (e) => {
       const prev = ptrs.get(e.pointerId);
       if (!prev) return;
       const dx = e.clientX - prev.x, dy = e.clientY - prev.y;
       ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (modo === 'espera') {
+        if (Math.hypot(e.clientX - espera.e.clientX, e.clientY - espera.e.clientY) < HOLGURA) return;
+        decidir(espera.e);
+        if (modo === 'pinta') this.op.arrastra(e);
+        return;
+      }
       if (modo === 'gira') {
         this.giro += dx * 0.012;
         this.cabeceo = limita(this.cabeceo + dy * 0.006, -0.05, 0.95);
         this.dibujar();
       } else if (modo === 'pinta') {
         this.op.arrastra(e);
-      } else if (modo === 'pellizco' && ptrs.size === 2) {
-        this.dist = limita(pellizco.dist * pellizco.d / Math.max(10, separacion()), 4.5, 15);
+      } else if (modo === 'dos' && ptrs.size === 2) {
+        const k = par();
+        if (!this.fijo) {
+          this.giro += (k.x - gesto.x) * 0.011;
+          this.cabeceo = limita(this.cabeceo + (k.y - gesto.y) * 0.006, -0.05, 0.95);
+        }
+        this.zoom = limita(gesto.zoom * gesto.d / k.d, 0.45, 1.7);
+        gesto.x = k.x; gesto.y = k.y;
         this.dibujar();
       }
     });
     const suelta = (e) => {
       if (!ptrs.has(e.pointerId)) return;
       ptrs.delete(e.pointerId);
-      if (modo === 'pinta' && this.op.suelta) this.op.suelta(e);
+      if (modo === 'espera') {                        // fue un toque
+        decidir(espera.e);
+        if (modo === 'pinta' && this.op.suelta) this.op.suelta(e);
+        modo = null;
+      } else if (modo === 'pinta' && this.op.suelta) this.op.suelta(e);
       if (!ptrs.size) modo = null;
-      else if (modo === 'pellizco') modo = 'nada';
+      else if (modo === 'dos') modo = 'nada';
       c.classList.remove('girando');
     };
     c.addEventListener('pointerup', suelta);
-    c.addEventListener('pointercancel', suelta);
+    c.addEventListener('pointercancel', (e) => {
+      if (espera) { clearTimeout(espera.t); espera = null; }
+      if (modo === 'pinta' && this.op.cancela) this.op.cancela();
+      modo = 'nada';
+      ptrs.delete(e.pointerId);
+      if (!ptrs.size) modo = null;
+    });
     c.addEventListener('wheel', (e) => {
       e.preventDefault();
-      this.dist = limita(this.dist * (1 + e.deltaY * 0.001), 4.5, 15);
+      this.zoom = limita(this.zoom * (1 + e.deltaY * 0.001), 0.45, 1.7);
       this.dibujar();
     }, { passive: false });
   }
@@ -794,10 +896,23 @@ class Visor {
   }
 
   /* ─── pintar ───────────────────────────────────────────── */
+  /* La cámara encuadra lo que hay en el hueco que dejan libre la barra y
+     el dock, no en toda la pantalla: el centro se corre con `setViewOffset`
+     y la distancia crece lo que haga falta para que entre entero. */
   ubicar() {
     const o = this.objetivo;
     this.figura.rotation.y = this.giro;
     this.figura.updateMatrixWorld();
+    const w = (this.op.foto ? this.canvas.width : this.canvas.clientWidth) || 800;
+    const h = (this.op.foto ? this.canvas.height : this.canvas.clientHeight) || 1000;
+    const m = this.margen;
+    const libreW = Math.max(160, w - m.derecha), libreH = Math.max(160, h - m.arriba - m.abajo);
+    const tan = Math.tan(THREE.MathUtils.degToRad(this.camara.fov / 2));
+    const dv = this.necesita.alto / tan * (h / libreH);
+    const dh = this.necesita.ancho / (tan * (w / h)) * (w / libreW);
+    this.dist = Math.max(dv, dh) * this.zoom;
+    if (m.arriba || m.abajo || m.derecha) this.camara.setViewOffset(w, h, m.derecha / 2, (m.abajo - m.arriba) / 2, w, h);
+    else if (this.camara.view) this.camara.clearViewOffset();
     this.camara.position.set(o.x, o.y + Math.sin(this.cabeceo) * this.dist, o.z + Math.cos(this.cabeceo) * this.dist);
     this.camara.lookAt(o);
     // los mordiscos viven en la figura: se llevan al mundo en cada cuadro
@@ -901,7 +1016,7 @@ function deLaPrimeraHornada(d, o) {
     pasa(272, 188); pasa(328, 188); pasa(300, 214);
     for (let i = 0; i < 5; i++) pasa(270 + i * 15, 242 + Math.sin(i / 4 * Math.PI) * 9);
   }
-  return Object.assign({}, d, { v: 3, a: MOLDES[f](), k: 100, o: cara.concat(ops), f });
+  return Object.assign({}, d, { v: 3, a: f === 'guagua' ? guaguaConBrazos() : MOLDES[f](), k: 100, o: cara.concat(ops), f });
 }
 /* Lo que llega por un enlace lo escribió cualquiera: se filtra todo. */
 function sano(d) {
@@ -1218,7 +1333,7 @@ function arrastrarMasa(ev) {
   if (!amase) return;
   if (amase.mano === 'bolita') {
     const q = taller.alPlano(ev, amase.c.z);
-    if (q) estirarBolita(q);
+    if (q && Math.hypot(q.x - amase.c.x, q.y - amase.c.y) > 0.06) { amase.estirada = true; estirarBolita(q); }
   } else if (amase.mano === 'chorizo') {
     const hit = taller.tocar(ev, true);
     const ultimo = amase.pts[amase.pts.length - 1];
@@ -1241,11 +1356,15 @@ function soltarMasa() {
   taller.previaPieza(null);
   if (m.mano === 'bolita' && m.pieza) {
     recordar();
-    const a = estado.a.concat([m.pieza]);
+    // un toque, sin estirar: una bolita mediana
+    const pieza = m.estirada ? m.pieza : (() => { const r = 0.3, z = m.sobre ? m.c.z - r * 0.25 : 0; return bolita(V(m.c.x, m.c.y, z), V(r, r, r * 0.75)); })();
+    vibra();
+    const a = estado.a.concat([pieza]);
     taller.ponerMasa(a); cambiarMasa(a);
   } else if (m.mano === 'chorizo') {
     recordar();
     const p = m.pts.length > 1 ? chorizo(m.r, m.pts) : bolita(m.pts[0], V(m.r * 1.3, m.r * 1.3, m.r * 1.1));
+    vibra();
     const a = estado.a.concat([p]);
     taller.ponerMasa(a); cambiarMasa(a);
   } else if (m.mano === 'mover' && m.movido) {
@@ -1264,7 +1383,7 @@ function prenderHorno() {
   $('#horno-fin').hidden = true;
   $('#sacar').hidden = false;
   $('#sacar').disabled = false;
-  $('.mesa').classList.add('en-horno');
+  $('#taller').classList.add('en-horno');
   const t0 = performance.now();
   const paso = (t) => {
     if (!horneando) return;
@@ -1290,7 +1409,7 @@ function sacarDelHorno() {
   ding();
   const k = estado.k / 100;
   taller.hornear(k, false);
-  $('.mesa').classList.remove('en-horno');
+  $('#taller').classList.remove('en-horno');
   $('#sacar').hidden = true;
   $('#horno-fin').hidden = false;
   $('#horno-veredicto').textContent = punto(k).f;
@@ -1301,12 +1420,14 @@ function sacarDelHorno() {
 function apagarHorno() {
   if (horneando) cancelAnimationFrame(horneando);
   horneando = null;
-  $('.mesa').classList.remove('en-horno');
+  $('#taller').classList.remove('en-horno');
 }
 
 /* ─── 3. decorar ──────────────────────────────────────────── */
+const vibra = () => { if (navigator.vibrate) navigator.vibrate(8); };
 function fijar(op) {
   estado.o.push(op);
+  if (op[0] !== 0 && op[0] !== 2) vibra();
   taller.agregar(op);
   guardarBorrador();
   actualizarEtiqueta();
@@ -1370,24 +1491,52 @@ function soltarDecorar() {
 
 /* ─── las etapas ──────────────────────────────────────────── */
 const PISTAS = {
-  amasar: 'Bolita: arrastra hacia el lado para hacerla ancha y hacia arriba para hacerla alta. Chorizo: arrastra el dedo como si lo estiraras. Lo que pones encima de otra pieza se pega.',
-  horno: 'Mírala dorarse y sácala a tiempo. Antes queda blanca; después, carbón.',
-  decorar: 'Arrastra sobre la guagua para decorarla. Arrastra fuera de ella para girarla y pellizca (o usa la rueda) para acercarte. La cara también se dibuja: carita de yeso, pasas y el pincel.',
+  amasar: 'Arrastra para hacer una bolita: hacia el lado sale ancha, hacia arriba sale alta. Encima de otra pieza, se pega. Con dos dedos te acercas.',
+  horno: 'Mírala dorarse y sácala en la franja blanca. Antes queda blanca; después, carbón.',
+  decorar: 'Con un dedo decoras. Con dos dedos la giras y te acercas. La cara también se dibuja: carita, pasas y pincel.',
 };
+let relojPista = null;
+function pista(texto, ms = 6500) {
+  const el = $('#mesa-pista');
+  el.textContent = texto;
+  el.classList.remove('oculta');
+  clearTimeout(relojPista);
+  relojPista = setTimeout(() => el.classList.add('oculta'), ms);
+}
+/* Lo que tapan la barra y el dock, para que la cámara encuadre en el hueco. */
+function margenes(canvas, arriba, abajo) {
+  const c = canvas.getBoundingClientRect();
+  const m = { arriba: 0, abajo: 0, derecha: 0 };
+  if (!c.width) return m;
+  if (arriba) m.arriba = Math.max(0, arriba.getBoundingClientRect().bottom - c.top);
+  if (abajo && !abajo.hidden) {
+    const d = abajo.getBoundingClientRect();
+    if (d.width < c.width * 0.6 && d.left > c.left + c.width * 0.4) m.derecha = Math.max(0, c.right - d.left);
+    else m.abajo = Math.max(0, c.bottom - d.top);
+  }
+  return m;
+}
+function medirTaller() {
+  if (!taller) return;
+  taller.margen = margenes($('#lienzo'), $('#barra'), $(`.dock[data-etapa="${estado.etapa}"]`));
+  taller.dibujar();
+}
 function irA(etapa) {
   if (etapa !== 'horno') apagarHorno();
   estado.etapa = etapa;
-  $('#taller').dataset.etapa = etapa;
-  $$('[data-etapa]').forEach((s) => { s.hidden = s.dataset.etapa !== etapa; });
+  const t = $('#taller');
+  t.dataset.etapa = etapa;
+  t.dataset.herramienta = etapa === 'amasar' ? estado.mano : estado.herramienta;
+  $$('.dock[data-etapa]').forEach((s) => { s.hidden = s.dataset.etapa !== etapa; });
   $$('[data-ir]').forEach((b) => {
     const i = ['amasar', 'horno', 'decorar'].indexOf(b.dataset.ir), j = ['amasar', 'horno', 'decorar'].indexOf(etapa);
     if (b.dataset.ir === etapa) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
     b.classList.toggle('hecha', i < j);
   });
   $('[data-ir="decorar"]').disabled = estado.k < 50;
-  $('#mesa-pista').textContent = PISTAS[etapa];
+  pista(PISTAS[etapa]);
   taller.fijo = etapa === 'amasar';
-  taller.usar(etapa === 'decorar' ? 'plato' : 'lata');
+  taller.ambiente(etapa);
   if (etapa === 'amasar') {
     taller.hornear(0, false);
     taller.cabeceo = 0.12;
@@ -1395,8 +1544,10 @@ function irA(etapa) {
   } else if (etapa === 'decorar') {
     taller.hornear(estado.k / 100, false);
     taller.cabeceo = 0.2;
+    // de frente otra vez (el horno la deja dando vueltas), por el camino corto
+    taller.girar(-0.25 + Math.round((taller.giro + 0.25) / (Math.PI * 2)) * Math.PI * 2, true);
   }
-  $('#sorpresa').hidden = etapa === 'horno';
+  requestAnimationFrame(medirTaller);
   guardarBorrador(); actualizarEtiqueta();
 }
 function volverAAmasar() {
@@ -1424,17 +1575,19 @@ function montarTaller() {
     $('#sin-3d').hidden = false;
     return false;
   }
-  const grupoDe = (sel, clave, num) => $$(sel).forEach((b) => b.addEventListener('click', () => {
-    const v = b.getAttribute(sel.slice(1, -1));
+  // solo botones: el <main> también lleva data-herramienta, para el CSS
+  const grupoDe = (attr, clave, num) => $$(`button[${attr}]`).forEach((b) => b.addEventListener('click', () => {
+    const v = b.getAttribute(attr);
     estado[clave] = num ? +v : v;
-    $$(sel).forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    $$(`button[${attr}]`).forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
     if (clave === 'herramienta' || clave === 'mano') $('#taller').dataset.herramienta = estado[clave];
+    requestAnimationFrame(medirTaller);
   }));
-  grupoDe('[data-mano]', 'mano');
-  grupoDe('[data-grosor]', 'grosor', true);
-  grupoDe('[data-herramienta]', 'herramienta');
-  grupoDe('[data-boquilla]', 'boquilla', true);
-  grupoDe('[data-tamano]', 'tamano', true);
+  grupoDe('data-mano', 'mano');
+  grupoDe('data-grosor', 'grosor', true);
+  grupoDe('data-herramienta', 'herramienta');
+  grupoDe('data-boquilla', 'boquilla', true);
+  grupoDe('data-tamano', 'tamano', true);
   const cremas = $('#cremas');
   CREMAS.forEach((cr, i) => {
     const b = document.createElement('button');
@@ -1446,7 +1599,7 @@ function montarTaller() {
     b.addEventListener('click', () => {
       estado.crema = i;
       $$('.crema', cremas).forEach((x, j) => x.setAttribute('aria-pressed', String(j === i)));
-      if (estado.herramienta !== 'manga' && estado.herramienta !== 'roseta') $('[data-herramienta="manga"]').click();
+      if (estado.herramienta !== 'manga' && estado.herramienta !== 'roseta') $('button[data-herramienta="manga"]').click();
     });
     cremas.appendChild(b);
   });
@@ -1468,7 +1621,26 @@ function montarTaller() {
   $('#sacar').addEventListener('click', sacarDelHorno);
   $('#a-decorar').addEventListener('click', aDecorar);
   $('#otra-vez').addEventListener('click', volverAAmasar);
-  $('#a-amasar').addEventListener('click', volverAAmasar);
+  // la barra: ayuda, vitrina y pantalla completa
+  $('#abrir-info').addEventListener('click', () => window.malDS.abrir('#d-info'));
+  $('#abrir-vitrina').addEventListener('click', () => { pintarVitrina(); window.malDS.abrir('#d-vitrina'); });
+  const raiz = document.documentElement;
+  if (raiz.requestFullscreen && document.fullscreenEnabled) {
+    const boton = $('#pantalla');
+    boton.hidden = false;
+    boton.addEventListener('click', () => {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else raiz.requestFullscreen({ navigationUI: 'hide' }).catch(() => {});
+    });
+    document.addEventListener('fullscreenchange', () => {
+      boton.setAttribute('aria-label', document.fullscreenElement ? 'Salir de pantalla completa' : 'Pantalla completa');
+    });
+  }
+  // la cámara se vuelve a encuadrar cuando cambia lo que tapa la pantalla
+  const ro = new ResizeObserver(() => medirTaller());
+  ro.observe($('#barra'));
+  $$('.dock').forEach((d) => ro.observe(d));
+  window.addEventListener('resize', medirTaller);
   $('#girar-izq').addEventListener('click', () => taller.girar(-Math.PI / 4));
   $('#girar-der').addEventListener('click', () => taller.girar(Math.PI / 4));
   $('#deshacer').addEventListener('click', deshacer);
@@ -1491,7 +1663,8 @@ function montarTaller() {
     taller.dibujar(); guardarBorrador(); actualizarEtiqueta();
   });
   $('#de-nuevo').addEventListener('click', () => {
-    if (estado.o.length && !confirm('¿Empezamos otra desde la masa?')) return;
+    if ((estado.o.length || estado.a.length) && !confirm('¿Empezamos otra desde la masa?')) return;
+    $('#d-info').close();
     nueva();
   });
   $('#regalar').addEventListener('click', abrirRegalo);
@@ -1529,12 +1702,12 @@ async function guardarMia() {
   pintarVitrina();
 }
 function sincronizarControles() {
-  const marcar = (sel, v) => $$(sel).forEach((b) => b.setAttribute('aria-pressed', String(b.getAttribute(sel.slice(1, -1)) === String(v))));
-  marcar('[data-mano]', estado.mano);
-  marcar('[data-grosor]', estado.grosor);
-  marcar('[data-herramienta]', estado.herramienta);
-  marcar('[data-boquilla]', estado.boquilla);
-  marcar('[data-tamano]', estado.tamano);
+  const marcar = (attr, v) => $$(`button[${attr}]`).forEach((b) => b.setAttribute('aria-pressed', String(b.getAttribute(attr) === String(v))));
+  marcar('data-mano', estado.mano);
+  marcar('data-grosor', estado.grosor);
+  marcar('data-herramienta', estado.herramienta);
+  marcar('data-boquilla', estado.boquilla);
+  marcar('data-tamano', estado.tamano);
 }
 
 /* Para el que no se anima: una decoración de panadería, distinta cada
@@ -1699,6 +1872,9 @@ async function pintarVitrina(cual) {
   const lista = todas.filter((x) => x.t === pestana);
   $('#cuenta-mia').textContent = todas.filter((x) => x.t === 'mia').length;
   $('#cuenta-recibida').textContent = todas.filter((x) => x.t === 'recibida').length;
+  const hud = $('#cuenta-hud');
+  hud.textContent = todas.length;
+  hud.hidden = !todas.length;
   rej.textContent = '';
   $('#vitrina-vacia').hidden = !!lista.length;
   $('#vitrina-vacia').textContent = pestana === 'mia'
@@ -1744,7 +1920,7 @@ function montarVitrina() {
     taller.cargar(estado);
     irA('decorar');
     $('#d-pieza').close();
-    $('#taller').scrollIntoView({ behavior: quieto ? 'auto' : 'smooth' });
+    if ($('#d-vitrina').open) $('#d-vitrina').close();
   });
   $('#p-regalar').addEventListener('click', async () => {
     const enlace = direccion() + '#r=' + piezaActual.item.e;
@@ -1801,11 +1977,14 @@ async function recibir(cod) {
     });
   }
   visorRegalo.giro = -0.25;
+  visorRegalo.ambiente('decorar');
   visorRegalo.cargar(e);
   visorRegalo.medir();
+  const medirRegalo = () => { visorRegalo.margen = margenes($('#regalo-lienzo'), null, $('#regalo-tarjeta')); visorRegalo.dibujar(); };
+  requestAnimationFrame(medirRegalo);
+  if (!visorRegalo._observa) { visorRegalo._observa = new ResizeObserver(medirRegalo); visorRegalo._observa.observe($('#regalo-tarjeta')); }
   guardarEnVitrina({ id: nuevoId(), t: 'recibida', e: cod, f: Date.now() });
   pintarVitrina('recibida');
-  window.scrollTo(0, 0);
 }
 function montarRecibir() {
   $('#regalo-devolver').addEventListener('click', () => {
@@ -1823,7 +2002,7 @@ function cerrarRegalo() {
   $('#regalo').hidden = true;
   history.replaceState(null, '', location.pathname + location.search);
   taller.medir();
-  $('#taller').scrollIntoView();
+  medirTaller();
 }
 
 /* ─── arranque ─────────────────────────────────────────────── */
@@ -1841,6 +2020,10 @@ function arrancar() {
     nueva('guagua');
   }
   pintarVitrina();
+  if (!location.hash && !almacen.leer('guagua:visto', false)) {
+    almacen.poner('guagua:visto', true);
+    window.malDS.abrir('#d-info');
+  }
   const leerHash = () => {
     const h = location.hash.match(/^#r=([zj][A-Za-z0-9_-]+)$/);
     if (h) recibir(h[1]);
