@@ -185,7 +185,7 @@ const MOLDES = {
   // la de panadería: más larga, y el bulto de los pies termina en colita cónica
   tradicional() {
     return [
-      bolita(V(0, 1.75, 0), V(0.62, 1.65, 0.47), 0, 0.72), // el cuerpo envuelto, que se afina en colita
+      bolita(V(0, 1.75, 0), V(0.66, 1.6, 0.5), 0, 0.38), // el cuerpo envuelto, que se afina en colita
       bolita(V(0, 3.38, 0), V(0.27, 0.14, 0.27)),          // el cuello
       bolita(V(0, 3.78, 0.04), V(0.46, 0.48, 0.42)),       // la cabeza
     ];
@@ -255,7 +255,7 @@ function elipsoide(c, s, rotZ, punta = 0) {
   if (punta) {
     const p = g.attributes.position;
     for (let i = 0; i < p.count; i++) {
-      const f = 1 - punta * Math.max(0, -p.getY(i)) ** 1.3;
+      const f = 1 - punta * Math.max(0, -p.getY(i)) ** 1.8;
       p.setX(i, p.getX(i) * f); p.setZ(i, p.getZ(i) * f);
     }
     g.computeVertexNormals();
@@ -1281,6 +1281,19 @@ function rotuloFinados() {
 }
 
 /* ─── la tarjeta para regalar (1080 × 1350) ───────────────── */
+/* Dónde termina la figura en la foto: la fila más baja con pan, y su ancho. */
+function pie(c) {
+  const { width: w, height: h } = c;
+  const px = c.getContext('2d').getImageData(0, 0, w, h).data;
+  const fila = (y) => { let a = -1, b = -1; for (let x = 0; x < w; x += 4) if (px[(y * w + x) * 4 + 3] > 200) { if (a < 0) a = x; b = x; } return [a, b]; };
+  let y = h - 1;
+  while (y > 0 && fila(y)[0] < 0) y -= 3;
+  if (y <= 0) return { x: w / 2, y: h * 0.93, ancho: w * 0.5 };
+  // el ancho de la base, un poco más arriba de la última fila
+  let a = w, b = 0;
+  for (let yy = y; yy > Math.max(0, y - h * 0.08); yy -= 3) { const [p, q] = fila(yy); if (p >= 0) { a = Math.min(a, p); b = Math.max(b, q); } }
+  return { x: (a + b) / 2, y, ancho: b - a };
+}
 function envolver(ctx, texto, x, y, ancho, alto, max) {
   const lineas = [];
   let l = '';
@@ -1391,9 +1404,13 @@ async function tarjeta(e) {
     ctx.fillText(e.d ? que : 'para ti', 540, 282, 1000);
   }
   const alto = 780, ancho = alto * 0.8, gx = 540 - ancho / 2 - 60, gy = 300;
+  // la sombra va donde la figura toca el suelo: un perrito echado no llega hasta abajo
+  const retrato = foto(e, 800, 1000), suelo = pie(retrato);
   ctx.fillStyle = 'rgba(0,0,0,.35)';
-  ctx.beginPath(); ctx.ellipse(gx + ancho / 2, gy + alto - 70, ancho * 0.34, 24, 0, 0, Math.PI * 2); ctx.fill();
-  ctx.drawImage(foto(e, 800, 1000), gx, gy, ancho, alto);
+  ctx.beginPath();
+  ctx.ellipse(gx + suelo.x / 800 * ancho, gy + suelo.y / 1000 * alto - 4, Math.max(80, suelo.ancho / 800 * ancho * 0.6), 22, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.drawImage(retrato, gx, gy, ancho, alto);
   if (memoria) vela(ctx, 880, 990, 0.9); else colada(ctx, 870, 960, 0.9);
   if (!memoria && VALES[e.l]) sello(ctx, VALES[e.l], 860, 470);
   const nombre = '«' + nombreDe(e) + '»';
