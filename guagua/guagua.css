@@ -139,6 +139,7 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 .juego:not([data-herramienta="chorizo"]) .dock__fila[data-con="chorizo"],
 .juego[data-herramienta="chorizo"] .dock__fila[data-sin="chorizo"],
 .juego:not([data-herramienta="manga"]):not([data-herramienta="roseta"]) .dock__fila[data-con="manga roseta"],
+.juego:not([data-herramienta="manga"]):not([data-herramienta="roseta"]):not([data-herramienta="carita"]) .dock__fila[data-con="manga roseta carita"],
 .juego:not([data-herramienta="carita"]) .dock__fila[data-con="carita"],
 .juego:not([data-herramienta="grageas"]) .dock__fila[data-con="grageas"],
 .juego:not([data-herramienta="pasa"]) .dock__fila[data-con="pasa"],
@@ -269,3 +270,21 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 .juego-cuerpo .modal .modal__cuerpo{overflow-y:auto;overscroll-behavior:contain;min-height:0}
 .juego-cuerpo .modal .modal__cab,.juego-cuerpo .modal .modal__pie{flex:none}
 .juego-cuerpo .modal .modal__pie{padding-top:var(--mal-e3)}
+
+/* ─── la cuenta ───────────────────────────────────────────── */
+.vitrina__cuenta{display:flex;gap:var(--mal-e3);align-items:center;justify-content:space-between;
+  padding:var(--mal-e3);margin-bottom:var(--mal-e4);border-radius:var(--mal-r-s);background:var(--mal-primary-container)}
+.vitrina__cuenta[hidden]{display:none}
+.vitrina__cuenta .caption{margin:0}
+.vitrina__cuenta .btn{flex:none}
+.regalar__entrar{display:flex;gap:var(--mal-e3);align-items:center;justify-content:space-between;margin:0 var(--mal-e5) var(--mal-e3);
+  padding:var(--mal-e3);border-radius:var(--mal-r-s);background:var(--mal-primary-container);font-size:var(--mal-t-caption)}
+.regalar__entrar[hidden]{display:none}
+.regalar__entrar .btn{flex:none}
+.cuenta{max-width:min(94vw, 440px)}
+.cuenta__google{background:#fff;color:#1f1f1f;border-color:#dadce0}
+.cuenta__o{display:flex;align-items:center;gap:.8em;margin:var(--mal-e4) 0;color:var(--mal-on-surface-3);font-size:var(--mal-t-caption)}
+.cuenta__o::before,.cuenta__o::after{content:"";flex:1;border-top:var(--mal-separador)}
+.cuenta__error{display:block;min-height:1.2em;margin:0}
+.cuenta__acc{display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--mal-e2)}
+#cuenta-fuera[hidden],#cuenta-dentro[hidden],#c-campo-nombre[hidden]{display:none}

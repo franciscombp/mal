@@ -1,0 +1,88 @@
+rules_version = '2';
+
+// ===============================================================
+// Guagua de pan · reglas de Firestore (prototipo, para revisar)
+// ===============================================================
+//
+// Modelo de datos que suponen estas reglas
+//
+// Colección: guaguas
+// ID: automático de Firestore (20 caracteres al azar: es el enlace corto)
+// Campos:
+//   - dueno: string (obligatorio, inmutable) uid de quien la regala
+//   - receta: string (obligatorio, 1–12000) la guagua codificada, igual que en el enlace largo
+//   - creada: timestamp (obligatorio) hora del servidor
+//   - v: int (obligatorio, 3) versión de la receta
+// Acceso: cualquiera la abre por su ID, porque quien recibe un regalo puede no tener
+// cuenta. Nadie puede listar la colección. Un regalo no se edita; su dueño lo puede borrar.
+//
+// Colección: usuarios/{uid}/vitrina
+// ID: lo genera la app
+// Campos:
+//   - tipo: string (obligatorio, 'mia' | 'recibida')
+//   - receta: string (obligatorio, 1–12000)
+//   - guagua: string (opcional, 1–40) ID del regalo en /guaguas, si lo hay
+//   - fecha: timestamp (obligatorio) hora del servidor
+// Acceso: solo su dueño. La app la lee con orderBy('fecha', 'desc') y limit(80).
+//
+// ===============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─── ayudas ─────────────────────────────────────────────
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    function validString(value, minLen, maxLen) {
+      return value is string && value.size() >= minLen && value.size() <= maxLen;
+    }
+
+    // ─── validadores ────────────────────────────────────────
+    function isValidGuagua(data) {
+      return data.keys().hasAll(['dueno', 'receta', 'creada', 'v'])
+        && data.keys().hasOnly(['dueno', 'receta', 'creada', 'v'])
+        && data.dueno is string
+        && validString(data.receta, 1, 12000)
+        && data.creada is timestamp
+        && data.v is int && data.v == 3;
+    }
+    function isValidVitrina(data) {
+      return data.keys().hasAll(['tipo', 'receta', 'fecha'])
+        && data.keys().hasOnly(['tipo', 'receta', 'guagua', 'fecha'])
+        && data.tipo in ['mia', 'recibida']
+        && validString(data.receta, 1, 12000)
+        && (!('guagua' in data) || validString(data.guagua, 1, 40))
+        && data.fecha is timestamp;
+    }
+
+    // ─── los regalos ────────────────────────────────────────
+    match /guaguas/{guaguaId} {
+      allow get: if true;
+      allow list: if false;
+      allow create: if isAuthenticated()
+        && isValidGuagua(request.resource.data)
+        && request.resource.data.dueno == request.auth.uid
+        && request.resource.data.creada == request.time;
+      allow update: if false;
+      allow delete: if isAuthenticated() && resource.data.dueno == request.auth.uid;
+    }
+
+    // ─── la vitrina de cada persona ─────────────────────────
+    match /usuarios/{userId}/vitrina/{itemId} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && isValidVitrina(request.resource.data)
+        && request.resource.data.fecha == request.time;
+      allow delete: if isOwner(userId);
+    }
+
+    // todo lo demás, cerrado
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
