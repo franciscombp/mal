@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>El Lamparómetro · EL MERCIO.</title>
-<meta name="description" content="Cuatro tests satíricos para saber a qué lámpara ecuatoriana te pareces: el espectro político, la carta astral, la playlist y qué producto del Tuti eres. Un juego de EL MERCIO.">
+<meta name="description" content="Cinco tests satíricos: a qué lámpara ecuatoriana te pareces en el espectro político, en la carta astral y en la playlist, qué provincia eres y qué producto del Tuti eres. Un juego de EL MERCIO.">
 <link rel="canonical" href="https://franciscombp.github.io/mal/lamparometro/">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#141414" media="(prefers-color-scheme: dark)">
@@ -12,7 +12,7 @@
 <meta property="og:site_name" content="EL MERCIO.">
 <meta property="og:locale" content="es_EC">
 <meta property="og:title" content="El Lamparómetro · ¿A qué lámpara ecuatoriana te pareces?">
-<meta property="og:description" content="Cuatro tests satíricos: el espectro político, la carta astral, la playlist y qué producto del Tuti eres.">
+<meta property="og:description" content="Cinco tests satíricos: el espectro político, la carta astral, la playlist, qué provincia eres y qué producto del Tuti eres.">
 <meta property="og:url" content="https://franciscombp.github.io/mal/lamparometro/">
 <meta property="og:image" content="https://franciscombp.github.io/mal/img/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -37,7 +37,7 @@
 .lm-pantalla{outline:none}
 .lm-pantalla[hidden]{display:none}
 
-/* ─── portada: los cuatro tests ─── */
+/* ─── portada: los tests ─── */
 .lm-tests{display:grid;gap:var(--em-16);grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));margin-top:var(--em-32)}
 .lm-test{
   display:flex;flex-direction:column;gap:var(--em-8);text-align:left;
@@ -48,7 +48,7 @@
 .lm-test h2{font-family:var(--em-serif);font-size:var(--mal-t-h2);font-weight:700;margin:0;line-height:1.2}
 .lm-test p{margin:0;color:var(--em-contrast-2)}
 .lm-test .em-meta{margin-top:auto;padding-top:var(--em-8)}
-.lm-elenco{display:flex;flex-wrap:wrap;gap:var(--em-8);margin-top:var(--em-16);justify-content:center}
+.lm-elenco{display:flex;flex-wrap:wrap;gap:var(--em-4);margin-top:var(--em-16);justify-content:center}
 
 /* ─── el monograma: una lámpara sin foto ─── */
 .lm-mono{
@@ -115,13 +115,26 @@
 .lm-plano .rej{stroke:var(--em-contrast);stroke-width:.02;opacity:.35}
 .lm-plano .rot{fill:var(--em-contrast-3);font-size:.62px;font-weight:700;letter-spacing:.03px;text-transform:uppercase}
 .lm-plano .nom{fill:var(--em-contrast);font-size:.68px;font-weight:600}
-.lm-plano .tu{fill:var(--em-accent)}
+.lm-plano .pj{cursor:pointer;outline:none}
+.lm-plano .pj:focus-visible circle,.lm-plano .pj.activo circle{stroke:var(--em-contrast);stroke-width:.18}
+.lm-quien{text-align:center;font-family:var(--em-sans);font-size:14px;font-weight:600;color:var(--em-contrast-3);margin:var(--em-8) 0 0;min-height:1.5em}
 .lm-plano .tu-nom{fill:var(--em-accent);font-size:.9px;font-weight:800}
 .lm-ejes{display:grid;grid-template-columns:1fr 1fr;gap:var(--em-12);margin-top:var(--em-16)}
-.lm-ejes div{background:var(--em-surface);padding:var(--em-12) var(--em-16)}
+.lm-ejes > div{background:var(--em-surface);padding:var(--em-12) var(--em-16)}
 .lm-ejes b{display:block;font-family:var(--em-sans);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--em-contrast-3)}
 .lm-ejes span{font-family:var(--em-serif);font-size:var(--mal-t-h4);font-weight:700}
 
+.lm-plano .ini{font-size:.5px;font-weight:800;pointer-events:none}
+.lm-ejes__z{grid-column:1 / -1}
+.lm-medida--z{height:10px;background:var(--em-base);margin-top:var(--em-8)}
+.lm-medida--z i{display:block;height:100%;background:linear-gradient(90deg,var(--em-contrast-3),var(--em-accent))}
+.lm-adn{list-style:none;padding:0;margin:0;display:grid;gap:var(--em-12)}
+.lm-adn li{display:grid;grid-template-columns:5.5em 1fr;gap:var(--em-4) var(--em-12);align-items:center}
+.lm-adn b{font-family:var(--em-sans);font-size:13px}
+.lm-adn span{grid-column:2;font-size:var(--em-t-caption);color:var(--em-contrast-3);font-style:italic}
+.lm-adn .lm-medida{height:10px;background:var(--em-surface);position:relative}
+.lm-adn .lm-medida i{display:block;height:100%;background:var(--em-accent)}
+.lm-adn .lm-medida s{position:absolute;top:-4px;bottom:-4px;width:3px;margin-left:-1.5px;background:var(--em-contrast)}
 .lm-aviso{margin-top:var(--em-48);padding-top:var(--em-16);border-top:1px solid var(--em-border);color:var(--em-contrast-3);font-size:var(--em-t-caption)}
 .lm .em-header{flex-wrap:nowrap}
 .lm .em-header .em-logo{font-size:clamp(22px, 6vw, 32px)}
@@ -146,7 +159,7 @@
       <div class="lm-cab">
         <p class="em-kicker">Juegos · Sátira</p>
         <h1 class="em-h1" id="portada-t" style="font-size:var(--mal-t-display)">El Lamparómetro</h1>
-        <p class="em-frase">¿A qué lámpara ecuatoriana te pareces? Cuatro tests con rigor
+        <p class="em-frase">¿A qué lámpara ecuatoriana te pareces? Cinco tests con rigor
         científico cero y margen de error del cien por ciento.</p>
         <div class="lm-elenco" id="elenco" aria-label="El elenco"></div>
         <p class="lm-fecha"><span>Quito · edición de los tests</span><span>Sin registro · sin datos · sin vergüenza</span></p>
@@ -156,7 +169,7 @@
       Esto es sátira. Ninguna de las personas ni de los personajes que salen aquí participó,
       aprobó ni se enteró de este test, y las posiciones del plano son una exageración de su
       figura pública, no un dato. Las cartas astrales son inventadas: nadie revisó la partida
-      de nacimiento de nadie. El Tuti tampoco sabe que existimos. Tus respuestas no salen de tu
+      de nacimiento de nadie. Las provincias son cariño, no geografía. El Tuti tampoco sabe que existimos. Tus respuestas no salen de tu
       teléfono.</p>
     </section>
 
@@ -184,296 +197,15 @@
   </footer>
 </div>
 
+<script src="datos.js?v=2"></script>
 <script>
 (() => {
 'use strict';
 
-/* ══════════ EL ELENCO ══════════
-   x: ¿quién paga?   −10 «que pague el Estado»  ·  +10 «que cada quien se rebusque»
-   y: ¿quién manda?  +10 «mando yo, sabatina»   ·  −10 «aquí nadie manda, es farra»
-   Las coordenadas son caricatura de la figura pública, no un análisis. */
-const PJ = {
-  correa: {
-    nombre: 'Rafael Correa', ini: 'RC', c: '#2f7d32', t: '#fff', x: -7, y: 8,
-    apodo: 'Ascendente en sabatina',
-    frase: 'Hasta la victoria siempre… y desde Bélgica, que allá también hay wifi.',
-    desc: 'Tienes opinión sobre todo y la das los sábados de diez a dos, sin pausa para ir al baño. Quieres muchísimo al Estado, sobre todo cuando lo manejas tú. Si alguien te contradice, sacas una lámina con un gráfico.',
-    rasgos: ['Tuiteas en mayúsculas desde otro huso horario.', 'Tu palabra favorita empieza con «prensa» y termina con «corrupta».', 'Cantas en la tarima aunque nadie te haya pasado el micrófono.']
-  },
-  bucaram: {
-    nombre: 'Los Bucaram', ini: 'LB', c: '#e8790c', t: '#141414', x: -6, y: -7,
-    apodo: 'Un loco que ama',
-    frase: '¡Que suene la banda, que el país se arregla bailando!',
-    desc: 'Tu idea de gobernar es una tarima, un micrófono y un grupo de cumbia. Crees que todo problema se soluciona con una canción, y si no se soluciona, con otra. Tu familia no es una familia: es una franquicia con presencia en varias provincias y al menos un país vecino.',
-    rasgos: ['Tienes la maleta hecha, por si acaso.', 'Tienes un primo en cada lista electoral.', 'Grabaste un disco y lo regalas en los cumpleaños.']
-  },
-  vera: {
-    nombre: 'Carlos Vera', ini: 'CV', c: '#1f3b70', t: '#fff', x: 6, y: 6,
-    apodo: 'La repregunta',
-    frase: '¿Me va a responder la pregunta, o le repito la pregunta?',
-    desc: 'Entrevistas hasta al mesero y le exiges que justifique la sopa del día. Te indignas con método y con horario estelar. Crees en el orden, en el mercado y en que todo el país te debe una respuesta, de preferencia en vivo.',
-    rasgos: ['Alzas una ceja y la reunión familiar se queda en silencio.', 'Tu «buenas noches» suena a amenaza editorial.', 'Tienes un programa especial de tres horas listo para cualquier emergencia.']
-  },
-  mino: {
-    nombre: 'Fausto Miño', ini: 'FM', c: '#7b3fa0', t: '#fff', x: 3, y: -3,
-    apodo: 'SerraCosteño',
-    frase: 'Usted es hermosa… pero no estoy de acuerdo con su tuit.',
-    desc: 'No eres ni de la Sierra ni de la Costa: eres de donde haya señal. Cantas una balada y opinas de política en el mismo hilo, y te sorprende de verdad cuando te vuelves tendencia, que pasa más o menos una vez al mes.',
-    rasgos: ['Dedicas canciones mirando fijamente a los ojos.', 'Tienes una opinión sobre el himno nacional y la compartes.', 'Siempre «entiendes», aunque no estés de acuerdo.']
-  },
-  cholito: {
-    nombre: 'El Cholito', ini: 'EC', c: '#8a4b1f', t: '#fff', x: -4, y: -2,
-    apodo: 'Del barrio, forever',
-    frase: 'Yo voy a ser periodista, ñaño. Ya vas a ver.',
-    desc: 'Eres del barrio y lo defiendes de cualquier inversionista que quiera volverlo condominio. Tienes poca plata, muchos sueños y más vecinos que contactos. Crees en la comunidad, en la palabra y en que todo se arregla en la tienda de la esquina.',
-    rasgos: ['Te saludan de todos los balcones.', 'Tu mejor fuente es la señora de la tienda.', 'Llevas veinte años diciendo que ya mismo te va bien, y te ves igualito.']
-  },
-  aud: {
-    nombre: 'AU-D', ini: 'AU', c: '#d9a400', t: '#141414', x: 7, y: -6,
-    apodo: 'Vieja escuela',
-    frase: 'Vieja escuela, mi pana. Yo traje esto cuando nadie sabía qué era.',
-    desc: 'Trajiste el dancehall cuando el resto todavía bailaba otra cosa. Eres emprendedor de los de antes: produces, cantas, vendes, y si hace falta te nacionalizas. Tu ideología es el flow; el Estado te parece bien mientras no te desenchufe el micrófono.',
-    rasgos: ['Tienes un tema para cada ocasión, y lo produjiste tú.', 'Le dices «mi pana» hasta al guardia del banco.', 'En cualquier fiesta, alguien te pide la de los noventa.']
-  },
-  fusilero: {
-    nombre: 'Fusilero y Malcriadito', ini: 'FyM', c: '#2c6fa8', t: '#fff', x: 0, y: 3,
-    apodo: 'Terapia familiar',
-    frase: '—¡Malcriado! —¿Y qué, pues?',
-    desc: 'Eres dos personas a la vez: la que pone orden a gritos y la que no le hace caso. Te gobiernas como una casa de Vivos: muchísima autoridad y cero obediencia. En terapia familiar te dieron el alta por cansancio del terapeuta.',
-    rasgos: ['Tu idea de diálogo es hablar más fuerte.', 'Pides perdón cantando el Día de la Madre.', 'En tu casa manda todo el mundo y nadie obedece.']
-  }
-};
-
-/* ══════════ LOS PRODUCTOS DEL TUTI ══════════
-   Ninguno es un producto real: son los arquetipos de la percha. */
-const PROD = {
-  atun:       { nombre: 'El atún de marca propia', ini: 'AT', c: '#2c6fa8', t: '#fff',
-    apodo: 'Lomitos en aceite (dice)',
-    frase: '«Lomitos en aceite», dice la etiqueta. Lo del aceite es verdad.',
-    desc: 'Eres rendidor: con una lata le das de comer a cuatro, con arroz y un poco de fe. Nadie sabe bien de qué estás hecho, pero todos confían en ti a fin de mes.',
-    rasgos: ['Siempre hay uno de ti en la alacena.', 'Nadie lee tu etiqueta, y es mejor así.', 'Combinas con todo: arroz, fideo, encebollado improvisado.'] },
-  cola:       { nombre: 'La cola de tres litros', ini: '3L', c: '#9c1f1f', t: '#fff',
-    apodo: 'Sabor «cola»',
-    frase: 'Sabor: cola. Color: cola. Marca: la de la casa.',
-    desc: 'Llegas a todas las fiestas aunque nadie te haya invitado, y sin ti no hay brindis. Eres efervescente durante veinte minutos y después te desbravas, pero nadie se queja porque eres mucho.',
-    rasgos: ['Te sirven en vasos de plástico y no te importa.', 'Ocupas media refri.', 'Quedas para el día siguiente, sin gas y con dignidad.'] },
-  papel:      { nombre: 'El papel higiénico de 32 rollos', ini: '32', c: '#5a6b7b', t: '#fff',
-    apodo: 'Hoja simple, presencia doble',
-    frase: 'Una sola hoja. Muchísima presencia.',
-    desc: 'Eres la compra que nadie planifica y todos agradecen. Ocupas la mitad del carrito y duras años en la bodega. Eres de una sola hoja, sí, pero estás ahí cuando más se te necesita.',
-    rasgos: ['Te compran en pánico, nunca por amor.', 'No cabes en ningún clóset.', 'Alguien de tu familia te usa como servilleta.'] },
-  galletas:   { nombre: 'Las galletas del paquete familiar', ini: 'GA', c: '#c27a1a', t: '#141414',
-    apodo: 'Comfort food de cartera',
-    frase: 'Paquete familiar: dura una tarde.',
-    desc: 'Estás siempre: en la cartera, en la guantera, en el cajón de la oficina. Eres el consuelo de las cuatro de la tarde y la cena de los que llegaron tarde. Te acabas rápido, pero nadie te olvida.',
-    rasgos: ['Vienes de a doce y desapareces de a doce.', 'Te mojan en café y te dejas.', 'Eres la merienda oficial de cualquier reunión de condominio.'] },
-  shampoo:    { nombre: 'El shampoo de dos litros', ini: '2L', c: '#3c8d3c', t: '#fff',
-    apodo: 'Manzana verde, multiuso',
-    frase: 'Shampoo, jabón de platos y, si apuran, desengrasante.',
-    desc: 'Haces de todo y lo haces más o menos bien. Lavas el pelo, el perro y la loza. Hueles a manzana verde de una manzana que nunca existió. Eres la navaja suiza de la ducha.',
-    rasgos: ['Tu tapa nunca cierra del todo.', 'Te rellenan con agua para que rindas.', 'Estás en el baño de la casa de todos tus tíos.'] },
-  salchicha:  { nombre: 'Las salchichas de pollo (dice)', ini: 'SA', c: '#c9547a', t: '#fff',
-    apodo: 'El misterio de la parrillada',
-    frase: 'De pollo, dice el empaque. El pollo no confirma.',
-    desc: 'Eres un misterio con buena actitud. Nadie pregunta de qué estás hecho y tú no lo cuentas. En la parrillada eres lo primero que se acaba, y nadie admite que te prefería a la carne.',
-    rasgos: ['Combinas con pan, con arroz y con dudas.', 'Tienes un color que no existe en la naturaleza.', 'Eres el plan B que siempre termina siendo el plan A.'] },
-  chocolate:  { nombre: 'El chocolate «tipo» importado', ini: 'CH', c: '#5b3a24', t: '#fff',
-    apodo: 'Europeo de lejos',
-    frase: 'De lejos, suizo. De cerca, de Durán.',
-    desc: 'Tienes empaque dorado y nombre en otro idioma. Pareces importado hasta que alguien lee la letra chiquita. Pero no te preocupes: el sabor es honesto, y regalarte quedó bonito.',
-    rasgos: ['Vienes en una caja más grande que tú.', 'Te regalan en el amigo secreto.', 'Tu nombre tiene una diéresis que no hacía falta.'] },
-  detergente: { nombre: 'El detergente de cinco kilos', ini: '5K', c: '#1b8a9c', t: '#fff',
-    apodo: 'Aroma a «brisa»',
-    frase: 'Huele a «brisa». A qué brisa, no lo dice.',
-    desc: 'Prometes muchísimo y limpias lo justo. Eres el rey de la promo del grupo de WhatsApp y el que más espacio ocupa en el patio. Tu olor llega antes que tú y se queda después.',
-    rasgos: ['Tienes una taza medidora que nadie usa.', 'Eres la oferta de la semana, todas las semanas.', 'Dejas la ropa oliendo a ti por tres lavadas.'] }
-};
-
-/* ══════════ LOS TESTS ══════════ */
-const ESCALA = [
-  { t: 'Totalmente', n: 'de ley', v: 2 },
-  { t: 'Algo', n: 'medio medio', v: 1 },
-  { t: 'Ni fu ni fa', n: 'chuta, no sé', v: 0 },
-  { t: 'Más bien no', n: 'tampoco así', v: -1 },
-  { t: 'Para nada', n: 'ni loco', v: -2 }
-];
-
-const TESTS = {
-  lamparometro: {
-    titulo: 'El Lamparómetro',
-    kicker: 'Test 1 · El espectro político',
-    bajada: 'El clásico plano de dos ejes, pero en vez de Marx y Thatcher están las lámparas de siempre. ¿Quién paga y quién manda?',
-    meta: '14 afirmaciones · 3 min',
-    tipo: 'plano', grupo: PJ,
-    preguntas: [
-      { t: 'La tienda de la esquina sube el pan y hay que respetarlo: es la mano invisible del mercado.', eje: 'x', s: 1 },
-      { t: 'Un país se gobierna mejor con una cadena nacional de cuatro horas cada sábado.', eje: 'y', s: 1 },
-      { t: 'Los vendedores de La Bahía son el verdadero motor de la economía nacional.', eje: 'x', s: 1 },
-      { t: 'Cada barrio debería decidir sus cosas en asamblea, con colada morada y empanadas.', eje: 'y', s: -1 },
-      { t: 'La electricidad debería ser del Estado, aunque haya apagones de catorce horas.', eje: 'x', s: -1 },
-      { t: 'Al que critica al gobierno hay que mostrarle su foto en pantalla gigante.', eje: 'y', s: 1 },
-      { t: 'El que no madruga a vender caramelos en el bus no tiene derecho a quejarse.', eje: 'x', s: 1 },
-      { t: 'Las leyes son más bien sugerencias, como las señales de tránsito en Guayaquil.', eje: 'y', s: -1 },
-      { t: 'Que el seguro social te dé cita para el 2031 es un derecho, y hay que defenderlo.', eje: 'x', s: -1 },
-      { t: 'Hace falta alguien que ponga orden, aunque sea gritando en la casa.', eje: 'y', s: 1 },
-      { t: 'La gasolina debería costar lo mismo que en 1999, y que la diferencia la pague el Estado.', eje: 'x', s: -1 },
-      { t: 'Una farra en tarima es una forma perfectamente legítima de hacer política.', eje: 'y', s: -1 },
-      { t: 'El que manda debería poder cambiar la Constitución cuando le aburra.', eje: 'y', s: 1 },
-      { t: 'Cualquiera debería poder fundar un partido político con dos primos y un logo.', eje: 'y', s: -1 }
-    ]
-  },
-  astral: {
-    titulo: '¿Con quién compartes carta astral?',
-    kicker: 'Test 2 · Horóscopo lámpara',
-    bajada: 'Tu sol, tu ascendente, tu luna y tu Mercurio retrógrado, cruzados con las cartas (inventadas) de siete lámparas nacionales.',
-    meta: 'tu cumpleaños + 4 preguntas · 1 min',
-    tipo: 'puntos', grupo: PJ, fecha: true,
-    preguntas: [
-      { t: '¿A qué hora naciste, más o menos?', astro: 'Ascendente', op: [
-        { t: 'De madrugada, después de la farra', p: { bucaram: 2 }, casa: 'Tarima' },
-        { t: 'A las diez en punto, como cadena nacional', p: { correa: 2 }, casa: 'Sabatina' },
-        { t: 'En hora pico, dentro de la Metrovía', p: { cholito: 2 }, casa: 'Barrio' },
-        { t: 'Mi mamá dice una hora y mi papá otra', p: { fusilero: 2 }, casa: 'Terapia familiar' },
-        { t: 'Justo en el noticiero estelar', p: { vera: 2 }, casa: 'Entrevista' }
-      ]},
-      { t: '¿Cómo amaneces un lunes?', astro: 'Luna', op: [
-        { t: 'Con chuchaqui y sin arrepentimiento', p: { aud: 1, bucaram: 1 }, casa: 'Chuchaqui' },
-        { t: 'Indignado por algo que leí a las seis de la mañana', p: { vera: 2 }, casa: 'Indignación' },
-        { t: 'Cantando una balada en la ducha', p: { mino: 2 }, casa: 'Balada' },
-        { t: 'Escribiendo en mayúsculas', p: { correa: 2 }, casa: 'Bloq Mayús' },
-        { t: 'Pidiendo prestado para el pasaje', p: { cholito: 2 }, casa: 'Fin de mes' }
-      ]},
-      { t: '¿Cómo conquistas a alguien?', astro: 'Venus', op: [
-        { t: 'Le dedico una canción, con pista y micrófono', p: { mino: 1, bucaram: 1 }, casa: 'Serenata' },
-        { t: 'Con flow y un «qué fue, mi reina»', p: { aud: 2 }, casa: 'Dancehall' },
-        { t: 'Le hago preguntas incómodas hasta que acepta', p: { vera: 2 }, casa: 'Repregunta' },
-        { t: 'Le presento a toda mi familia en la primera cita', p: { fusilero: 1, bucaram: 1 }, casa: 'Familión' },
-        { t: 'Le escribo una nota en el periódico del barrio', p: { cholito: 2 }, casa: 'Periodismo' }
-      ]},
-      { t: 'Mercurio está retrógrado y todo te sale mal. ¿Qué haces?', astro: 'Mercurio', op: [
-        { t: 'Le echo la culpa a la prensa', p: { correa: 2 }, casa: 'Prensa corrupta' },
-        { t: 'Me voy un tiempito fuera del país, a ver si se calma', p: { bucaram: 1, correa: 1 }, casa: 'Exilio' },
-        { t: 'Grito, y luego pido perdón cantando', p: { fusilero: 2 }, casa: 'Grito' },
-        { t: 'Saco tema nuevo', p: { aud: 1, mino: 1 }, casa: 'Lanzamiento' },
-        { t: 'Hago un especial de tres horas sobre el tema', p: { vera: 2 }, casa: 'Programa especial' }
-      ]}
-    ]
-  },
-  playlist: {
-    titulo: '¿A qué lámpara te pareces según tu playlist?',
-    kicker: 'Test 3 · Tus gustos musicales',
-    bajada: 'Dime qué suena en tu farra y te diré quién eres. Spoiler: alguien que pone la música muy alto.',
-    meta: '6 preguntas · 1 min',
-    tipo: 'puntos', grupo: PJ,
-    preguntas: [
-      { t: '¿Qué suena en tu farra?', op: [
-        { t: 'Cumbia en tarima, a todo volumen', p: { bucaram: 2 } },
-        { t: 'Dancehall de los noventa, hecho en Guayaquil', p: { aud: 2 } },
-        { t: 'Baladas para cantar abrazados', p: { mino: 2 } },
-        { t: 'Canciones de protesta, con el puño en alto', p: { correa: 2 } },
-        { t: 'Lo que ponga el vecino, que tiene el parlante más grande', p: { cholito: 2 } }
-      ]},
-      { t: 'Tu canción de karaoke es…', op: [
-        { t: 'Una que dedico mirando a los ojos de alguien', p: { mino: 2 } },
-        { t: 'Cualquiera, mientras el micrófono sea mío', p: { correa: 1, bucaram: 1 } },
-        { t: 'Ninguna: prefiero entrevistar al que canta', p: { vera: 2 } },
-        { t: 'Un dúo, y peleamos por quién canta la primera parte', p: { fusilero: 2 } },
-        { t: 'Un rap improvisado sobre los presentes', p: { aud: 2 } }
-      ]},
-      { t: 'En el bus, con audífonos, escuchas…', op: [
-        { t: 'Un pódcast de análisis político de tres horas', p: { vera: 2 } },
-        { t: 'Nada: el bus ya trae su propio DJ', p: { cholito: 2 } },
-        { t: 'Mis propios audios de WhatsApp', p: { correa: 1, fusilero: 1 } },
-        { t: 'Reguetón de la vieja escuela', p: { aud: 2 } },
-        { t: 'Pasillos, para sufrir con estilo', p: { mino: 1, cholito: 1 } }
-      ]},
-      { t: '¿Cómo armas tu playlist?', op: [
-        { t: 'No la armo: la playlist soy yo', p: { bucaram: 1, correa: 1 } },
-        { t: 'Por orden cronológico y con fuentes verificadas', p: { vera: 2 } },
-        { t: 'Mitad Sierra, mitad Costa', p: { mino: 2 } },
-        { t: 'La que me pasó mi primo por Bluetooth', p: { cholito: 1, fusilero: 1 } },
-        { t: 'Solo temas que produje yo', p: { aud: 2 } }
-      ]},
-      { t: '¿A qué volumen escuchas música?', op: [
-        { t: 'Al que hace que el vecino golpee la pared', p: { fusilero: 2 } },
-        { t: 'Volumen tarima: con bajo y amplificación', p: { bucaram: 2 } },
-        { t: 'Suavecito, como para dedicar', p: { mino: 2 } },
-        { t: 'Al del parlante del barrio, que es de todos', p: { cholito: 2 } },
-        { t: 'Bajito, para oír quién habla mal de mí', p: { correa: 1, vera: 1 } }
-      ]},
-      { t: 'La canción que dice todo de ti:', op: [
-        { t: 'Una que habla de mí, en tercera persona', p: { correa: 2 } },
-        { t: 'Una de amor loco', p: { bucaram: 2 } },
-        { t: 'Una de esas que se le cantan a mamá', p: { fusilero: 2 } },
-        { t: 'La cortina musical de un noticiero', p: { vera: 2 } },
-        { t: 'Una con coro pegajoso y letra de barrio', p: { cholito: 1, aud: 1 } },
-        { t: 'Una balada que suena igual en Quito que en Guayaquil', p: { mino: 2 } }
-      ]}
-    ]
-  },
-  tuti: {
-    titulo: '¿Qué producto del Tuti eres?',
-    kicker: 'Test 4 · Bonus de percha',
-    bajada: 'Rendidor, de marca propia y a precio de oferta. Averigua en qué percha te pondrían.',
-    meta: '6 preguntas · 1 min',
-    tipo: 'puntos', grupo: PROD, cosa: true,
-    preguntas: [
-      { t: '¿Cómo llegas al súper?', op: [
-        { t: 'Con lista, calculadora y la plata exacta', p: { atun: 2 } },
-        { t: 'Sin lista y con antojo', p: { galletas: 2 } },
-        { t: 'A comprar «una cosita» y salgo con 32 rollos de papel', p: { papel: 2 } },
-        { t: 'Por una promo que vi en un grupo de WhatsApp', p: { detergente: 2 } },
-        { t: 'Porque en la casa se acabó el shampoo, y el lavaplatos, y el jabón', p: { shampoo: 2 } }
-      ]},
-      { t: 'En una fiesta, tú eres…', op: [
-        { t: 'El que llega con la bebida grande que nadie pidió', p: { cola: 2 } },
-        { t: 'El que todos quieren pero nadie admite', p: { salchicha: 2 } },
-        { t: 'El que se hace el importado', p: { chocolate: 2 } },
-        { t: 'El que aguanta hasta el final', p: { papel: 1, atun: 1 } },
-        { t: 'El que sirve para todo: hielo, vasos y DJ', p: { shampoo: 2 } }
-      ]},
-      { t: 'Tu mayor virtud:', op: [
-        { t: 'Rindo: con poquito hago mucho', p: { atun: 2 } },
-        { t: 'Estoy siempre: en la cartera, en la oficina, en el carro', p: { galletas: 2 } },
-        { t: 'Prometo', p: { detergente: 2 } },
-        { t: 'Burbujeo', p: { cola: 2 } },
-        { t: 'Tengo misterio', p: { salchicha: 2 } }
-      ]},
-      { t: 'Tu mayor defecto:', op: [
-        { t: 'Me desbravo rápido', p: { cola: 2 } },
-        { t: 'Soy de una sola hoja', p: { papel: 2 } },
-        { t: 'Nadie sabe de qué estoy hecho', p: { salchicha: 1, atun: 1 } },
-        { t: 'De lejos parezco otra cosa', p: { chocolate: 2 } },
-        { t: 'Huelo más de lo que limpio', p: { detergente: 2 } }
-      ]},
-      { t: 'Tu plan de domingo:', op: [
-        { t: 'Encebollado y sofá', p: { atun: 1, galletas: 1 } },
-        { t: 'Parrillada en el patio', p: { salchicha: 2 } },
-        { t: 'Lavar todo lo que no lavé en la semana', p: { detergente: 1, shampoo: 1 } },
-        { t: 'Ir al mall a ver vitrinas de cosas importadas', p: { chocolate: 2 } },
-        { t: 'Hacer inventario de la bodega', p: { papel: 2 } }
-      ]},
-      { t: '¿Qué dicen de ti en tu casa?', op: [
-        { t: 'Que eres de confianza, aunque nadie lee tu etiqueta', p: { atun: 2 } },
-        { t: 'Que te acabas en un día', p: { galletas: 2 } },
-        { t: 'Que sirves para todo', p: { shampoo: 2 } },
-        { t: 'Que te crees mucho', p: { chocolate: 1, cola: 1 } },
-        { t: 'Que ocupas demasiado espacio', p: { papel: 2 } }
-      ]}
-    ]
-  }
-};
-
-/* Signos: el sol da dos puntos a una lámpara. El reparto es tan arbitrario
-   como el de un horóscopo de verdad. */
-const SIGNOS = [
-  // [nombre, desde (mes, día), lámpara]
-  ['Capricornio', 12, 22, 'aud'], ['Acuario', 1, 20, 'aud'], ['Piscis', 2, 19, 'mino'],
-  ['Aries', 3, 21, 'vera'], ['Tauro', 4, 20, 'cholito'], ['Géminis', 5, 21, 'fusilero'],
-  ['Cáncer', 6, 21, 'bucaram'], ['Leo', 7, 23, 'correa'], ['Virgo', 8, 23, 'vera'],
-  ['Libra', 9, 23, 'mino'], ['Escorpio', 10, 23, 'correa'], ['Sagitario', 11, 22, 'bucaram']
-];
+const { PJ, RASGOS, ESCALA, TESTS, SIGNOS } = window.LAMP;
 const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const EJES = ['x', 'y', 'z'];
+
 function signo(mes, dia) {
   const v = mes * 100 + dia;
   let s = SIGNOS[0];  // capricornio cubre del 22 de diciembre al 19 de enero
@@ -481,6 +213,23 @@ function signo(mes, dia) {
   if (v >= 1222) s = SIGNOS[0];
   return s;
 }
+
+/* El tope de cada rasgo sale de las preguntas: el mínimo y el máximo que se
+   pueden sumar eligiendo en cada pregunta la opción que más resta o más suma.
+   Así el perfil va de 0 a 10 aunque se añadan preguntas. La media es lo que
+   saca quien responde al azar: se compara contra ella y no contra el 5, o
+   todo el mundo caería en la provincia más tibia. */
+function topes(T) {
+  const t = Object.fromEntries(RASGOS.map((r) => [r.k, [0, 0, 0]]));
+  for (const q of T.preguntas) for (const r of RASGOS) {
+    const v = q.op.map((o) => o.r[r.k] || 0);
+    t[r.k][0] += Math.min(...v); t[r.k][1] += Math.max(...v);
+    t[r.k][2] += v.reduce((a, b) => a + b, 0) / v.length;
+  }
+  return t;
+}
+const escala = (tp, k, n) => (n - tp[k][0]) / (tp[k][1] - tp[k][0]) * 10;
+const FIRMA = .07;   // cuánto pesa un punto de firma frente al coseno (−1…1)
 
 /* ══════════ ESTADO Y PANTALLAS ══════════ */
 const $ = (s, r = document) => r.querySelector(s);
@@ -531,7 +280,7 @@ function pregunta() {
   const ops = T.tipo === 'plano' ? ESCALA : q.op;
   ul.innerHTML = ops.map((o, k) => `<li><button class="lm-opcion" type="button" data-k="${k}">` +
     (T.tipo === 'plano' ? `<span>${esc(o.t)}</span><span>${esc(o.n)}</span>`
-                        : `<b>${'ABCDEF'[k]}</b><span>${esc(o.t)}</span>`) +
+                        : `<b>${'ABCDEFGHI'[k]}</b><span>${esc(o.t)}</span>`) +
     `</button></li>`).join('');
 }
 
@@ -571,35 +320,54 @@ function atras() {
 function calcular() {
   const T = TESTS[st.id];
   if (T.tipo === 'plano') {
-    const acc = { x: [0, 0], y: [0, 0] };
+    const acc = { x: [0, 0], y: [0, 0], z: [0, 0] };
     T.preguntas.forEach((q, i) => {
-      acc[q.eje][0] += ESCALA[st.resp[i]].v * q.s;
-      acc[q.eje][1] += 2;
+      acc[q.eje][0] += ESCALA[st.resp[i]].v * q.s * q.w;
+      acc[q.eje][1] += 2 * q.w;
     });
-    const x = Math.round(acc.x[0] / acc.x[1] * 100) / 10;
-    const y = Math.round(acc.y[0] / acc.y[1] * 100) / 10;
-    return { id: st.id, x, y };
+    const r = { id: st.id };
+    for (const e of EJES) r[e] = Math.round(acc[e][0] / acc[e][1] * 100) / 10;
+    return r;
   }
+  if (T.tipo === 'rasgos') return perfil(st.id, st.resp.slice());
   const pts = Object.fromEntries(Object.keys(T.grupo).map((k) => [k, 0]));
   const carta = [];
+  const suma = (p) => { for (const [k, v] of Object.entries(p)) pts[k] += v; };
   if (T.fecha) {
     const s = signo(st.fecha.mes, st.fecha.dia);
-    pts[s[3]] += 2;
+    suma(s[3]);
     carta.push(s[0]);
   }
   T.preguntas.forEach((q, i) => {
     const o = q.op[st.resp[i]];
-    for (const [k, v] of Object.entries(o.p)) pts[k] += v;
+    suma(o.p);
     if (o.casa) carta.push(o.casa);
   });
   return { id: st.id, pts, carta };
 }
 
+/* Con las respuestas se arma todo: el perfil de 0 a 10, lo que se aparta de
+   la media y los puntos de firma. Por eso el hash guarda las respuestas. */
+function perfil(id, resp) {
+  const T = TESTS[id], tp = topes(T);
+  const sum = Object.fromEntries(RASGOS.map((r) => [r.k, 0]));
+  const firma = {};
+  T.preguntas.forEach((q, i) => {
+    const o = q.op[resp[i]];
+    for (const [k, v] of Object.entries(o.r)) sum[k] += v;
+    for (const [k, v] of Object.entries(o.b || {})) firma[k] = (firma[k] || 0) + v;
+  });
+  const v = RASGOS.map((r) => Math.round(escala(tp, r.k, sum[r.k]) * 10) / 10);
+  const media = RASGOS.map((r) => escala(tp, r.k, tp[r.k][2]));
+  return { id, resp, v, media, firma };
+}
+
 /* El resultado viaja en el hash para poder compartirlo sin servidor:
-   #r=lamparometro,3.5,-2  ·  #r=playlist,aud,2.0.1.0...  */
+   #r=lamparometro,3.5,-2,6  ·  #r=provincia,7.5.2.10…  ·  #r=playlist,2.0.1…,Leo.Tarima */
 function codigo(r) {
   const T = TESTS[r.id];
-  if (T.tipo === 'plano') return `r=${r.id},${r.x},${r.y}`;
+  if (T.tipo === 'plano') return `r=${r.id},${r.x},${r.y},${r.z}`;
+  if (T.tipo === 'rasgos') return `r=${r.id},${r.resp.join('.')}`;
   const claves = Object.keys(T.grupo);
   let c = `r=${r.id},${claves.map((k) => r.pts[k]).join('.')}`;
   if (r.carta.length) c += ',' + r.carta.map(encodeURIComponent).join('.');
@@ -611,14 +379,19 @@ function leer(h) {
   const T = TESTS[m[1]];
   const partes = m[2].split(',');
   if (T.tipo === 'plano') {
-    const x = clamp(+partes[0]), y = clamp(+partes[1]);
-    if (Number.isNaN(x) || Number.isNaN(y)) return null;
-    return { id: m[1], x, y };
+    const n = partes.map(Number);
+    const r = { id: m[1], x: clamp(n[0]), y: clamp(n[1]), z: clamp(partes[2] === undefined ? 0 : n[2]) };
+    return EJES.some((e) => Number.isNaN(r[e])) ? null : r;
+  }
+  if (T.tipo === 'rasgos') {
+    const resp = partes[0].split('.').map(Number);
+    if (resp.length !== T.preguntas.length || resp.some((n, i) => !Number.isInteger(n) || n < 0 || n >= T.preguntas[i].op.length)) return null;
+    return perfil(m[1], resp);
   }
   const claves = Object.keys(T.grupo);
   const v = partes[0].split('.').map(Number);
-  if (v.length !== claves.length || v.some((n) => !Number.isFinite(n) || n < 0 || n > 40)) return null;
-  const carta = partes[1] ? partes[1].split('.').map((s) => decodeURIComponent(s).slice(0, 40)) : [];
+  if (v.length !== claves.length || v.some((n) => !Number.isFinite(n) || n < 0 || n > 60)) return null;
+  const carta = partes[1] ? partes[1].split('.').map((s) => { try { return decodeURIComponent(s).slice(0, 40); } catch { return ''; } }) : [];
   return { id: m[1], pts: Object.fromEntries(claves.map((k, i) => [k, v[i]])), carta };
 }
 const clamp = (n) => Math.max(-10, Math.min(10, n));
@@ -626,11 +399,24 @@ const clamp = (n) => Math.max(-10, Math.min(10, n));
 function ranking(r) {
   const T = TESTS[r.id];
   if (T.tipo === 'plano') {
-    // afinidad: 100 % encima, 0 % a veinte puntos, que es el ancho del plano
+    // afinidad: 100 % encima; 0 % a veinticinco puntos de distancia en los tres ejes
     return Object.entries(PJ).map(([k, p]) => {
-      const d = Math.hypot(p.x - r.x, p.y - r.y);
-      return { k, o: p, pct: Math.max(0, Math.round(100 - d / 20 * 100)) };
+      const d = Math.hypot(p.x - r.x, p.y - r.y, (p.z - r.z) * .8);
+      return { k, o: p, pct: Math.max(0, Math.round(100 - d / 25 * 100)) };
     }).sort((a, b) => b.pct - a.pct);
+  }
+  if (T.tipo === 'rasgos') {
+    // coseno entre lo que te apartas de la media y lo que se aparta la provincia
+    const lista = Object.entries(T.grupo);
+    const pm = RASGOS.map((_, i) => lista.reduce((a, [, p]) => a + p.v[i], 0) / lista.length);
+    const u = r.v.map((n, i) => n - r.media[i]);
+    const nu = Math.hypot(...u) || 1;
+    return lista.map(([k, p]) => {
+      const c = p.v.map((n, i) => n - pm[i]);
+      const cos = c.reduce((a, n, i) => a + n * u[i], 0) / ((Math.hypot(...c) || 1) * nu);
+      const s = cos + FIRMA * (r.firma[k] || 0);
+      return { k, o: p, s, pct: Math.max(0, Math.min(99, Math.round(s / 1.3 * 100))) };
+    }).sort((a, b) => b.s - a.s);
   }
   const total = Object.values(r.pts).reduce((a, b) => a + b, 0) || 1;
   return Object.entries(r.pts).map(([k, v]) => ({ k, o: T.grupo[k], pct: Math.round(v / total * 100) }))
@@ -644,6 +430,7 @@ function resultado(r, ajeno) {
   const g = rk[0].o;
   const otros = Object.keys(TESTS).filter((k) => k !== r.id);
   const que = T.cosa ? 'Eres' : 'Te pareces a';
+  const cuantos = T.tipo === 'puntos' ? 5 : 6;
   const el = $('#resultado');
 
   el.innerHTML = `
@@ -654,17 +441,18 @@ function resultado(r, ajeno) {
       <div>
         <p class="em-meta">${que}</p>
         <h1 id="r-t">${esc(g.nombre)}</h1>
-        <p class="em-meta">${esc(g.apodo)} · ${rk[0].pct} % de afinidad</p>
+        <p class="em-meta">${g.region ? esc(g.region) + ' · ' : ''}${esc(g.apodo)} · ${rk[0].pct} % de afinidad</p>
       </div>
     </div>
     <blockquote class="em-quote">${esc(g.frase)}</blockquote>
     <p>${esc(g.desc)}</p>
     <ul class="lm-rasgos">${g.rasgos.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
     ${r.carta && r.carta.length ? `<div class="lm-sec"><span class="em-kicker">Tu carta</span>
-      <ul class="lm-carta">${r.carta.map((c, i) => `<li>${['Sol en', 'Ascendente en', 'Luna en', 'Venus en', 'Mercurio en'][i] || ''} ${esc(c)}</li>`).join('')}</ul></div>` : ''}
+      <ul class="lm-carta">${r.carta.map((c, i) => `<li>${esc(T.astros[i] || '')} ${esc(c)}</li>`).join('')}</ul></div>` : ''}
     ${T.tipo === 'plano' ? planoHTML(r) : ''}
-    <div class="lm-sec"><span class="em-kicker">${T.cosa ? 'Tu percha' : 'Tu podio'}</span>
-      <ol class="lm-podio">${rk.slice(0, T.tipo === 'plano' ? 7 : 4).filter((x) => x.pct > 0).map((x) => `<li>${mono(x.o, 'lm-mono--s')}
+    ${T.tipo === 'rasgos' ? adnHTML(r, g) : ''}
+    <div class="lm-sec"><span class="em-kicker">${T.tipo === 'rasgos' ? 'También podrías ser' : T.cosa ? 'Tu percha' : 'Tu podio'}</span>
+      <ol class="lm-podio">${rk.slice(T.tipo === 'rasgos' ? 1 : 0, cuantos + 1).filter((x) => x.pct > 0).map((x) => `<li>${mono(x.o, 'lm-mono--s')}
         <div><b>${esc(x.o.nombre)}</b><div class="lm-medida" style="--c:${x.o.c}"><i style="width:${x.pct}%"></i></div></div>
         <span class="tabular">${x.pct} %</span></li>`).join('')}</ol></div>
     <div class="lm-acciones">
@@ -674,25 +462,31 @@ function resultado(r, ajeno) {
     </div>
     <div class="lm-sec"><span class="em-kicker">Sigue midiéndote</span>
       <div class="lm-tests" style="margin-top:0">${otros.map(tarjetaTest).join('')}</div></div>
-    <p class="lm-aviso">Sátira. Las lámparas de este test no participaron ni lo aprobaron,
-    y lo que dice de ellas es una exageración de su figura pública.</p>`;
+    <p class="lm-aviso">Sátira. Las personas, personajes y provincias de este test no participaron
+    ni lo aprobaron, y lo que dice de ellos es una exageración cariñosa, no un dato.</p>`;
   el._r = r;
   mostrar('resultado');
 }
 
+function adnHTML(r, g) {
+  return `<div class="lm-sec"><span class="em-kicker">Tu ADN provincial</span>
+    <ul class="lm-adn">${RASGOS.map((x, i) => `<li>
+      <b>${esc(x.nombre)}</b>
+      <div class="lm-medida"><i style="width:${r.v[i] * 10}%"></i><s style="left:${g.v[i] * 10}%" title="${esc(g.nombre)}"></s></div>
+      <span>${esc(r.v[i] >= 5 ? x.alto : x.bajo)}</span></li>`).join('')}</ul>
+    <p class="em-meta">La barra es tuya; la rayita, de ${esc(g.nombre)}.</p></div>`;
+}
+
 function planoHTML(r) {
   const L = 11;   // el plano va de −10 a 10 con un margen
-  const pt = (x, y) => [x, -y];
-  const pjs = Object.values(PJ).map((p) => {
-    const [cx, cy] = pt(p.x, p.y);
-    const izq = p.x > 4;
-    return `<circle cx="${cx}" cy="${cy}" r=".45" fill="${p.c}"/>
-      <text class="nom" x="${cx + (izq ? -.7 : .7)}" y="${cy + .24}" text-anchor="${izq ? 'end' : 'start'}">${esc(p.nombre)}</text>`;
-  }).join('');
-  const [ux, uy] = pt(r.x, r.y);
+  const pjs = Object.values(PJ).map((p) => `<g class="pj" data-n="${esc(p.nombre)}" tabindex="0" role="button" aria-label="${esc(p.nombre)}"><title>${esc(p.nombre)}</title>
+      <circle cx="${p.x}" cy="${-p.y}" r=".78" fill="${p.c}"/>
+      <text class="ini" x="${p.x}" y="${-p.y + .2}" text-anchor="middle" fill="${p.t}">${esc(p.ini)}</text></g>`).join('');
   const rej = [-5, 5].map((v) => `<line class="rej" x1="${v}" y1="-10" x2="${v}" y2="10"/><line class="rej" x1="-10" y1="${v}" x2="10" y2="${v}"/>`).join('');
   const ex = r.x < -3 ? 'Que pague el Estado' : r.x > 3 ? 'Que cada quien se rebusque' : 'Que pague el que pueda';
   const ey = r.y > 3 ? 'Mando yo' : r.y < -3 ? 'Aquí nadie manda' : 'Mandan todos y nadie';
+  const ez = r.z > 5 ? 'Tarima, luces y humo' : r.z > 0 ? 'Lámpara con moderación' : r.z > -5 ? 'Perfil bajo, con escapadas' : 'Un Excel con patas';
+  const sg = (n) => `${n > 0 ? '+' : ''}${n}`;
   return `<div class="lm-sec"><span class="em-kicker">Tu lugar en el plano</span>
     <svg class="lm-plano" viewBox="${-L} ${-L - 1} ${2 * L} ${2 * L + 2}" role="img" aria-label="Plano político: estás en x ${r.x}, y ${r.y}">
       <rect class="cuad" x="-10" y="-10" width="10" height="10" fill="#c53b2b"/>
@@ -703,15 +497,18 @@ function planoHTML(r) {
       <line class="eje" x1="-10" y1="0" x2="10" y2="0"/><line class="eje" x1="0" y1="-10" x2="0" y2="10"/>
       <text class="rot" x="0" y="-10.5" text-anchor="middle">Mando yo · sabatina</text>
       <text class="rot" x="0" y="11.1" text-anchor="middle">Aquí nadie manda · farra</text>
-      <text class="rot" x="-10" y="-.4">← Que pague el Estado</text>
-      <text class="rot" x="10" y="-.4" text-anchor="end">Que se rebusque →</text>
+      <text class="rot" x="-9.8" y="1">← Estado</text>
+      <text class="rot" x="9.8" y="1" text-anchor="end">Rebusque →</text>
       ${pjs}
-      <circle class="tu" cx="${ux}" cy="${uy}" r=".75" stroke="var(--em-base)" stroke-width=".18"/>
-      <text class="tu-nom" x="${ux}" y="${uy - 1.05}" text-anchor="middle">TÚ</text>
+      <circle class="tu" cx="${r.x}" cy="${-r.y}" r="1.05" fill="none" stroke="var(--em-accent)" stroke-width=".3"/>
+      <text class="tu-nom" x="${r.x}" y="${-r.y - 1.25}" text-anchor="middle">TÚ</text>
     </svg>
+    <p class="lm-quien" id="plano-quien" aria-live="polite">Toca un círculo para ver quién es.</p>
     <div class="lm-ejes">
-      <div><b>¿Quién paga?</b><span>${ex}</span> <span class="em-meta">(${r.x > 0 ? '+' : ''}${r.x})</span></div>
-      <div><b>¿Quién manda?</b><span>${ey}</span> <span class="em-meta">(${r.y > 0 ? '+' : ''}${r.y})</span></div>
+      <div><b>¿Quién paga?</b><span>${ex}</span> <span class="em-meta">(${sg(r.x)})</span></div>
+      <div><b>¿Quién manda?</b><span>${ey}</span> <span class="em-meta">(${sg(r.y)})</span></div>
+      <div class="lm-ejes__z"><b>¿Cuánta lámpara? · el Lamparómetro</b><span>${ez}</span> <span class="em-meta">(${sg(r.z)})</span>
+        <div class="lm-medida lm-medida--z"><i style="width:${(r.z + 10) * 5}%"></i></div></div>
     </div></div>`;
 }
 
@@ -798,6 +595,8 @@ async function tarjeta(r) {
     x.fillText('MANDO YO', ox, oy - S / 2 - 12); x.fillText('NADIE MANDA', ox, oy + S / 2 + 28);
     x.textAlign = 'right'; x.fillText('ESTADO', ox - S / 2 - 12, oy + 6);
     x.textAlign = 'left'; x.fillText('REBUSQUE', ox + S / 2 + 12, oy + 6);
+    x.textAlign = 'left'; x.font = `800 22px ${sans}`; x.fillStyle = '#c53b2b';
+    x.fillText(`LAMPARÓMETRO ${r.z > 0 ? '+' : ''}${r.z}`, M, oy + S / 2 + 28);
   } else {
     x.font = `600 30px ${sans}`;
     for (const it of rk.slice(1, 4)) {
@@ -811,7 +610,7 @@ async function tarjeta(r) {
   x.textAlign = 'left';
   x.fillStyle = '#141414'; x.fillRect(0, H - 150, W, 150);
   x.fillStyle = '#ffffff'; x.font = `700 36px ${serif}`;
-  x.fillText(T.cosa ? '¿Y tú qué producto del Tuti eres?' : '¿Y tú a qué lámpara te pareces?', M, H - 84);
+  x.fillText(T.pie, M, H - 84);
   x.fillStyle = '#a0a0a0'; x.font = `600 24px ${sans}`;
   x.fillText(`${(location.host + location.pathname).replace(/\/(index\.html)?$/, '')} · sátira de EL MERCIO.`, M, H - 44);
   return cv;
@@ -841,9 +640,11 @@ function tarjetaTest(id) {
     <span class="em-meta">${esc(T.meta)} →</span></button>`;
 }
 $('#tests').innerHTML = Object.keys(TESTS).map(tarjetaTest).join('');
-$('#elenco').innerHTML = Object.values(PJ).map((p) => `<span title="${esc(p.nombre)}">${mono(p)}</span>`).join('');
+$('#elenco').innerHTML = Object.values(PJ).map((p) => `<span title="${esc(p.nombre)}">${mono(p, 'lm-mono--s')}</span>`).join('');
 
 document.addEventListener('click', (e) => {
+  const pj = e.target.closest('.lm-plano .pj');
+  if (pj) return quien(pj);
   const b = e.target.closest('[data-empezar],[data-ir],[data-accion],.lm-opcion,#q-atras');
   if (!b) return;
   if (b.dataset.empezar) { e.preventDefault(); history.replaceState(null, '', location.pathname + location.search); empezar(b.dataset.empezar); }
@@ -852,6 +653,16 @@ document.addEventListener('click', (e) => {
   else if (b.dataset.accion === 'tarjeta') descargar();
   else if (b.id === 'q-atras') atras();
   else if (b.classList.contains('lm-opcion')) responder(+b.dataset.k);
+});
+
+function quien(g) {
+  for (const o of document.querySelectorAll('.lm-plano .pj.activo')) o.classList.remove('activo');
+  g.classList.add('activo');
+  $('#plano-quien').textContent = g.dataset.n;
+}
+document.addEventListener('keydown', (e) => {
+  const pj = e.target.closest?.('.lm-plano .pj');
+  if (pj && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); quien(pj); }
 });
 
 function enrutar() {
