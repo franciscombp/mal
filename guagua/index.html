@@ -232,7 +232,13 @@
       <button class="chip" type="button" data-tipo="m" aria-pressed="false">Dedicarla a quien ya no está</button>
     </div>
     <div class="regalar__rej">
-      <img class="regalar__vista" id="r-vista" alt="Vista previa de la tarjeta que se va a compartir" width="1080" height="1350">
+      <div class="regalar__previa">
+        <img class="regalar__vista" id="r-vista" alt="Vista previa de la imagen que se va a compartir" width="1080" height="1920">
+        <div class="fila regalar__formato" role="group" aria-label="Formato de la imagen">
+          <button class="chip chip--s" type="button" data-formato="historia" aria-pressed="true">Historia 9:16</button>
+          <button class="chip chip--s" type="button" data-formato="cuadrada" aria-pressed="false">Publicación 1:1</button>
+        </div>
+      </div>
       <div class="pila">
         <div class="campo"><label for="r-nombre">Se llama</label><input id="r-nombre" maxlength="40" autocomplete="off"></div>
         <div class="campo"><label for="r-para" id="r-para-rotulo">Para</label><input id="r-para" maxlength="40" autocomplete="off" placeholder="Mi hermana, mi abuelo, la familia"></div>
@@ -259,7 +265,7 @@
     <button class="btn btn--rojo" id="r-compartir" type="button"><svg class="icono" aria-hidden="true"><use href="#i-compartir"/></svg> Compartir</button>
     <button class="btn" id="r-whatsapp" type="button"><svg class="icono" aria-hidden="true"><use href="#g-whatsapp"/></svg> WhatsApp</button>
     <button class="btn" id="r-copiar" type="button"><svg class="icono" aria-hidden="true"><use href="#i-enlace"/></svg> Copiar enlace</button>
-    <button class="btn" id="r-descargar" type="button"><svg class="icono" aria-hidden="true"><use href="#i-descargar"/></svg> Tarjeta</button>
+    <button class="btn" id="r-descargar" type="button"><svg class="icono" aria-hidden="true"><use href="#i-descargar"/></svg> Imagen</button>
   </div>
 </dialog>
 
