@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es" data-marca="juegos">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cuentan que… · leyendas para armar · UNA</title>
+<meta name="description" content="Seis leyendas del Ecuador y de América Latina, cada una con su puzzle: encaja la piedra que falta en el atrio de San Francisco, ordena la ventana del padre Almeida, ilumina las calles de la Dama Tapada, descubre a la Tunda, desenreda las trenzas del Sombrerón y nivela la balsa de El Dorado.">
+<link rel="canonical" href="https://franciscombp.github.io/mal/leyendas/">
+<meta name="theme-color" content="#f3f1ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1d1822" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="UNA">
+<meta property="og:locale" content="es_EC">
+<meta property="og:title" content="Cuentan que… · seis leyendas para armar">
+<meta property="og:description" content="Cantuña, el padre Almeida, la Dama Tapada, la Tunda, el Sombrerón y El Dorado: cada leyenda es un puzzle, y cada puzzle resuelto, una estampa.">
+<meta property="og:url" content="https://franciscombp.github.io/mal/leyendas/">
+<meta property="og:image" content="https://franciscombp.github.io/mal/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../img/icono-leyendas.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../img/icono-180.png">
+<link rel="preload" href="../ds/fonts/syne.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../ds/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../ds/mal/mal.css?v=1.0.17">
+<link rel="stylesheet" href="leyendas.css">
+<script src="../ds/mal/mal.js?v=1.0.17" defer></script>
+<script src="leyendas.js" defer></script>
+</head>
+<body class="cq">
+<a class="salta" href="#principal">Saltar al contenido</a>
+
+<header class="cq-barra">
+  <a class="cq-marca" href="#/"><i aria-hidden="true"></i><b>Cuentan que…</b></a>
+  <div class="cq-barra__acc">
+    <span class="badge" id="cuenta" title="Estampas ganadas"><svg class="icono icono--s" aria-hidden="true"><use href="#i-estrella"/></svg> <span id="cuenta-n">0</span>/6</span>
+    <a class="btn btn--sm btn--fantasma" href="../">una.red</a>
+  </div>
+</header>
+
+<main id="principal">
+  <!-- ─── el mapa: las seis leyendas ─────────────────────────── -->
+  <section class="cq-mapa" id="mapa" aria-labelledby="mapa-t">
+    <div class="cq-portada">
+      <p class="kicker">Leyendas del Ecuador y de América Latina</p>
+      <h1 id="mapa-t">Cuentan que…</h1>
+      <p class="lede">Lo que contaban las abuelas cuando se iba la luz, convertido en
+      puzzles. Cada leyenda se arma con las manos, y cada una que resuelves te deja
+      una estampa.</p>
+    </div>
+    <ul class="cq-cartas" id="cartas"></ul>
+    <p class="micro cq-nota" id="nota-mapa">Son versiones de tradición oral: cada pueblo las
+    cuenta a su manera, y todas valen.</p>
+  </section>
+
+  <!-- ─── una leyenda abierta ─────────────────────────────────── -->
+  <section class="cq-leyenda" id="leyenda" aria-labelledby="ley-t" hidden>
+    <div class="cq-cuento">
+      <a class="btn btn--sm btn--fantasma cq-volver" href="#/"><svg class="icono icono--s" aria-hidden="true"><use href="#i-flecha-izq"/></svg> Todas las leyendas</a>
+      <p class="kicker" id="ley-lugar"></p>
+      <h1 id="ley-t"></h1>
+      <div class="cq-texto" id="ley-cuento"></div>
+      <div class="cq-regla" id="ley-regla"></div>
+      <div class="cq-final" id="ley-final" hidden></div>
+      <p class="cq-sigue" id="ley-sigue" hidden>
+        <a class="btn btn--rojo" id="ley-siguiente" href="#/">Siguiente leyenda <svg class="icono icono--s" aria-hidden="true"><use href="#i-flecha-der"/></svg></a>
+      </p>
+    </div>
+    <div class="cq-mesa">
+      <div class="cq-tablero" id="tablero"></div>
+      <p class="cq-estado" id="estado" aria-live="polite"></p>
+      <div class="cq-controles" id="controles">
+        <button class="btn btn--sm" id="reiniciar" type="button"><svg class="icono icono--s" aria-hidden="true"><use href="#i-reiniciar"/></svg> Empezar de nuevo</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ─── la estampa: sale cuando se resuelve una leyenda ──────── -->
+<div class="premio cq-premio" id="premio" role="dialog" aria-modal="true" aria-labelledby="premio-nombre" tabindex="-1" hidden>
+  <div class="premio__rayos" aria-hidden="true"></div>
+  <div class="premio__escena">
+    <div class="premio__pieza premio__pieza--entra" id="premio-pieza"><div class="premio__disco" id="premio-disco"></div></div>
+    <div class="premio__texto">
+      <p class="kicker" id="premio-kicker"></p>
+      <p class="premio__nombre" id="premio-nombre"></p>
+      <p class="premio__desc" id="premio-desc"></p>
+    </div>
+  </div>
+  <p class="premio__pie">Toca para seguir</p>
+</div>
+
+<footer class="cq-pie">
+  <p><b>Cuentan que…</b> · un juego de <a href="../">UNA</a> · hecho en Quito, con Claude Code de copiloto</p>
+</footer>
+</body>
+</html>
