@@ -567,7 +567,9 @@ class Visor {
     this.cabeceo = 0.9;            // desde arriba y un poco de frente: así se mira una lata
     this.dist = 10.5;
     this.zoom = 1;
-    this.necesita = { radio: 2.4, grosor: 0.7 };       // lo que hay que ver: el largo mayor y el alto
+    // las medidas de la figura, para encuadrarla acostada o de pie
+    this.medidas = { cx: 0, cy: 1.6, minY: 0, maxZ: 0.3, largo: 2.4, ancho: 2.4, grosor: 0.6 };
+    this.dePie = 0;                // 0: acostada en la lata · 1: de pie en el plato
     this.margen = { arriba: 0, abajo: 0, derecha: 0 };   // lo que tapan la barra y el dock
     this.piezas = [];
     this.ops = []; this.objetos = []; this.extra = [];
@@ -663,12 +665,26 @@ class Visor {
     const caja = new THREE.Box3();
     this.piezas.forEach((p) => caja.union(new THREE.Box3().setFromBufferAttribute(geometriaPieza(p).attributes.position)));
     this.zoom = 1;
-    this.objetivo.set(0, 0.3, 0);
-    if (caja.isEmpty()) { this.acostada.position.set(0, -PISO, 1.6); this.necesita = { radio: 2.4, grosor: 0.7 }; return; }
+    if (caja.isEmpty()) { this.medidas = { cx: 0, cy: 1.6, minY: 0, maxZ: 0.3, largo: 2.4, ancho: 2.4, grosor: 0.6 }; return; }
     const c = caja.getCenter(V()), t = caja.getSize(V());
-    // el centro de la figura, sobre el eje del plato giratorio
-    this.acostada.position.set(-c.x, -PISO, c.y);
-    this.necesita = { radio: Math.max(t.x, t.y) / 2 + 0.45, grosor: Math.max(0.5, caja.max.z - PISO) };
+    this.medidas = {
+      cx: c.x, cy: c.y, minY: caja.min.y, maxZ: caja.max.z,
+      largo: t.y / 2 + 0.45, ancho: t.x / 2 + 0.45, grosor: (caja.max.z - PISO) / 2 + 0.35,
+    };
+  }
+  /* Acostada en la lata para amasar y hornear; de pie en el plato para
+     decorar, con la espalda plana que le dejó la lata. Con `animar` se
+     levanta (o se acuesta) en medio segundo. */
+  postura(dePie, animar) {
+    if (!animar || quieto) { this.dePie = dePie; this.dibujar(); return; }
+    const de = this.dePie, t0 = performance.now();
+    const paso = (t) => {
+      const k = Math.min(1, (t - t0) / 650);
+      this.dePie = de + (dePie - de) * (1 - (1 - k) ** 3);
+      this.dibujar();
+      if (k < 1) requestAnimationFrame(paso);
+    };
+    requestAnimationFrame(paso);
   }
   malla(g, m) {
     const o = new THREE.Mesh(g, m);
@@ -876,7 +892,7 @@ class Visor {
       }
       if (modo === 'gira') {
         this.giro += dx * 0.012;
-        this.cabeceo = limita(this.cabeceo + dy * 0.006, 0.3, 1.45);
+        this.cabeceo = limita(this.cabeceo + dy * 0.006, ...this.limitesCabeceo());
         this.dibujar();
       } else if (modo === 'pinta') {
         this.op.arrastra(e);
@@ -884,7 +900,7 @@ class Visor {
         const k = par();
         if (!this.fijo) {
           this.giro += (k.x - gesto.x) * 0.011;
-          this.cabeceo = limita(this.cabeceo + (k.y - gesto.y) * 0.006, 0.3, 1.45);
+          this.cabeceo = limita(this.cabeceo + (k.y - gesto.y) * 0.006, ...this.limitesCabeceo());
         }
         this.zoom = limita(gesto.zoom * gesto.d / k.d, 0.45, 1.7);
         gesto.x = k.x; gesto.y = k.y;
@@ -932,7 +948,17 @@ class Visor {
   /* La cámara encuadra lo que hay en el hueco que dejan libre la barra y
      el dock, no en toda la pantalla: el centro se corre con `setViewOffset`
      y la distancia crece lo que haga falta para que entre entero. */
+  limitesCabeceo() {
+    const t = this.dePie;
+    return [0.3 + (-0.05 - 0.3) * t, 1.45 + (0.95 - 1.45) * t];
+  }
   ubicar() {
+    // la postura: de acostada (base sobre la lata) a parada (pies en el plato),
+    // siempre con el centro de la figura sobre el eje del plato giratorio
+    const md = this.medidas, t = this.dePie;
+    this.acostada.rotation.x = -Math.PI / 2 * (1 - t);
+    this.acostada.position.set(-md.cx, -PISO + (-md.minY + PISO) * t, md.cy + (-(PISO + md.maxZ) / 2 - md.cy) * t);
+    this.objetivo.set(0, 0.3 + (md.cy - md.minY - 0.3) * t, 0);
     const o = this.objetivo;
     this.figura.rotation.y = this.giro;
     this.figura.updateMatrixWorld();
@@ -941,9 +967,11 @@ class Visor {
     const m = this.margen;
     const libreW = Math.max(160, w - m.derecha), libreH = Math.max(160, h - m.arriba - m.abajo);
     const tan = Math.tan(THREE.MathUtils.degToRad(this.camara.fov / 2));
-    // acostada, lo que se ve de alto depende de cuán desde arriba se mire
-    const { radio, grosor } = this.necesita;
-    const alto = radio * Math.sin(this.cabeceo) + grosor * Math.cos(this.cabeceo);
+    // lo que se ve de alto depende de la postura y de cuán desde arriba se mire
+    const { largo, ancho, grosor } = md;
+    const sc = Math.sin(this.cabeceo), cc = Math.cos(this.cabeceo);
+    const alto = (largo * sc + grosor * cc) * (1 - t) + (largo * cc + grosor * sc) * t;
+    const radio = Math.max(largo, ancho) * (1 - t) + Math.max(ancho, grosor) * t;
     const dv = alto / tan * (h / libreH);
     const dh = radio / (tan * (w / h)) * (w / libreW);
     this.dist = Math.max(dv, dh) * this.zoom;
@@ -976,7 +1004,8 @@ function foto(e, w, h, extra) {
   estudio.renderer.setSize(w, h, false);
   estudio.camara.aspect = w / h;
   estudio.camara.updateProjectionMatrix();
-  estudio.cabeceo = 1.12;          // como una foto de la lata, desde arriba
+  estudio.cabeceo = 0.12;          // de pie y de frente, como en la panadería
+  estudio.dePie = 1;
   estudio.cargar(e);
   (extra || []).forEach((op) => estudio.extra.push(op));
   estudio.actualizarBocados();
@@ -1209,11 +1238,9 @@ async function tarjeta(e) {
   ctx.fillText(e.d ? 'Te regalo' : que.charAt(0).toUpperCase() + que.slice(1), 540, 196, 1000);
   ctx.fillText(e.d ? que : 'para ti', 540, 282, 1000);
   const alto = 780, ancho = alto * 0.8, gx = 540 - ancho / 2 - 60, gy = 300;
-  // vista desde arriba: la sombra sigue la silueta del pan, un poco corrida
-  ctx.save();
-  ctx.shadowColor = 'rgba(10,0,12,.55)'; ctx.shadowBlur = 36; ctx.shadowOffsetY = 18;
+  ctx.fillStyle = 'rgba(0,0,0,.35)';
+  ctx.beginPath(); ctx.ellipse(gx + ancho / 2, gy + alto - 70, ancho * 0.34, 24, 0, 0, Math.PI * 2); ctx.fill();
   ctx.drawImage(foto(e, 800, 1000), gx, gy, ancho, alto);
-  ctx.restore();
   colada(ctx, 870, 960, 0.9);
   const nombre = '«' + nombreDe(e) + '»';
   ctx.font = '800 46px Syne, Inter, system-ui, sans-serif';
@@ -1622,13 +1649,16 @@ function irA(etapa) {
   taller.ambiente(etapa);
   if (etapa === 'amasar') {
     taller.hornear(0, false);
+    taller.postura(0, taller.dePie > 0);
     taller.cabeceo = 1.3;          // casi desde arriba, como sobre la mesa
     taller.girar(0, true);
   } else if (etapa === 'horno') {
+    taller.postura(0);
     taller.cabeceo = 0.95;
   } else if (etapa === 'decorar') {
     taller.hornear(estado.k / 100, false);
-    taller.cabeceo = 0.95;
+    taller.postura(1, true);       // sale del horno y se levanta: se decora de pie
+    taller.cabeceo = 0.2;
     // derecha otra vez (el horno la deja dando vueltas), por el camino corto
     taller.girar(Math.round(taller.giro / (Math.PI * 2)) * Math.PI * 2, true);
   }
@@ -2029,7 +2059,7 @@ function abrirPieza(item, e) {
   $('#p-editar').hidden = item.t !== 'mia';
   window.malDS.abrir('#d-pieza');
   if (!visorPieza) visorPieza = new Visor($('#p-lienzo'));
-  visorPieza.giro = 0;
+  visorPieza.giro = -0.25; visorPieza.dePie = 1; visorPieza.cabeceo = 0.2;
   visorPieza.cargar(e);
   visorPieza.medir();
 }
@@ -2105,7 +2135,7 @@ async function recibir(cod, regalo) {
       },
     });
   }
-  visorRegalo.giro = 0;
+  visorRegalo.giro = -0.25; visorRegalo.dePie = 1; visorRegalo.cabeceo = 0.2;
   visorRegalo.ambiente('decorar');
   visorRegalo.cargar(e);
   visorRegalo.medir();
