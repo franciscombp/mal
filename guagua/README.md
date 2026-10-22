@@ -1,6 +1,15 @@
 # Guagua de pan
 
-Una guagua de pan en 3D para decorar con crema y regalar por el Día de Difuntos.
+Una guagua de pan en 3D, en tres actos, para regalar por el Día de Difuntos:
+
+1. **Amasar.** Bolitas (arrastrar hacia el lado las hace anchas; hacia arriba, altas) y chorizos
+   (se estiran con el dedo). Lo que cae encima de otra pieza se pega. Hay moldes: guagua,
+   caballito, chanchito, gallinita y la lata vacía.
+2. **Hornear.** La masa se infla y se dora en seis segundos; hay que sacarla en su punto. Antes
+   queda blanca, después se quema, y la panadera lo comenta.
+3. **Decorar.** Manga de crema con pincel y tres boquillas, rosetas, grageas, pasas, carita de
+   yeso en blanco y mordiscos. La cara no viene hecha: se dibuja.
+
 Vive en `franciscombp.github.io/mal/guagua/` y la carpeta se basta sola: Three.js va en
 `vendor/` (r170, licencia MIT en `vendor/LICENSE-three.txt`) y el sistema de diseño se pide
 con ruta relativa desde `../ds/`.
@@ -29,6 +38,8 @@ la piel (`?marca=mercio`) pero no el `embed`: quien los recibe abre la guagua a 
 
 ## Cómo viaja una guagua
 
-No hay servidor. La guagua es una lista de operaciones (trazos de manga, rosetas, grageas,
-mordiscos) en centésimas de unidad; se comprime con `deflate-raw` y va en el enlace, después
+No hay servidor. La guagua son tres cosas: la masa (`a`, una lista de bolitas y chorizos), la
+cocción (`k`) y la decoración (`o`, trazos de manga, rosetas, grageas, pasas, caritas y
+mordiscos), todo en centésimas de unidad. Los enlaces de la versión anterior (`v: 2`) se
+traducen solos al formato de ahora (`v: 3`). La receta se comprime con `deflate-raw` y va en el enlace, después
 del `#`, así que tampoco llega a GitHub. La vitrina vive en el `localStorage` de cada navegador.
