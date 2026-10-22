@@ -139,6 +139,7 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 .juego:not([data-herramienta="chorizo"]) .dock__fila[data-con="chorizo"],
 .juego[data-herramienta="chorizo"] .dock__fila[data-sin="chorizo"],
 .juego:not([data-herramienta="manga"]):not([data-herramienta="roseta"]) .dock__fila[data-con="manga roseta"],
+.juego:not([data-herramienta="manga"]):not([data-herramienta="roseta"]):not([data-herramienta="carita"]) .dock__fila[data-con="manga roseta carita"],
 .juego:not([data-herramienta="carita"]) .dock__fila[data-con="carita"],
 .juego:not([data-herramienta="grageas"]) .dock__fila[data-con="grageas"],
 .juego:not([data-herramienta="pasa"]) .dock__fila[data-con="pasa"],

@@ -8,7 +8,8 @@ Una guagua de pan en 3D, en tres actos, para regalar por el Día de Difuntos:
 2. **Hornear.** La masa se infla y se dora en seis segundos; hay que sacarla en su punto. Antes
    queda blanca, después se quema, y la panadera lo comenta.
 3. **Decorar.** Manga de crema con pincel y tres boquillas, rosetas, grageas, pasas, carita de
-   yeso en blanco y mordiscos. La cara no viene hecha: se dibuja.
+   crema y mordiscos. La cara no viene hecha: la carita es una espiral de crema que se amolda
+   a la cabeza, y los ojos y la boca se ponen con pasas y el pincel.
 
 Vive en `franciscombp.github.io/mal/guagua/` y la carpeta se basta sola: Three.js va en
 `vendor/` (r170, licencia MIT en `vendor/LICENSE-three.txt`) y el sistema de diseño se pide
