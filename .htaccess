@@ -30,6 +30,8 @@ RewriteRule ^(coches/.*)$  https://franciscombp.github.io/mal/$1 [R=301,L]
 RewriteRule ^coches$      https://franciscombp.github.io/mal/coches/ [R=301,L]
 RewriteRule ^(lamparometro/.*)$ https://franciscombp.github.io/mal/$1 [R=301,L]
 RewriteRule ^lamparometro$ https://franciscombp.github.io/mal/lamparometro/ [R=301,L]
+RewriteRule ^(leyendas/.*)$ https://franciscombp.github.io/mal/$1 [R=301,L]
+RewriteRule ^leyendas$     https://franciscombp.github.io/mal/leyendas/ [R=301,L]
 
 <IfModule mod_headers.c>
   Header set X-Content-Type-Options "nosniff"

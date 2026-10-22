@@ -1,0 +1,144 @@
+/* Cuentan que… · lo propio del juego. Lo demás —botones, chips, vidas,
+   la pantalla de premio— sale de mal.css con el tema de juegos.
+
+   Los tableros son SVG con sus colores de escena dentro: son de noche
+   en los dos temas, como se cuentan las leyendas. */
+
+.cq{min-height:100dvh;display:flex;flex-direction:column;background:var(--mal-fondo)}
+.cq main{flex:1}
+
+/* ─── la barra ─────────────────────────────────────────────── */
+.cq-barra{
+  position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:var(--mal-e3);
+  padding:calc(env(safe-area-inset-top, 0px) + var(--mal-e3)) max(16px, env(safe-area-inset-right, 0px)) var(--mal-e3) max(16px, env(safe-area-inset-left, 0px));
+  background:var(--mal-relleno-barra);border-bottom:var(--mal-borde);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+}
+.cq-marca{display:flex;align-items:center;gap:var(--mal-e2);text-decoration:none;color:var(--mal-on-surface);
+  font-family:var(--mal-display);font-weight:var(--ref-peso-display);font-size:1.15rem;letter-spacing:-.02em}
+.cq-marca i{width:14px;height:14px;border-radius:50%;background:var(--mal-relleno-marca);box-shadow:0 0 0 3px rgba(var(--mal-primary-rgb), .18)}
+.cq-barra__acc{display:flex;align-items:center;gap:var(--mal-e2)}
+.cq-barra .badge{font-variant-numeric:tabular-nums}
+
+/* ─── el mapa ──────────────────────────────────────────────── */
+.cq-mapa{width:min(100% - 32px, 1120px);margin-inline:auto;padding-block:var(--mal-e7) var(--mal-e8)}
+.cq-portada{max-width:44rem;margin-bottom:var(--mal-e7)}
+.cq-portada h1{font-size:var(--mal-t-display);line-height:1;margin-block:var(--mal-e2) var(--mal-e4)}
+.cq-cartas{list-style:none;margin:0;padding:0;display:grid;gap:var(--mal-e5);
+  grid-template-columns:repeat(auto-fill, minmax(min(100%, 250px), 1fr))}
+.cq-carta{
+  position:relative;display:flex;flex-direction:column;height:100%;padding:var(--mal-e5);
+  text-decoration:none;color:var(--mal-on-surface);
+  background:var(--mal-surface);border:var(--mal-borde-fuerte);border-radius:var(--mal-r);
+  box-shadow:var(--mal-elev-1);transition:transform var(--mal-dur) var(--mal-ease), box-shadow var(--mal-dur) var(--mal-ease);
+}
+.cq-carta:hover{transform:var(--mal-salto)}
+.cq-carta:active{transform:var(--mal-presion);box-shadow:none}
+.cq-carta:focus-visible{outline:3px solid var(--mal-primary);outline-offset:3px}
+.cq-carta__dibujo{display:grid;place-items:center;width:84px;height:84px;margin-bottom:var(--mal-e4);
+  border-radius:50%;background:#1d1822;border:2px solid var(--mal-on-surface)}
+.cq-carta__dibujo svg{width:68px;height:68px}
+.cq-carta__n{position:absolute;top:var(--mal-e5);right:var(--mal-e5);font-family:var(--mal-mono);font-size:var(--mal-t-micro);color:var(--mal-on-surface-3);letter-spacing:.1em}
+.cq-carta__lugar{font-size:var(--mal-t-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--mal-on-surface-2)}
+.cq-carta__t{font-family:var(--mal-display);font-weight:var(--ref-peso-display);font-size:var(--mal-t-h4);line-height:1.15;margin-top:var(--mal-e1);overflow-wrap:anywhere}
+.cq-carta__e{display:flex;align-items:center;gap:6px;margin-top:auto;padding-top:var(--mal-e4);font-size:var(--mal-t-caption);color:var(--mal-on-surface-3)}
+.cq-carta--hecha .cq-carta__e{color:var(--mal-primary-txt);font-weight:600}
+.cq-carta--hecha .cq-carta__dibujo{box-shadow:0 0 0 4px var(--mal-primary)}
+.cq-nota{margin-top:var(--mal-e6);color:var(--mal-on-surface-3)}
+
+/* ─── una leyenda ──────────────────────────────────────────── */
+.cq-leyenda{width:min(100% - 32px, 1200px);margin-inline:auto;padding-block:var(--mal-e5) var(--mal-e8);
+  display:grid;gap:var(--mal-e6);align-items:start}
+@media (min-width:900px){
+  .cq-leyenda{grid-template-columns:minmax(0, 5fr) minmax(0, 7fr);gap:var(--mal-e7)}
+  .cq-cuento{position:sticky;top:84px}
+}
+.cq-volver{margin-bottom:var(--mal-e4)}
+.cq-cuento h1{font-size:var(--mal-t-h1);line-height:1.05;margin-block:var(--mal-e2) var(--mal-e4)}
+.cq-cuento h1:focus{outline:none}
+.cq-texto p{font-size:var(--mal-t-cuerpo);line-height:1.6;color:var(--mal-on-surface-2);margin-block:0 var(--mal-e3)}
+.cq-texto p:first-child::first-letter{font-family:var(--mal-display);font-weight:var(--ref-peso-display);
+  float:left;font-size:3.2em;line-height:.9;margin:.06em .1em 0 0;color:var(--mal-primary-txt)}
+.cq-regla,.cq-final{margin-top:var(--mal-e5);padding:var(--mal-e4) var(--mal-e5);border-radius:var(--mal-r-s);border:var(--mal-borde)}
+.cq-regla{background:var(--mal-pastel-azul)}
+.cq-final{background:var(--mal-pastel-lila);border-color:var(--mal-primary)}
+.cq-regla p,.cq-final p{margin:0;line-height:1.55;color:var(--mal-on-surface)}
+.cq-regla .kicker,.cq-final .kicker{margin-bottom:var(--mal-e2)}
+.cq-sigue{margin-top:var(--mal-e5)}
+
+.cq-mesa{display:flex;flex-direction:column;gap:var(--mal-e3);min-width:0}
+.cq-tablero{display:flex;flex-direction:column;align-items:center;gap:var(--mal-e4)}
+.cq-svg{display:block;width:100%;height:auto;max-width:max(280px, calc((100dvh - 230px) * var(--ar, 1)));overflow:hidden;
+  touch-action:none;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;
+  border-radius:var(--mal-r);box-shadow:var(--mal-elev-2)}
+.cq-svg:focus-visible{outline:3px solid var(--mal-primary);outline-offset:4px}
+.cq-svg [role=button]:focus-visible{outline:3px solid #ffc93c;outline-offset:2px}
+.cq-estado{min-height:1.6em;margin:0;text-align:center;font-weight:600;color:var(--mal-on-surface)}
+.cq-controles{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:var(--mal-e3)}
+
+/* Texto dentro de los tableros. */
+.cq-rotulo{font-family:var(--mal-display);font-weight:800;font-size:26px;fill:#ffc93c}
+.cq-num{font-family:var(--mal-mono);font-weight:700;font-size:15px;fill:#fff;paint-order:stroke;stroke:rgba(0,0,0,.55);stroke-width:3px;opacity:0;transition:opacity .2s}
+.cq-num--fijo,.cq-con-numeros .cq-num{opacity:1}
+
+/* Lo que se arrastra o se toca. Las transiciones van en el transform
+   porque las piezas se mueven con style.transform. */
+.cq-pieza,.cq-ofrenda,.cq-mono,.cq-ficha,.cq-calle,.cq-mujer{cursor:pointer}
+.cq-pieza,.cq-ofrenda,.cq-ficha{transition:transform .18s var(--mal-ease), opacity .4s}
+.cq-alza{transition:none !important;filter:drop-shadow(0 10px 8px rgba(0,0,0,.45))}
+.cq-sin-transicion{transition:none !important}
+.cq-suave{transition:opacity .6s}
+.cq-late{animation:cq-late 1.1s ease-in-out infinite}
+@keyframes cq-late{50%{opacity:.35}}
+
+/* Almeida */
+.cq-ficha:hover{filter:brightness(1.08)}
+
+/* La Dama Tapada */
+.cq-calle__fondo{fill:#1e1828;stroke:#2b2236;stroke-width:2;transition:fill .3s}
+.cq-calle__via{fill:#3d3448;transition:fill .3s}
+.cq-calle__giro{transition:transform .2s var(--mal-ease)}
+.cq-luz .cq-calle__fondo{fill:#2a2333}
+.cq-luz .cq-calle__via{fill:#f4c95d}
+.cq-dama{transition:transform .9s var(--mal-ease), opacity .6s}
+
+/* La Tunda */
+.cq-tunda{display:flex;flex-direction:column;gap:var(--mal-e4);width:100%}
+.cq-pistas{padding:var(--mal-e4) var(--mal-e5);background:var(--mal-surface);border:var(--mal-borde-fuerte);border-radius:var(--mal-r-s)}
+.cq-pistas ol{margin:var(--mal-e2) 0 0;padding-left:1.4em;display:grid;gap:4px}
+.cq-pistas li{line-height:1.45}
+.cq-tache{opacity:0;transition:opacity .15s;pointer-events:none}
+.cq-fuera .cq-tache{opacity:1}
+.cq-molinillo{opacity:0;transition:opacity .4s, transform .6s var(--mal-ease)}
+.cq-tunda-es .cq-molinillo{opacity:1;transform:translateY(8px)}
+.cq-tiembla{animation:cq-tiembla .45s}
+@keyframes cq-tiembla{20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+
+/* El Sombrerón */
+.cq-hilo__base{stroke:#5b3a1e;stroke-width:9;stroke-linecap:round}
+.cq-hilo__trenza{stroke:#a8754a;stroke-width:4;stroke-dasharray:6 6;stroke-linecap:round}
+.cq-cruza .cq-hilo__base{stroke:#b01254}
+.cq-cruza .cq-hilo__trenza{stroke:#ff77ab}
+.cq-suelto .cq-hilo__trenza{stroke:#ffc93c}
+.cq-mono:hover{filter:brightness(1.15)}
+
+/* El Dorado */
+.cq-balsa{transition:transform .5s cubic-bezier(.3,1.5,.5,1)}
+.cq-nivelada .cq-cacique{filter:drop-shadow(0 0 10px #ffc93c)}
+
+/* ─── la estampa ───────────────────────────────────────────── */
+.cq-premio{position:fixed;inset:0;z-index:100;min-height:0;padding-block:calc(env(safe-area-inset-top, 0px) + 48px) calc(env(safe-area-inset-bottom, 0px) + 40px)}
+.cq-premio:focus{outline:none}
+.cq-premio[hidden]{display:none}
+.cq-premio .premio__disco{background:#1d1822}
+.cq-premio__svg{width:70%;height:70%}
+.cq-con-premio{overflow:hidden}
+
+.cq-pie{padding:var(--mal-e5) 16px calc(env(safe-area-inset-bottom, 0px) + var(--mal-e5));text-align:center;
+  font-size:var(--mal-t-caption);color:var(--mal-on-surface-3);border-top:var(--mal-borde)}
+.cq-pie p{margin:0}
+
+@media (prefers-reduced-motion:reduce){
+  .cq-pieza,.cq-ofrenda,.cq-ficha,.cq-calle__giro,.cq-dama,.cq-balsa,.cq-carta,.cq-molinillo{transition:none}
+  .cq-late,.cq-tiembla{animation:none}
+}

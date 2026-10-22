@@ -1,0 +1,151 @@
+/* ══════════════════════════════════════════════════════════════
+   Guagua de pan · lo que el sistema no trae
+   El tema es `juegos`; aquí solo va la mesa donde se decora, la
+   paleta de cremas y la vitrina. Colores, radios y sombras salen
+   de los roles del sistema. La mesa es ilustración: su mantel es
+   morado de colada en claro y en oscuro.
+   ══════════════════════════════════════════════════════════════ */
+:root{
+  --mantel-1:#4b1450;
+  --mantel-2:#5e1d62;
+  --mantel-punto:rgba(255,201,60,.16);
+}
+body{background:var(--mal-bg);color:var(--mal-on-surface)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ─── el taller ────────────────────────────────────────────── */
+.taller{padding-block:var(--mal-e6) var(--mal-e7)}
+.taller__cab{max-width:46rem;margin-bottom:var(--mal-e5)}
+.taller__cab h1,.regalo h1{font-family:var(--mal-display);font-size:var(--mal-t-h1);line-height:1.02;letter-spacing:-.03em;margin:.2em 0 .3em}
+.taller__mesa{display:grid;gap:var(--mal-e5);grid-template-columns:minmax(0, 1.1fr) minmax(300px, .9fr);align-items:start}
+body.modo-regalo .taller{display:none}
+
+.mesa{
+  position:relative;border-radius:var(--mal-r);overflow:hidden;border:var(--mal-borde-fuerte);
+  box-shadow:var(--mal-elev-2);
+  background:
+    radial-gradient(circle at 50% 46%, rgba(255,255,255,.12) 0 36%, transparent 62%),
+    radial-gradient(var(--mantel-punto) 2px, transparent 2.5px) 0 0/28px 28px,
+    linear-gradient(160deg, var(--mantel-1), var(--mantel-2));
+}
+.lienzo{display:block;width:100%;height:auto;aspect-ratio:4/5;touch-action:none;cursor:crosshair}
+.taller__lienzo{min-width:0}
+.taller[data-herramienta="roseta"] .lienzo,.taller[data-herramienta="grageas"] .lienzo{cursor:cell}
+.taller[data-herramienta="mordisco"] .lienzo,.lienzo--comer{cursor:pointer}
+.mesa__flota{position:absolute;top:var(--mal-e3);right:var(--mal-e3);display:flex;gap:var(--mal-e2)}
+.mesa__flota .btn{background:var(--mal-surface)}
+.mesa__flota .btn:disabled{opacity:.5;cursor:default}
+.mesa__giro{position:absolute;bottom:var(--mal-e3);left:50%;transform:translateX(-50%);display:flex;gap:var(--mal-e2)}
+.mesa__giro .btn{background:var(--mal-surface)}
+.mesa__pista{margin:var(--mal-e3) 0 0}
+.mesa__sin3d{position:absolute;inset:auto var(--mal-e5) 40%;padding:var(--mal-e4);border-radius:var(--mal-r-s);
+  background:var(--mal-surface);color:var(--mal-on-surface);text-align:center}
+.lienzo.girando{cursor:grabbing}
+.lienzo:focus-visible{outline:3px solid var(--mal-primary);outline-offset:-3px}
+
+.herramientas{display:flex;flex-direction:column;gap:var(--mal-e5);padding:var(--mal-e5);position:sticky;top:var(--mal-e4)}
+.grupo{display:flex;flex-direction:column;gap:var(--mal-e3)}
+.grupo__t{font-family:var(--mal-mono);font-size:var(--mal-t-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--mal-on-surface-3);margin:0}
+.herramientas .fila{display:flex;flex-wrap:wrap;gap:var(--mal-e2)}
+.chip--s{min-height:40px;padding-inline:.8rem}
+.herramientas__acc{display:flex;flex-direction:column;gap:var(--mal-e3);padding-top:var(--mal-e2);border-top:var(--mal-separador)}
+.herramientas__acc .fila{justify-content:space-between}
+
+/* la paleta: una gota de cada crema */
+.cremas{display:grid;grid-template-columns:repeat(8, minmax(0, 1fr));gap:var(--mal-e2)}
+.crema{
+  aspect-ratio:1;min-height:36px;border-radius:50%;cursor:pointer;padding:0;
+  border:2px solid rgba(var(--ref-borde-rgb), .25);
+  background:radial-gradient(circle at 34% 30%, rgba(255,255,255,.75) 0 12%, transparent 30%), var(--crema);
+  box-shadow:inset 0 -4px 0 rgba(0,0,0,.14);
+  transition:transform .15s var(--mal-ease), box-shadow .15s;
+}
+.crema:hover{transform:var(--mal-salto)}
+.crema[aria-pressed="true"]{box-shadow:inset 0 -4px 0 rgba(0,0,0,.14), 0 0 0 3px var(--mal-bg), 0 0 0 6px var(--mal-primary);transform:scale(1.06)}
+.crema:focus-visible{outline:2px solid var(--mal-primary);outline-offset:3px}
+.taller[data-herramienta="grageas"] .grupo--crema,
+.taller[data-herramienta="mordisco"] .grupo--crema{opacity:.55}
+
+/* ─── cuando te llega una ─────────────────────────────────── */
+.regalo{
+  display:grid;column-gap:var(--mal-e6);row-gap:var(--mal-e4);grid-template-columns:minmax(0, .9fr) minmax(0, 1.1fr);
+  grid-template-areas:"cab mesa" "resto mesa";grid-template-rows:auto 1fr;padding-block:var(--mal-e6) var(--mal-e7)}
+.regalo__cab{grid-area:cab;align-self:end}
+.regalo__resto{grid-area:resto}
+.mesa--regalo{grid-area:mesa}
+.regalo[hidden]{display:none}
+.regalo__nombre{font-family:var(--mal-display);font-weight:800;font-size:var(--mal-t-h2);color:var(--mal-primary-txt);margin:0;letter-spacing:-.02em}
+.regalo__para{font-weight:600;margin:.4em 0 0}
+.regalo__msg{margin:0;padding-left:var(--mal-e4);border-left:3px solid var(--mal-tertiary);font-style:italic;color:var(--mal-on-surface-2);font-size:var(--mal-t-lede)}
+.regalo__pista{margin-top:var(--mal-e5);font-weight:600}
+.regalo__acc{display:flex;flex-wrap:wrap;gap:var(--mal-e3);margin:var(--mal-e4) 0 var(--mal-e3)}
+.latido{animation:guagua-latido 1.1s var(--mal-ease) infinite}
+@keyframes guagua-latido{0%,100%{transform:none}50%{transform:scale(1.05)}}
+
+/* ─── regalar ──────────────────────────────────────────────── */
+.regalar{max-width:min(94vw, 760px)}
+.regalar__cuerpo{display:flex;flex-direction:column;gap:var(--mal-e4)}
+.regalar__rej{display:grid;grid-template-columns:minmax(0, 220px) minmax(0, 1fr);gap:var(--mal-e5);align-items:start}
+.regalar__vista{width:100%;height:auto;border-radius:var(--mal-r-s);border:var(--mal-borde);background:var(--mantel-1);box-shadow:var(--mal-elev-1)}
+.regalar .pila{display:flex;flex-direction:column;gap:var(--mal-e3)}
+.regalar textarea{min-height:0}
+.regalar__pie{justify-content:flex-start}
+.panadera{margin:0;padding:var(--mal-e4);border-radius:var(--mal-r-s);background:var(--mal-primary-container);border:var(--mal-borde)}
+.panadera__frase{margin:0 0 .4em;font-family:var(--mal-display);font-weight:700;font-size:var(--mal-t-h4);color:var(--mal-on-surface);line-height:1.25}
+.panadera__frase::before{content:"«"}
+.panadera__frase::after{content:"»"}
+.panadera figcaption{font-size:var(--mal-t-caption);color:var(--mal-on-surface-2)}
+
+/* ─── la vitrina ───────────────────────────────────────────── */
+.vitrina__cab{display:flex;flex-wrap:wrap;gap:var(--mal-e4);justify-content:space-between;align-items:end;margin-bottom:var(--mal-e5)}
+.vitrina__cab h2{margin:.15em 0 0}
+.vitrina__cab .fila{display:flex;gap:var(--mal-e2);flex-wrap:wrap}
+.vitrina__cab .badge{margin-left:.2em}
+.vitrina__rej{display:grid;grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));gap:var(--mal-e4)}
+.pieza{
+  display:flex;flex-direction:column;align-items:center;gap:.15rem;padding:var(--mal-e3) var(--mal-e3) var(--mal-e4);
+  border-radius:var(--mal-r);border:var(--mal-borde-fuerte);cursor:pointer;color:var(--mal-on-surface);text-align:center;
+  background:
+    radial-gradient(var(--mantel-punto) 1.5px, transparent 2px) 0 0/18px 18px,
+    linear-gradient(160deg, var(--mantel-1), var(--mantel-2));
+  box-shadow:var(--mal-elev-1);transition:transform .18s var(--mal-ease);
+  font:inherit;
+}
+.pieza:hover{transform:var(--mal-salto)}
+.pieza:active{transform:var(--mal-presion)}
+.pieza:focus-visible{outline:3px solid var(--mal-primary);outline-offset:3px}
+.pieza__img{width:100%;height:auto;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35))}
+.pieza__nombre{font-family:var(--mal-display);font-weight:800;color:#fff;font-size:var(--mal-t-h4);line-height:1.15}
+.pieza__meta{font-size:var(--mal-t-mini);color:rgba(255,255,255,.75)}
+.vitrina__vacia{padding:var(--mal-e6);text-align:center;border:2px dashed var(--mal-outline-2);border-radius:var(--mal-r)}
+.vitrina__nota{margin-top:var(--mal-e5)}
+.lienzo--vista{max-width:300px;margin:0 auto var(--mal-e3);border-radius:var(--mal-r-s);cursor:grab;
+  background:linear-gradient(160deg, var(--mantel-1), var(--mantel-2))}
+.pieza-modal #p-mensaje{font-style:italic}
+
+.saber__rej{display:grid;gap:var(--mal-e5);grid-template-columns:minmax(0, 1fr) minmax(0, 1.4fr);align-items:start}
+.saber__rej p{font-size:var(--mal-t-lede);color:var(--mal-on-surface-2);margin:0}
+
+/* ─── el teléfono ──────────────────────────────────────────── */
+@media (max-width:860px){
+  .taller__mesa,.regalo,.saber__rej{grid-template-columns:1fr}
+  .regalo{grid-template-areas:"cab" "mesa" "resto";grid-template-rows:auto}
+  .mesa--regalo{width:min(100%, 360px);margin-inline:auto}
+  .herramientas{position:static}
+  .regalar__rej{grid-template-columns:1fr}
+  .regalar__vista{max-width:200px;margin:0 auto}
+}
+@media (max-width:520px){
+  .hud nav a:nth-child(3){display:none}
+  .taller{padding-top:var(--mal-e5)}
+  .cremas{grid-template-columns:repeat(4, minmax(0, 1fr))}
+  .crema{min-height:44px}
+  .regalar__pie .btn{flex:1 1 calc(50% - var(--mal-e2))}
+}
+@media (prefers-reduced-motion:reduce){
+  .latido{animation:none}
+}
+
+/* ─── incrustada (?embed): solo el juego, para un iframe ──── */
+.embebido .hud,.embebido .pie,.embebido .saber{display:none}
+.embebido .taller,.embebido .regalo{padding-top:var(--mal-e4)}
