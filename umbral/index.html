@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Umbral · UNA</title>
+<meta name="description" content="Un puzle de geometría imposible: si dos caminos se ven unidos, están unidos. Gira puentes, desliza rieles y cruza el umbral.">
+<meta name="theme-color" content="#f0a98f">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../ds/fonts/syne.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+  @font-face { font-family: 'Syne'; src: url('../ds/fonts/syne.woff2') format('woff2'); font-weight: 400 800; font-display: swap; }
+  @font-face { font-family: 'Inter'; src: url('../ds/fonts/inter.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+  :root {
+    --tinta: #2b2a33;
+    --papel: rgba(255, 255, 255, .72);
+    --borde: rgba(43, 42, 51, .14);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #f0a98f; color: var(--tinta); }
+  body { font: 15px/1.4 Inter, system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
+  #lienzo { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: pointer; }
+
+  .barra {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 2;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: max(14px, env(safe-area-inset-top)) 16px 0; pointer-events: none;
+  }
+  .barra > * { pointer-events: auto; }
+  .titulo { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+  .titulo a { font: 800 13px/1 Syne, sans-serif; letter-spacing: .28em; text-transform: uppercase; color: inherit; text-decoration: none; }
+  .titulo span { font: 600 13px/1 Inter, sans-serif; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .acciones { display: flex; gap: 6px; align-items: center; }
+  #niveles { display: flex; gap: 4px; margin-right: 6px; }
+  button {
+    font: 600 12px/1 Inter, sans-serif; color: var(--tinta);
+    min-width: 34px; height: 34px; padding: 0 10px; border-radius: 17px;
+    border: 1px solid var(--borde); background: var(--papel); cursor: pointer;
+    backdrop-filter: blur(6px);
+  }
+  button:hover { background: #fff; }
+  button:focus-visible { outline: 2px solid var(--tinta); outline-offset: 2px; }
+  button:disabled { opacity: .35; cursor: default; background: var(--papel); }
+  #niveles button[aria-current] { background: var(--tinta); color: #fff; border-color: var(--tinta); }
+  #sonido[aria-pressed="false"] { text-decoration: line-through; opacity: .7; }
+
+  body.noche { --tinta: #fbf4ee; --papel: rgba(43, 38, 70, .55); --borde: rgba(255, 255, 255, .22); }
+  body.noche #niveles button[aria-current] { color: #2b2a33; }
+  body.noche #fin > div { background: rgba(43, 38, 70, .88); }
+  body.noche #fin button { color: #2b2a33; }
+  #pista {
+    position: fixed; left: 50%; bottom: max(22px, env(safe-area-inset-bottom)); z-index: 2;
+    transform: translateX(-50%); width: max-content; max-width: calc(100% - 32px);
+    font: 500 14px/1.4 Inter, sans-serif; text-align: center;
+    padding: 9px 16px; border-radius: 20px; background: var(--papel);
+    opacity: 0; pointer-events: none;
+  }
+  #pista.ver { animation: pista 7s ease forwards; }
+  @keyframes pista { 0% { opacity: 0; } 8%, 80% { opacity: 1; } 100% { opacity: 0; } }
+
+  #fin {
+    position: fixed; inset: 0; z-index: 3; display: grid; place-items: center;
+    background: rgba(255, 255, 255, .28); backdrop-filter: blur(3px);
+    animation: aparece .6s ease;
+  }
+  #fin[hidden] { display: none; }
+  #fin > div { text-align: center; padding: 28px 32px; border-radius: 22px; background: rgba(255, 255, 255, .86); max-width: calc(100% - 32px); }
+  #fin h2 { margin: 0 0 6px; font: 800 26px/1.1 Syne, sans-serif; letter-spacing: .02em; }
+  #fin p { margin: 0 0 18px; opacity: .75; }
+  #fin button { height: 42px; padding: 0 22px; border-radius: 21px; background: var(--tinta); color: #fff; font-size: 14px; }
+  @keyframes aparece { from { opacity: 0; } }
+  @media (max-width: 560px) {
+    .titulo span { display: none; }
+    .titulo a { letter-spacing: .18em; }
+    .acciones, #niveles { gap: 3px; }
+    button { min-width: 28px; height: 28px; padding: 0 5px; font-size: 11px; }
+  }
+  @media (prefers-reduced-motion: reduce) { #pista.ver { animation: none; opacity: 1; } #fin { animation: none; } }
+</style>
+</head>
+<body>
+<canvas id="lienzo" aria-label="Tablero del juego: toca el camino para caminar y arrastra las manijas para mover las piezas"></canvas>
+<header class="barra">
+  <div class="titulo">
+    <a href="./">Umbral</a>
+    <span><b id="nivel-num">I</b> · <span id="nivel-nombre"></span></span>
+  </div>
+  <div class="acciones">
+    <nav id="niveles" aria-label="Niveles"></nav>
+    <button id="reiniciar" type="button" title="Reiniciar nivel (R)" aria-label="Reiniciar nivel">↺</button>
+    <button id="sonido" type="button" title="Sonido" aria-label="Sonido" aria-pressed="true">♪</button>
+  </div>
+</header>
+<p id="pista" role="status"></p>
+<div id="fin" hidden>
+  <div>
+    <h2 id="fin-titulo">Umbral cruzado</h2>
+    <p id="fin-texto"></p>
+    <button id="fin-siguiente" type="button">Siguiente</button>
+  </div>
+</div>
+<script src="niveles.js"></script>
+<script src="motor.js"></script>
+</body>
+</html>
