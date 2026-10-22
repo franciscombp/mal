@@ -698,7 +698,7 @@ class Visor {
     this.plato.visible = etapa === 'decorar';
     this.lata.visible = etapa !== 'decorar';
     this.mantel.visible = etapa !== 'horno';
-    this.dibujar();
+    if (this.acostada) this.dibujar();   // en el constructor todavía no hay figura
   }
   /* El horno: luz de brasa, la masa se infla y se dora. */
   hornear(k, encendido) {
