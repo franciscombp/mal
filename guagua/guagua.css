@@ -29,11 +29,19 @@ body.modo-regalo .taller{display:none}
     linear-gradient(160deg, var(--mantel-1), var(--mantel-2));
 }
 .lienzo{display:block;width:100%;height:auto;aspect-ratio:4/5;touch-action:none;cursor:crosshair}
+.taller__lienzo{min-width:0}
 .taller[data-herramienta="roseta"] .lienzo,.taller[data-herramienta="grageas"] .lienzo{cursor:cell}
 .taller[data-herramienta="mordisco"] .lienzo,.lienzo--comer{cursor:pointer}
 .mesa__flota{position:absolute;top:var(--mal-e3);right:var(--mal-e3);display:flex;gap:var(--mal-e2)}
 .mesa__flota .btn{background:var(--mal-surface)}
 .mesa__flota .btn:disabled{opacity:.5;cursor:default}
+.mesa__giro{position:absolute;bottom:var(--mal-e3);left:50%;transform:translateX(-50%);display:flex;gap:var(--mal-e2)}
+.mesa__giro .btn{background:var(--mal-surface)}
+.mesa__pista{margin:var(--mal-e3) 0 0}
+.mesa__sin3d{position:absolute;inset:auto var(--mal-e5) 40%;padding:var(--mal-e4);border-radius:var(--mal-r-s);
+  background:var(--mal-surface);color:var(--mal-on-surface);text-align:center}
+.lienzo.girando{cursor:grabbing}
+.lienzo:focus-visible{outline:3px solid var(--mal-primary);outline-offset:-3px}
 
 .herramientas{display:flex;flex-direction:column;gap:var(--mal-e5);padding:var(--mal-e5);position:sticky;top:var(--mal-e4)}
 .grupo{display:flex;flex-direction:column;gap:var(--mal-e3)}
@@ -111,7 +119,7 @@ body.modo-regalo .taller{display:none}
 .pieza__meta{font-size:var(--mal-t-mini);color:rgba(255,255,255,.75)}
 .vitrina__vacia{padding:var(--mal-e6);text-align:center;border:2px dashed var(--mal-outline-2);border-radius:var(--mal-r)}
 .vitrina__nota{margin-top:var(--mal-e5)}
-.lienzo--vista{max-width:300px;margin:0 auto var(--mal-e3);border-radius:var(--mal-r-s);cursor:default;
+.lienzo--vista{max-width:300px;margin:0 auto var(--mal-e3);border-radius:var(--mal-r-s);cursor:grab;
   background:linear-gradient(160deg, var(--mantel-1), var(--mantel-2))}
 .pieza-modal #p-mensaje{font-style:italic}
 
@@ -137,3 +145,7 @@ body.modo-regalo .taller{display:none}
 @media (prefers-reduced-motion:reduce){
   .latido{animation:none}
 }
+
+/* ─── incrustada (?embed): solo el juego, para un iframe ──── */
+.embebido .hud,.embebido .pie,.embebido .saber{display:none}
+.embebido .taller,.embebido .regalo{padding-top:var(--mal-e4)}

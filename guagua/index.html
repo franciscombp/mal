@@ -2,9 +2,20 @@
 <html lang="es" data-marca="juegos">
 <head>
 <meta charset="utf-8">
+<!-- Una sola carpeta que se puede incrustar en cualquier sitio:
+     ?marca=mercio|mal|apps cambia la piel del sistema (los juegos, por defecto)
+     ?embed quita la cabecera y el pie, para meterla en un iframe. -->
+<script>
+(function () {
+  var q = new URLSearchParams(location.search), m = q.get('marca'), r = document.documentElement;
+  if (m === 'mal') r.removeAttribute('data-marca');
+  else if (m === 'mercio' || m === 'apps') r.setAttribute('data-marca', m);
+  if (q.has('embed')) r.classList.add('embebido');
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Guagua de pan · decórala y regálala por Finados · UNA</title>
-<meta name="description" content="Una guagua recién salida del horno y una manga llena de crema. Decórala con el dedo, ponle nombre y regálala por WhatsApp para el Día de Difuntos. Quien la recibe se la puede comer.">
+<meta name="description" content="Una guagua de pan en 3D recién salida del horno y una manga llena de crema. Gírala, decórala con el dedo, ponle nombre y regálala por WhatsApp para el Día de Difuntos. Quien la recibe se la puede comer.">
 <link rel="canonical" href="https://franciscombp.github.io/mal/guagua/">
 <meta name="theme-color" content="#f3f1ec" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1d1822" media="(prefers-color-scheme: dark)">
@@ -75,7 +86,7 @@
       <p class="regalo__para" id="regalo-para"></p>
     </div>
     <div class="mesa mesa--regalo">
-      <canvas id="regalo-lienzo" class="lienzo lienzo--comer" role="img" aria-label="La guagua que te regalaron. Tócala para darle un mordisco."></canvas>
+      <canvas id="regalo-lienzo" class="lienzo lienzo--comer" tabindex="0" role="img" aria-label="La guagua que te regalaron, en 3D. Arrastra a un lado para girarla y tócala para darle un mordisco."></canvas>
     </div>
     <div class="regalo__resto">
       <blockquote class="regalo__msg" id="regalo-mensaje"></blockquote>
@@ -94,19 +105,29 @@
     <div class="taller__cab">
       <p class="kicker" id="cuenta">Faltan unos días para Finados</p>
       <h1 id="taller-titulo">Decora tu guagua de pan</h1>
-      <p class="lede">Recién salida del horno, todavía tibia. Ponle crema con el dedo, bautízala y
-      regálala: a quien le llegue, se la puede comer.</p>
+      <p class="lede">Recién salida del horno, todavía tibia. Gírala, ponle crema con el dedo por
+      donde quieras, bautízala y regálala: a quien le llegue, se la puede comer.</p>
     </div>
 
     <div class="taller__mesa">
+      <div class="taller__lienzo">
       <div class="mesa">
-        <canvas id="lienzo" class="lienzo" role="img" aria-label="Una guagua de pan. Dibuja con el dedo o el ratón para ponerle crema."></canvas>
+        <canvas id="lienzo" class="lienzo" tabindex="0" role="img" aria-label="Una guagua de pan en 3D. Arrastra sobre ella para ponerle crema y fuera de ella para girarla."></canvas>
         <div class="mesa__flota">
           <button class="btn btn--sm btn--icono" id="deshacer" type="button" aria-label="Deshacer" data-pista="Deshacer">
             <svg class="icono" aria-hidden="true"><use href="#i-reiniciar"/></svg></button>
           <button class="btn btn--sm" id="sorpresa" type="button">
             <svg class="icono" aria-hidden="true"><use href="#g-dado"/></svg> Sorpréndeme</button>
         </div>
+        <div class="mesa__giro">
+          <button class="btn btn--sm btn--icono" id="girar-izq" type="button" aria-label="Girar a la izquierda"><svg class="icono" aria-hidden="true"><use href="#i-chevron-izq"/></svg></button>
+          <button class="btn btn--sm btn--icono" id="girar-der" type="button" aria-label="Girar a la derecha"><svg class="icono" aria-hidden="true"><use href="#i-chevron-der"/></svg></button>
+        </div>
+        <p class="mesa__sin3d" id="sin-3d" hidden>Este navegador no tiene 3D (WebGL) encendido, y sin eso no hay horno.
+        Prueba en otro navegador o actualiza el teléfono.</p>
+      </div>
+      <p class="caption mesa__pista">Arrastra sobre la guagua para ponerle crema. Arrastra fuera de ella para girarla y
+      pellizca (o usa la rueda) para acercarte. Las flechas la dan vuelta.</p>
       </div>
 
       <div class="herramientas card">
@@ -229,7 +250,7 @@
     <button class="btn btn--sm btn--icono btn-ghost" type="button" data-cierra aria-label="Cerrar"><svg class="icono" aria-hidden="true"><use href="#i-cerrar"/></svg></button>
   </div>
   <div class="modal__cuerpo">
-    <canvas id="p-lienzo" class="lienzo lienzo--vista" aria-hidden="true"></canvas>
+    <canvas id="p-lienzo" class="lienzo lienzo--vista" aria-label="La guagua en 3D. Arrastra para girarla."></canvas>
     <p class="caption" id="p-quien"></p>
     <p id="p-mensaje"></p>
   </div>
@@ -253,6 +274,7 @@
 </footer>
 
 <script src="../ds/mal/mal.js?v=1.0.17" defer></script>
-<script src="guagua.js" defer></script>
+<script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js" } }</script>
+<script type="module" src="guagua.js"></script>
 </body>
 </html>
