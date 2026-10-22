@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>El Lamparómetro · EL MERCIO.</title>
-<meta name="description" content="Cinco tests satíricos: a qué lámpara ecuatoriana te pareces en el espectro político, en la carta astral y en la playlist, qué provincia eres y qué producto del Tuti eres. Un juego de EL MERCIO.">
+<meta name="description" content="Cinco tests satíricos de EL MERCIO.: a qué lámpara ecuatoriana te pareces en política, en la carta astral y en la playlist, qué provincia eres y qué producto del Tuti eres.">
 <link rel="canonical" href="https://franciscombp.github.io/mal/lamparometro/">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#141414" media="(prefers-color-scheme: dark)">
@@ -17,38 +17,82 @@
 <meta property="og:image" content="https://franciscombp.github.io/mal/img/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<link rel="preload" href="../ds/fonts/pt-serif.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../ds/fonts/pt-serif-bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../ds/fonts/montserrat.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../ds/mal/mal.css?v=1.0.17">
 <script src="../ds/mal/mal.js?v=1.0.17" defer></script>
 <style>
-/* El periódico pone la tipografía, el color y la escuadra. Aquí solo va lo
-   que es del juego: la caja del test, las opciones, la ficha del resultado
-   y el plano del Lamparómetro. */
-.lm{width:min(100% - 2rem, 760px);margin-inline:auto;padding-bottom:var(--em-64)}
-.lm-cab{text-align:center;padding-block:var(--em-32) var(--em-24)}
-.lm-cab .em-frase{margin-top:var(--em-8)}
-.lm-fecha{
-  display:flex;justify-content:space-between;gap:var(--em-16);flex-wrap:wrap;
-  padding-block:var(--em-12);margin-top:var(--em-24);border-block:1px solid var(--em-border);
-  font-family:var(--em-sans);font-size:var(--em-t-caption);font-weight:500;
-  text-transform:uppercase;letter-spacing:.06em;color:var(--em-contrast-3);
+/* El periódico pone la tipografía, el rojo y la escuadra; el juego pone el
+   movimiento. Las fichas son las de un concurso de televisión —cuatro
+   colores, cuatro formas— pero impresas: esquinas rectas y una sombra dura
+   de tinta, como un sello, que se hunde al pulsar. */
+:root{
+  --k-rojo:#c53b2b; --k-tinta:#141414; --k-azul:#1f5fa8; --k-mostaza:#e3a72a;
+  --k-papel:#fffdf7; --k-sombra:0 5px 0 rgba(0,0,0,.32);
+  --k-rapido:.18s; --k-suave:cubic-bezier(.2,.9,.3,1.25);
 }
+body{overflow-x:hidden}
+body.jugando{overflow:hidden}
+.lm{width:min(100% - 2rem, 720px);margin-inline:auto;padding-bottom:var(--em-64)}
+.lm .em-header{flex-wrap:nowrap}
+.lm .em-header .em-logo{font-size:clamp(22px, 6vw, 32px)}
+.lm > footer{padding-inline:0}
+.lm-nav .em-btn{padding:var(--em-8) var(--em-16);white-space:nowrap}
 .lm-pantalla{outline:none}
 .lm-pantalla[hidden]{display:none}
 
-/* ─── portada: los tests ─── */
-.lm-tests{display:grid;gap:var(--em-16);grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));margin-top:var(--em-32)}
-.lm-test{
-  display:flex;flex-direction:column;gap:var(--em-8);text-align:left;
-  padding:var(--em-24);background:var(--em-surface);border:0;border-radius:0;
-  color:var(--em-contrast);cursor:pointer;font:inherit;transition:background .2s ease;
+/* ─── la mascota: Lamparita ─── */
+.lm-lamp{display:block;overflow:visible;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.lm-lamp__gira{transform-box:view-box;transform-origin:60px 0}
+.lm-lamp__luz{opacity:.18;transition:opacity .3s ease}
+.lm-lamp__ojo{transform-box:fill-box;transform-origin:center;animation:parpadeo 4.2s infinite}
+.lm-lamp.mece .lm-lamp__gira{animation:mece .9s var(--k-suave)}
+.lm-lamp.prende .lm-lamp__luz{animation:prende .9s ease}
+.lm-lamp.prende .lm-lamp__foco{animation:foco .9s ease}
+@keyframes mece{0%{transform:rotate(0)}20%{transform:rotate(14deg)}45%{transform:rotate(-9deg)}70%{transform:rotate(4deg)}100%{transform:rotate(0)}}
+@keyframes prende{0%{opacity:.18}25%{opacity:.75}100%{opacity:.18}}
+@keyframes foco{0%,100%{fill:#ffd34d}25%{fill:#fff6c9}}
+@keyframes parpadeo{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+
+/* ─── portada ─── */
+.lm-hero{display:grid;grid-template-columns:auto 1fr;gap:var(--em-16) var(--em-24);align-items:end;padding-block:var(--em-32) var(--em-24)}
+.lm-hero .lm-lamp{width:96px}
+.lm-hero h1{font-family:var(--em-serif);font-size:clamp(30px, 8vw, 56px);line-height:1;margin:var(--em-4) 0 0;letter-spacing:-.02em}
+.lm-hero .em-frase{grid-column:1 / -1;margin:0;font-size:var(--mal-t-lede);line-height:1.4}
+.lm-globo{
+  position:relative;grid-column:1 / -1;justify-self:start;margin:0;padding:var(--em-8) var(--em-12);
+  background:var(--k-tinta);color:#fff;font-family:var(--em-sans);font-size:13px;font-weight:700;
+  opacity:0;transform:translateY(6px);transition:opacity .2s ease,transform .2s var(--k-suave);pointer-events:none;
 }
-.lm-test:hover,.lm-test:focus-visible{background:var(--em-surface-2,var(--em-surface));outline:2px solid var(--em-accent);outline-offset:-2px}
-.lm-test h2{font-family:var(--em-serif);font-size:var(--mal-t-h2);font-weight:700;margin:0;line-height:1.2}
-.lm-test p{margin:0;color:var(--em-contrast-2)}
-.lm-test .em-meta{margin-top:auto;padding-top:var(--em-8)}
-.lm-elenco{display:flex;flex-wrap:wrap;gap:var(--em-4);margin-top:var(--em-16);justify-content:center}
+.lm-globo.ve{opacity:1;transform:none}
+.lm-globo::before{content:"";position:absolute;left:36px;top:-7px;border:7px solid transparent;border-top:0;border-bottom-color:var(--k-tinta)}
+.lm-empezar{
+  display:flex;align-items:center;justify-content:center;gap:var(--em-12);width:100%;min-height:64px;margin-top:var(--em-8);
+  font-family:var(--em-sans);font-size:18px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  color:#fff;background:var(--k-rojo);border:0;border-radius:0;box-shadow:var(--k-sombra);cursor:pointer;
+  transition:transform var(--k-rapido) ease,box-shadow var(--k-rapido) ease;
+}
+.lm-empezar:active,.lm-empezar.pulsa{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.32)}
+.lm-lista{display:grid;gap:var(--em-12);margin-top:var(--em-32);list-style:none;padding:0}
+.lm-test{
+  --c:var(--k-rojo);
+  display:grid;grid-template-columns:56px 1fr auto;gap:var(--em-16);align-items:center;width:100%;
+  padding:var(--em-12) var(--em-16) var(--em-12) var(--em-12);text-align:left;font:inherit;color:var(--em-contrast);
+  background:var(--em-surface);border:0;border-radius:0;cursor:pointer;
+  box-shadow:0 4px 0 rgba(var(--ref-borde-rgb),.12);
+  transition:transform var(--k-rapido) ease,box-shadow var(--k-rapido) ease,background var(--k-rapido) ease;
+}
+.lm-test:hover{transform:translateY(-2px);box-shadow:0 6px 0 rgba(var(--ref-borde-rgb),.14)}
+.lm-test:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(var(--ref-borde-rgb),.14)}
+.lm-test:focus-visible{outline:3px solid var(--c);outline-offset:2px}
+.lm-test__n{display:grid;place-items:center;width:56px;height:56px;background:var(--c);color:#fff;font-family:var(--em-sans);font-weight:800;font-size:22px}
+.lm-test__t{display:block;font-family:var(--em-serif);font-weight:700;font-size:19px;line-height:1.2}
+.lm-test__m{display:block;margin-top:2px;font-family:var(--em-sans);font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--em-contrast-3)}
+.lm-test .icono{transition:transform var(--k-rapido) ease}
+.lm-test:hover .icono{transform:translateX(4px)}
+.lm-elenco{display:flex;flex-wrap:wrap;gap:4px;margin-top:var(--em-24)}
+.lm-elenco .lm-mono{transition:transform .2s var(--k-suave)}
+.lm-elenco .lm-mono:hover{transform:translateY(-4px) rotate(-6deg)}
 
 /* ─── el monograma: una lámpara sin foto ─── */
 .lm-mono{
@@ -56,38 +100,130 @@
   display:inline-grid;place-items:center;flex:none;width:44px;height:44px;border-radius:50%;
   background:var(--c);color:var(--t);font-family:var(--em-sans);font-weight:800;font-size:15px;letter-spacing:.02em;
 }
-.lm-mono--xl{width:112px;height:112px;font-size:36px}
+.lm-mono--xl{width:104px;height:104px;font-size:34px}
 .lm-mono--s{width:30px;height:30px;font-size:11px}
 
-/* ─── pregunta ─── */
-.lm-barra{height:6px;background:var(--em-surface);margin-block:var(--em-16) var(--em-32)}
-.lm-barra i{display:block;height:100%;width:0;background:var(--em-accent);transition:width .3s ease}
-.lm-pregunta{font-family:var(--em-serif);font-size:var(--mal-t-h1);font-weight:700;line-height:1.25;margin:var(--em-8) 0 var(--em-24)}
-.lm-opciones{display:grid;gap:var(--em-8);list-style:none;padding:0;margin:0}
-.lm-opcion{
-  width:100%;min-height:52px;text-align:left;padding:var(--em-12) var(--em-16);
-  background:var(--em-surface);color:var(--em-contrast);border:0;border-radius:0;cursor:pointer;
-  font-family:var(--em-serif);font-size:var(--mal-t-cuerpo);line-height:1.35;
-  display:flex;align-items:center;gap:var(--em-12);transition:background .15s ease,color .15s ease;
+/* ─── la pantalla de juego: ocupa todo, como una app ─── */
+.lm-juego{
+  position:fixed;inset:0;z-index:1000;display:grid;grid-template-rows:auto 1fr auto;
+  background:var(--em-base);color:var(--em-contrast);
+  padding:max(12px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
 }
-.lm-opcion:hover,.lm-opcion:focus-visible{background:var(--em-contrast);color:var(--em-base);outline:none}
-.lm-opcion b{font-family:var(--em-sans);font-size:12px;letter-spacing:.06em;text-transform:uppercase;min-width:2.2em;opacity:.65}
-.lm-escala .lm-opcion{justify-content:space-between}
-.lm-escala .lm-opcion span:last-child{font-family:var(--em-sans);font-size:12px;letter-spacing:.06em;text-transform:uppercase;opacity:.6}
-.lm-pie-q{display:flex;justify-content:space-between;align-items:center;margin-top:var(--em-24);gap:var(--em-16)}
-.lm-link{background:none;border:0;padding:0;font:inherit;color:var(--em-contrast-3);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
-.lm-link:hover{color:var(--em-accent)}
+.lm-juego[hidden]{display:none}
+.lm-juego__in{width:min(100%, 640px);margin-inline:auto;display:flex;flex-direction:column;min-height:0;overflow-y:auto}
+.lm-top{display:grid;grid-template-columns:44px 1fr auto;gap:var(--em-12);align-items:center;width:min(100%, 640px);margin-inline:auto}
+.lm-x{width:44px;height:44px;display:grid;place-items:center;background:none;border:0;color:var(--em-contrast-3);cursor:pointer;border-radius:0}
+.lm-x:hover{color:var(--em-contrast)}
+.lm-prog{position:relative;height:14px;background:var(--em-surface);overflow:hidden}
+.lm-prog i{position:absolute;inset:0 auto 0 0;width:0;background:var(--k-rojo);transition:width .45s var(--k-suave)}
+.lm-prog i::after{content:"";position:absolute;top:3px;left:6px;right:6px;height:3px;background:rgba(255,255,255,.35)}
+.lm-cuenta{font-family:var(--em-sans);font-weight:800;font-size:14px;font-variant-numeric:tabular-nums;color:var(--em-contrast-3);min-width:3.2em;text-align:right}
+.lm-cuenta.salta{animation:salta .35s var(--k-suave)}
+@keyframes salta{50%{transform:scale(1.35);color:var(--k-rojo)}}
 
-/* fecha de nacimiento de la carta astral */
-.lm-fechas{display:grid;grid-template-columns:1fr 2fr;gap:var(--em-12);margin-bottom:var(--em-24)}
+.lm-escena{display:grid;grid-template-columns:72px 1fr;gap:var(--em-12);align-items:end;margin:clamp(16px, 6vh, 64px) 0 var(--em-24)}
+#q-op{margin-top:auto}
+.lm-escena .lm-lamp{width:72px}
+.lm-burbuja{
+  position:relative;margin:0 0 var(--em-24);padding:var(--em-16);border:2px solid var(--em-contrast);background:var(--em-base);
+}
+.lm-burbuja::before,.lm-burbuja::after{content:"";position:absolute;left:-12px;bottom:18px;border:10px solid transparent;border-left:0}
+.lm-burbuja::before{border-right:12px solid var(--em-contrast)}
+.lm-burbuja::after{left:-9px;border-right:12px solid var(--em-base)}
+.lm-burbuja .em-kicker{display:block;margin-bottom:var(--em-4)}
+.lm-pregunta{font-family:var(--em-serif);font-size:clamp(19px, 5vw, 26px);font-weight:700;line-height:1.25;margin:0}
+.lm-entra{animation:entra .35s var(--k-suave) both}
+@keyframes entra{from{opacity:0;transform:translateX(18px)}}
+
+.lm-fichas{display:grid;grid-template-columns:1fr 1fr;gap:12px;list-style:none;margin:0;padding:0 0 6px}
+.lm-op{
+  --c:var(--k-rojo);--t:#fff;
+  position:relative;width:100%;height:100%;min-height:96px;padding:30px 12px 12px;text-align:left;
+  display:flex;align-items:flex-end;
+  font-family:var(--em-serif);font-weight:700;font-size:clamp(15px, 4.1vw, 18px);line-height:1.2;
+  color:var(--t);background:var(--c);border:0;border-radius:0;cursor:pointer;
+  box-shadow:var(--k-sombra);-webkit-tap-highlight-color:transparent;
+  transition:transform var(--k-rapido) ease,box-shadow var(--k-rapido) ease,opacity .25s ease,filter .25s ease;
+  animation:ficha .4s var(--k-suave) both;animation-delay:calc(var(--i) * 60ms);
+}
+.lm-op:hover{filter:brightness(1.07)}
+.lm-op:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.32)}
+.lm-op:focus-visible{outline:3px solid var(--em-contrast);outline-offset:3px}
+.lm-op__forma{position:absolute;top:10px;left:12px;width:18px;height:18px;fill:currentColor;opacity:.9}
+.lm-op__tecla{position:absolute;top:9px;right:10px;font-family:var(--em-sans);font-size:11px;font-weight:800;opacity:.55}
+.lm-op--0{--c:var(--k-rojo)} .lm-op--1{--c:var(--k-azul)}
+.lm-op--2{--c:var(--k-mostaza);--t:var(--k-tinta)} .lm-op--3{--c:var(--k-tinta)}
+:root[data-tema="oscuro"] .lm-op--3{--c:#3a3a3a}
+@media (prefers-color-scheme:dark){:root:not([data-tema="claro"]) .lm-op--3{--c:#3a3a3a}}
+.lm-fichas.decidido .lm-op{pointer-events:none}
+.lm-fichas.decidido .lm-op:not(.elegida){opacity:.25;transform:scale(.96);filter:saturate(.4)}
+.lm-op.elegida{animation:elegida .45s var(--k-suave);transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.32)}
+.lm-op.elegida::after{
+  content:"";position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;
+  background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23141414' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7'/%3E%3C/svg%3E") center/14px no-repeat;
+  animation:check .35s var(--k-suave) .05s both;
+}
+.lm-op.elegida .lm-op__tecla{opacity:0}
+@keyframes ficha{from{opacity:0;transform:translateY(14px) scale(.96)}}
+@keyframes elegida{0%{transform:scale(1)}40%{transform:scale(1.05)}100%{transform:translateY(4px)}}
+@keyframes check{from{transform:scale(0) rotate(-45deg)}}
+.lm-saltar{display:block;margin:var(--em-16) auto 0;background:none;border:0;padding:var(--em-8);font-family:var(--em-sans);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--em-contrast-3);cursor:pointer}
+.lm-saltar:hover{color:var(--em-contrast)}
+.lm-saltar[hidden]{display:none}
+
+/* cumpleaños de la carta astral */
+.lm-fechas{display:grid;grid-template-columns:1fr 2fr;gap:12px}
 .lm-fechas label{display:grid;gap:var(--em-4);font-family:var(--em-sans);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--em-contrast-3)}
-.lm-fechas select{
-  min-height:52px;padding:0 var(--em-12);font:inherit;font-family:var(--em-serif);font-size:var(--mal-t-cuerpo);
-  text-transform:none;letter-spacing:0;color:var(--em-contrast);background:var(--em-surface);border:0;border-radius:0;
-}
+.lm-fechas select{min-height:56px;padding:0 var(--em-12);font-family:var(--em-serif);font-size:18px;font-weight:700;color:var(--em-contrast);background:var(--em-surface);border:0;border-radius:0}
 
-/* ─── resultado ─── */
-.lm-ficha{display:grid;grid-template-columns:auto 1fr;gap:var(--em-24);align-items:center;margin-top:var(--em-16)}
+/* ─── la hoja: el comentario de la redacción después de cada respuesta ─── */
+.lm-hoja{
+  position:fixed;left:0;right:0;bottom:0;z-index:1010;
+  padding:var(--em-16) 16px max(16px, env(safe-area-inset-bottom));
+  background:var(--k-tinta);color:#fff;transform:translateY(105%);visibility:hidden;
+  transition:transform .28s var(--k-suave),visibility 0s linear .28s;
+}
+.lm-hoja.ve{transform:none;visibility:visible;transition:transform .28s var(--k-suave),visibility 0s}
+.lm-hoja__in{width:min(100%, 640px);margin-inline:auto;display:grid;grid-template-columns:1fr auto;gap:var(--em-12) var(--em-16);align-items:center}
+.lm-hoja__de{font-family:var(--em-sans);font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#e8604f;margin:0}
+.lm-hoja__q{grid-column:1;font-family:var(--em-serif);font-style:italic;font-size:clamp(18px, 5vw, 22px);line-height:1.25;margin:2px 0 0}
+.lm-seguir{
+  grid-column:2;grid-row:1 / span 2;position:relative;overflow:hidden;min-width:120px;min-height:56px;padding:0 var(--em-24);
+  font-family:var(--em-sans);font-weight:800;font-size:15px;letter-spacing:.08em;text-transform:uppercase;
+  color:#fff;background:var(--k-rojo);border:0;border-radius:0;box-shadow:0 4px 0 rgba(0,0,0,.45);cursor:pointer;
+}
+.lm-seguir:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.45)}
+.lm-seguir i{position:absolute;left:0;bottom:0;height:4px;width:100%;background:rgba(255,255,255,.55);transform-origin:left}
+.lm-hoja.ve .lm-seguir i{animation:mecha var(--espera,1.4s) linear forwards}
+@keyframes mecha{to{transform:scaleX(0)}}
+@media (max-width:420px){.lm-hoja__in{grid-template-columns:1fr}.lm-seguir{grid-column:1;grid-row:auto;width:100%}}
+
+/* ─── el resultado: primero el podio, después la ficha ─── */
+.lm-revela{text-align:center;padding-top:var(--em-32)}
+.lm-revela__t{font-family:var(--em-serif);font-size:clamp(24px, 6vw, 32px);margin:var(--em-8) 0 var(--em-24);min-height:1.3em}
+.lm-podio3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-items:end;height:250px;max-width:460px;margin-inline:auto}
+.lm-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.lm-col__quien{display:flex;flex-direction:column;align-items:center;gap:4px;margin-bottom:8px;transition:opacity .3s ease,transform .4s var(--k-suave)}
+.lm-col__quien b{font-family:var(--em-sans);font-size:12px;line-height:1.15;max-width:100%;overflow-wrap:anywhere}
+.lm-col__barra{
+  width:100%;height:var(--h);background:var(--c);color:var(--t);display:flex;align-items:flex-start;justify-content:center;
+  padding-top:8px;font-family:var(--em-sans);font-weight:800;font-size:28px;box-shadow:var(--k-sombra);
+  transform-origin:bottom;transition:transform .7s var(--k-suave);
+}
+.lm-col--1 .lm-col__barra{font-size:40px}
+.suspenso .lm-col__barra{transform:scaleY(0)}
+.suspenso .lm-col__quien{opacity:0;transform:translateY(20px)}
+.lm-col--3 .lm-col__barra,.lm-col--3 .lm-col__quien{transition-delay:.2s}
+.lm-col--2 .lm-col__barra,.lm-col--2 .lm-col__quien{transition-delay:.7s}
+.lm-col--1 .lm-col__barra,.lm-col--1 .lm-col__quien{transition-delay:1.3s}
+.lm-col--1 .lm-mono{transition:transform .5s var(--k-suave) 1.6s}
+.revelado .lm-col--1 .lm-mono{transform:scale(1.18)}
+.lm-despues{transition:opacity .5s ease .1s,transform .5s var(--k-suave) .1s}
+.suspenso .lm-despues,.contando .lm-despues{opacity:0;transform:translateY(24px)}
+.lm-puntos::after{content:"";animation:puntos 1s steps(4) infinite}
+@keyframes puntos{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
+
+.lm-ficha{display:grid;grid-template-columns:auto 1fr;gap:var(--em-24);align-items:center;margin-top:var(--em-48);text-align:left}
 .lm-ficha h1{font-family:var(--em-serif);font-size:var(--mal-t-display);line-height:1.1;margin:var(--em-4) 0 0}
 .lm-ficha .em-meta{margin:var(--em-4) 0 0}
 @media (max-width:520px){.lm-ficha{grid-template-columns:1fr;justify-items:start}}
@@ -104,27 +240,36 @@
 .lm-podio .lm-medida i{display:block;height:100%;background:var(--c,var(--em-accent))}
 .lm-podio b{font-family:var(--em-sans);font-size:14px}
 .lm-podio .tabular{font-family:var(--em-sans);font-weight:700;font-variant-numeric:tabular-nums}
-.lm-acciones{display:flex;flex-wrap:wrap;gap:var(--em-8);margin-top:var(--em-32)}
-.lm-acciones .em-btn{display:inline-flex;align-items:center;gap:var(--em-8)}
-.lm-ajeno{background:var(--mal-pastel-azul,var(--em-surface));color:#141414;padding:var(--em-12) var(--em-16);margin-top:var(--em-16);font-family:var(--em-sans);font-size:14px}
+.lm-acciones{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:var(--em-32)}
+.lm-acciones .lm-empezar{grid-column:1 / -1;margin:0}
+.lm-boton{
+  display:flex;align-items:center;justify-content:center;gap:var(--em-8);min-height:52px;padding:0 var(--em-12);
+  font-family:var(--em-sans);font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--em-contrast);background:var(--em-surface);border:0;border-radius:0;cursor:pointer;
+  box-shadow:0 4px 0 rgba(var(--ref-borde-rgb),.14);transition:transform var(--k-rapido) ease,box-shadow var(--k-rapido) ease;
+}
+.lm-boton:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(var(--ref-borde-rgb),.14)}
+.lm-ajeno{background:var(--mal-pastel-azul,var(--em-surface));color:#141414;padding:var(--em-12) var(--em-16);margin-top:var(--em-16);font-family:var(--em-sans);font-size:14px;text-align:left}
 
-/* ─── el plano del Lamparómetro ─── */
+/* el plano */
 .lm-plano{width:100%;max-width:560px;display:block;margin-inline:auto;font-family:var(--em-sans)}
 .lm-plano .cuad{opacity:.12}
 .lm-plano .eje{stroke:var(--em-contrast);stroke-width:.08}
 .lm-plano .rej{stroke:var(--em-contrast);stroke-width:.02;opacity:.35}
 .lm-plano .rot{fill:var(--em-contrast-3);font-size:.62px;font-weight:700;letter-spacing:.03px;text-transform:uppercase}
-.lm-plano .nom{fill:var(--em-contrast);font-size:.68px;font-weight:600}
-.lm-plano .pj{cursor:pointer;outline:none}
-.lm-plano .pj:focus-visible circle,.lm-plano .pj.activo circle{stroke:var(--em-contrast);stroke-width:.18}
-.lm-quien{text-align:center;font-family:var(--em-sans);font-size:14px;font-weight:600;color:var(--em-contrast-3);margin:var(--em-8) 0 0;min-height:1.5em}
 .lm-plano .tu-nom{fill:var(--em-accent);font-size:.9px;font-weight:800}
+.lm-plano .ini{font-size:.5px;font-weight:800;pointer-events:none}
+.lm-plano .pj{cursor:pointer;outline:none}
+.lm-plano .pj circle{transition:transform .2s var(--k-suave);transform-box:fill-box;transform-origin:center}
+.lm-plano .pj:hover circle,.lm-plano .pj.activo circle{transform:scale(1.25)}
+.lm-plano .pj:focus-visible circle,.lm-plano .pj.activo circle{stroke:var(--em-contrast);stroke-width:.18}
+.lm-plano .tu{animation:latido 1.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes latido{50%{transform:scale(1.18)}}
+.lm-quien{text-align:center;font-family:var(--em-sans);font-size:14px;font-weight:600;color:var(--em-contrast-3);margin:var(--em-8) 0 0;min-height:1.5em}
 .lm-ejes{display:grid;grid-template-columns:1fr 1fr;gap:var(--em-12);margin-top:var(--em-16)}
 .lm-ejes > div{background:var(--em-surface);padding:var(--em-12) var(--em-16)}
 .lm-ejes b{display:block;font-family:var(--em-sans);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--em-contrast-3)}
 .lm-ejes span{font-family:var(--em-serif);font-size:var(--mal-t-h4);font-weight:700}
-
-.lm-plano .ini{font-size:.5px;font-weight:800;pointer-events:none}
 .lm-ejes__z{grid-column:1 / -1}
 .lm-medida--z{height:10px;background:var(--em-base);margin-top:var(--em-8)}
 .lm-medida--z i{display:block;height:100%;background:linear-gradient(90deg,var(--em-contrast-3),var(--em-accent))}
@@ -135,16 +280,49 @@
 .lm-adn .lm-medida{height:10px;background:var(--em-surface);position:relative}
 .lm-adn .lm-medida i{display:block;height:100%;background:var(--em-accent)}
 .lm-adn .lm-medida s{position:absolute;top:-4px;bottom:-4px;width:3px;margin-left:-1.5px;background:var(--em-contrast)}
+.lm-otros{display:grid;gap:var(--em-12);list-style:none;padding:0;margin:0}
+
+/* confeti de papel periódico */
+.lm-papeles{position:fixed;inset:0;pointer-events:none;z-index:1020;overflow:hidden}
+.lm-papeles i{position:absolute;top:-24px;width:9px;height:16px;background:var(--c);animation:cae var(--d) cubic-bezier(.25,.6,.4,1) var(--r) forwards}
+@keyframes cae{to{transform:translate(var(--x), 110vh) rotate(var(--g))}}
+
+/* salir a mitad de juego */
+.lm-dialogo{border:0;border-radius:0;padding:var(--em-24);width:min(100% - 32px, 400px);background:var(--em-base);color:var(--em-contrast);box-shadow:0 8px 0 rgba(0,0,0,.35)}
+.lm-dialogo::backdrop{background:rgba(20,20,20,.55)}
+.lm-dialogo h2{font-family:var(--em-serif);margin:0 0 var(--em-8)}
+.lm-dialogo p{margin:0 0 var(--em-24);color:var(--em-contrast-2)}
+.lm-dialogo .lm-empezar{margin:0 0 var(--em-12)}
+
 .lm-aviso{margin-top:var(--em-48);padding-top:var(--em-16);border-top:1px solid var(--em-border);color:var(--em-contrast-3);font-size:var(--em-t-caption)}
-.lm .em-header{flex-wrap:nowrap}
-.lm .em-header .em-logo{font-size:clamp(22px, 6vw, 32px)}
-.lm > footer{padding-inline:0}
-.lm-nav .em-btn{padding:var(--em-8) var(--em-16);white-space:nowrap}
-@media (prefers-reduced-motion:reduce){.lm-barra i,.lm-opcion,.lm-test{transition:none}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;transition-delay:0s !important}
+  .lm-papeles{display:none}
+}
 </style>
 </head>
 <body>
 <a class="salta" href="#principal">Saltar al contenido</a>
+
+<!-- Lamparita, la mascota. Se clona donde haga falta. -->
+<template id="t-lamp">
+  <svg class="lm-lamp" viewBox="0 0 120 150" role="img" aria-label="Lamparita, la mascota del Lamparómetro">
+    <g class="lm-lamp__gira">
+      <line x1="60" y1="0" x2="60" y2="38" stroke="currentColor" stroke-width="3"/>
+      <path class="lm-lamp__luz" d="M30 86 L90 86 L122 150 L-2 150 Z" fill="#ffd34d"/>
+      <rect x="52" y="34" width="16" height="8" fill="currentColor"/>
+      <path d="M40 42 H80 L100 82 H20 Z" fill="#141414"/>
+      <rect x="18" y="80" width="84" height="7" fill="#c53b2b"/>
+      <circle class="lm-lamp__foco" cx="60" cy="92" r="9" fill="#ffd34d"/>
+      <ellipse class="lm-lamp__ojo" cx="50" cy="63" rx="4.2" ry="5.2" fill="#fff"/>
+      <ellipse class="lm-lamp__ojo" cx="70" cy="63" rx="4.2" ry="5.2" fill="#fff"/>
+      <circle cx="51" cy="64.5" r="2" fill="#141414"/>
+      <circle cx="71" cy="64.5" r="2" fill="#141414"/>
+    </g>
+  </svg>
+</template>
+
 <div class="lm">
   <header class="em-header">
     <a class="em-logo" href="https://elmercio.com/">EL MERCIO<span class="em-logo-dot">.</span></a>
@@ -156,35 +334,26 @@
   <main id="principal">
     <!-- PORTADA -->
     <section class="lm-pantalla" id="portada" tabindex="-1" aria-labelledby="portada-t">
-      <div class="lm-cab">
-        <p class="em-kicker">Juegos · Sátira</p>
-        <h1 class="em-h1" id="portada-t" style="font-size:var(--mal-t-display)">El Lamparómetro</h1>
-        <p class="em-frase">¿A qué lámpara ecuatoriana te pareces? Cinco tests con rigor
-        científico cero y margen de error del cien por ciento.</p>
-        <div class="lm-elenco" id="elenco" aria-label="El elenco"></div>
-        <p class="lm-fecha"><span>Quito · edición de los tests</span><span>Sin registro · sin datos · sin vergüenza</span></p>
+      <div class="lm-hero">
+        <div data-lamp="hero"></div>
+        <div>
+          <p class="em-kicker">Juegos · Sátira</p>
+          <h1 id="portada-t">El Lamparómetro</h1>
+        </div>
+        <p class="lm-globo" id="globo" aria-live="polite"></p>
+        <p class="em-frase">¿A qué lámpara ecuatoriana te pareces? Cinco tests de un minuto, con
+        rigor científico cero.</p>
       </div>
-      <div class="lm-tests" id="tests"></div>
+      <button class="lm-empezar" type="button" data-empezar="lamparometro">Empezar
+        <svg class="icono" aria-hidden="true"><use href="#i-play"/></svg></button>
+      <ul class="lm-lista" id="tests"></ul>
+      <div class="lm-elenco" id="elenco" aria-label="El elenco"></div>
       <p class="lm-aviso"><svg class="icono icono--s" aria-hidden="true"><use href="#i-info"/></svg>
       Esto es sátira. Ninguna de las personas ni de los personajes que salen aquí participó,
       aprobó ni se enteró de este test, y las posiciones del plano son una exageración de su
-      figura pública, no un dato. Las cartas astrales son inventadas: nadie revisó la partida
-      de nacimiento de nadie. Las provincias son cariño, no geografía. El Tuti tampoco sabe que existimos. Tus respuestas no salen de tu
+      figura pública, no un dato. Las cartas astrales son inventadas. Las provincias son
+      cariño, no geografía. El Tuti tampoco sabe que existimos. Tus respuestas no salen de tu
       teléfono.</p>
-    </section>
-
-    <!-- PREGUNTA -->
-    <section class="lm-pantalla" id="test" tabindex="-1" hidden aria-live="polite">
-      <p class="em-kicker" id="q-kicker"></p>
-      <div class="lm-barra" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="q-barra"><i></i></div>
-      <p class="em-meta" id="q-n"></p>
-      <h2 class="lm-pregunta" id="q-t"></h2>
-      <div id="q-extra"></div>
-      <ul class="lm-opciones" id="q-op"></ul>
-      <div class="lm-pie-q">
-        <button class="lm-link" type="button" id="q-atras">← Atrás</button>
-        <button class="lm-link" type="button" data-ir="portada">Salir del test</button>
-      </div>
     </section>
 
     <!-- RESULTADO -->
@@ -197,14 +366,58 @@
   </footer>
 </div>
 
-<script src="datos.js?v=2"></script>
+<!-- EL JUEGO -->
+<section class="lm-juego lm-pantalla" id="test" tabindex="-1" hidden aria-label="Test">
+  <div class="lm-top">
+    <button class="lm-x" type="button" id="q-salir" aria-label="Salir del test"><svg class="icono" aria-hidden="true"><use href="#i-cerrar"/></svg></button>
+    <div class="lm-prog" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="q-barra"><i></i></div>
+    <span class="lm-cuenta" id="q-n"></span>
+  </div>
+  <div class="lm-juego__in">
+    <div class="lm-escena">
+      <div data-lamp="juego"></div>
+      <div class="lm-burbuja" id="q-burbuja" aria-live="polite">
+        <span class="em-kicker" id="q-kicker"></span>
+        <h2 class="lm-pregunta" id="q-t"></h2>
+      </div>
+    </div>
+    <div id="q-op"></div>
+    <button class="lm-saltar" type="button" id="q-saltar" hidden>Chuta, no sé</button>
+  </div>
+  <div></div>
+</section>
+
+<div class="lm-hoja" id="hoja" aria-live="assertive">
+  <div class="lm-hoja__in">
+    <p class="lm-hoja__de">La redacción dice</p>
+    <p class="lm-hoja__q" id="hoja-q"></p>
+    <button class="lm-seguir" type="button" id="hoja-seguir">Seguir<i></i></button>
+  </div>
+</div>
+
+<dialog class="lm-dialogo" id="salir">
+  <h2>¿Te vas a la mitad?</h2>
+  <p>Si sales ahora, la redacción no publica tu resultado y se pierde lo respondido.</p>
+  <button class="lm-empezar" type="button" value="sigo" data-cerrar>Seguir jugando</button>
+  <button class="lm-boton" type="button" style="width:100%" value="salgo" data-cerrar>Salir</button>
+</dialog>
+
+<script src="datos.js?v=3"></script>
 <script>
 (() => {
 'use strict';
 
-const { PJ, RASGOS, ESCALA, TESTS, SIGNOS } = window.LAMP;
+const { PJ, RASGOS, ESCALA, SALTO, QUIPS, TESTS, SIGNOS } = window.LAMP;
 const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 const EJES = ['x', 'y', 'z'];
+const quieto = matchMedia('(prefers-reduced-motion: reduce)');
+const ESPERA = 1400;   // lo que la hoja espera antes de pasar sola a la siguiente
+const FORMAS = [
+  '<path d="M12 3 22 21H2z"/>',                       // triángulo
+  '<path d="M12 2 22 12 12 22 2 12z"/>',              // rombo
+  '<circle cx="12" cy="12" r="10"/>',                 // círculo
+  '<rect x="3" y="3" width="18" height="18"/>'        // cuadrado
+];
 
 function signo(mes, dia) {
   const v = mes * 100 + dia;
@@ -231,90 +444,168 @@ function topes(T) {
 const escala = (tp, k, n) => (n - tp[k][0]) / (tp[k][1] - tp[k][0]) * 10;
 const FIRMA = .07;   // cuánto pesa un punto de firma frente al coseno (−1…1)
 
-/* ══════════ ESTADO Y PANTALLAS ══════════ */
+/* ══════════ UTILIDADES ══════════ */
 const $ = (s, r = document) => r.querySelector(s);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-let st = null;   // { id, i, resp: [], fecha: {mes, dia} }
-
-function mostrar(id) {
-  for (const p of document.querySelectorAll('.lm-pantalla')) p.hidden = p.id !== id;
-  const p = $('#' + id);
-  window.scrollTo({ top: 0 });
-  p.focus({ preventScroll: true });
-}
+const azar = (a) => a[Math.floor(Math.random() * a.length)];
+const vibra = (ms) => { try { navigator.vibrate?.(ms); } catch {} };
 function mono(o, mod = '') {
   return `<span class="lm-mono ${mod}" style="--c:${o.c};--t:${o.t}" aria-hidden="true">${esc(o.ini)}</span>`;
+}
+/* reinicia una animación de CSS quitando y poniendo la clase */
+function anima(el, clase) {
+  if (!el) return;
+  el.classList.remove(clase); void el.getBoundingClientRect(); el.classList.add(clase);
+}
+for (const hueco of document.querySelectorAll('[data-lamp]')) hueco.replaceWith($('#t-lamp').content.cloneNode(true));
+const lampJuego = () => $('#test .lm-lamp');
+function reacciona(lamp) { anima(lamp, 'mece'); anima(lamp, 'prende'); }
+
+/* ══════════ ESTADO Y PANTALLAS ══════════ */
+let st = null;   // { id, i, resp: [], fecha, decidido }
+let reloj = 0;
+let ultimoQuip = '';
+
+function mostrar(id) {
+  const juego = id === 'test';
+  $('#test').hidden = !juego;
+  document.body.classList.toggle('jugando', juego);
+  for (const p of document.querySelectorAll('main .lm-pantalla')) p.hidden = p.id !== id;
+  if (!juego) window.scrollTo({ top: 0 });
+  $('#' + id).focus({ preventScroll: true });
 }
 
 function portada() {
   st = null;
+  ocultaHoja();
   history.replaceState(null, '', location.pathname + location.search);
   mostrar('portada');
 }
 
 function empezar(id) {
-  st = { id, i: 0, resp: [], fecha: null };
-  pregunta();
+  for (const c of document.querySelectorAll('.lm-papeles')) c.remove();
+  st = { id, i: 0, resp: [], fecha: null, decidido: false };
+  ocultaHoja();
+  history.replaceState(null, '', location.pathname + location.search);
   mostrar('test');
+  pregunta();
+}
+
+const pasos = (T) => T.preguntas.length + (T.fecha ? 1 : 0);
+const pasoActual = () => st.i + (TESTS[st.id].fecha && st.fecha ? 1 : 0);
+
+function progreso(n) {
+  const T = TESTS[st.id], total = pasos(T);
+  const pct = Math.round(n / total * 100);
+  $('#q-barra i').style.width = pct + '%';
+  $('#q-barra').setAttribute('aria-valuenow', pct);
 }
 
 function pregunta() {
   const T = TESTS[st.id];
+  st.decidido = false;
+  const total = pasos(T);
+  progreso(pasoActual());
+  $('#q-n').textContent = `${Math.min(pasoActual() + 1, total)}/${total}`;
+  anima($('#q-n'), 'salta');
+  $('#q-kicker').textContent = T.corto;
+  anima($('#q-burbuja'), 'lm-entra');
+
+  if (T.fecha && !st.fecha) return fechaPaso();
+
   const q = T.preguntas[st.i];
-  const total = T.preguntas.length;
-  $('#q-kicker').textContent = T.kicker;
-  $('#q-n').textContent = `Pregunta ${st.i + 1} de ${total}`;
-  const pct = Math.round(st.i / total * 100);
-  $('#q-barra i').style.width = pct + '%';
-  $('#q-barra').setAttribute('aria-valuenow', pct);
   $('#q-t').textContent = q.astro ? `${q.astro}. ${q.t}` : q.t;
-  $('#q-atras').hidden = st.i === 0 && !T.fecha;
-
-  const extra = $('#q-extra');
-  extra.innerHTML = '';
-  // el primer paso de la carta astral es el cumpleaños
-  if (T.fecha && st.i === 0 && !st.fecha) return fechaPaso();
-
-  const ul = $('#q-op');
-  ul.className = 'lm-opciones' + (T.tipo === 'plano' ? ' lm-escala' : '');
   const ops = T.tipo === 'plano' ? ESCALA : q.op;
-  ul.innerHTML = ops.map((o, k) => `<li><button class="lm-opcion" type="button" data-k="${k}">` +
-    (T.tipo === 'plano' ? `<span>${esc(o.t)}</span><span>${esc(o.n)}</span>`
-                        : `<b>${'ABCDEFGHI'[k]}</b><span>${esc(o.t)}</span>`) +
-    `</button></li>`).join('');
+  $('#q-op').innerHTML = `<ul class="lm-fichas">${ops.map((o, k) => `<li>
+    <button class="lm-op lm-op--${k}" type="button" data-k="${k}" style="--i:${k}">
+      <svg class="lm-op__forma" viewBox="0 0 24 24" aria-hidden="true">${FORMAS[k]}</svg>
+      <span class="lm-op__tecla" aria-hidden="true">${k + 1}</span>
+      <span>${esc(o.t)}</span></button></li>`).join('')}</ul>`;
+  $('#q-saltar').hidden = T.tipo !== 'plano';
 }
 
 function fechaPaso() {
-  $('#q-n').textContent = 'Antes de empezar';
   $('#q-t').textContent = 'Sol. ¿Cuándo es tu cumpleaños?';
-  $('#q-atras').hidden = true;
+  $('#q-saltar').hidden = true;
   const dias = Array.from({ length: 31 }, (_, k) => `<option>${k + 1}</option>`).join('');
   const meses = MESES.map((m, k) => `<option value="${k + 1}">${m}</option>`).join('');
-  $('#q-extra').innerHTML = `<div class="lm-fechas">
-    <label>Día<select id="f-dia">${dias}</select></label>
-    <label>Mes<select id="f-mes">${meses}</select></label></div>`;
-  $('#q-op').className = 'lm-opciones';
-  $('#q-op').innerHTML = `<li><button class="em-btn" type="button" id="f-ok">Ver mi sol y seguir</button></li>`;
+  $('#q-op').innerHTML = `<div class="lm-fechas">
+      <label>Día<select id="f-dia">${dias}</select></label>
+      <label>Mes<select id="f-mes">${meses}</select></label></div>
+    <button class="lm-empezar" type="button" id="f-ok" style="margin-top:16px">Ver mi sol</button>`;
   $('#f-ok').addEventListener('click', () => {
     const dia = +$('#f-dia').value, mes = +$('#f-mes').value;
     const max = new Date(2024, mes, 0).getDate();   // 2024 es bisiesto: el 29 de febrero vale
     st.fecha = { dia: Math.min(dia, max), mes };
-    pregunta();
+    const s = signo(mes, st.fecha.dia);
+    const quien = PJ[Object.keys(s[3])[0]].nombre;
+    st.decidido = true;
+    progreso(1);
+    reacciona(lampJuego());
+    vibra(10);
+    muestraHoja(`Sol en ${s[0]}. Compartes sol con ${quien}.`, ESPERA + 600);
   });
 }
 
-function responder(k) {
-  st.resp[st.i] = k;
+/* tocar una ficha: se hunde, las demás se apagan, Lamparita se mece y sube
+   la hoja con el comentario de la redacción */
+function elegir(k) {
+  if (!st || st.decidido) return;
   const T = TESTS[st.id];
-  if (st.i < T.preguntas.length - 1) { st.i++; pregunta(); $('#test').focus({ preventScroll: true }); }
-  else { const r = calcular(); location.hash = codigo(r); }
+  st.decidido = true;
+  st.resp[st.i] = k;
+  vibra(12);
+  const fichas = $('#q-op .lm-fichas');
+  if (fichas) {
+    fichas.classList.add('decidido');
+    if (k >= 0) fichas.querySelector(`[data-k="${k}"]`)?.classList.add('elegida');
+  }
+  $('#q-saltar').hidden = true;
+  reacciona(lampJuego());
+  progreso(pasoActual() + 1);
+  let q;
+  if (T.tipo === 'plano') q = azar((k < 0 ? SALTO : ESCALA[k]).q);
+  else q = T.preguntas[st.i].op[k].q;
+  if (!q) { do q = azar(QUIPS); while (q === ultimoQuip && QUIPS.length > 1); }
+  ultimoQuip = q;
+  muestraHoja(q, ESPERA);
 }
 
-function atras() {
-  const T = TESTS[st.id];
-  if (st.i > 0) { st.i--; pregunta(); }
-  else if (T.fecha && st.fecha) { st.fecha = null; pregunta(); }
+function muestraHoja(texto, espera) {
+  $('#hoja-q').textContent = texto;
+  const h = $('#hoja');
+  h.style.setProperty('--espera', espera + 'ms');
+  h.classList.remove('ve'); void h.offsetWidth; h.classList.add('ve');
+  clearTimeout(reloj);
+  reloj = setTimeout(avanzar, quieto.matches ? espera + 800 : espera);
 }
+function ocultaHoja() { clearTimeout(reloj); $('#hoja').classList.remove('ve'); }
+
+function avanzar() {
+  if (!st || !st.decidido) return;
+  ocultaHoja();
+  const T = TESTS[st.id];
+  if (T.fecha && st.fecha && st.resp.length === 0 && st.i === 0 && !$('#q-op .lm-fichas')) return pregunta();
+  if (st.i < T.preguntas.length - 1) { st.i++; pregunta(); return; }
+  const r = calcular();
+  st.terminado = true;
+  location.hash = codigo(r);
+}
+
+function salir() {
+  if (!st || (st.i === 0 && !st.decidido)) return portada();
+  clearTimeout(reloj);
+  const d = $('#salir');
+  if (typeof d.showModal === 'function') d.showModal();
+  else if (confirm('¿Salir del test? Se pierde lo respondido.')) portada();
+}
+$('#salir').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-cerrar]');
+  if (!b) return;
+  $('#salir').close();
+  if (b.value === 'salgo') portada();
+  else if (st?.decidido) reloj = setTimeout(avanzar, 600);
+});
 
 /* ══════════ CÁLCULO ══════════ */
 function calcular() {
@@ -322,7 +613,8 @@ function calcular() {
   if (T.tipo === 'plano') {
     const acc = { x: [0, 0], y: [0, 0], z: [0, 0] };
     T.preguntas.forEach((q, i) => {
-      acc[q.eje][0] += ESCALA[st.resp[i]].v * q.s * q.w;
+      const v = st.resp[i] >= 0 ? ESCALA[st.resp[i]].v : SALTO.v;
+      acc[q.eje][0] += v * q.s * q.w;
       acc[q.eje][1] += 2 * q.w;
     });
     const r = { id: st.id };
@@ -346,8 +638,6 @@ function calcular() {
   return { id: st.id, pts, carta };
 }
 
-/* Con las respuestas se arma todo: el perfil de 0 a 10, lo que se aparta de
-   la media y los puntos de firma. Por eso el hash guarda las respuestas. */
 function perfil(id, resp) {
   const T = TESTS[id], tp = topes(T);
   const sum = Object.fromEntries(RASGOS.map((r) => [r.k, 0]));
@@ -395,7 +685,6 @@ function leer(h) {
   return { id: m[1], pts: Object.fromEntries(claves.map((k, i) => [k, v[i]])), carta };
 }
 const clamp = (n) => Math.max(-10, Math.min(10, n));
-
 function ranking(r) {
   const T = TESTS[r.id];
   if (T.tipo === 'plano') {
@@ -423,8 +712,10 @@ function ranking(r) {
     .sort((a, b) => b.pct - a.pct || a.k.localeCompare(b.k));
 }
 
-/* ══════════ RESULTADO ══════════ */
-function resultado(r, ajeno) {
+/* ══════════ RESULTADO ══════════
+   Primero el podio sube de a uno, como en un concurso: tercero, segundo y,
+   con suspenso, el primero. Después cae el confeti y aparece la ficha. */
+function resultado(r, ajeno, animar) {
   const T = TESTS[r.id];
   const rk = ranking(r);
   const g = rk[0].o;
@@ -432,10 +723,20 @@ function resultado(r, ajeno) {
   const que = T.cosa ? 'Eres' : 'Te pareces a';
   const cuantos = T.tipo === 'puntos' ? 5 : 6;
   const el = $('#resultado');
+  const top = rk.slice(0, 3);
+  const maxp = Math.max(1, top[0].pct);
+  const col = (x, n) => x ? `<div class="lm-col lm-col--${n}">
+      <div class="lm-col__quien">${mono(x.o, n === 1 ? '' : 'lm-mono--s')}<b>${esc(x.o.nombre)}</b></div>
+      <div class="lm-col__barra" style="--c:${x.o.c};--t:${x.o.t};--h:${Math.max(18, Math.round(x.pct / maxp * (n === 1 ? 70 : 52)))}%">${n}</div></div>` : '<div></div>';
 
   el.innerHTML = `
-    <p class="em-kicker" style="margin-top:var(--em-32)">${esc(T.kicker)}</p>
-    ${ajeno ? `<p class="lm-ajeno">A alguien le salió esto. Haz el test y compara.</p>` : ''}
+    <div class="lm-revela">
+      <p class="em-kicker">${esc(T.kicker)}</p>
+      ${ajeno ? `<p class="lm-ajeno">A alguien le salió esto. Haz el test y compara.</p>` : ''}
+      <p class="lm-revela__t" id="r-anuncio">${animar ? '<span class="lm-puntos">Contando votos</span>' : esc(que) + '…'}</p>
+      <div class="lm-podio3">${col(top[1], 2)}${col(top[0], 1)}${col(top[2], 3)}</div>
+    </div>
+    <div class="lm-despues">
     <div class="lm-ficha">
       ${mono(g, 'lm-mono--xl')}
       <div>
@@ -447,25 +748,51 @@ function resultado(r, ajeno) {
     <blockquote class="em-quote">${esc(g.frase)}</blockquote>
     <p>${esc(g.desc)}</p>
     <ul class="lm-rasgos">${g.rasgos.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
+    <div class="lm-acciones">
+      <button class="lm-empezar" type="button" data-accion="compartir"><svg class="icono" aria-hidden="true"><use href="#i-compartir"/></svg> Compartir</button>
+      <button class="lm-boton" type="button" data-accion="tarjeta"><svg class="icono icono--s" aria-hidden="true"><use href="#i-descargar"/></svg> Tarjeta</button>
+      <button class="lm-boton" type="button" data-empezar="${r.id}"><svg class="icono icono--s" aria-hidden="true"><use href="#i-reiniciar"/></svg> ${ajeno ? 'Jugar' : 'Repetir'}</button>
+    </div>
     ${r.carta && r.carta.length ? `<div class="lm-sec"><span class="em-kicker">Tu carta</span>
       <ul class="lm-carta">${r.carta.map((c, i) => `<li>${esc(T.astros[i] || '')} ${esc(c)}</li>`).join('')}</ul></div>` : ''}
     ${T.tipo === 'plano' ? planoHTML(r) : ''}
     ${T.tipo === 'rasgos' ? adnHTML(r, g) : ''}
-    <div class="lm-sec"><span class="em-kicker">${T.tipo === 'rasgos' ? 'También podrías ser' : T.cosa ? 'Tu percha' : 'Tu podio'}</span>
+    <div class="lm-sec"><span class="em-kicker">${T.tipo === 'rasgos' ? 'También podrías ser' : T.cosa ? 'Tu percha' : 'Tu podio completo'}</span>
       <ol class="lm-podio">${rk.slice(T.tipo === 'rasgos' ? 1 : 0, cuantos + 1).filter((x) => x.pct > 0).map((x) => `<li>${mono(x.o, 'lm-mono--s')}
         <div><b>${esc(x.o.nombre)}</b><div class="lm-medida" style="--c:${x.o.c}"><i style="width:${x.pct}%"></i></div></div>
         <span class="tabular">${x.pct} %</span></li>`).join('')}</ol></div>
-    <div class="lm-acciones">
-      <button class="em-btn" type="button" data-accion="compartir"><svg class="icono icono--s" aria-hidden="true"><use href="#i-compartir"/></svg> Compartir</button>
-      <button class="em-btn em-btn--linea" type="button" data-accion="tarjeta"><svg class="icono icono--s" aria-hidden="true"><use href="#i-descargar"/></svg> Descargar la tarjeta</button>
-      <button class="em-btn em-btn--linea" type="button" data-empezar="${r.id}"><svg class="icono icono--s" aria-hidden="true"><use href="#i-reiniciar"/></svg> ${ajeno ? 'Hacer este test' : 'Repetir'}</button>
-    </div>
     <div class="lm-sec"><span class="em-kicker">Sigue midiéndote</span>
-      <div class="lm-tests" style="margin-top:0">${otros.map(tarjetaTest).join('')}</div></div>
+      <ul class="lm-otros">${otros.map(tarjetaTest).join('')}</ul></div>
     <p class="lm-aviso">Sátira. Las personas, personajes y provincias de este test no participaron
-    ni lo aprobaron, y lo que dice de ellos es una exageración cariñosa, no un dato.</p>`;
+    ni lo aprobaron, y lo que dice de ellos es una exageración cariñosa, no un dato.</p>
+    </div>`;
   el._r = r;
   mostrar('resultado');
+
+  if (!animar || quieto.matches) { el.classList.remove('suspenso', 'contando'); el.classList.add('revelado'); return; }
+  el.classList.remove('revelado');
+  el.classList.add('suspenso', 'contando');
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.remove('suspenso')));
+  setTimeout(() => {
+    $('#r-anuncio').textContent = T.cosa ? `¡Eres ${g.nombre}!` : '¡Ya salió!';
+    el.classList.remove('contando');
+    el.classList.add('revelado');
+    confeti();
+    vibra([20, 40, 20]);
+  }, 1900);
+}
+
+function confeti() {
+  if (quieto.matches) return;
+  const caja = document.createElement('div');
+  caja.className = 'lm-papeles';
+  const colores = ['#c53b2b', '#141414', '#1f5fa8', '#e3a72a', '#d6d6d6'];
+  caja.innerHTML = Array.from({ length: 44 }, () => {
+    const l = Math.random() * 100, x = (Math.random() - .5) * 160;
+    return `<i style="left:${l}%;--c:${azar(colores)};--x:${x}px;--g:${Math.round(Math.random() * 900 - 450)}deg;--d:${(1.6 + Math.random() * 1.4).toFixed(2)}s;--r:${(Math.random() * .4).toFixed(2)}s"></i>`;
+  }).join('');
+  document.body.appendChild(caja);
+  setTimeout(() => caja.remove(), 3600);
 }
 
 function adnHTML(r, g) {
@@ -476,7 +803,6 @@ function adnHTML(r, g) {
       <span>${esc(r.v[i] >= 5 ? x.alto : x.bajo)}</span></li>`).join('')}</ul>
     <p class="em-meta">La barra es tuya; la rayita, de ${esc(g.nombre)}.</p></div>`;
 }
-
 function planoHTML(r) {
   const L = 11;   // el plano va de −10 a 10 con un margen
   const pjs = Object.values(PJ).map((p) => `<g class="pj" data-n="${esc(p.nombre)}" tabindex="0" role="button" aria-label="${esc(p.nombre)}"><title>${esc(p.nombre)}</title>
@@ -631,28 +957,54 @@ async function descargar() {
 }
 
 /* ══════════ ARRANQUE ══════════ */
-function tarjetaTest(id) {
+function tarjetaTest(id, n) {
   const T = TESTS[id];
-  return `<button class="lm-test" type="button" data-empezar="${id}">
-    <span class="em-kicker">${esc(T.kicker)}</span>
-    <h2>${esc(T.titulo)}</h2>
-    <p>${esc(T.bajada)}</p>
-    <span class="em-meta">${esc(T.meta)} →</span></button>`;
+  const color = ['var(--k-rojo)', 'var(--k-azul)', 'var(--k-mostaza)', 'var(--k-tinta)', '#2e7d4f'][Object.keys(TESTS).indexOf(id) % 5];
+  return `<li><button class="lm-test" type="button" data-empezar="${id}" style="--c:${color}">
+    <span class="lm-test__n" aria-hidden="true">${Object.keys(TESTS).indexOf(id) + 1}</span>
+    <span><span class="lm-test__t">${esc(T.titulo)}</span><span class="lm-test__m">${esc(T.meta)}</span></span>
+    <svg class="icono" aria-hidden="true"><use href="#i-chevron-der"/></svg></button></li>`;
 }
 $('#tests').innerHTML = Object.keys(TESTS).map(tarjetaTest).join('');
 $('#elenco').innerHTML = Object.values(PJ).map((p) => `<span title="${esc(p.nombre)}">${mono(p, 'lm-mono--s')}</span>`).join('');
 
+/* Lamparita, en la portada, dice cosas si la tocas */
+const DICHOS = ['¡Ay! Cuidado con el foco.', 'Soy la lámpara oficial de la redacción.', 'Prendo más que un candidato en campaña.',
+  'Haz el test, que no muerdo.', 'Me tienen colgada desde 1998.', 'Ilumino, pero no opino. Bueno, un poquito.'];
+$('#portada .lm-lamp').addEventListener('click', (e) => {
+  reacciona(e.currentTarget);
+  const g = $('#globo');
+  g.textContent = azar(DICHOS);
+  anima(g, 've');
+  clearTimeout(g._t); g._t = setTimeout(() => g.classList.remove('ve'), 2600);
+});
+
 document.addEventListener('click', (e) => {
   const pj = e.target.closest('.lm-plano .pj');
   if (pj) return quien(pj);
-  const b = e.target.closest('[data-empezar],[data-ir],[data-accion],.lm-opcion,#q-atras');
+  const b = e.target.closest('[data-empezar],[data-ir],[data-accion],.lm-op,#q-saltar,#q-salir,#hoja-seguir');
   if (!b) return;
-  if (b.dataset.empezar) { e.preventDefault(); history.replaceState(null, '', location.pathname + location.search); empezar(b.dataset.empezar); }
+  if (b.dataset.empezar) { e.preventDefault(); empezar(b.dataset.empezar); }
   else if (b.dataset.ir) { e.preventDefault(); portada(); }
   else if (b.dataset.accion === 'compartir') compartir();
   else if (b.dataset.accion === 'tarjeta') descargar();
-  else if (b.id === 'q-atras') atras();
-  else if (b.classList.contains('lm-opcion')) responder(+b.dataset.k);
+  else if (b.id === 'q-saltar') elegir(-1);
+  else if (b.id === 'q-salir') salir();
+  else if (b.id === 'hoja-seguir') avanzar();
+  else if (b.classList.contains('lm-op')) elegir(+b.dataset.k);
+});
+
+/* teclado: 1–4 eligen, 0 o S saltan, Enter sigue, Escape sale */
+document.addEventListener('keydown', (e) => {
+  const pj = e.target.closest?.('.lm-plano .pj');
+  if (pj && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); return quien(pj); }
+  if ($('#test').hidden || $('#salir').open || e.target.matches?.('select')) return;
+  if (e.key === 'Escape') { e.preventDefault(); return salir(); }
+  if (st?.decidido && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); return avanzar(); }
+  if (!st || st.decidido) return;
+  const n = +e.key;
+  if (n >= 1 && n <= 4 && $(`#q-op [data-k="${n - 1}"]`)) { e.preventDefault(); elegir(n - 1); }
+  else if ((e.key === '0' || e.key.toLowerCase() === 's') && !$('#q-saltar').hidden) { e.preventDefault(); elegir(-1); }
 });
 
 function quien(g) {
@@ -660,16 +1012,13 @@ function quien(g) {
   g.classList.add('activo');
   $('#plano-quien').textContent = g.dataset.n;
 }
-document.addEventListener('keydown', (e) => {
-  const pj = e.target.closest?.('.lm-plano .pj');
-  if (pj && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); quien(pj); }
-});
 
 function enrutar() {
   if (!location.hash.startsWith('#r=')) { if (!st && $('#resultado').hidden) mostrar('portada'); return; }
   const r = leer(location.hash);
   if (!r) return portada();
-  resultado(r, !st);   // sin test en curso, el resultado es de otra persona
+  const propio = !!st?.terminado;
+  resultado(r, !propio, true);   // sin test recién terminado, el resultado es de otra persona
   st = null;
 }
 window.addEventListener('hashchange', enrutar);

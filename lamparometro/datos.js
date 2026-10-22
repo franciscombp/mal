@@ -318,187 +318,151 @@ const PROV = Object.fromEntries(Object.entries(PROV_RAW).map(([k, v]) => {
   }];
 }));
 
-/* ══════════ LOS TESTS ══════════ */
+/* ══════════ LOS TESTS ══════════
+   Cuatro opciones por pregunta, como en un concurso de televisión: más es
+   tarea. En el plano la escala también tiene cuatro, y «chuta, no sé» es
+   saltar la pregunta (vale cero). */
 const ESCALA = [
-  { t: 'Totalmente', n: 'de ley', v: 2 },
-  { t: 'Algo', n: 'medio medio', v: 1 },
-  { t: 'Ni fu ni fa', n: 'chuta, no sé', v: 0 },
-  { t: 'Más bien no', n: 'tampoco así', v: -1 },
-  { t: 'Para nada', n: 'ni loco', v: -2 }
+  { t: 'De ley', v: 2, q: ['¡De ley!', 'Convencidísimo, se nota.', 'Eso, sin anestesia.'] },
+  { t: 'Medio medio', v: 1, q: ['Tibio, pero a favor.', 'Con matices, como buen columnista.', 'Medio medio, anotado.'] },
+  { t: 'Tampoco así', v: -1, q: ['Tampoco así, ¿no?', 'Con calma, mijo.', 'Lo pensaste dos veces.'] },
+  { t: 'Ni loco', v: -2, q: ['¡Ni loco!', 'Sin chance.', 'Ni regalado.'] }
+];
+const SALTO = { v: 0, q: ['Chuta, nadie sabe.', 'Se reservó el comentario.', 'Ni fu ni fa, como la Asamblea.'] };
+
+/* Lo que dice la redacción después de cada respuesta, cuando la opción no
+   trae su propio comentario. */
+const QUIPS = [
+  'Anotado.', 'Fuentes confirman.', 'Eso lo publicamos mañana.', 'Mmm… sospechoso.',
+  'La redacción aplaude.', 'Eso huele a titular.', 'Sin comentarios, dijo el vocero.',
+  'Desinformación de calidad.', 'Lo sabíamos.', 'Chuta, interesante.', 'Ya mismo sale en portada.',
+  'El pasante tomó nota.'
 ];
 
 const TESTS = {
   lamparometro: {
     titulo: 'El Lamparómetro',
+    corto: 'Espectro político',
     kicker: 'Test 1 · El espectro político',
-    bajada: 'El clásico plano político, pero con tres ejes y dieciséis lámparas: ¿quién paga, quién manda y cuánta tarima le pones?',
-    meta: '24 afirmaciones · 4 min',
+    bajada: '¿Quién paga, quién manda y cuánta tarima le pones? Tres ejes, dieciséis lámparas.',
+    meta: '15 frases · 2 min',
     pie: '¿Y tú a qué lámpara te pareces?',
     tipo: 'plano', grupo: PJ,
     preguntas: [
       // x · ¿quién paga?
-      { t: 'La tienda de la esquina sube el pan y hay que respetarlo: es la mano invisible del mercado.', eje: 'x', s: 1, w: 1 },
-      { t: 'Los vendedores de La Bahía son el verdadero motor de la economía nacional.', eje: 'x', s: 1, w: 1 },
-      { t: 'La electricidad debería ser del Estado, aunque haya apagones de catorce horas.', eje: 'x', s: -1, w: 1.5 },
-      { t: 'El que no madruga a vender caramelos en el bus no tiene derecho a quejarse.', eje: 'x', s: 1, w: 1 },
-      { t: 'Que el seguro social te dé cita para el 2031 es un derecho, y hay que defenderlo.', eje: 'x', s: -1, w: 1 },
-      { t: 'La gasolina debería costar lo mismo que en 1999, y que la diferencia la pague el Estado.', eje: 'x', s: -1, w: 1.5 },
+      { t: 'Si la tienda sube el pan, es la mano invisible del mercado y hay que respetarla.', eje: 'x', s: 1, w: 1 },
+      { t: 'La electricidad debe ser del Estado, aunque haya apagones de catorce horas.', eje: 'x', s: -1, w: 1.5 },
       { t: 'Un banquero sabe gobernar porque sabe cuadrar la caja.', eje: 'x', s: 1, w: 1.5 },
-      { t: 'Los bonos del gobierno deberían llegar por delivery, con propina incluida.', eje: 'x', s: -1, w: 1 },
+      { t: 'La gasolina debería costar lo mismo que en 1999, y que pague el Estado.', eje: 'x', s: -1, w: 1.5 },
+      { t: 'Los vendedores de La Bahía son el verdadero motor del país.', eje: 'x', s: 1, w: 1 },
       // y · ¿quién manda?
-      { t: 'Un país se gobierna mejor con una cadena nacional de cuatro horas cada sábado.', eje: 'y', s: 1, w: 1.5 },
-      { t: 'Cada barrio debería decidir sus cosas en asamblea, con colada morada y empanadas.', eje: 'y', s: -1, w: 1 },
-      { t: 'Al que critica al gobierno hay que mostrarle su foto en pantalla gigante.', eje: 'y', s: 1, w: 1.5 },
-      { t: 'Las leyes son más bien sugerencias, como las señales de tránsito en Guayaquil.', eje: 'y', s: -1, w: 1 },
-      { t: 'Hace falta alguien que ponga orden, aunque sea gritando en la casa.', eje: 'y', s: 1, w: 1 },
-      { t: 'Una farra en tarima es una forma perfectamente legítima de hacer política.', eje: 'y', s: -1, w: 1 },
-      { t: 'El que manda debería poder cambiar la Constitución cuando le aburra.', eje: 'y', s: 1, w: 1 },
-      { t: 'Si la Asamblea no te hace caso, lo justo es cerrarla y que todos se vayan a la casa.', eje: 'y', s: 1, w: 1 },
+      { t: 'Un país se gobierna mejor con cadena nacional de cuatro horas cada sábado.', eje: 'y', s: 1, w: 1.5 },
+      { t: 'Cada barrio debería decidir sus cosas en asamblea, con colada morada.', eje: 'y', s: -1, w: 1 },
+      { t: 'Si la Asamblea no te hace caso, se cierra y todos a su casa.', eje: 'y', s: 1, w: 1 },
+      { t: 'Una farra en tarima es una forma legítima de hacer política.', eje: 'y', s: -1, w: 1 },
+      { t: 'Las leyes son sugerencias, como los semáforos en Guayaquil.', eje: 'y', s: -1, w: 1 },
       // z · ¿cuánta lámpara?
-      { t: 'Un buen político debe saber cantar, bailar y hacer la coreografía completa en tarima.', eje: 'z', s: 1, w: 1.5 },
+      { t: 'Un buen político debe cantar, bailar y hacer la coreografía en tarima.', eje: 'z', s: 1, w: 1.5 },
       { t: 'Si no lo subiste a TikTok, no pasó.', eje: 'z', s: 1, w: 1 },
-      { t: 'Me pondría de rodillas en un mitin, con una Biblia en la mano, si eso ayuda a ganar.', eje: 'z', s: 1, w: 1 },
-      { t: 'Con un recorte de cartón de mí mismo puedo estar en diez sitios a la vez.', eje: 'z', s: 1, w: 1 },
       { t: 'La elegancia está en el perfil bajo: menos tarima, más Excel.', eje: 'z', s: -1, w: 1.5 },
-      { t: 'La salida más digna de un mal día en el trabajo es en helicóptero.', eje: 'z', s: 1, w: 1 },
-      { t: 'Las cosas serias se dicen bajito, sin parlante y sin música de fondo.', eje: 'z', s: -1, w: 1 },
-      { t: 'Una buena campaña cabe en un PDF de cuarenta páginas, sin fotos.', eje: 'z', s: -1, w: 1 }
+      { t: 'La salida más digna de un mal día es en helicóptero.', eje: 'z', s: 1, w: 1 },
+      { t: 'Las cosas serias se dicen bajito, sin parlante.', eje: 'z', s: -1, w: 1 }
     ]
   },
   astral: {
     titulo: '¿Con quién compartes carta astral?',
+    corto: 'Carta astral',
     kicker: 'Test 2 · Horóscopo lámpara',
-    bajada: 'Tu sol, ascendente, luna, Venus, Marte y Mercurio retrógrado, cruzados con las cartas (inventadas) de dieciséis lámparas nacionales.',
-    meta: 'tu cumpleaños + 5 preguntas · 2 min',
+    bajada: 'Tu cumpleaños y cinco planetas, cruzados con las cartas (inventadas) de dieciséis lámparas.',
+    meta: '6 pasos · 1 min',
     pie: '¿Y tú con quién compartes carta astral?',
     tipo: 'puntos', grupo: PJ, fecha: true,
     astros: ['Sol en', 'Ascendente en', 'Luna en', 'Venus en', 'Marte en', 'Mercurio en'],
     preguntas: [
       { t: '¿A qué hora naciste, más o menos?', astro: 'Ascendente', op: [
-        { t: 'De madrugada, después de la farra', p: { bucaram: 2, mofle: 1 }, casa: 'Tarima' },
-        { t: 'A las diez en punto, como cadena nacional', p: { correa: 2, dnoboa: 1 }, casa: 'Sabatina' },
-        { t: 'En hora pico, dentro de la Metrovía', p: { cholito: 2, nebot: 1 }, casa: 'Barrio' },
-        { t: 'Mi mamá dice una hora y mi papá otra', p: { fusilero: 2, mofle: 1 }, casa: 'Terapia familiar' },
-        { t: 'Justo en el noticiero estelar', p: { vera: 2, lasso: 1 }, casa: 'Entrevista' },
-        { t: 'Mientras pasaban un video en MTV', p: { rico: 2, aud: 1, delfin: 1 }, casa: 'Videoclip' }
+        { t: 'De madrugada, después de la farra', p: { bucaram: 2, mofle: 1, rico: 1 }, casa: 'Tarima' },
+        { t: 'A las diez, como cadena nacional', p: { correa: 2, dnoboa: 1, nebot: 1 }, casa: 'Sabatina' },
+        { t: 'En hora pico, dentro de la Metrovía', p: { cholito: 2, fusilero: 1, evaristo: 1 }, casa: 'Barrio' },
+        { t: 'Justo en el noticiero estelar', p: { vera: 2, lasso: 1, lucio: 1 }, casa: 'Entrevista' }
       ]},
       { t: '¿Cómo amaneces un lunes?', astro: 'Luna', op: [
-        { t: 'Con chuchaqui y sin arrepentimiento', p: { aud: 1, bucaram: 1, rico: 1 }, casa: 'Chuchaqui' },
-        { t: 'Indignado por algo que leí a las seis de la mañana', p: { vera: 2, evaristo: 1 }, casa: 'Indignación' },
-        { t: 'Cantando una balada en la ducha', p: { mino: 2, delfin: 1 }, casa: 'Balada' },
-        { t: 'Escribiendo en mayúsculas', p: { correa: 2, nebot: 1 }, casa: 'Bloq Mayús' },
-        { t: 'Pidiendo prestado para el pasaje', p: { cholito: 2, evaristo: 1 }, casa: 'Fin de mes' },
+        { t: 'Con chuchaqui y sin arrepentimiento', p: { aud: 2, bucaram: 1, rico: 1 }, casa: 'Chuchaqui' },
+        { t: 'Indignado por algo que leí a las seis', p: { vera: 2, evaristo: 2 }, casa: 'Indignación' },
+        { t: 'Cantando una balada en la ducha', p: { mino: 2, delfin: 2 }, casa: 'Balada' },
         { t: 'Revisando cuánto subieron mis acciones', p: { lasso: 2, alvaro: 1, dnoboa: 1 }, casa: 'Bolsa de valores' }
       ]},
       { t: '¿Cómo conquistas a alguien?', astro: 'Venus', op: [
-        { t: 'Le dedico una canción, con pista y micrófono', p: { mino: 1, bucaram: 1, delfin: 1 }, casa: 'Serenata' },
-        { t: 'Con flow y un «qué fue, mi reina»', p: { aud: 2, rico: 1 }, casa: 'Dancehall' },
-        { t: 'Le hago preguntas incómodas hasta que acepta', p: { vera: 2 }, casa: 'Repregunta' },
-        { t: 'Le presento a toda mi familia en la primera cita', p: { fusilero: 1, bucaram: 1, lucio: 1 }, casa: 'Familión' },
-        { t: 'Le escribo una nota en el periódico del barrio', p: { cholito: 2, mofle: 1 }, casa: 'Periodismo' },
-        { t: 'Le regalo una computadora y una Biblia', p: { alvaro: 3 }, casa: 'Donación' }
+        { t: 'Le dedico una canción, con pista', p: { mino: 2, delfin: 1, bucaram: 1 }, casa: 'Serenata' },
+        { t: 'Con flow y un «qué fue, mi reina»', p: { aud: 2, rico: 2 }, casa: 'Dancehall' },
+        { t: 'Le presento a toda mi familia', p: { fusilero: 2, mofle: 1, lucio: 1 }, casa: 'Familión' },
+        { t: 'Le regalo una computadora y una Biblia', p: { alvaro: 3, nebot: 1 }, casa: 'Donación' }
       ]},
       { t: '¿Cómo peleas?', astro: 'Marte', op: [
-        { t: 'A gritos, desde la cocina', p: { mofle: 2, fusilero: 1 }, casa: 'Grito' },
-        { t: 'Con el puño en alto y el malecón de fondo', p: { nebot: 2, correa: 1 }, casa: 'Malecón' },
-        { t: 'Disuelvo todo y me voy a mi casa', p: { lasso: 3 }, casa: 'Muerte cruzada' },
-        { t: 'No peleo: me voy volando, literalmente', p: { lucio: 2, bucaram: 1 }, casa: 'Helicóptero' },
-        { t: 'Saco un videoclip con efectos especiales', p: { delfin: 2, rico: 1 }, casa: 'Efectos especiales' },
-        { t: 'Mando a mi versión de cartón', p: { dnoboa: 2 }, casa: 'Cartón' },
-        { t: 'Me quejo, pero con mucha educación', p: { evaristo: 2, mino: 1 }, casa: 'Queja formal' }
+        { t: 'A gritos, desde la cocina', p: { mofle: 2, fusilero: 2 }, casa: 'Grito' },
+        { t: 'Con el puño en alto y el malecón de fondo', p: { nebot: 2, correa: 2 }, casa: 'Malecón' },
+        { t: 'Disuelvo todo y me voy a la casa', p: { lasso: 3, evaristo: 1 }, casa: 'Muerte cruzada' },
+        { t: 'No peleo: me voy en helicóptero', p: { lucio: 3, bucaram: 1 }, casa: 'Helicóptero' }
       ]},
-      { t: 'Mercurio está retrógrado y todo te sale mal. ¿Qué haces?', astro: 'Mercurio', op: [
-        { t: 'Le echo la culpa a la prensa', p: { correa: 2, lucio: 1 }, casa: 'Prensa corrupta' },
-        { t: 'Me voy un tiempito fuera del país, a ver si se calma', p: { bucaram: 1, correa: 1, rico: 1 }, casa: 'Exilio' },
-        { t: 'Grito, y luego pido perdón cantando', p: { fusilero: 2, mofle: 1 }, casa: 'Perdón cantado' },
-        { t: 'Saco tema nuevo', p: { aud: 1, mino: 1, delfin: 1 }, casa: 'Lanzamiento' },
-        { t: 'Hago un especial de tres horas sobre el tema', p: { vera: 2 }, casa: 'Programa especial' },
-        { t: 'Digo que antes todo era mejor', p: { evaristo: 2, cholito: 1 }, casa: 'Nostalgia' },
-        { t: 'Me vuelvo a postular', p: { alvaro: 2, dnoboa: 1, nebot: 1 }, casa: 'Candidatura' }
+      { t: 'Mercurio está retrógrado. ¿Qué haces?', astro: 'Mercurio', op: [
+        { t: 'Le echo la culpa a la prensa', p: { correa: 2, lucio: 1, vera: 1 }, casa: 'Prensa corrupta' },
+        { t: 'Saco un videoclip con efectos especiales', p: { delfin: 2, aud: 1, rico: 1 }, casa: 'Efectos especiales' },
+        { t: 'Mando a mi versión de cartón', p: { dnoboa: 3, alvaro: 1 }, casa: 'Cartón' },
+        { t: 'Digo que antes todo era mejor', p: { evaristo: 2, cholito: 2 }, casa: 'Nostalgia' }
       ]}
     ]
   },
   playlist: {
     titulo: '¿A qué lámpara te pareces según tu playlist?',
+    corto: 'Tu playlist',
     kicker: 'Test 3 · Tus gustos musicales',
-    bajada: 'Dime qué suena en tu farra y te diré quién eres. Spoiler: alguien que pone la música muy alto.',
-    meta: '7 preguntas · 2 min',
+    bajada: 'Dime qué suena en tu farra y te diré quién eres.',
+    meta: '6 preguntas · 1 min',
     pie: '¿Y tú a qué lámpara te pareces?',
     tipo: 'puntos', grupo: PJ,
     preguntas: [
       { t: '¿Qué suena en tu farra?', op: [
-        { t: 'Cumbia en tarima, a todo volumen', p: { bucaram: 2, mofle: 1 } },
-        { t: 'Dancehall de los noventa, hecho en Guayaquil', p: { aud: 2, rico: 1 } },
-        { t: 'Baladas para cantar abrazados', p: { mino: 2 } },
-        { t: 'Canciones de protesta, con el puño en alto', p: { correa: 2, lucio: 1 } },
-        { t: 'Lo que ponga el vecino, que tiene el parlante más grande', p: { cholito: 2, mofle: 1 } },
-        { t: 'Tecnocumbia con video de fondo verde', p: { delfin: 3 } },
-        { t: 'Un pasillo y un traguito', p: { evaristo: 2, mino: 1 } },
-        { t: 'Jazz de lobby de banco', p: { lasso: 2, dnoboa: 1 } }
+        { t: 'Cumbia en tarima, a todo volumen', p: { bucaram: 2, mofle: 1, delfin: 1 } },
+        { t: 'Dancehall de los noventa', p: { aud: 2, rico: 2 } },
+        { t: 'Pasillos para cantar abrazados', p: { mino: 2, evaristo: 1, cholito: 1 } },
+        { t: 'Canciones de protesta, puño en alto', p: { correa: 2, lucio: 1, nebot: 1 } }
       ]},
-      { t: 'Tu canción de karaoke es…', op: [
-        { t: 'Una que dedico mirando a los ojos de alguien', p: { mino: 2, rico: 1 } },
-        { t: 'Cualquiera, mientras el micrófono sea mío', p: { correa: 1, bucaram: 1, nebot: 1 } },
-        { t: 'Ninguna: prefiero entrevistar al que canta', p: { vera: 2 } },
-        { t: 'Un dúo, y peleamos por quién canta la primera parte', p: { fusilero: 2, mofle: 1 } },
-        { t: 'Un rap improvisado sobre los presentes', p: { aud: 2 } },
-        { t: 'Una sobre la actualidad internacional, con coreografía', p: { delfin: 2 } },
-        { t: 'No canto, pero subo el video a TikTok', p: { dnoboa: 2, alvaro: 1 } }
+      { t: 'Tu karaoke es…', op: [
+        { t: 'Una que dedico mirando a los ojos', p: { mino: 2, rico: 1, alvaro: 1 } },
+        { t: 'No canto: entrevisto al que canta', p: { vera: 2, lasso: 1 } },
+        { t: 'Un dúo, y peleamos la primera parte', p: { fusilero: 2, mofle: 2 } },
+        { t: 'No canto, pero lo subo a TikTok', p: { dnoboa: 2, delfin: 1, aud: 1 } }
       ]},
       { t: 'En el bus, con audífonos, escuchas…', op: [
-        { t: 'Un pódcast de análisis político de tres horas', p: { vera: 2, lasso: 1 } },
-        { t: 'Nada: el bus ya trae su propio DJ', p: { cholito: 2, mofle: 1 } },
-        { t: 'Mis propios audios de WhatsApp', p: { correa: 1, fusilero: 1 } },
-        { t: 'Reguetón de la vieja escuela', p: { aud: 2, rico: 1 } },
-        { t: 'Pasillos, para sufrir con estilo', p: { evaristo: 2, mino: 1 } },
-        { t: 'No voy en bus: voy en helicóptero', p: { lucio: 2, alvaro: 1 } },
-        { t: 'Jingles de campaña, por nostalgia', p: { alvaro: 1, dnoboa: 1, nebot: 1, bucaram: 1 } }
+        { t: 'Un pódcast político de tres horas', p: { vera: 2, lasso: 1, nebot: 1 } },
+        { t: 'Nada: el bus ya trae su DJ', p: { cholito: 2, mofle: 1, fusilero: 1 } },
+        { t: 'Mis propios audios de WhatsApp', p: { correa: 2, bucaram: 1, alvaro: 1 } },
+        { t: 'No voy en bus: voy en helicóptero', p: { lucio: 2, dnoboa: 1, alvaro: 1 } }
       ]},
-      { t: '¿Cómo armas tu playlist?', op: [
-        { t: 'No la armo: la playlist soy yo', p: { bucaram: 1, correa: 1 } },
-        { t: 'Por orden cronológico y con fuentes verificadas', p: { vera: 2 } },
-        { t: 'Mitad Sierra, mitad Costa', p: { mino: 2 } },
-        { t: 'La que me pasó mi primo por Bluetooth', p: { cholito: 1, fusilero: 1, mofle: 1 } },
-        { t: 'Solo temas que produje yo', p: { aud: 2, delfin: 1 } },
-        { t: 'La misma que suena en el gimnasio desde 1990', p: { rico: 2 } },
-        { t: 'Me la arma mi equipo de comunicación', p: { dnoboa: 2, lasso: 1 } }
-      ]},
-      { t: '¿A qué volumen escuchas música?', op: [
-        { t: 'Al que hace que el vecino golpee la pared', p: { fusilero: 2, mofle: 1 } },
-        { t: 'Volumen tarima: con bajo y amplificación', p: { bucaram: 2, delfin: 1 } },
-        { t: 'Suavecito, como para dedicar', p: { mino: 2, rico: 1 } },
-        { t: 'Al del parlante del barrio, que es de todos', p: { cholito: 2 } },
-        { t: 'Bajito, para oír quién habla mal de mí', p: { correa: 1, vera: 1, lucio: 1 } },
-        { t: 'Volumen de despacho, con la puerta cerrada', p: { lasso: 2, nebot: 1 } },
-        { t: 'Radio AM, como debe ser', p: { evaristo: 2 } }
+      { t: '¿A qué volumen?', op: [
+        { t: 'El que hace que el vecino golpee la pared', p: { fusilero: 2, bucaram: 1, aud: 1 } },
+        { t: 'Suavecito, como para dedicar', p: { mino: 2, rico: 1, evaristo: 1 } },
+        { t: 'Radio AM, como debe ser', p: { evaristo: 2, cholito: 1, vera: 1 } },
+        { t: 'Volumen de despacho, puerta cerrada', p: { lasso: 2, nebot: 1, dnoboa: 1 } }
       ]},
       { t: 'La canción que dice todo de ti:', op: [
-        { t: 'Una que habla de mí, en tercera persona', p: { correa: 2, alvaro: 1 } },
-        { t: 'Una de amor loco', p: { bucaram: 2 } },
-        { t: 'Una de esas que se le cantan a mamá', p: { fusilero: 2 } },
-        { t: 'La cortina musical de un noticiero', p: { vera: 2 } },
-        { t: 'Una con coro pegajoso y letra de barrio', p: { cholito: 1, aud: 1, mofle: 1 } },
-        { t: 'Una balada que suena igual en Quito que en Guayaquil', p: { mino: 2 } },
-        { t: 'El himno de Guayaquil, de pie', p: { nebot: 2 } },
-        { t: 'Una en inglés que nadie entiende y todos bailan', p: { rico: 2 } },
-        { t: 'Una sobre lo bonito que era Quito antes', p: { evaristo: 2 } }
+        { t: 'Una que habla de mí, en tercera persona', p: { correa: 2, alvaro: 2 } },
+        { t: 'Una de amor loco', p: { bucaram: 2, delfin: 1, mofle: 1 } },
+        { t: 'El himno de Guayaquil, de pie', p: { nebot: 2, lucio: 1, aud: 1 } },
+        { t: 'Una en inglés que nadie entiende', p: { rico: 2, dnoboa: 1, lasso: 1 } }
       ]},
       { t: '¿Cómo bailas?', op: [
-        { t: 'Como en tarima de campaña', p: { bucaram: 2, correa: 1 } },
-        { t: 'Sin camisa', p: { rico: 2 } },
-        { t: 'Con poncho y pasos que inventé yo', p: { delfin: 2 } },
-        { t: 'No bailo: cuadro la caja', p: { lasso: 2 } },
-        { t: 'Barriendo y bailando a la vez', p: { mofle: 2 } },
-        { t: 'Marcando el paso, firme', p: { lucio: 2 } },
-        { t: 'Con una mano en el corazón y otra en la Biblia', p: { alvaro: 2 } },
-        { t: 'En TikTok, con filtro', p: { dnoboa: 2, aud: 1 } }
+        { t: 'Sin camisa', p: { rico: 2, aud: 1 } },
+        { t: 'Con poncho y pasos que inventé', p: { delfin: 2, cholito: 1 } },
+        { t: 'Barriendo y bailando a la vez', p: { mofle: 2, fusilero: 1 } },
+        { t: 'No bailo: cuadro la caja', p: { lasso: 2, vera: 1, evaristo: 1 } }
       ]}
     ]
   },
   provincia: {
     titulo: '¿Qué provincia del Ecuador eres?',
+    corto: 'Tu provincia',
     kicker: 'Test 4 · Geografía emocional',
-    bajada: 'Eres Loja: todos te quieren, pero vives lejazos. Eres Manabí: sabor y cumbia chonera. Eres Guaranda: contigo siempre es carnaval. Las 24, sin excepción.',
+    bajada: 'Loja: todos te quieren, pero vives lejazos. Manabí: sabor y cumbia chonera. Las 24.',
     meta: '12 preguntas · 2 min',
     pie: '¿Y tú qué provincia eres?',
     tipo: 'rasgos', grupo: PROV, cosa: true,
@@ -506,174 +470,123 @@ const TESTS = {
        b: puntos de firma para una provincia: la respuesta que solo daría ella. */
     preguntas: [
       { t: '¿Qué clima te pone de buen humor?', op: [
-        { t: 'Treinta y cinco grados y humedad: así se vive', r: { calor: 3 }, b: { guayas: 1, eloro: 1, orellana: 1 } },
-        { t: 'Sol de mañana, lluvia de tarde y granizo de noche', r: { calor: -1, volcan: 1, pose: 1 }, b: { pichincha: 2 } },
-        { t: 'Neblina y chompa: nací con poncho', r: { calor: -2, lejos: 1 }, b: { carchi: 2, chimborazo: 1 } },
-        { t: 'Lluvia tropical todo el día, como debe ser', r: { calor: 2, verde: 2 }, b: { pastaza: 2, napo: 1 } },
-        { t: 'Brisa de mar y sombrilla', r: { calor: 2, farra: 1 }, b: { santaelena: 1, esmeraldas: 1, manabi: 1 } },
-        { t: 'Templadito, como de primavera eterna', r: { calor: 0, pose: 1, lejos: 1 }, b: { loja: 1, azuay: 1, imbabura: 1 } }
+        { t: 'Treinta y cinco grados y humedad', r: { calor: 3 }, b: { guayas: 1, eloro: 1, losrios: 1, orellana: 2 } },
+        { t: 'Cuatro estaciones en un día', r: { calor: -1, volcan: 1, pose: 1 }, b: { pichincha: 3, tungurahua: 1 } },
+        { t: 'Neblina, chompa y poncho', r: { calor: -2, lejos: 1 }, b: { carchi: 3, bolivar: 1 } },
+        { t: 'Lluvia tropical todo el día', r: { calor: 2, verde: 2 }, b: { pastaza: 1, napo: 1, morona: 2 } }
       ]},
       { t: 'Es viernes en la noche. Tú…', op: [
-        { t: 'Farra hasta que salga el sol, con punta y comparsa', r: { farra: 3, calor: -1 }, b: { bolivar: 2 } },
-        { t: 'Cumbia, parlante en la vereda y vecinos invitados', r: { farra: 2, jama: 1, calor: 1 }, b: { manabi: 1, losrios: 1 } },
-        { t: 'Un vinito tranquilo y una charla de arquitectura colonial', r: { pose: 2, farra: -1 }, b: { azuay: 2, pichincha: 1 } },
-        { t: 'Duermo: mañana madrugo a vender', r: { camello: 3, farra: -2 }, b: { imbabura: 1, santodomingo: 1, tungurahua: 1 } },
-        { t: 'Me voy al río, aunque sea de noche', r: { verde: 3, lejos: 1 }, b: { napo: 1, morona: 1 } },
-        { t: 'Me acuesto temprano: mañana hay turno en el campamento', r: { camello: 2, calor: 2, farra: -1 }, b: { orellana: 2, sucumbios: 1 } }
+        { t: 'Farra hasta que salga el sol', r: { farra: 3 }, b: { bolivar: 2, santaelena: 1, esmeraldas: 1 } },
+        { t: 'Cumbia y parlante en la vereda', r: { farra: 2, jama: 1, calor: 1 }, b: { manabi: 2, losrios: 1 } },
+        { t: 'Un vinito y charla de arquitectura colonial', r: { pose: 2, farra: -1 }, b: { azuay: 2, pichincha: 1 } },
+        { t: 'Duermo: mañana madrugo a vender', r: { camello: 3, farra: -2 }, b: { imbabura: 1, santodomingo: 1, tungurahua: 1, canar: 2 } }
       ]},
       { t: '¿Qué tan lejos vives de todo?', op: [
-        { t: 'Lejazos, pero el que llega no se quiere ir', r: { lejos: 3, pose: 1 }, b: { loja: 3 } },
-        { t: 'En el centro de todo, y me gusta que se note', r: { lejos: -2, pose: 2 }, b: { pichincha: 2, guayas: 1 } },
-        { t: 'Me tienen que llegar en avioneta o en lancha', r: { lejos: 3, verde: 2 }, b: { galapagos: 2, morona: 2 } },
-        { t: 'Soy de paso: todos me cruzan para ir a otro lado', r: { lejos: -1, camello: 2 }, b: { santodomingo: 3 } },
-        { t: 'Cerca de la frontera, con un pie en cada lado', r: { lejos: 2, camello: 2 }, b: { carchi: 2, eloro: 1, sucumbios: 1 } },
-        { t: 'Más lejos que el que dice que vive lejazos', r: { lejos: 3, verde: 1, pose: -1 }, b: { zamora: 3 } }
+        { t: 'Lejazos, pero el que llega no se va', r: { lejos: 3, pose: 1 }, b: { loja: 3, zamora: 1 } },
+        { t: 'En el centro de todo, y que se note', r: { lejos: -2, pose: 2 }, b: { pichincha: 2, guayas: 2 } },
+        { t: 'Me llegan en avioneta o en lancha', r: { lejos: 3, verde: 2 }, b: { galapagos: 2, morona: 3 } },
+        { t: 'Soy de paso: todos me cruzan', r: { lejos: -1, camello: 2 }, b: { santodomingo: 3, losrios: 1 } }
       ]},
-      { t: '¿Cuál es tu desayuno ideal?', op: [
-        { t: 'Bolón con chicharrón, café pasado y una siesta después', r: { jama: 3, calor: 1 }, b: { manabi: 2 } },
-        { t: 'Encebollado, que cura todo', r: { jama: 2, calor: 2, farra: 1 }, b: { guayas: 2 } },
-        { t: 'Pan con queso y café en taza de la abuelita', r: { calor: -1, jama: 1, lejos: 1 }, b: { tungurahua: 1, carchi: 1 } },
-        { t: 'Fruta y guayusa, con vista a la selva', r: { verde: 2, calor: 1 }, b: { napo: 2 } },
-        { t: 'Chugchucaras, aunque sean las ocho de la mañana', r: { jama: 3, volcan: 1, calor: -1 }, b: { cotopaxi: 3 } },
-        { t: 'Un cafecito de especialidad, que lo tostaron cerca', r: { pose: 2, jama: 1 }, b: { loja: 1, azuay: 1 } },
-        { t: 'Encocado, aunque sea desayuno', r: { jama: 2, calor: 2, farra: 1 }, b: { esmeraldas: 3 } }
+      { t: 'Tu desayuno ideal:', op: [
+        { t: 'Bolón con chicharrón', r: { jama: 3, calor: 1 }, b: { manabi: 2, eloro: 1 } },
+        { t: 'Encebollado, que cura todo', r: { jama: 2, calor: 2, farra: 1 }, b: { guayas: 2, esmeraldas: 1 } },
+        { t: 'Chugchucaras, aunque sean las ocho', r: { jama: 3, volcan: 1, calor: -1 }, b: { cotopaxi: 3 } },
+        { t: 'Guayusa y fruta, con vista a la selva', r: { verde: 2, calor: 1 }, b: { napo: 2, pastaza: 1 } }
       ]},
       { t: 'Tu relación con la plata:', op: [
-        { t: 'Vendo, compro, regateo y exporto', r: { camello: 3 }, b: { imbabura: 2, tungurahua: 1 } },
-        { t: 'La mitad de mi familia manda dólares desde Nueva York', r: { camello: 1, lejos: 2 }, b: { canar: 3, azuay: 1 } },
-        { t: 'Petróleo, oro o camarón: algo hay debajo de mí', r: { camello: 2, calor: 1, verde: 1 }, b: { orellana: 1, sucumbios: 1, zamora: 1, eloro: 1 } },
-        { t: 'La plata va y viene; la farra se queda', r: { farra: 2, camello: -1 }, b: { bolivar: 1, esmeraldas: 1 } },
-        { t: 'Prefiero no hablar de plata: es de mal gusto', r: { pose: 3 }, b: { azuay: 1, pichincha: 1 } },
-        { t: 'Vivo del turismo, y el turista paga lo que le digo', r: { camello: 2, verde: 1, pose: 1 }, b: { galapagos: 2, santaelena: 1 } }
+        { t: 'Vendo, compro, regateo y exporto', r: { camello: 3 }, b: { imbabura: 2, tungurahua: 1, santodomingo: 1 } },
+        { t: 'Media familia manda dólares de Nueva York', r: { camello: 1, lejos: 2 }, b: { canar: 4, azuay: 1 } },
+        { t: 'Petróleo, oro o camarón: algo hay debajo', r: { camello: 2, calor: 1, verde: 1 }, b: { orellana: 3, sucumbios: 2, zamora: 1, eloro: 1 } },
+        { t: 'Vivo del turismo: el turista paga lo que digo', r: { camello: 2, verde: 1, pose: 1 }, b: { galapagos: 2, santaelena: 2 } }
       ]},
-      { t: '¿Cómo reaccionas ante un problema?', op: [
-        { t: 'Echo humo, ceniza y amenazo con erupción', r: { volcan: 3 }, b: { tungurahua: 2, cotopaxi: 1 } },
-        { t: 'Me inundo un poquito y luego sigo', r: { volcan: 1, calor: 2, camello: 1 }, b: { losrios: 3 } },
-        { t: 'Lo resuelvo con un baile', r: { farra: 2, volcan: -1 }, b: { esmeraldas: 1, bolivar: 1 } },
-        { t: 'Me retiro al bosque a pensar', r: { verde: 2, lejos: 1, volcan: -1 }, b: { pastaza: 1, morona: 1 } },
-        { t: 'Escribo una carta al municipio con copia a la prensa', r: { pose: 2, volcan: 2 }, b: { pichincha: 1, guayas: 1 } },
-        { t: 'Nada me altera: soy agua mansa', r: { volcan: -2 }, b: { galapagos: 1, loja: 1 } }
+      { t: 'Ante un problema, tú…', op: [
+        { t: 'Echo humo y amenazo con erupción', r: { volcan: 3 }, b: { tungurahua: 2, cotopaxi: 2 } },
+        { t: 'Me inundo un poquito y sigo', r: { volcan: 1, calor: 2, camello: 1 }, b: { losrios: 3 } },
+        { t: 'Lo resuelvo con un baile', r: { farra: 2, volcan: -1 }, b: { esmeraldas: 2, bolivar: 1 } },
+        { t: 'Nada me altera: soy agua mansa', r: { volcan: -2, verde: 1 }, b: { galapagos: 1, loja: 1, pastaza: 1 } }
       ]},
       { t: '¿Qué música suena en tu casa?', op: [
         { t: 'Cumbia chonera', r: { farra: 2, jama: 1, calor: 2 }, b: { manabi: 3 } },
-        { t: 'Pasillo y serenata', r: { lejos: 2, pose: 1 }, b: { loja: 2 } },
+        { t: 'Pasillo y serenata', r: { lejos: 2, pose: 1 }, b: { loja: 2, azuay: 1 } },
         { t: 'Marimba', r: { calor: 3, farra: 2 }, b: { esmeraldas: 3 } },
-        { t: 'La del carnaval, todo el año', r: { farra: 3, calor: -1 }, b: { bolivar: 3 } },
-        { t: 'Bomba del Chota y sanjuanito', r: { farra: 1, verde: 1, camello: 1 }, b: { imbabura: 3 } },
-        { t: 'Reguetón a volumen de bus urbano', r: { calor: 2, farra: 1, pose: 1 }, b: { guayas: 1, eloro: 1 } },
-        { t: 'Los pájaros, porque no hay señal', r: { verde: 3, lejos: 2 }, b: { zamora: 1, morona: 1, pastaza: 1 } }
-      ]},
-      { t: '¿Qué dicen de ti los demás?', op: [
-        { t: 'Que me creo mucho', r: { pose: 3 }, b: { azuay: 1, pichincha: 1, guayas: 1 } },
-        { t: 'Que soy lindo pero nadie me visita', r: { lejos: 3, verde: 1 }, b: { zamora: 1, pastaza: 1 } },
-        { t: 'Que siempre estoy de fiesta', r: { farra: 3 }, b: { santaelena: 1, bolivar: 1 } },
-        { t: 'Que trabajo hasta el cansancio', r: { camello: 3 }, b: { canar: 1, imbabura: 1 } },
-        { t: 'Que soy un peligro en potencia', r: { volcan: 3 }, b: { cotopaxi: 2 } },
-        { t: 'Que cocino rico', r: { jama: 3 }, b: { manabi: 1, eloro: 1 } }
-      ]},
-      { t: 'Tu plan de feriado:', op: [
-        { t: 'Playa, aunque esté llena', r: { calor: 2, farra: 1 }, b: { santaelena: 2 } },
-        { t: 'Me quedo: los turistas vienen a mí', r: { pose: 1, camello: 1, lejos: 1 }, b: { galapagos: 1, santaelena: 1, tungurahua: 1 } },
-        { t: 'Selva, rafting y cero señal', r: { verde: 3, lejos: 1 }, b: { napo: 2 } },
-        { t: 'Feria de pueblo, fritada y desfile', r: { jama: 2, farra: 1 }, b: { cotopaxi: 1, chimborazo: 1 } },
-        { t: 'Ir a vender a la feria', r: { camello: 3 }, b: { imbabura: 1, santodomingo: 1 } },
-        { t: 'Ver el volcán desde la ventana, por si acaso', r: { volcan: 2, calor: -1 }, b: { tungurahua: 1, cotopaxi: 1, chimborazo: 1 } }
+        { t: 'Bomba del Chota y sanjuanito', r: { farra: 1, verde: 1, camello: 1 }, b: { imbabura: 3 } }
       ]},
       { t: '¿Cómo saludas a un desconocido?', op: [
-        { t: '«¡Qué fue, mi llave!»', r: { calor: 2, pose: 1, farra: 1 }, b: { guayas: 2 } },
-        { t: '«Buenos días, ¿cómo le va, cómo ha estado, y la familia?»', r: { lejos: 2, calor: -1 }, b: { loja: 1, carchi: 1 } },
+        { t: '«¡Qué fue, mi llave!»', r: { calor: 2, pose: 1, farra: 1 }, b: { guayas: 2, eloro: 1 } },
         { t: '«¡Ajá, mijo!»', r: { jama: 2, calor: 2 }, b: { manabi: 2 } },
-        { t: '«Siga nomás, casero, ¿qué le doy?»', r: { camello: 3 }, b: { imbabura: 1, tungurahua: 1, santodomingo: 1 } },
-        { t: 'Con la mano, sin hablar mucho', r: { verde: 1, lejos: 1, farra: -1 }, b: { pastaza: 1, morona: 1 } },
-        { t: '«Ay, qué lindo, ve»', r: { pose: 2, calor: -1 }, b: { azuay: 3 } }
+        { t: '«Ay, qué lindo, ve»', r: { pose: 2, calor: -1 }, b: { azuay: 3 } },
+        { t: 'Con la mano, sin hablar mucho', r: { verde: 1, lejos: 1, farra: -1 }, b: { carchi: 2, morona: 2, zamora: 1 } }
       ]},
-      { t: 'Y para terminar, ¿de qué presumes?', op: [
+      { t: '¿Dónde te tomas la foto de perfil?', op: [
+        { t: 'Frente a un volcán nevado', r: { calor: -2, pose: 1, volcan: 1 }, b: { chimborazo: 2, cotopaxi: 2 } },
+        { t: 'Con una tortuga gigante', r: { verde: 2, lejos: 2, pose: 1 }, b: { galapagos: 4 } },
+        { t: 'Frente a Ingapirca', r: { pose: 1, lejos: 1 }, b: { canar: 3 } },
+        { t: 'En el malecón, con el río de fondo', r: { calor: 2, pose: 1 }, b: { guayas: 2, orellana: 1, losrios: 1 } }
+      ]},
+      { t: '¿Cómo te mueves?', op: [
+        { t: 'En canoa, por el río', r: { verde: 2, lejos: 2, calor: 2 }, b: { sucumbios: 2, orellana: 1, pastaza: 1 } },
+        { t: 'En bus interprovincial, ocho horas', r: { lejos: 3 }, b: { loja: 2, zamora: 1, carchi: 1 } },
+        { t: 'En tren, para la foto', r: { pose: 1, calor: -1 }, b: { chimborazo: 1, pichincha: 1 } },
+        { t: 'En chiva, con banda', r: { farra: 3 }, b: { esmeraldas: 1, manabi: 1, bolivar: 1 } }
+      ]},
+      { t: '¿De qué presumes?', op: [
         { t: 'De estar más cerca del sol que nadie', r: { pose: 1, calor: -2 }, b: { chimborazo: 4 } },
-        { t: 'De ser la provincia más grande, aunque nadie lo sepa', r: { verde: 2, lejos: 1, pose: -1 }, b: { pastaza: 4 } },
-        { t: 'De tener una capital con dos nombres', r: { calor: 2, verde: 1, lejos: 2 }, b: { sucumbios: 4 } },
-        { t: 'De que mi vecina es una tortuga de ciento cincuenta años', r: { verde: 2, lejos: 2 }, b: { galapagos: 4 } },
+        { t: 'De ser la provincia más grande, aunque nadie lo sepa', r: { verde: 3, lejos: 1, pose: -1 }, b: { pastaza: 4 } },
         { t: 'Del banano, el camarón y un poquito de oro', r: { calor: 2, camello: 2, jama: 1 }, b: { eloro: 4 } },
-        { t: 'Del malecón y de que aquí sí se camella', r: { calor: 2, camello: 2, pose: 1 }, b: { guayas: 4 } },
-        { t: 'Del Yasuní y de los barriles que salen de aquí', r: { calor: 2, camello: 2, verde: 1 }, b: { orellana: 4 } },
-        { t: 'De las cascadas que todavía no salen en el mapa', r: { verde: 3, lejos: 1 }, b: { morona: 4 } },
+        { t: 'Del petróleo y de una capital con dos nombres', r: { calor: 2, camello: 2, lejos: 1 }, b: { sucumbios: 3, orellana: 3 } }
       ]},
       { t: 'Si te fueras lejos, ¿qué extrañarías?', op: [
-        { t: 'Los cipreses con forma de animal', r: { calor: -2, pose: 1 }, b: { carchi: 4 } },
-        { t: 'Ver la Mitad del Mundo desde la ventana del bus', r: { pose: 2, lejos: -1 }, b: { pichincha: 4 } },
-        { t: 'El chaulafán de Quevedo', r: { jama: 2, calor: 2 }, b: { losrios: 4 } },
-        { t: 'Las casas de tres pisos que mi tío construyó desde Nueva York', r: { camello: 1, lejos: 1 }, b: { canar: 4 } },
         { t: 'El atardecer en Montañita', r: { calor: 2, farra: 2 }, b: { santaelena: 4 } },
-        { t: 'Bañarme en el río con una guayusa en la mano', r: { verde: 2, farra: 1, calor: 1 }, b: { napo: 4 } },
         { t: 'El reloj gigante de la montaña', r: { lejos: 2, verde: 1 }, b: { zamora: 4 } },
-        { t: 'La melcocha de Baños y el pan de Pinllo', r: { jama: 2, volcan: 1 }, b: { tungurahua: 4 } }
+        { t: 'Bañarme en el río con guayusa', r: { verde: 2, farra: 1, calor: 1 }, b: { napo: 4 } },
+        { t: 'La espuma de carnaval', r: { farra: 3, calor: -1 }, b: { bolivar: 4 } }
       ]}
     ]
   },
   tuti: {
     titulo: '¿Qué producto del Tuti eres?',
+    corto: 'Producto del Tuti',
     kicker: 'Test 5 · Bonus de percha',
-    bajada: 'Rendidor, de marca propia y a precio de oferta. Averigua en qué percha te pondrían.',
-    meta: '7 preguntas · 1 min',
+    bajada: 'Rendidor, de marca propia y a precio de oferta.',
+    meta: '6 preguntas · 1 min',
     pie: '¿Y tú qué producto del Tuti eres?',
     tipo: 'puntos', grupo: PROD, cosa: true,
     preguntas: [
       { t: '¿Cómo llegas al súper?', op: [
-        { t: 'Con lista, calculadora y la plata exacta', p: { atun: 2, arroz: 1 } },
+        { t: 'Con lista y la plata exacta', p: { atun: 2, arroz: 1 } },
         { t: 'Sin lista y con antojo', p: { galletas: 2, mayonesa: 1 } },
-        { t: 'A comprar «una cosita» y salgo con 32 rollos de papel', p: { papel: 2 } },
-        { t: 'Por una promo que vi en un grupo de WhatsApp', p: { detergente: 2 } },
-        { t: 'Porque en la casa se acabó el shampoo, y el lavaplatos, y el jabón', p: { shampoo: 2 } }
+        { t: 'Por una promo de WhatsApp', p: { detergente: 2, papel: 1 } },
+        { t: 'Porque se acabó el shampoo, y el lavaplatos', p: { shampoo: 2, papel: 1 } }
       ]},
       { t: 'En una fiesta, tú eres…', op: [
-        { t: 'El que llega con la bebida grande que nadie pidió', p: { cola: 2 } },
-        { t: 'El que todos quieren pero nadie admite', p: { salchicha: 2 } },
+        { t: 'El que llega con la bebida grande', p: { cola: 2 } },
+        { t: 'El que todos quieren y nadie admite', p: { salchicha: 2, mayonesa: 1 } },
         { t: 'El que se hace el importado', p: { chocolate: 2 } },
-        { t: 'El que aguanta hasta el final', p: { papel: 1, atun: 1 } },
-        { t: 'El que sirve para todo: hielo, vasos y DJ', p: { shampoo: 2 } },
-        { t: 'El que se mete en todas las conversaciones', p: { mayonesa: 2 } }
+        { t: 'El que aguanta hasta el final', p: { papel: 2, arroz: 1 } }
       ]},
       { t: 'Tu mayor virtud:', op: [
-        { t: 'Rindo: con poquito hago mucho', p: { atun: 2 } },
-        { t: 'Estoy siempre: en la cartera, en la oficina, en el carro', p: { galletas: 2 } },
-        { t: 'Prometo', p: { detergente: 2 } },
-        { t: 'Burbujeo', p: { cola: 2 } },
-        { t: 'Tengo misterio', p: { salchicha: 2 } },
-        { t: 'Soy la base de todo', p: { arroz: 2 } }
+        { t: 'Rindo: con poquito hago mucho', p: { atun: 2, arroz: 1 } },
+        { t: 'Estoy siempre, en todas partes', p: { galletas: 2, papel: 1 } },
+        { t: 'Sirvo para todo', p: { shampoo: 2, detergente: 1 } },
+        { t: 'Tengo misterio', p: { salchicha: 2 } }
       ]},
       { t: 'Tu mayor defecto:', op: [
-        { t: 'Me desbravo rápido', p: { cola: 2 } },
-        { t: 'Soy de una sola hoja', p: { papel: 2 } },
-        { t: 'Nadie sabe de qué estoy hecho', p: { salchicha: 1, atun: 1 } },
+        { t: 'Me desbravo rápido', p: { cola: 2, galletas: 1 } },
         { t: 'De lejos parezco otra cosa', p: { chocolate: 2 } },
         { t: 'Huelo más de lo que limpio', p: { detergente: 2 } },
-        { t: 'Soy intenso', p: { mayonesa: 2 } },
-        { t: 'Soy predecible', p: { arroz: 2 } }
+        { t: 'Soy intenso', p: { mayonesa: 2 } }
       ]},
       { t: 'Tu plan de domingo:', op: [
         { t: 'Encebollado y sofá', p: { atun: 1, galletas: 1 } },
-        { t: 'Parrillada en el patio', p: { salchicha: 2, mayonesa: 1 } },
-        { t: 'Lavar todo lo que no lavé en la semana', p: { detergente: 1, shampoo: 1 } },
-        { t: 'Ir al mall a ver vitrinas de cosas importadas', p: { chocolate: 2 } },
-        { t: 'Hacer inventario de la bodega', p: { papel: 2 } },
-        { t: 'Almuerzo familiar con montaña de arroz', p: { arroz: 2 } }
+        { t: 'Parrillada en el patio', p: { salchicha: 1, mayonesa: 1, cola: 1 } },
+        { t: 'Lavar todo lo de la semana', p: { detergente: 1, shampoo: 1 } },
+        { t: 'Almuerzo con montaña de arroz', p: { arroz: 2 } }
       ]},
       { t: '¿Qué dicen de ti en tu casa?', op: [
-        { t: 'Que eres de confianza, aunque nadie lee tu etiqueta', p: { atun: 2 } },
-        { t: 'Que te acabas en un día', p: { galletas: 2 } },
-        { t: 'Que sirves para todo', p: { shampoo: 2 } },
-        { t: 'Que te crees mucho', p: { chocolate: 1, cola: 1 } },
-        { t: 'Que ocupas demasiado espacio', p: { papel: 2 } },
-        { t: 'Que manchas todo', p: { mayonesa: 2 } }
-      ]},
-      { t: '¿Dónde te encuentran?', op: [
-        { t: 'En el almuerzo de todos los días', p: { arroz: 3 } },
-        { t: 'En la salchipapa de la esquina', p: { mayonesa: 2, salchicha: 1 } },
-        { t: 'En la cartera', p: { galletas: 2 } },
-        { t: 'En la bodega, al fondo', p: { papel: 2, detergente: 1 } },
-        { t: 'En la mesa del domingo, en botella', p: { cola: 2 } },
-        { t: 'En la ducha', p: { shampoo: 2 } },
-        { t: 'En la canasta navideña', p: { chocolate: 2 } },
-        { t: 'En la alacena, en fila', p: { atun: 2, arroz: 1 } }
+        { t: 'Que ocupas demasiado espacio', p: { papel: 2, detergente: 1 } },
+        { t: 'Que te crees mucho', p: { chocolate: 2, cola: 1 } },
+        { t: 'Que manchas todo', p: { mayonesa: 2, salchicha: 1 } },
+        { t: 'Que eres de confianza', p: { atun: 2, arroz: 1 } }
       ]}
     ]
   }
@@ -691,5 +604,5 @@ const SIGNOS = [
   ['Escorpio', 10, 23, { dnoboa: 2, correa: 1 }], ['Sagitario', 11, 22, { alvaro: 2, bucaram: 1 }]
 ];
 
-window.LAMP = { PJ, PROD, PROV, RASGOS, ESCALA, TESTS, SIGNOS };
+window.LAMP = { PJ, PROD, PROV, RASGOS, ESCALA, SALTO, QUIPS, TESTS, SIGNOS };
 })();
