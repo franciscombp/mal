@@ -54,20 +54,19 @@ const MAX_PIEZAS = 60;
 const MORDIDA = 0.36;
 
 const NOMBRES = {
-  guagua: ['Rosita', 'Michita', 'Carmita', 'Panchito', 'Lucho', 'Toñito', 'Charito', 'Juanchito',
-    'Maruja', 'Chabelita', 'Kevin', 'Britany', 'Dayana', 'Jefferson', 'Mayerli', 'Brayan',
-    'Pepita', 'Don Gustavo', 'Michael Steven', 'Fernandita', 'Anahí', 'Cuchito'],
-  caballito: ['Rayo', 'Canela', 'Trueno', 'Galletón', 'Pegaso', 'Relámpago', 'Pancho Villa', 'Pinto', 'Bolívar', 'Palomo'],
-  chanchito: ['Chicharrón', 'Hornado', 'Peppa', 'Don Fritada', 'Manteca', 'Lechoncito', 'Gordo Bonito'],
-  gallinita: ['Cocoroca', 'Doña Clueca', 'Pollita', 'Josefina', 'Turuleca', 'Caldo de Gallina'],
-  libre: ['Bicho', 'Engendro', 'Criatura', 'Experimento 7', 'La Cosa', 'Pan Mutante', 'Nuevo Animal', 'Sin Nombre'],
+  guagua: ['Rosita', 'Carmita', 'Panchito', 'Lucho', 'Toñito', 'Charito', 'Juanita', 'Maruja', 'Chabelita',
+    'Pepita', 'Martita', 'Manuelito', 'Lolita', 'Teresita', 'Anita', 'Pachita', 'Tomasito', 'Clarita', 'Inesita'],
+  caballito: ['Rayo', 'Canela', 'Trueno', 'Lucero', 'Pegaso', 'Pinto', 'Bayo', 'Palomo', 'Azabache', 'Galope'],
+  chanchito: ['Rosado', 'Bellota', 'Lechoncito', 'Gordito', 'Cachito', 'Tomasín', 'Trufa'],
+  gallinita: ['Cocoroca', 'Pinta', 'Pollita', 'Josefina', 'Plumita', 'Clueca'],
+  libre: ['Criatura', 'Animalito', 'Sorpresa', 'Bichito', 'Invento', 'Misterio'],
 };
 const MENSAJES = [
-  'Para que el 2 de noviembre no te agarre sin guagua.',
-  'Con colada morada sabe mejor. La colada la pones tú.',
-  'Amasada, horneada y decorada con mis propias manos. Más o menos.',
-  'Una guagua para ti y otra para mí, que yo también tengo hambre.',
-  'Va con cariño. Si llega mordida, fue el cartero.',
+  'Para que este 2 de noviembre no te falte guagua.',
+  'Con colada morada sabe mejor. Te la mando para acompañar.',
+  'La amasé, la horneé y la decoré pensando en ti.',
+  'Para recordar juntos a los que extrañamos.',
+  'Para compartir en la mesa, como en casa.',
 ];
 
 /* ─── utilidades ───────────────────────────────────────────── */
@@ -1052,11 +1051,11 @@ function sano(d) {
 
 /* ─── el horno opina, y la panadera también ───────────────── */
 function punto(k) {
-  if (k < 0.75) return { t: 'Cruda', f: 'La sacaste cruda, mijo. Eso todavía es masa de amasar.' };
-  if (k < 0.92) return { t: 'Blanquita', f: 'Le faltó horno: está más blanca que oficinista en invierno.' };
-  if (k <= 1.08) return { t: '¡En su punto!', f: 'En su punto: dorada como para foto de calendario.' };
-  if (k <= 1.25) return { t: 'Tostadita', f: 'Tostadita, como le gusta al abuelo. Crocante por fuera.' };
-  return { t: 'Quemada', f: 'Se te quemó. Igual se come: la parte negra da suerte.' };
+  if (k < 0.75) return { t: 'Cruda', f: 'Salió antes de tiempo: por dentro todavía está cruda.' };
+  if (k < 0.92) return { t: 'Blanquita', f: 'Le faltó un poquito de horno. Quedó blanquita.' };
+  if (k <= 1.08) return { t: '¡En su punto!', f: 'En su punto: dorada y esponjosa.' };
+  if (k <= 1.25) return { t: 'Tostadita', f: 'Tostadita y crocante, como la prefieren algunos.' };
+  return { t: 'Quemada', f: 'Se pasó de horno. La próxima vez, sácala un poco antes.' };
 }
 function veredicto(e) {
   const cuenta = (t) => e.o.filter((op) => op[0] === t).length;
@@ -1066,26 +1065,27 @@ function veredicto(e) {
   const cara = cuenta(4) || cuenta(5);
   let frase;
   if (k > 1.25) frase = punto(k).f;
-  else if (!total) frase = '¿Y la crema? Así pelada parece pan de la tienda de la esquina.';
-  else if (bocados >= 3) frase = 'Eso ya no es una guagua, es la evidencia. Regálala igual: es la intención.';
-  else if (bocados) frase = 'Regalar una guagua mordida es amor del verdadero. O hambre.';
+  else if (!total) frase = 'Le falta la decoración: con un poco de crema queda lista.';
+  else if (bocados >= 3) frase = 'Ya tiene varios mordiscos. Se nota que estaba rica.';
+  else if (bocados) frase = 'Tiene un mordisco: alguien no pudo esperar.';
   else if (k < 0.92) frase = punto(k).f;
-  else if (total > 70) frase = 'Eso ya no es guagua, es pastel de primera comunión. Me encanta.';
-  else if (colores >= 6) frase = 'Más colores que el mercado de San Roque un sábado. Así me gusta.';
-  else if (grag > trazos + rosetas) frase = 'Más grageas que pan. Esta guagua va a dejar la mesa como confeti.';
-  else if (e.f === 'libre' && e.a.length > 3) frase = 'No sé qué animal es, pero lo quiero. Yo tampoco hubiera sabido amasarlo.';
-  else if (!cara && e.f === 'guagua') frase = 'Bonita, pero sin carita. Una guagua sin cara es un pan con ropa.';
-  else if (e.f === 'caballito') frase = 'Un caballito bien enjaezado. Que no se le vaya galopando al vecino.';
+  else if (total > 70) frase = 'Cuánto detalle. Quedó para la vitrina de la panadería.';
+  else if (colores >= 6) frase = 'Muy colorida, como las de los mercados en noviembre.';
+  else if (grag > trazos + rosetas) frase = 'Llena de grageas: alegre y de fiesta.';
+  else if (colores === 1 && trazos > 4) frase = 'Sobria y elegante, de un solo color.';
+  else if (e.f === 'libre' && e.a.length > 3) frase = 'Una figura propia, hecha a mano. Así empiezan las tradiciones.';
+  else if (!cara && e.f === 'guagua') frase = 'Bonita, aunque le falta la carita. Prueba con la carita de yeso y unas pasas.';
+  else if (e.f === 'caballito') frase = 'Un caballito bien adornado, listo para la mesa.';
   else frase = elige([
-    'Bien bonita le quedó, mijo. La abuelita estaría orgullosa.',
-    'Esta guagua tiene cara de que va a salir candidata.',
-    'Linda. Ojalá la colada esté igual de espesa.',
-    'Así mismo se decoraban en el horno de la calle Rocafuerte.',
+    'Muy bonita. Así se decoraban en casa de la abuela.',
+    'Quedó linda. Ahora solo falta la colada morada.',
+    'Hecha con paciencia, y se nota.',
+    'Una guagua como las de antes.',
   ]);
   const horno = k >= 0.92 && k <= 1.08 ? 1 : k > 1.25 || k < 0.75 ? -2 : 0;
   const nota = Math.max(1, Math.min(10, 4 + Math.min(colores, 3) + (rosetas ? 1 : 0) + (grag ? 1 : 0) + (cara ? 1 : 0) + horno - (total < 4 ? 2 : 0)));
-  const razon = k > 1.25 ? 'por quemada' : k < 0.92 ? 'por blanquita' : 'porque no trajo colada';
-  const descuento = nota === 10 ? 'Diez. No le bajo nada.' : `${nota}/10. Le bajé ${10 - nota} ${10 - nota === 1 ? 'punto' : 'puntos'} ${razon}.`;
+  const razon = k > 1.25 ? 'porque se pasó de horno' : k < 0.92 ? 'porque le faltó horno' : 'porque falta la colada morada';
+  const descuento = nota === 10 ? 'Diez de diez.' : `${nota}/10. Le bajé ${10 - nota} ${10 - nota === 1 ? 'punto' : 'puntos'} ${razon}.`;
   return { frase, nota, descuento };
 }
 
@@ -1100,7 +1100,7 @@ function rotuloFinados() {
   const d = faltan();
   if (d === 0) return 'Hoy es Día de Difuntos';
   if (d === 1) return 'Mañana es Día de Difuntos';
-  if (d > 300) return 'Ya pasó Finados, pero la guagua no tiene temporada';
+  if (d > 300) return 'Finados ya pasó, pero una guagua siempre es bienvenida';
   return `Faltan ${d} días para Finados`;
 }
 
@@ -1376,7 +1376,7 @@ function soltarMasa() {
 let horneando = null;
 const KMAX = 1.6, SEGUNDOS = 6;       // en 6 s llega al punto; después se quema
 function prenderHorno() {
-  if (!estado.a.length) { avisa('Primero amasa algo: el horno no hornea aire.'); return; }
+  if (!estado.a.length) { avisa('Primero pon algo de masa en la lata.'); return; }
   irA('horno');
   estado.k = 0; estado.o = [];
   taller.cargar(estado);
@@ -1455,7 +1455,7 @@ function tocarDecorar(ev) {
     fijar([4, estado.tamano, 0, ...pn(hit)]);
   } else if (h === 'mordisco') {
     if (estado.o.filter((op) => op[0] === 3).length >= BOCADOS_TALLER) {
-      avisa('Ya está bien mordida. Deja algo para quien la reciba.');
+      avisa('Ya tiene suficientes mordiscos. Deja algo para quien la reciba.');
     } else { fijar([3, ent(hit.p.x), ent(hit.p.y), ent(hit.p.z)]); crunch(); }
   }
   return true;
@@ -1492,7 +1492,7 @@ function soltarDecorar() {
 /* ─── las etapas ──────────────────────────────────────────── */
 const PISTAS = {
   amasar: 'Arrastra para hacer una bolita: hacia el lado sale ancha, hacia arriba sale alta. Encima de otra pieza, se pega. Con dos dedos te acercas.',
-  horno: 'Mírala dorarse y sácala en la franja blanca. Antes queda blanca; después, carbón.',
+  horno: 'Mírala dorarse y sácala en la franja blanca. Si la sacas antes queda blanca; si esperas mucho, se quema.',
   decorar: 'Con un dedo decoras. Con dos dedos la giras y te acercas. La cara también se dibuja: carita, pasas y pincel.',
 };
 let relojPista = null;
@@ -1552,7 +1552,7 @@ function irA(etapa) {
 }
 function volverAAmasar() {
   if (estado.etapa === 'amasar') return;
-  if (estado.o.length && !confirm('Volver a amasar bota la decoración y la masa vuelve a estar cruda. ¿Seguimos?')) return;
+  if (estado.o.length && !confirm('Si vuelves a amasar, se borra la decoración y la masa vuelve a estar cruda. ¿Continuar?')) return;
   estado.o = []; estado.k = 0;
   taller.cargar(estado, { encuadrar: false });
   irA('amasar');
@@ -1605,7 +1605,7 @@ function montarTaller() {
   });
   $$('[data-molde]').forEach((b) => b.addEventListener('click', () => {
     const f = b.dataset.molde;
-    if (estado.a.length && !confirm(f === 'libre' ? '¿Vaciamos la lata?' : 'Eso bota la masa que tienes. ¿Seguimos?')) return;
+    if (estado.a.length && !confirm(f === 'libre' ? '¿Vaciar la lata?' : 'Se reemplaza la masa que tienes. ¿Continuar?')) return;
     recordar();
     const a = MOLDES[f]();
     estado.n = elige(NOMBRES[f]);
@@ -1663,7 +1663,7 @@ function montarTaller() {
     taller.dibujar(); guardarBorrador(); actualizarEtiqueta();
   });
   $('#de-nuevo').addEventListener('click', () => {
-    if ((estado.o.length || estado.a.length) && !confirm('¿Empezamos otra desde la masa?')) return;
+    if ((estado.o.length || estado.a.length) && !confirm('¿Empezar una nueva desde la masa? Se borra la que estás haciendo.')) return;
     $('#d-info').close();
     nueva();
   });
@@ -1820,7 +1820,7 @@ async function refrescarTarjeta() {
 const textoRegalo = () => {
   const quien = estado.d ? estado.d + ' te regaló' : 'Te regalaron';
   const que = queEs(estado) + ' de pan' + (estado.n ? ' que se llama ' + estado.n : '');
-  return `${quien} ${que}, directo del horno, por el Día de Difuntos. Ábrelo aquí:`;
+  return `${quien} ${que} por el Día de Difuntos:`;
 };
 async function copiar(texto) {
   try { await navigator.clipboard.writeText(texto); avisa('Enlace copiado. Pégalo donde quieras.', 'ok'); }
@@ -1878,8 +1878,8 @@ async function pintarVitrina(cual) {
   rej.textContent = '';
   $('#vitrina-vacia').hidden = !!lista.length;
   $('#vitrina-vacia').textContent = pestana === 'mia'
-    ? 'Todavía no has guardado ninguna. La primera siempre sale chueca: es parte de la tradición.'
-    : 'Nadie te ha regalado una todavía. Regala tú primero: así funciona el karma de la guagua.';
+    ? 'Aquí se guardan las que haces. Todavía no hay ninguna.'
+    : 'Aquí aparecen las que te regalan. Regala una: quizá te devuelvan el gesto.';
   for (const item of lista) {
     let e;
     try { e = await decodificar(item.e); } catch (err) { continue; }
@@ -1931,7 +1931,7 @@ function montarVitrina() {
     copiar(enlace);
   });
   $('#p-borrar').addEventListener('click', () => {
-    if (!confirm('¿Sacamos esta guagua de la vitrina? No hay vuelta atrás.')) return;
+    if (!confirm('¿Quitar esta guagua de la vitrina? No se puede deshacer.')) return;
     almacen.poner(CLAVE, vitrina().filter((x) => x.id !== piezaActual.item.id));
     if (estado.id === piezaActual.item.id) estado.id = null;
     $('#d-pieza').close();
@@ -1944,7 +1944,7 @@ let recibida = null, visorRegalo = null, mordidas = 0;
 async function recibir(cod) {
   let e;
   try { e = await decodificar(cod); }
-  catch (err) { avisa('Esa guagua se rompió en el camino. Pide que te la vuelvan a mandar.', 'error'); return; }
+  catch (err) { avisa('No se pudo abrir esta guagua. Pide que te la envíen otra vez.', 'error'); return; }
   recibida = e; mordidas = 0;
   document.body.classList.add('modo-regalo');
   $('#regalo').hidden = false;
@@ -1954,7 +1954,7 @@ async function recibir(cod) {
   $('#regalo-para').hidden = !e.p;
   $('#regalo-mensaje').textContent = e.m || '';
   $('#regalo-mensaje').hidden = !e.m;
-  $('#regalo-pista').textContent = 'Gírala arrastrando a un lado. Tócala para darle un mordisco.';
+  $('#regalo-pista').textContent = 'Gírala con dos dedos. Tócala para darle un mordisco.';
   $('#regalo-devolver').classList.remove('latido');
   if (!visorRegalo) {
     visorRegalo = new Visor($('#regalo-lienzo'), {
@@ -1967,11 +1967,11 @@ async function recibir(cod) {
         mordidas++;
         const pista = $('#regalo-pista');
         if (visorRegalo.bocados().length >= MAX_BOCADOS || mordidas === 9) {
-          pista.textContent = 'Te la acabaste. Ahora te toca amasar una.';
+          pista.textContent = 'Se acabó. Ahora te toca amasar una para alguien más.';
           $('#regalo-devolver').classList.add('latido');
-        } else if (mordidas === 1) pista.textContent = 'Crunch. Otro más.';
-        else if (mordidas === 4) pista.textContent = 'Ya va la mitad. ¿Y la colada?';
-        else if (mordidas === 6) pista.textContent = 'Deja algo para el resto de la familia.';
+        } else if (mordidas === 1) pista.textContent = 'Crocante por fuera, suave por dentro.';
+        else if (mordidas === 4) pista.textContent = 'Va por la mitad. Con colada morada sabría mejor.';
+        else if (mordidas === 6) pista.textContent = 'Guarda un poco para compartir.';
         return true;
       },
     });
@@ -1993,7 +1993,7 @@ function montarRecibir() {
     nueva();
     estado.p = para || '';
     guardarBorrador();
-    avisa(para ? `Amasa una para ${para}.` : 'A amasar la tuya.', 'ok');
+    avisa(para ? `Amasa una para ${para}.` : 'Amasa la tuya.', 'ok');
   });
   $('#regalo-taller').addEventListener('click', cerrarRegalo);
 }
