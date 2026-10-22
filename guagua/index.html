@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es" data-marca="juegos">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Guagua de pan · decórala y regálala por Finados · UNA</title>
+<meta name="description" content="Una guagua recién salida del horno y una manga llena de crema. Decórala con el dedo, ponle nombre y regálala por WhatsApp para el Día de Difuntos. Quien la recibe se la puede comer.">
+<link rel="canonical" href="https://franciscombp.github.io/mal/guagua/">
+<meta name="theme-color" content="#f3f1ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1d1822" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="UNA">
+<meta property="og:locale" content="es_EC">
+<meta property="og:title" content="Te regalaron una guagua de pan">
+<meta property="og:description" content="Ábrela, mírala y cómetela. Después decora una y devuelve el gesto: el 2 de noviembre nadie se queda sin guagua.">
+<meta property="og:url" content="https://franciscombp.github.io/mal/guagua/">
+<meta property="og:image" content="https://franciscombp.github.io/mal/guagua/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Una guagua de pan decorada con crema rosada y grageas, junto a una taza de colada morada">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../img/icono-guagua.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../img/icono-180.png">
+<link rel="preload" href="../ds/fonts/syne.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../ds/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "VideoGame",
+ "name": "Guagua de pan",
+ "url": "https://franciscombp.github.io/mal/guagua/",
+ "inLanguage": "es",
+ "description": "Decora una guagua de pan con crema y regálala por el Día de Difuntos.",
+ "genre": "Casual",
+ "playMode": "SinglePlayer",
+ "gamePlatform": "Navegador web",
+ "applicationCategory": "Game",
+ "operatingSystem": "Cualquiera",
+ "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+ "author": { "@id": "https://una.red/#fran" }
+}
+</script>
+<link rel="stylesheet" href="../ds/mal/mal.css?v=1.0.17">
+<link rel="stylesheet" href="guagua.css">
+</head>
+<body>
+<a class="salta" href="#principal">Saltar al contenido</a>
+
+<!-- Los cuatro iconos del taller. El sprite del sistema no tiene mangas
+     pasteleras, y la regla es no poner emojis en la interfaz. -->
+<svg width="0" height="0" class="sr-only" aria-hidden="true" focusable="false">
+  <symbol id="g-manga" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 4l9 4 3 3-5 5-3-3zM16 11l3 3M17.5 15.5c1 1.5 1.5 3 .5 4s-2.5.5-4-.5"/></symbol>
+  <symbol id="g-roseta" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 5a3 3 0 0 1 4.5 3.9A3 3 0 0 1 15 15a3 3 0 0 1-6 0 3 3 0 0 1-1.5-6.1A3 3 0 0 1 12 5zM12 10.5a1.5 1.5 0 1 0 0 3"/></symbol>
+  <symbol id="g-grageas" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" d="M5 7l2 2M11 4l-1 3M17 6l2-1M8 14l3-1M15 11l1 3M5 19l2-2M12 19l1 2M18 17l2 1"/></symbol>
+  <symbol id="g-mordisco" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M20 12a8 8 0 1 1-6.5-7.9 2 2 0 0 0 2.2 2.4 2 2 0 0 0 2.4 2.6 2 2 0 0 0 1.9 2.9"/></symbol>
+  <symbol id="g-dado" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></symbol>
+  <symbol id="g-whatsapp" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 20l1.3-4A8 8 0 1 1 8.4 19zM9 9c0 3 3 6 6 6l1-1.5-2-1-1 .8c-1-.5-1.8-1.3-2.3-2.3l.8-1-1-2z"/></symbol>
+</svg>
+
+<header class="hud">
+  <div class="wrap hud__in">
+    <a class="hud__marca" href="https://una.red/"><span class="hud__punto" aria-hidden="true"></span><b>UNA</b><span>una.red</span></a>
+    <nav aria-label="Secciones"><a href="#taller">Taller</a><a href="#vitrina">Vitrina</a><a href="https://una.red/#juegos">Más juegos</a></nav>
+  </div>
+</header>
+
+<main id="principal">
+
+  <!-- ══ Cuando te llega una ═══════════════════════════════════ -->
+  <section class="regalo wrap" id="regalo" hidden aria-labelledby="regalo-titulo">
+    <div class="regalo__cab">
+      <p class="kicker">Te llegó una guagua</p>
+      <h1 id="regalo-titulo">Te regalaron una guagua</h1>
+      <p class="regalo__nombre" id="regalo-nombre"></p>
+      <p class="regalo__para" id="regalo-para"></p>
+    </div>
+    <div class="mesa mesa--regalo">
+      <canvas id="regalo-lienzo" class="lienzo lienzo--comer" role="img" aria-label="La guagua que te regalaron. Tócala para darle un mordisco."></canvas>
+    </div>
+    <div class="regalo__resto">
+      <blockquote class="regalo__msg" id="regalo-mensaje"></blockquote>
+      <p class="caption regalo__pista" id="regalo-pista" aria-live="polite">Toca la guagua para darle un mordisco.</p>
+      <div class="regalo__acc">
+        <button class="btn btn--rojo boton-juego" id="regalo-devolver" type="button">
+          <svg class="icono" aria-hidden="true"><use href="#i-regalo"/></svg> Decorar una de vuelta</button>
+        <button class="btn btn-ghost" id="regalo-taller" type="button">Ir al taller</button>
+      </div>
+      <p class="micro">Ya quedó guardada en tu vitrina, más abajo.</p>
+    </div>
+  </section>
+
+  <!-- ══ El taller ═════════════════════════════════════════════ -->
+  <section class="taller wrap" id="taller" data-herramienta="manga" aria-labelledby="taller-titulo">
+    <div class="taller__cab">
+      <p class="kicker" id="cuenta">Faltan unos días para Finados</p>
+      <h1 id="taller-titulo">Decora tu guagua de pan</h1>
+      <p class="lede">Recién salida del horno, todavía tibia. Ponle crema con el dedo, bautízala y
+      regálala: a quien le llegue, se la puede comer.</p>
+    </div>
+
+    <div class="taller__mesa">
+      <div class="mesa">
+        <canvas id="lienzo" class="lienzo" role="img" aria-label="Una guagua de pan. Dibuja con el dedo o el ratón para ponerle crema."></canvas>
+        <div class="mesa__flota">
+          <button class="btn btn--sm btn--icono" id="deshacer" type="button" aria-label="Deshacer" data-pista="Deshacer">
+            <svg class="icono" aria-hidden="true"><use href="#i-reiniciar"/></svg></button>
+          <button class="btn btn--sm" id="sorpresa" type="button">
+            <svg class="icono" aria-hidden="true"><use href="#g-dado"/></svg> Sorpréndeme</button>
+        </div>
+      </div>
+
+      <div class="herramientas card">
+        <div class="grupo">
+          <p class="grupo__t">Herramienta</p>
+          <div class="fila herramientas__fila" role="group" aria-label="Herramienta">
+            <button class="chip" type="button" data-herramienta="manga" aria-pressed="true"><svg class="icono" aria-hidden="true"><use href="#g-manga"/></svg> Manga</button>
+            <button class="chip" type="button" data-herramienta="roseta" aria-pressed="false"><svg class="icono" aria-hidden="true"><use href="#g-roseta"/></svg> Roseta</button>
+            <button class="chip" type="button" data-herramienta="grageas" aria-pressed="false"><svg class="icono" aria-hidden="true"><use href="#g-grageas"/></svg> Grageas</button>
+            <button class="chip" type="button" data-herramienta="mordisco" aria-pressed="false"><svg class="icono" aria-hidden="true"><use href="#g-mordisco"/></svg> Mordisco</button>
+          </div>
+        </div>
+
+        <div class="grupo grupo--crema">
+          <p class="grupo__t">Crema</p>
+          <div class="cremas" id="cremas" role="group" aria-label="Color de la crema"></div>
+          <div class="fila" role="group" aria-label="Boquilla">
+            <button class="chip chip--s" type="button" data-boquilla="0" aria-pressed="false">Fina</button>
+            <button class="chip chip--s" type="button" data-boquilla="1" aria-pressed="true">Media</button>
+            <button class="chip chip--s" type="button" data-boquilla="2" aria-pressed="false">Gruesa</button>
+          </div>
+        </div>
+
+        <div class="grupo">
+          <p class="grupo__t">Molde</p>
+          <div class="fila" role="group" aria-label="Molde">
+            <button class="chip chip--s" type="button" data-forma="guagua" aria-pressed="true">Guagua</button>
+            <button class="chip chip--s" type="button" data-forma="caballito" aria-pressed="false">Caballito</button>
+          </div>
+          <div class="fila" id="caras" role="group" aria-label="Cara">
+            <button class="chip chip--s" type="button" data-cara="1" aria-pressed="true">De yeso</button>
+            <button class="chip chip--s" type="button" data-cara="4" aria-pressed="false">De pasas</button>
+            <button class="chip chip--s" type="button" data-cara="2" aria-pressed="false">Dormida</button>
+            <button class="chip chip--s" type="button" data-cara="3" aria-pressed="false">Pícara</button>
+            <button class="chip chip--s" type="button" data-cara="0" aria-pressed="false">Sin cara</button>
+          </div>
+        </div>
+
+        <div class="herramientas__acc">
+          <button class="btn btn--rojo boton-juego btn-block" id="regalar" type="button">
+            <svg class="icono" aria-hidden="true"><use href="#i-regalo"/></svg> Regalar</button>
+          <div class="fila">
+            <button class="btn btn--sm" id="guardar" type="button">
+              <svg class="icono icono--s" aria-hidden="true"><use href="#i-cuadricula"/></svg> A la vitrina</button>
+            <button class="btn btn--sm btn-ghost" id="de-nuevo" type="button">Otra guagua</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ La vitrina ════════════════════════════════════════════ -->
+  <section class="sec vitrina" id="vitrina" aria-labelledby="vitrina-titulo">
+    <div class="wrap">
+      <div class="vitrina__cab">
+        <div>
+          <p class="kicker">La vitrina</p>
+          <h2 id="vitrina-titulo">Las guaguas de la casa</h2>
+        </div>
+        <div class="fila" role="group" aria-label="Qué guaguas ver">
+          <button class="chip" type="button" data-vitrina="mia" aria-pressed="true">Las mías <span class="badge" id="cuenta-mia">0</span></button>
+          <button class="chip" type="button" data-vitrina="recibida" aria-pressed="false">Me regalaron <span class="badge" id="cuenta-recibida">0</span></button>
+        </div>
+      </div>
+      <div class="vitrina__rej" id="vitrina-rej"></div>
+      <p class="vitrina__vacia caption" id="vitrina-vacia" hidden></p>
+      <p class="micro vitrina__nota">La vitrina vive solo en este navegador. Las guaguas que regalas
+      viajan enteras dentro del enlace: no pasan por ningún servidor.</p>
+    </div>
+  </section>
+
+  <section class="sec saber">
+    <div class="wrap saber__rej">
+      <div>
+        <p class="kicker">Por si no sabías</p>
+        <h2>Guagua quiere decir bebé.</h2>
+      </div>
+      <p>En kichwa, <i>wawa</i> es la criatura. Cada 2 de noviembre, en los Andes del Ecuador, se
+      hornean guaguas y caballitos de pan, se pintan con crema y se acompañan con colada morada:
+      espesa, de mortiño y harina negra, con mora, piña, frutilla y babaco. Se comparten con la
+      familia y con los que ya no están. Esta guagua no engorda, pero tampoco llena: para eso,
+      la panadería de la esquina.</p>
+    </div>
+  </section>
+</main>
+
+<!-- ══ Regalar ═══════════════════════════════════════════════ -->
+<dialog class="modal regalar" id="d-regalar" aria-labelledby="d-regalar-t">
+  <div class="modal__cab">
+    <h2 id="d-regalar-t">Regálala</h2>
+    <button class="btn btn--sm btn--icono btn-ghost" type="button" data-cierra aria-label="Cerrar"><svg class="icono" aria-hidden="true"><use href="#i-cerrar"/></svg></button>
+  </div>
+  <div class="modal__cuerpo regalar__cuerpo">
+    <figure class="panadera">
+      <p class="panadera__frase" id="panadera-frase"></p>
+      <figcaption><b>Doña Rosa, la panadera</b> · <span id="panadera-nota"></span></figcaption>
+    </figure>
+    <div class="regalar__rej">
+      <img class="regalar__vista" id="r-vista" alt="Vista previa de la tarjeta que se va a compartir" width="1080" height="1350">
+      <div class="pila">
+        <div class="campo"><label for="r-nombre">Se llama</label><input id="r-nombre" maxlength="40" autocomplete="off"></div>
+        <div class="campo"><label for="r-para">Para</label><input id="r-para" maxlength="40" autocomplete="off" placeholder="Mi ñaña, la jefa, el grupo de la familia"></div>
+        <div class="campo"><label for="r-de">De</label><input id="r-de" maxlength="40" autocomplete="nickname" placeholder="Tu nombre"></div>
+        <div class="campo"><label for="r-mensaje">Unas palabras</label><textarea id="r-mensaje" maxlength="160" rows="2"></textarea></div>
+      </div>
+    </div>
+  </div>
+  <div class="modal__pie regalar__pie">
+    <button class="btn btn--rojo" id="r-compartir" type="button"><svg class="icono" aria-hidden="true"><use href="#i-compartir"/></svg> Compartir</button>
+    <button class="btn" id="r-whatsapp" type="button"><svg class="icono" aria-hidden="true"><use href="#g-whatsapp"/></svg> WhatsApp</button>
+    <button class="btn" id="r-copiar" type="button"><svg class="icono" aria-hidden="true"><use href="#i-enlace"/></svg> Copiar enlace</button>
+    <button class="btn" id="r-descargar" type="button"><svg class="icono" aria-hidden="true"><use href="#i-descargar"/></svg> Tarjeta</button>
+  </div>
+</dialog>
+
+<!-- ══ Una pieza de la vitrina ═══════════════════════════════ -->
+<dialog class="modal pieza-modal" id="d-pieza" aria-labelledby="p-titulo">
+  <div class="modal__cab">
+    <h2 id="p-titulo">Guagua</h2>
+    <button class="btn btn--sm btn--icono btn-ghost" type="button" data-cierra aria-label="Cerrar"><svg class="icono" aria-hidden="true"><use href="#i-cerrar"/></svg></button>
+  </div>
+  <div class="modal__cuerpo">
+    <canvas id="p-lienzo" class="lienzo lienzo--vista" aria-hidden="true"></canvas>
+    <p class="caption" id="p-quien"></p>
+    <p id="p-mensaje"></p>
+  </div>
+  <div class="modal__pie">
+    <button class="btn btn-ghost" id="p-borrar" type="button"><svg class="icono" aria-hidden="true"><use href="#i-papelera"/></svg> Sacar</button>
+    <button class="btn" id="p-editar" type="button"><svg class="icono" aria-hidden="true"><use href="#i-editar"/></svg> Seguir decorando</button>
+    <button class="btn btn--rojo" id="p-regalar" type="button"><svg class="icono" aria-hidden="true"><use href="#i-compartir"/></svg> Regalar</button>
+  </div>
+</dialog>
+
+<footer class="pie">
+  <div class="wrap pie__in">
+    <p><b>UNA</b> · <a href="https://una.red/">una.red</a> · el hub de MAL · Quito, Ecuador</p>
+    <ul>
+      <li><a href="https://una.red/#juegos">Más juegos</a></li>
+      <li><a href="../ds/">Sistema de diseño</a></li>
+      <li><a href="https://github.com/franciscombp/mal/tree/main/guagua">Código</a></li>
+    </ul>
+    <p>Hecho en Quito, con Claude Code de copiloto</p>
+  </div>
+</footer>
+
+<script src="../ds/mal/mal.js?v=1.0.17" defer></script>
+<script src="guagua.js" defer></script>
+</body>
+</html>

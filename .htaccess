@@ -26,6 +26,9 @@ RewriteRule ^ds$           https://franciscombp.github.io/mal/ds/ [R=301,L]
 RewriteRule ^renuncia$     https://franciscombp.github.io/mal/renuncia/ [R=301,L]
 RewriteRule ^(portafolio/.*)$ https://franciscombp.github.io/mal/$1 [R=301,L]
 RewriteRule ^portafolio$   https://franciscombp.github.io/mal/portafolio/ [R=301,L]
+# El juego de Finados: la tarjeta que se comparte dice «una.red/guagua».
+RewriteRule ^(guagua/.*)$  https://franciscombp.github.io/mal/$1 [R=301,L]
+RewriteRule ^guagua$       https://franciscombp.github.io/mal/guagua/ [R=301,L]
 
 <IfModule mod_headers.c>
   Header set X-Content-Type-Options "nosniff"
