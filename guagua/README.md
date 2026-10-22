@@ -4,13 +4,17 @@ Una guagua de pan en 3D, en tres actos, para regalar por el Día de Difuntos:
 
 1. **Amasar.** Bolitas (arrastrar hacia el lado las hace anchas; hacia arriba, altas) y chorizos
    (se estiran con el dedo). Lo que cae encima de otra pieza se pega. Hay moldes: guagua,
-   caballito, chanchito, gallinita y la lata vacía. La masa viene en seis colores (natural,
-   cacao, mora, añil, achiote y verde), y Teñir cambia el de una pieza ya amasada.
+   guagua tradicional (más larga, con colita cónica), guaguau (un perrito echado), caballito,
+   chanchito, gallinita y la lata vacía.
 2. **Hornear.** La masa se infla y se dora en seis segundos; hay que sacarla en su punto. Antes
    queda blanca, después se quema, y la panadera lo comenta.
 3. **Decorar.** Manga de crema con pincel y tres boquillas, rosetas, grageas, pasas, carita y
    mordiscos. La cara no viene hecha: es el mismo pan, y Carita le pinta con glaseado fino
    ojos, nariz, sonrisa y chapitas, como en las guaguas de panadería.
+4. **Regalar o dedicar.** Un regalo puede venir con un vale por una guagua de verdad, una
+   invitación a colada morada o la tarea de pasarla; quien la recibe responde con un toque por
+   WhatsApp. Una guagua dedicada a quien ya no está sale con su velita, y la tarjeta invita a
+   que otros dediquen la suya. En la receta: `t: 'm'` si es dedicada y `l` el vale (1, 2 o 3).
 
 Vive en `franciscombp.github.io/mal/guagua/` y la carpeta se basta sola: Three.js va en
 `vendor/` (r170, licencia MIT en `vendor/LICENSE-three.txt`) y el sistema de diseño se pide

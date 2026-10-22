@@ -118,11 +118,6 @@
       <button class="tool" type="button" data-mano="chorizo" aria-pressed="false"><svg class="icono" aria-hidden="true"><use href="#g-chorizo"/></svg><span>Chorizo</span></button>
       <button class="tool" type="button" data-mano="mover" aria-pressed="false"><svg class="icono" aria-hidden="true"><use href="#g-mano"/></svg><span>Mover</span></button>
       <button class="tool" type="button" data-mano="quitar" aria-pressed="false"><svg class="icono" aria-hidden="true"><use href="#i-papelera"/></svg><span>Quitar</span></button>
-      <button class="tool" type="button" data-mano="tenir" aria-pressed="false"><svg class="icono" aria-hidden="true"><use href="#i-gota"/></svg><span>Teñir</span></button>
-    </div>
-    <div class="dock__fila dock__fila--desliza" data-con="masa" role="group" aria-label="Color de la masa">
-      <span class="dock__rotulo">Masa</span>
-      <div class="cremas" id="masas"></div>
     </div>
     <div class="dock__fila" data-con="chorizo" role="group" aria-label="Grosor del chorizo">
       <span class="dock__rotulo">Grosor</span>
@@ -133,6 +128,8 @@
     <div class="dock__fila dock__fila--desliza" data-sin="chorizo" role="group" aria-label="Moldes para empezar">
       <span class="dock__rotulo">Moldes</span>
       <button class="chip chip--s" type="button" data-molde="guagua">Guagua</button>
+      <button class="chip chip--s" type="button" data-molde="tradicional">Tradicional</button>
+      <button class="chip chip--s" type="button" data-molde="guaguau">Guaguau</button>
       <button class="chip chip--s" type="button" data-molde="caballito">Caballito</button>
       <button class="chip chip--s" type="button" data-molde="chanchito">Chanchito</button>
       <button class="chip chip--s" type="button" data-molde="gallinita">Gallinita</button>
@@ -202,15 +199,19 @@
 <section class="juego regalo" id="regalo" hidden aria-labelledby="regalo-titulo">
   <canvas id="regalo-lienzo" class="juego__lienzo lienzo--comer" tabindex="0" role="img" aria-label="La guagua que te regalaron, en 3D. Arrastra a un lado para girarla y tócala para darle un mordisco."></canvas>
   <div class="regalo__tarjeta" id="regalo-tarjeta">
-    <p class="kicker">Te llegó una guagua</p>
+    <p class="kicker" id="regalo-kicker">Te llegó una guagua</p>
     <h1 id="regalo-titulo">Te regalaron una guagua</h1>
     <p class="regalo__nombre" id="regalo-nombre"></p>
     <p class="regalo__para" id="regalo-para"></p>
     <blockquote class="regalo__msg" id="regalo-mensaje"></blockquote>
+    <div class="regalo__vale" id="regalo-vale" hidden>
+      <p><b id="regalo-vale-t"></b><span id="regalo-vale-d"></span></p>
+      <button class="btn btn--sm" id="regalo-cobrar" type="button"><svg class="icono" aria-hidden="true"><use href="#g-whatsapp"/></svg> <span id="regalo-cobrar-t">Cobrar el vale</span></button>
+    </div>
     <p class="regalo__pista" id="regalo-pista" aria-live="polite">Toca la guagua para darle un mordisco.</p>
     <div class="regalo__acc">
       <button class="btn btn-ghost" id="regalo-taller" type="button">Ir al taller</button>
-      <button class="btn btn--rojo boton-juego" id="regalo-devolver" type="button"><svg class="icono" aria-hidden="true"><use href="#i-regalo"/></svg> Amasar una de vuelta</button>
+      <button class="btn btn--rojo boton-juego" id="regalo-devolver" type="button"><svg class="icono" aria-hidden="true"><use href="#i-regalo"/></svg> <span id="regalo-devolver-t">Amasar una de vuelta</span></button>
     </div>
   </div>
 </section>
@@ -218,7 +219,7 @@
 <!-- ══ Regalar ═══════════════════════════════════════════════ -->
 <dialog class="modal regalar" id="d-regalar" aria-labelledby="d-regalar-t">
   <div class="modal__cab">
-    <h2 id="d-regalar-t">Regálala</h2>
+    <h2 id="d-regalar-t">Regálala o dedícala</h2>
     <button class="btn btn--sm btn--icono btn-ghost" type="button" data-cierra aria-label="Cerrar"><svg class="icono" aria-hidden="true"><use href="#i-cerrar"/></svg></button>
   </div>
   <div class="modal__cuerpo regalar__cuerpo">
@@ -226,13 +227,27 @@
       <p class="panadera__frase" id="panadera-frase"></p>
       <figcaption><b>Doña Rosa, la panadera</b> · <span id="panadera-nota"></span></figcaption>
     </figure>
+    <div class="fila regalar__tipo" role="group" aria-label="Qué vas a hacer con ella">
+      <button class="chip" type="button" data-tipo="" aria-pressed="true">Regalarla</button>
+      <button class="chip" type="button" data-tipo="m" aria-pressed="false">Dedicarla a quien ya no está</button>
+    </div>
     <div class="regalar__rej">
       <img class="regalar__vista" id="r-vista" alt="Vista previa de la tarjeta que se va a compartir" width="1080" height="1350">
       <div class="pila">
         <div class="campo"><label for="r-nombre">Se llama</label><input id="r-nombre" maxlength="40" autocomplete="off"></div>
-        <div class="campo"><label for="r-para">Para</label><input id="r-para" maxlength="40" autocomplete="off" placeholder="Mi hermana, mi abuelo, la familia"></div>
+        <div class="campo"><label for="r-para" id="r-para-rotulo">Para</label><input id="r-para" maxlength="40" autocomplete="off" placeholder="Mi hermana, mi abuelo, la familia"></div>
         <div class="campo"><label for="r-de">De</label><input id="r-de" maxlength="40" autocomplete="nickname" placeholder="Tu nombre"></div>
         <div class="campo"><label for="r-mensaje">Unas palabras</label><textarea id="r-mensaje" maxlength="160" rows="2"></textarea></div>
+        <div class="campo" id="r-vale-campo">
+          <span class="campo__etiqueta" id="r-vale-rotulo">Y además</span>
+          <div class="fila regalar__vales" role="group" aria-labelledby="r-vale-rotulo">
+            <button class="chip chip--s" type="button" data-vale="0" aria-pressed="true">Nada más</button>
+            <button class="chip chip--s" type="button" data-vale="1" aria-pressed="false">Vale por una guagua de verdad</button>
+            <button class="chip chip--s" type="button" data-vale="2" aria-pressed="false">Invitación a una colada morada</button>
+            <button class="chip chip--s" type="button" data-vale="3" aria-pressed="false">Pásala</button>
+          </div>
+          <span class="campo__pista" id="r-vale-pista"></span>
+        </div>
       </div>
     </div>
   </div>
@@ -332,9 +347,10 @@
   <div class="modal__cuerpo">
     <p class="kicker" id="cuenta">Faltan unos días para Finados</p>
     <ol class="info__pasos">
-      <li><b>Amasa.</b> Bolita: arrastra hacia el lado para hacerla ancha y hacia arriba para hacerla alta; un toque deja una bolita mediana. Chorizo: arrastra como si lo estiraras. Lo que pones encima de otra pieza se pega. Elige el color de la masa (natural, cacao, mora, añil, achiote o verde) antes de amasar, o usa Teñir para cambiar una pieza ya hecha.</li>
+      <li><b>Amasa.</b> Bolita: arrastra hacia el lado para hacerla ancha y hacia arriba para hacerla alta; un toque deja una bolita mediana. Chorizo: arrastra como si lo estiraras. Lo que pones encima de otra pieza se pega.</li>
       <li><b>Hornea.</b> Se dora en seis segundos. Sácala en la franja blanca: si la sacas antes queda blanca; si esperas mucho, se quema.</li>
       <li><b>Decora.</b> Crema, rosetas, grageas, pasas y la carita: la cara es el mismo pan, y se le pintan ojos, nariz y sonrisa con glaseado.</li>
+      <li><b>Regálala o dedícala.</b> Mándala con un vale por una guagua de verdad o con una invitación a tomar colada morada. También puedes dedicarla a alguien que ya no está y compartirla en tus redes.</li>
     </ol>
     <p class="info__gesto"><svg class="icono" aria-hidden="true"><use href="#g-dos-dedos"/></svg>
     <span>Con un dedo se amasa y se decora. Con dos dedos se gira y se acerca. En la compu: clic derecho para girar y la rueda para acercar.</span></p>
