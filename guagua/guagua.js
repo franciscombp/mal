@@ -178,10 +178,8 @@ const MOLDES = {
   // con la cabeza redonda en la punta.
   guagua() {
     return [
-      chorizo(0.5, [V(0, 0.52, 0), V(0, 1.75, 0)]),       // el bulto de los pies, redondeado
-      bolita(V(0, 2.15, 0), V(0.62, 0.95, 0.46)),          // el cuerpo envuelto, con hombros
-      bolita(V(0, 3.08, 0), V(0.27, 0.14, 0.27)),          // el cuello
-      bolita(V(0, 3.48, 0.04), V(0.46, 0.48, 0.42)),       // la cabeza
+      bolita(CUERPO.c, CUERPO.s),                          // el cuerpo, un huevo de pan
+      bolita(CABEZA.c, CABEZA.s),                          // la cabeza redonda encima
     ];
   },
   // la de panadería: más larga, y el bulto de los pies termina en colita cónica
@@ -198,13 +196,14 @@ const MOLDES = {
       bolita(V(-1.72, 0.36, 0), V(0.26, 0.16, 0.15), 0.12),   // la punta de la cola
       bolita(V(-1.2, 0.45, 0), V(0.55, 0.3, 0.28), 0.1),      // la cola
       bolita(V(-0.1, 0.55, 0), V(1.25, 0.53, 0.5)),            // el lomo
-      bolita(V(-0.55, 0.2, 0.36), V(0.32, 0.17, 0.14)),        // la pata de atrás
-      chorizo(0.13, [V(0.75, 0.15, 0.3), V(1.6, 0.13, 0.3)]),  // las patitas de adelante
-      chorizo(0.13, [V(0.75, 0.15, -0.25), V(1.55, 0.13, -0.25)]),
-      bolita(V(1.3, 0.92, 0.04), V(0.5, 0.48, 0.46)),          // la cabeza
-      bolita(V(1.76, 0.78, 0.04), V(0.27, 0.21, 0.25)),        // el hocico
-      bolita(V(1.12, 0.8, 0.42), V(0.15, 0.33, 0.1), -0.3),    // la oreja que se ve
-      bolita(V(1.12, 0.8, -0.38), V(0.15, 0.33, 0.1), -0.3),   // la otra oreja
+      bolita(V(-0.55, 0.2, 0.3), V(0.32, 0.17, 0.16)),         // la pata de atrás, pegada al lomo
+      // las patitas de adelante salen de debajo del pecho, y la cabeza descansa encima
+      chorizo(0.14, [V(0.35, 0.15, 0.26), V(1.68, 0.14, 0.26)]),
+      chorizo(0.14, [V(0.35, 0.15, -0.22), V(1.62, 0.14, -0.22)]),
+      bolita(V(1.25, 0.66, 0.04), V(0.5, 0.47, 0.46)),         // la cabeza, con la barbilla en las patas
+      bolita(V(1.7, 0.53, 0.04), V(0.27, 0.21, 0.25)),         // el hocico
+      bolita(V(1.08, 0.56, 0.36), V(0.15, 0.33, 0.12), -0.3),  // la oreja que se ve
+      bolita(V(1.08, 0.56, -0.32), V(0.15, 0.33, 0.12), -0.3), // la otra oreja
     ];
   },
   caballito() {
