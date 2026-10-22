@@ -1133,7 +1133,7 @@ function taza3d() {
   const asa = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.075, 16, 40, Math.PI), loza);
   asa.rotation.z = -Math.PI / 2; asa.position.set(0.6, 0.64, 0);
   const colada = new THREE.Mesh(new THREE.CircleGeometry(0.575, 64),
-    new THREE.MeshPhysicalMaterial({ color: '#4d1239', roughness: 0.18, clearcoat: 1 }));
+    new THREE.MeshStandardMaterial({ color: '#3d0a2e', roughness: 0.32, envMapIntensity: 0.25 }));
   colada.rotation.x = -Math.PI / 2; colada.position.y = 1.07;
   g.add(cuerpo, filete, asa, colada);
   const r = azar(11), frutas = ['#f2c14e', '#d7263d', '#2b1d4f', '#f2c14e', '#d7263d'];
@@ -1428,7 +1428,7 @@ const nombreDe = (e) => e.n || ({ guagua: 'Guagua', tradicional: 'Guagua', guagu
 /* Dos formatos: historia (9:16) para los estados y las historias, y
    cuadrada (1:1) para publicar. Todo se acomoda alrededor del bodegón. */
 const FORMATOS = {
-  historia: { w: 1080, h: 1920, kicker: 300, titulo: [420, 524], fuente: 100, escena: [600, 1360], cinta: 1420, quien: 1530, msg: 1586, lineas: 2, pie: 1700 },
+  historia: { w: 1080, h: 1920, kicker: 300, titulo: [420, 524], fuente: 100, escena: [590, 1380], cinta: 1420, quien: 1530, msg: 1586, lineas: 2, pie: 1700 },
   cuadrada: { w: 1080, h: 1080, kicker: 74, titulo: [156, 228], fuente: 70, escena: [256, 856], cinta: 880, quien: 980, msg: 1020, lineas: 1, pie: 1060 },
 };
 async function tarjeta(e, formato = 'historia') {
@@ -1474,7 +1474,7 @@ async function tarjeta(e, formato = 'historia') {
   // el bodegón 3D, centrado y apoyado abajo en su espacio
   const { img, boca } = bodegon(e);
   const k = Math.min((W - 60) / img.width, (e1 - e0) / img.height);
-  const bw = img.width * k, bh = img.height * k, bx = (W - bw) / 2, by = e1 - bh;
+  const bw = img.width * k, bh = img.height * k, bx = (W - bw) / 2, by = e0 + (e1 - e0 - bh) / 2;
   ctx.drawImage(img, bx, by, bw, bh);
   const px = bx + boca.x * k, py = by + boca.y * k;
   if (memoria) {
