@@ -37,7 +37,7 @@
       "id": "juegos",
       "atributo": "data-marca=\"juegos\"",
       "nombre": "Juegos",
-      "uso": "los siete juegos del hub",
+      "uso": "los juegos del hub",
       "caracter": "volumétrico: sombra dura, borde de 2 px y relleno en degradado",
       "demo": "https://franciscombp.github.io/mal/ds/demos/juegos/"
     }

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="es" data-marca="juegos">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>El boliche · Finados en la Sierra</title>
+<meta name="description" content="El boliche de Guano y Píllaro, en 3D: ocho canicas ruedan por la tina de cemento, chocan con el tope y la primera que cae decide. Redondo, pares; cajita, nones. Si aciertas, te duplican la apuesta.">
+<meta name="theme-color" content="#1d1822">
+<link rel="canonical" href="https://franciscombp.github.io/mal/apps/boliche/juego/">
+<link rel="icon" href="../../../img/icono-boliche.svg" type="image/svg+xml">
+<link rel="preload" href="../../../ds/fonts/syne.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../ds/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="modulepreload" href="three.module.min.js">
+<link rel="stylesheet" href="../../../ds/mal/mal.css?v=1.0.17">
+<style>
+/* Solo el lienzo y el reparto de la pantalla: todo lo que va encima
+   —.hud-juego, .marcador, .chip, .boton-juego, .vidrio, .medidor— es
+   del sistema. */
+html,body{height:100%}
+body{margin:0;overflow:hidden;overscroll-behavior:none;-webkit-user-select:none;user-select:none}
+.escena{position:fixed;inset:0}
+#tina{position:absolute;inset:0;width:100%;height:100%;touch-action:none;display:block}
+.mesa{width:min(100%, 440px);padding:var(--mal-e4);gap:var(--mal-e3)}
+.mesa[hidden],.capa[hidden]{display:none}
+.mesa .kicker{margin:0}
+.mesa p{margin:0}
+.mesa__linea{display:flex;align-items:baseline;justify-content:space-between;gap:var(--mal-e3)}
+.mesa__grupo{display:grid;gap:var(--mal-e2)}
+.mesa__suma{font-family:var(--mal-display);font-weight:800;font-size:clamp(1.6rem, 1.1rem + 2.4vw, 2.2rem);
+  line-height:1;letter-spacing:-.03em;margin:0}
+.opciones{display:flex;gap:var(--mal-e2)}
+.opciones .chip{flex:1;justify-content:center;font-variant-numeric:tabular-nums}
+.carga{margin-top:calc(var(--mal-e2) * -1)}
+.hud-juego__arriba .fila{gap:var(--mal-e2)}
+.capa{position:absolute;inset:0;z-index:30;display:grid;place-items:center;padding:var(--mal-e4);
+  background:color-mix(in srgb, var(--mal-bg) 45%, transparent)}
+.capa__panel{width:min(100%, 400px);padding:var(--mal-e5);text-align:center;max-height:100%;overflow:auto}
+.capa__panel .kicker{justify-content:center;margin:0}
+.capa__panel h1,.capa__panel h2{margin:0;line-height:1.05}
+.reglas{list-style:none;padding:0;margin:0;text-align:left;display:grid;gap:var(--mal-e2);font-size:var(--mal-t-caption)}
+.reglas li{display:grid;grid-template-columns:auto 1fr;gap:var(--mal-e2);align-items:start}
+.reglas .icono{margin-top:.15em;color:var(--mal-primary)}
+.sin-3d{position:absolute;inset:auto 0 50% 0;text-align:center;padding:var(--mal-e5)}
+</style>
+</head>
+<body class="fondo--aurora">
+<main class="escena">
+  <canvas id="tina" aria-label="La tina del boliche: una hondonada de cemento con un agujero redondo, una cajita cuadrada y un tope de madera en el fondo" role="img"></canvas>
+
+  <div class="hud-juego">
+    <div class="hud-juego__arriba">
+      <div class="fila">
+        <button class="btn btn--icono" id="b-reglas" type="button" aria-label="Reglas">
+          <svg class="icono" aria-hidden="true"><use href="#i-menu"/></svg></button>
+        <button class="btn btn--icono" id="b-sonido" type="button" aria-label="Sonido" aria-pressed="true">
+          <svg class="icono" aria-hidden="true"><use href="#i-altavoz"/></svg></button>
+      </div>
+      <div class="hud-juego__cifras">
+        <p class="marcador" id="saldo" aria-live="polite">$5,00<small>tu plata</small></p>
+        <span class="badge" id="apuesta-badge" hidden></span>
+      </div>
+    </div>
+
+    <div class="hud-juego__abajo">
+      <!-- Apostar: cuánto, a qué y quién lanza -->
+      <section class="vidrio pila mesa" id="m-apuesta" hidden aria-label="Tu apuesta">
+        <div class="mesa__grupo">
+          <p class="micro">Apuestas</p>
+          <div class="opciones" role="group" aria-label="Cuánto apuestas">
+            <button class="chip" type="button" data-ficha="25" aria-pressed="true">25 ctvs</button>
+            <button class="chip" type="button" data-ficha="50" aria-pressed="false">50 ctvs</button>
+            <button class="chip" type="button" data-ficha="100" aria-pressed="false">1 dólar</button>
+          </div>
+        </div>
+        <div class="mesa__grupo">
+          <p class="micro">A</p>
+          <div class="opciones" role="group" aria-label="A qué apuestas">
+            <button class="chip" type="button" data-a="pares" aria-pressed="true">Pares · redondo</button>
+            <button class="chip" type="button" data-a="nones" aria-pressed="false">Nones · cajita</button>
+          </div>
+        </div>
+        <div class="mesa__grupo">
+          <p class="micro">Lanza</p>
+          <div class="opciones" role="group" aria-label="Quién lanza">
+            <button class="chip" type="button" data-lanza="yo" aria-pressed="true">Yo</button>
+            <button class="chip" type="button" data-lanza="banca" aria-pressed="false">La banca</button>
+          </div>
+        </div>
+        <button class="btn btn--rojo boton-juego btn-block" id="b-apostar" type="button">
+          <svg class="icono" aria-hidden="true"><use href="#i-billete"/></svg> Apostar</button>
+      </section>
+
+      <!-- Lanzas tú -->
+      <section class="vidrio pila mesa" id="m-lanzar" hidden aria-label="Lanzar">
+        <div class="mesa__linea">
+          <p class="kicker">Te toca lanzar</p>
+          <p class="caption" id="lanzar-apuesta"></p>
+        </div>
+        <button class="btn btn--rojo boton-juego btn-block" id="b-lanzar" type="button">
+          <svg class="icono" aria-hidden="true"><use href="#i-play"/></svg> Mantén y suelta</button>
+        <div class="medidor medidor--continuo medidor--fino carga" aria-hidden="true"><i id="carga"></i></div>
+        <p class="caption">O desliza el dedo desde el borde de la tina, de costado, para que den vueltas.</p>
+      </section>
+
+      <!-- Mientras ruedan -->
+      <section class="vidrio pila mesa" id="m-rueda" hidden aria-live="polite">
+        <p class="kicker" id="rueda-k">Ruedan</p>
+        <p class="caption" id="rueda-t">La primera que caiga decide.</p>
+      </section>
+
+      <!-- El resultado -->
+      <section class="vidrio pila mesa" id="m-fin" hidden aria-live="polite">
+        <div class="mesa__linea">
+          <p class="mesa__suma" id="fin-suma">Pares</p>
+          <span class="badge" id="fin-badge">Ganas</span>
+        </div>
+        <p id="fin-texto">—</p>
+        <button class="btn btn--rojo boton-juego btn-block" id="b-otra" type="button">
+          <svg class="icono" aria-hidden="true"><use href="#i-reiniciar"/></svg> Otra</button>
+      </section>
+    </div>
+  </div>
+
+  <!-- Portada y reglas -->
+  <div class="capa" id="c-inicio">
+    <div class="vidrio pila capa__panel">
+      <p class="kicker">Finados en la Sierra</p>
+      <h1>El boliche</h1>
+      <ul class="reglas">
+        <li><svg class="icono icono--s" aria-hidden="true"><use href="#i-punto"/></svg>
+          <span>Se lanzan <b>ocho canicas</b>, celestes y blancas, dentro de la tina. Ruedan, chocan entre ellas y con el tope de madera.</span></li>
+        <li><svg class="icono icono--s" aria-hidden="true"><use href="#i-check"/></svg>
+          <span>En el fondo hay dos agujeros: el <b>redondo es pares</b> y la <b>cajita cuadrada es nones</b>.</span></li>
+        <li><svg class="icono icono--s" aria-hidden="true"><use href="#i-estrella"/></svg>
+          <span><b>La primera que cae decide.</b> Si le atinaste, te duplican la apuesta; si no, la pierdes.</span></li>
+        <li><svg class="icono icono--s" aria-hidden="true"><use href="#i-mando"/></svg>
+          <span>Lanzas tú o lanza la banca. Si no cae ninguna, el tiro no vale.</span></li>
+      </ul>
+      <button class="btn btn--rojo boton-juego btn-block" id="b-jugar" type="button">
+        <svg class="icono" aria-hidden="true"><use href="#i-play"/></svg> Jugar</button>
+      <p class="caption">Plata de mentira, se guarda en este navegador. Juego tradicional de Guano y Píllaro.</p>
+    </div>
+  </div>
+
+  <!-- Sin plata -->
+  <div class="capa" id="c-limpio" hidden>
+    <div class="vidrio pila capa__panel">
+      <p class="kicker">Te quedaste limpio</p>
+      <h2>Ni para una peseta.</h2>
+      <p class="caption">La banca te fía otros cinco dólares. Para el próximo Finados se los devuelves, con guagua de pan.</p>
+      <button class="btn btn--rojo boton-juego btn-block" id="b-fiado" type="button">
+        <svg class="icono" aria-hidden="true"><use href="#i-billete"/></svg> Aceptar el fiado</button>
+    </div>
+  </div>
+</main>
+
+<script src="tina.js?v=3"></script>
+<script src="../../../ds/mal/mal.js?v=1.0.17" defer></script>
+<script type="module">
+import * as THREE from './three.module.min.js';
+
+const $ = id => document.getElementById(id);
+const lienzo = $('tina');
+const moneda = new Intl.NumberFormat('es-EC', { style: 'currency', currency: 'USD' });
+const plata = c => moneda.format(c / 100);
+
+/* ─── lo que se guarda ─────────────────────────────────────── */
+const CLAVE = 'boliche.v2';
+const INICIAL = 500;
+let guardado = {};
+try { guardado = JSON.parse(localStorage.getItem(CLAVE)) || {}; } catch (e) {}
+const est = {
+  saldo: Number.isFinite(guardado.saldo) ? guardado.saldo : INICIAL,
+  sonido: guardado.sonido !== false,
+  ficha: [25, 50, 100].includes(guardado.ficha) ? guardado.ficha : 25,
+  a: guardado.a === 'nones' ? 'nones' : 'pares',
+  lanza: guardado.lanza === 'banca' ? 'banca' : 'yo',
+  fase: 'inicio',   // inicio | apuesta | lanzar | espera | rueda | fin
+  apostado: 0,
+};
+const guardar = () => { try { localStorage.setItem(CLAVE, JSON.stringify(
+  { saldo: est.saldo, sonido: est.sonido, ficha: est.ficha, a: est.a, lanza: est.lanza })); } catch (e) {} };
+
+/* ─── sonido: WebAudio, sin archivos ───────────────────────── */
+let audio = null;
+function sonar(tipo, fuerza) {
+  if (!est.sonido) return;
+  try {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    if (audio.state === 'suspended') audio.resume();
+    const t = audio.currentTime, o = audio.createOscillator(), g = audio.createGain();
+    o.connect(g); g.connect(audio.destination);
+    const vol = Math.min(1, fuerza == null ? 1 : fuerza);
+    const golpe = (forma, f0, f1, v, dur) => {
+      o.type = forma; o.frequency.setValueAtTime(f0, t);
+      if (f1) o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+      g.gain.setValueAtTime(v * vol, t); g.gain.exponentialRampToValueAtTime(.001, t + dur);
+      o.start(t); o.stop(t + dur + .02);
+    };
+    if (tipo === 'choque') golpe('sine', 2600 + Math.random() * 900, 0, .1, .045);   // vidrio contra vidrio
+    else if (tipo === 'tope') golpe('triangle', 420, 260, .16, .07);                 // madera
+    else if (tipo === 'pared') golpe('triangle', 170, 0, .14, .08);                  // cemento
+    else if (tipo === 'cae') golpe('sine', 640, 150, .26, .22);
+    else if (tipo === 'gana' || tipo === 'pierde') {
+      const notas = tipo === 'gana' ? [523, 659, 784, 1047] : [392, 330, 262];
+      o.type = 'triangle'; g.gain.setValueAtTime(.0001, t);
+      notas.forEach((f, i) => { o.frequency.setValueAtTime(f, t + i * .1); g.gain.setValueAtTime(.14, t + i * .1); g.gain.exponentialRampToValueAtTime(.001, t + i * .1 + .09); });
+      o.start(t); o.stop(t + notas.length * .1 + .05);
+    }
+  } catch (e) {}
+}
+
+/* ─── la escena ────────────────────────────────────────────── */
+const CFG = Tina.CFG;
+const alt = (x, z) => Tina.altura(CFG, x, z);
+
+let render;
+try { render = new THREE.WebGLRenderer({ canvas: lienzo, antialias: true, alpha: true }); }
+catch (e) {
+  const p = document.createElement('p'); p.className = 'sin-3d';
+  p.textContent = 'Este navegador no puede dibujar en 3D. Prueba en otro, o actualiza este.';
+  document.querySelector('.escena').append(p);
+  throw e;
+}
+render.shadowMap.enabled = true;
+render.shadowMap.type = THREE.PCFSoftShadowMap;
+render.outputColorSpace = THREE.SRGBColorSpace;
+render.toneMapping = THREE.ACESFilmicToneMapping;
+render.toneMappingExposure = 1.05;
+
+const escena = new THREE.Scene();
+const camara = new THREE.PerspectiveCamera(38, 1, 0.05, 40);
+
+// el color del fondo sale del tema: la niebla funde el piso con la página
+function colorFondo() {
+  return new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--mal-bg').trim() || '#1d1822');
+}
+escena.fog = new THREE.Fog(colorFondo(), 3.2, 7.5);
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => escena.fog.color.copy(colorFondo()));
+
+// luz: un foco de feria colgado encima, y el cielo de noche
+escena.add(new THREE.HemisphereLight(0xfff1dc, 0x3a3340, 0.9));
+const foco = new THREE.DirectionalLight(0xffe2b8, 2.3);
+foco.position.set(-1.2, 4, 1.6);
+foco.castShadow = true;
+foco.shadow.mapSize.set(1024, 1024);
+Object.assign(foco.shadow.camera, { left: -1.6, right: 1.6, top: 1.6, bottom: -1.6, near: .5, far: 9 });
+foco.shadow.bias = -0.0005;
+escena.add(foco);
+
+/* Textura de cemento, pintada en un canvas: grano, manchas y rayones. */
+function textura(ancho, alto, pinta) {
+  const c = document.createElement('canvas'); c.width = ancho; c.height = alto;
+  pinta(c.getContext('2d'), ancho, alto);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.anisotropy = 4;
+  return t;
+}
+/* El cemento empata de un borde al otro —cada mancha se pinta también
+   del otro lado— para que al repetirse no deje raya. */
+const cemento = textura(512, 512, (g, w, h) => {
+  const nueve = pinta => { for (const dx of [-w, 0, w]) for (const dy of [-h, 0, h]) pinta(dx, dy); };
+  g.fillStyle = '#a9a49b'; g.fillRect(0, 0, w, h);
+  for (let i = 0; i < 1800; i++) {
+    const x = Math.random() * w, y = Math.random() * h, r = Math.random() * 18 + 2;
+    g.fillStyle = `rgba(${Math.random() < .5 ? '60,55,50' : '235,230,220'},${Math.random() * .07})`;
+    nueve((dx, dy) => { g.beginPath(); g.arc(x + dx, y + dy, r, 0, Math.PI * 2); g.fill(); });
+  }
+  for (let i = 0; i < 14000; i++) {
+    g.fillStyle = `rgba(0,0,0,${Math.random() * .16})`;
+    g.fillRect(Math.random() * w, Math.random() * h, 1.4, 1.4);
+  }
+  g.strokeStyle = 'rgba(50,45,40,.18)'; g.lineWidth = 1;
+  for (let i = 0; i < 30; i++) {
+    const pts = [[Math.random() * w, Math.random() * h]];
+    for (let k = 0; k < 6; k++) { const [x, y] = pts[pts.length - 1]; pts.push([x + (Math.random() - .5) * 40, y + (Math.random() - .5) * 40]); }
+    nueve((dx, dy) => { g.beginPath(); pts.forEach(([x, y], k) => k ? g.lineTo(x + dx, y + dy) : g.moveTo(x + dx, y + dy)); g.stroke(); });
+  }
+});
+
+
+/* La hondonada y el piso, de una pieza: un torno con el perfil del cono
+   que sigue plano hacia afuera. Se oscurece hacia el fondo, que es donde
+   menos luz llega. */
+{
+  const perfil = [];
+  for (let i = 0; i <= 48; i++) { const r = Math.max(.002, i / 48); perfil.push(new THREE.Vector2(r, alt(r, 0))); }
+  // el borde: un filo de cemento un poco levantado, y luego la tierra
+  perfil.push(new THREE.Vector2(1.015, .028), new THREE.Vector2(1.07, .032), new THREE.Vector2(1.1, 0), new THREE.Vector2(5, 0));
+  const geo = new THREE.LatheGeometry(perfil, 128);
+  const pos = geo.attributes.position, col = [];
+  for (let i = 0; i < pos.count; i++) {
+    const r = Math.hypot(pos.getX(i), pos.getZ(i));
+    if (r > 1.09) col.push(.74, .6, .46);                      // tierra apisonada
+    else if (r > 1) col.push(1.08, 1.07, 1.04);                  // el filo, más claro
+    else { const k = .42 + .58 * Math.pow(r, .8); col.push(k, k, k * 1.02); } // más oscuro al fondo
+  }
+  geo.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  // el torno estira la textura en rayos: se proyecta desde arriba
+  const uv = geo.attributes.uv;
+  for (let i = 0; i < pos.count; i++) uv.setXY(i, pos.getX(i) * .45, pos.getZ(i) * .45);
+  const malla = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
+    map: cemento, vertexColors: true, roughness: .96, metalness: 0, side: THREE.DoubleSide }));
+  malla.receiveShadow = true;
+  escena.add(malla);
+}
+
+// el agujero redondo, con su aro de lata: PARES
+const negro = new THREE.MeshBasicMaterial({ color: 0x050404 });
+const lata = new THREE.MeshStandardMaterial({ color: 0xb9b6ae, metalness: .85, roughness: .35 });
+{
+  const R = CFG.redondo;
+  const hueco = new THREE.Mesh(new THREE.CircleGeometry(R.r, 40), negro);
+  hueco.rotation.x = -Math.PI / 2; hueco.position.set(R.x, alt(R.x, R.z) + .002, R.z);
+  escena.add(hueco);
+  const aro = new THREE.Mesh(new THREE.TorusGeometry(R.r + .006, .007, 8, 40), lata);
+  aro.rotation.x = -Math.PI / 2; aro.position.set(R.x, alt(R.x, R.z) + .004, R.z);
+  aro.castShadow = true; escena.add(aro);
+}
+// la cajita cuadrada, con su marco de madera: NONES
+const madera = new THREE.MeshStandardMaterial({ color: 0xb4834f, roughness: .8 });
+{
+  const K = CFG.cajita, y = alt(K.x, K.z);
+  const hueco = new THREE.Mesh(new THREE.PlaneGeometry(K.lado, K.lado), negro);
+  hueco.rotation.x = -Math.PI / 2; hueco.position.set(K.x, y + .002, K.z);
+  escena.add(hueco);
+  for (let i = 0; i < 4; i++) {
+    const liston = new THREE.Mesh(new THREE.BoxGeometry(K.lado + .014, .012, .008), madera);
+    const a = i * Math.PI / 2;
+    liston.position.set(K.x + Math.sin(a) * (K.lado / 2 + .003), y + .005, K.z + Math.cos(a) * (K.lado / 2 + .003));
+    liston.rotation.y = a; liston.castShadow = true;
+    escena.add(liston);
+  }
+}
+// los brillos que marcan dónde cayó la primera
+const brillo = () => new THREE.MeshBasicMaterial({ color: 0xffc93c, transparent: true, opacity: 0, depthWrite: false });
+const brilloRedondo = new THREE.Mesh(new THREE.RingGeometry(CFG.redondo.r + .016, CFG.redondo.r + .03, 40), brillo());
+brilloRedondo.rotation.x = -Math.PI / 2;
+brilloRedondo.position.set(CFG.redondo.x, alt(CFG.redondo.x, CFG.redondo.z) + .006, CFG.redondo.z);
+const brilloCajita = new THREE.Mesh(new THREE.RingGeometry(CFG.cajita.lado * .62, CFG.cajita.lado * .8, 4, 1, Math.PI / 4), brillo());
+brilloCajita.rotation.x = -Math.PI / 2;
+brilloCajita.position.set(CFG.cajita.x, alt(CFG.cajita.x, CFG.cajita.z) + .006, CFG.cajita.z);
+escena.add(brilloRedondo, brilloCajita);
+
+// el tope: una cuña de madera tirada en el fondo
+{
+  const T = CFG.tope, forma = new THREE.Shape();
+  forma.moveTo(-T.largo / 2, 0); forma.lineTo(T.largo / 2, 0); forma.lineTo(T.largo / 2, .034); forma.closePath();
+  const cuna = new THREE.Mesh(new THREE.ExtrudeGeometry(forma, { depth: .034, bevelEnabled: false }), madera);
+  cuna.geometry.translate(0, 0, -.017);
+  cuna.position.set(T.x, alt(T.x, T.z) - .004, T.z);
+  cuna.rotation.y = -T.angulo;
+  cuna.castShadow = cuna.receiveShadow = true;
+  escena.add(cuna);
+}
+
+// las tablas tiradas alrededor, como en las fotos
+for (const [a, d, largo, giro] of [[2.35, 1.32, 1.1, .1], [.45, 1.38, .9, -.08], [4.1, 1.3, .7, .05]]) {
+  const tabla = new THREE.Mesh(new THREE.BoxGeometry(largo, .03, .09), madera);
+  tabla.position.set(Math.cos(a) * d, .015, Math.sin(a) * d);
+  tabla.rotation.y = -a + Math.PI / 2 + giro;
+  tabla.castShadow = tabla.receiveShadow = true;
+  escena.add(tabla);
+}
+
+// las monedas de la apuesta, en el borde, delante de ti
+const plateado = new THREE.MeshStandardMaterial({ color: 0xe4e1d8, metalness: .35, roughness: .35 });
+const monedaGeo = new THREE.CylinderGeometry(.034, .034, .006, 24);
+const monedas = new THREE.Group(); escena.add(monedas);
+function ponerMonedas(centavos) {
+  monedas.clear();
+  const n = Math.round(centavos / 25);
+  for (let i = 0; i < n; i++) {
+    const m = new THREE.Mesh(monedaGeo, plateado);
+    m.position.set(.34 + (i % 2) * .012, .003 + i * .0065, 1.18 + (i % 2) * .006);
+    m.castShadow = true; monedas.add(m);
+  }
+}
+
+/* Las canicas: vidrio con una veta de color, para que se note que ruedan. */
+function veta(base, raya) {
+  return textura(128, 64, (g, w, h) => {
+    g.fillStyle = base; g.fillRect(0, 0, w, h);
+    g.strokeStyle = raya; g.lineWidth = 9;
+    g.beginPath();
+    for (let x = 0; x <= w; x += 4) g.lineTo(x, h / 2 + Math.sin(x / w * Math.PI * 4) * h * .22);
+    g.stroke();
+    g.lineWidth = 3; g.globalAlpha = .6;
+    g.beginPath();
+    for (let x = 0; x <= w; x += 4) g.lineTo(x, h / 2 + Math.cos(x / w * Math.PI * 2) * h * .32);
+    g.stroke();
+  });
+}
+const MATERIAL = {
+  celeste: new THREE.MeshPhysicalMaterial({ map: veta('#5fb4e6', '#e9f6ff'), roughness: .12, clearcoat: 1, clearcoatRoughness: .05 }),
+  blanca: new THREE.MeshPhysicalMaterial({ map: veta('#f4f3f6', '#7ab8e0'), roughness: .12, clearcoat: 1, clearcoatRoughness: .05 }),
+};
+const esferaGeo = new THREE.SphereGeometry(CFG.bola, 28, 18);
+let mallas = [];
+function ponerCanicas(t) {
+  for (const m of mallas) escena.remove(m);
+  mallas = t.bolas.map(b => {
+    const m = new THREE.Mesh(esferaGeo, MATERIAL[b.color]);
+    m.castShadow = true;
+    m.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
+    m.userData.prev = [b.x, b.z];
+    escena.add(m);
+    return m;
+  });
+  colocar(t);
+}
+const eje = new THREE.Vector3();
+function colocar(t) {
+  t.bolas.forEach((b, i) => {
+    const m = mallas[i]; if (!m) return;
+    let x = b.x, z = b.z, y = alt(x, z) + CFG.bola;
+    if (b.hueco) {
+      // se va al centro del agujero y se hunde
+      const k = Math.min(1, b.cayendo * 1.6);
+      x += (b.fx - x) * k; z += (b.fz - z) * k;
+      y = alt(x, z) + CFG.bola - b.cayendo * CFG.bola * 3;
+      m.visible = b.cayendo < 1;
+    }
+    // rueda: gira sobre el eje perpendicular a lo que avanzó
+    const [px, pz] = m.userData.prev, dx = x - px, dz = z - pz, d = Math.hypot(dx, dz);
+    if (d > 1e-6) { eje.set(dz, 0, -dx).normalize(); m.rotateOnWorldAxis(eje, d / CFG.bola); }
+    m.userData.prev = [x, z];
+    m.position.set(x, y, z);
+  });
+}
+
+/* La cámara: agachado frente a la tina, mirando hacia el fondo. En
+   vertical se aleja para que quepa entera, y se corre hacia arriba lo
+   que tapa la mesa de abajo. */
+function medir() {
+  const w = lienzo.clientWidth, h = lienzo.clientHeight;
+  render.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+  render.setSize(w, h, false);
+  const aspecto = w / h;
+  // que quepa la tina (diámetro 2) con un poco de piso alrededor, a lo
+  // ancho y a lo alto; en vertical se abre el ángulo para no irse tan lejos
+  camara.fov = aspecto < 1 ? 48 : 38;
+  const tan = Math.tan(camara.fov * Math.PI / 360);
+  const D = Math.max(1.15 / tan, 1.2 / (tan * aspecto));
+  const elev = 40 * Math.PI / 180;
+  camara.position.set(0, Math.sin(elev) * D - .15, Math.cos(elev) * D);
+  camara.lookAt(0, -.15, 0);
+  escena.fog.near = D + .6; escena.fog.far = D + 4.5;
+  const arriba = document.querySelector('.hud-juego__arriba').getBoundingClientRect().bottom;
+  const mesa = [...document.querySelectorAll('.mesa')].find(m => !m.hidden);
+  const abajo = mesa ? h - mesa.getBoundingClientRect().top : 0;
+  const corre = Math.max(0, (abajo - arriba) / 2);
+  camara.aspect = aspecto;
+  camara.setViewOffset(w, h + corre * 2, 0, corre * 2, w, h);
+  camara.updateProjectionMatrix();
+}
+
+/* ─── el bucle ─────────────────────────────────────────────── */
+const DT = 1 / 240;
+let tina = Tina.crear(), mano = null, resto = 0, antes = 0;
+function cuadro(ahora) {
+  const dt = Math.min(.05, (ahora - antes) / 1000 || 0); antes = ahora;
+  if (est.fase === 'rueda' || est.fase === 'fin') {
+    resto += dt;
+    let n = 0;
+    while (resto >= DT && n++ < 60) {
+      resto -= DT;
+      for (const e of Tina.paso(tina, DT)) {
+        if (e.tipo === 'cae') { sonar('cae'); if (e.primera) decidir(); }
+        else sonar(e.tipo, e.fuerza / 2.2);
+      }
+    }
+    if (est.fase === 'rueda' && Tina.quietas(tina) && !tina.primera) nulo();
+  }
+  colocar(tina);
+  if (carga.activa) {
+    carga.t += dt;
+    carga.valor = 1 - Math.abs(1 - (carga.t / 1.1) % 2); // va y viene
+    $('carga').style.width = (carga.valor * 100).toFixed(1) + '%';
+  }
+  for (const b of [brilloRedondo, brilloCajita]) {
+    const o = b.userData.encendido ? .6 + .4 * Math.sin(ahora / 160) : 0;
+    b.material.opacity += (o - b.material.opacity) * .2;
+  }
+  render.render(escena, camara);
+  requestAnimationFrame(cuadro);
+}
+
+/* ─── la mesa: qué panel se ve ────────────────────────────── */
+function mesa(cual) {
+  for (const id of ['m-apuesta', 'm-lanzar', 'm-rueda', 'm-fin']) $(id).hidden = id !== cual;
+  medir();
+}
+function pintar() {
+  $('saldo').innerHTML = `${plata(est.saldo)}<small>tu plata</small>`;
+  document.querySelectorAll('[data-ficha]').forEach(b => {
+    b.setAttribute('aria-pressed', String(+b.dataset.ficha === est.ficha));
+    b.disabled = +b.dataset.ficha > est.saldo;
+  });
+  document.querySelectorAll('[data-a]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.a === est.a)));
+  document.querySelectorAll('[data-lanza]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lanza === est.lanza)));
+  const badge = $('apuesta-badge');
+  badge.hidden = !est.apostado;
+  badge.textContent = est.apostado ? `${plata(est.apostado)} a ${est.a}` : '';
+}
+
+/* Las ocho en la mano, en el borde, antes de lanzar: delante de ti si
+   lanzas tú, al otro lado si lanza la banca. */
+const DELANTE = Math.PI / 2, ENFRENTE = -Math.PI / 2;
+function enLaMano(origen) {
+  tina = Tina.crear();
+  Tina.tirar(tina, origen, origen + Math.PI, 0);
+  for (const b of tina.bolas) b.vx = b.vz = 0;
+  mano = origen;
+  ponerCanicas(tina);
+}
+
+function nuevaRonda() {
+  est.apostado = 0;
+  for (const b of [brilloRedondo, brilloCajita]) b.userData.encendido = false;
+  if (est.ficha > est.saldo) est.ficha = 25;
+  ponerMonedas(0);
+  enLaMano(est.lanza === 'yo' ? DELANTE : ENFRENTE);
+  est.fase = 'apuesta'; mesa('m-apuesta'); pintar();
+}
+
+function apostar() {
+  if (est.fase !== 'apuesta' || est.ficha > est.saldo) return;
+  est.saldo -= est.ficha; est.apostado = est.ficha; guardar();
+  ponerMonedas(est.ficha);
+  pintar();
+  if (est.lanza === 'yo') {
+    enLaMano(DELANTE);
+    $('lanzar-apuesta').textContent = `${plata(est.apostado)} a ${est.a}`;
+    est.fase = 'lanzar'; mesa('m-lanzar');
+    $('b-lanzar').focus({ preventScroll: true });
+  } else {
+    enLaMano(ENFRENTE);
+    est.fase = 'espera';
+    $('rueda-k').textContent = 'La banca sopla las canicas';
+    $('rueda-t').textContent = 'Y las tira de costado, como se debe.';
+    mesa('m-rueda');
+    setTimeout(() => lanzar(ENFRENTE + (Math.random() - .5) * .5, null, .25 + Math.random() * .7), 1000);
+  }
+}
+
+/* Lanzar: desde `origen` en el borde, hacia `angulo` (o de costado, al
+   azar, si no hay ángulo), con `fuerza` de 0 a 1. */
+function lanzar(origen, angulo, fuerza) {
+  if (angulo == null) {
+    const lado = Math.random() < .5 ? -1 : 1;
+    angulo = origen + Math.PI + lado * (.6 + Math.random() * .8);
+  }
+  tina = Tina.crear();
+  Tina.tirar(tina, origen, angulo, fuerza);
+  ponerCanicas(tina);
+  mano = null; resto = 0;
+  est.fase = 'rueda';
+  $('rueda-k').textContent = 'Ruedan';
+  $('rueda-t').textContent = est.a === 'pares' ? 'Que caiga en el redondo…' : 'Que caiga en la cajita…';
+  mesa('m-rueda');
+  sonar('pared', .7);
+}
+
+/* Cayó la primera: ya se sabe. Las demás siguen rodando, de adorno. */
+function decidir() {
+  const r = Tina.resultado(tina);
+  const sale = r.par ? 'pares' : 'nones', gano = sale === est.a;
+  (r.par ? brilloRedondo : brilloCajita).userData.encendido = true;
+  const donde = `Cayó una ${tina.primera.color} en ${r.par ? 'el redondo' : 'la cajita'}.`;
+  $('fin-suma').textContent = r.par ? 'Pares' : 'Nones';
+  if (gano) {
+    est.saldo += est.apostado * 2;
+    $('fin-texto').textContent = `${donde} Te duplican: te llevas ${plata(est.apostado * 2)}.`;
+  } else {
+    $('fin-texto').textContent = `${donde} La banca se queda con tus ${plata(est.apostado)}.`;
+  }
+  $('fin-badge').textContent = gano ? 'Ganas' : 'Pierdes';
+  $('fin-badge').className = 'badge ' + (gano ? 'badge-ok' : 'badge-danger');
+  est.apostado = 0;
+  ponerMonedas(0);
+  guardar(); pintar();
+  setTimeout(() => sonar(gano ? 'gana' : 'pierde'), 250);
+  est.fase = 'fin'; mesa('m-fin');
+  $('b-otra').focus({ preventScroll: true });
+}
+
+/* Ninguna cayó: el tiro no vale y se devuelve lo apostado. */
+function nulo() {
+  est.saldo += est.apostado; est.apostado = 0; guardar();
+  window.malDS && malDS.aviso('Ninguna cayó: el tiro no vale. Se repite.', '');
+  nuevaRonda();
+}
+
+function revisarPlata() {
+  if (est.saldo >= 25) return true;
+  $('c-limpio').hidden = false;
+  return false;
+}
+
+/* ─── los controles ────────────────────────────────────────── */
+document.querySelectorAll('[data-ficha]').forEach(b => b.addEventListener('click', () => { est.ficha = +b.dataset.ficha; guardar(); pintar(); }));
+document.querySelectorAll('[data-a]').forEach(b => b.addEventListener('click', () => { est.a = b.dataset.a; guardar(); pintar(); }));
+document.querySelectorAll('[data-lanza]').forEach(b => b.addEventListener('click', () => {
+  est.lanza = b.dataset.lanza; guardar(); pintar();
+  enLaMano(est.lanza === 'yo' ? DELANTE : ENFRENTE);
+}));
+$('b-apostar').addEventListener('click', apostar);
+$('b-otra').addEventListener('click', () => { if (revisarPlata()) nuevaRonda(); });
+$('b-fiado').addEventListener('click', () => { est.saldo += INICIAL; guardar(); $('c-limpio').hidden = true; nuevaRonda(); });
+$('b-jugar').addEventListener('click', () => { $('c-inicio').hidden = true; if (revisarPlata()) nuevaRonda(); });
+$('b-reglas').addEventListener('click', () => {
+  if (est.fase === 'rueda' || est.fase === 'espera' || est.fase === 'lanzar') return;
+  $('c-inicio').hidden = false; $('b-jugar').focus({ preventScroll: true });
+});
+const bs = $('b-sonido');
+const pintarSonido = () => bs.setAttribute('aria-pressed', String(est.sonido));
+bs.addEventListener('click', () => { est.sonido = !est.sonido; pintarSonido(); guardar(); });
+pintarSonido();
+
+// mantener y soltar: la carga va y viene en el medidor
+const carga = { activa: false, t: 0, valor: 0 };
+function cargar() { if (est.fase !== 'lanzar') return; carga.activa = true; carga.t = 0; carga.valor = 0; }
+function soltar() {
+  if (!carga.activa) return;
+  carga.activa = false; $('carga').style.width = '0';
+  lanzar(DELANTE + (Math.random() - .5) * .4, null, carga.valor);
+}
+const bl = $('b-lanzar');
+bl.addEventListener('pointerdown', e => { e.preventDefault(); bl.setPointerCapture(e.pointerId); cargar(); });
+bl.addEventListener('pointerup', soltar);
+bl.addEventListener('pointercancel', () => { carga.activa = false; $('carga').style.width = '0'; });
+bl.addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); cargar(); } });
+bl.addEventListener('keyup', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); soltar(); } });
+
+/* Deslizar: el dedo se proyecta sobre el piso. Las canicas salen del
+   borde más cercano a donde empieza el gesto, hacia donde va. */
+const rayo = new THREE.Raycaster(), piso = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), punto = new THREE.Vector3();
+function alPiso(e) {
+  const r = lienzo.getBoundingClientRect();
+  rayo.setFromCamera({ x: ((e.clientX - r.left) / r.width) * 2 - 1, y: -((e.clientY - r.top) / r.height) * 2 + 1 }, camara);
+  return rayo.ray.intersectPlane(piso, punto) ? { x: punto.x, z: punto.z } : null;
+}
+const guia = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]),
+  new THREE.LineDashedMaterial({ color: 0xffc93c, dashSize: .04, gapSize: .03 }));
+guia.visible = false; escena.add(guia);
+let gesto = null;
+lienzo.addEventListener('pointerdown', e => {
+  if (est.fase !== 'lanzar') return;
+  const p = alPiso(e); if (!p) return;
+  const origen = Math.atan2(p.z, p.x);
+  enLaMano(origen);
+  gesto = { origen, pts: [{ ...p, t: e.timeStamp }] };
+  lienzo.setPointerCapture(e.pointerId);
+});
+lienzo.addEventListener('pointermove', e => {
+  if (!gesto) return;
+  const p = alPiso(e); if (!p) return;
+  gesto.pts.push({ ...p, t: e.timeStamp });
+  if (gesto.pts.length > 12) gesto.pts.shift();
+  const o = gesto.origen;
+  guia.geometry.setFromPoints([new THREE.Vector3(Math.cos(o) * .95, .02, Math.sin(o) * .95), new THREE.Vector3(p.x, .02, p.z)]);
+  guia.computeLineDistances(); guia.visible = true;
+});
+lienzo.addEventListener('pointerup', e => {
+  if (!gesto) return;
+  const g = gesto; gesto = null; guia.visible = false;
+  const ult = g.pts[g.pts.length - 1], ahora = e.timeStamp;
+  const pri = g.pts.find(p => ult.t - p.t < 110) || g.pts[0];
+  const dt = Math.max(16, ult.t - pri.t) / 1000;
+  const vx = (ult.x - pri.x) / dt, vz = (ult.z - pri.z) / dt, v = Math.hypot(vx, vz);
+  if (v < .6 || ahora - ult.t > 150) { window.malDS && malDS.aviso('Más rápido: desliza y suelta', ''); return; }
+  // hacia adentro: como mucho a 80° de la dirección al centro
+  const dentro = g.origen + Math.PI;
+  let dif = Math.atan2(vz, vx) - dentro;
+  dif = Math.atan2(Math.sin(dif), Math.cos(dif));
+  const tope = 80 * Math.PI / 180;
+  dif = Math.max(-tope, Math.min(tope, dif));
+  lanzar(g.origen, dentro + dif, Math.min(1, Math.max(0, (v - .6) / 5)));
+});
+lienzo.addEventListener('pointercancel', () => { gesto = null; guia.visible = false; });
+
+window.addEventListener('resize', medir);
+enLaMano(est.lanza === 'yo' ? DELANTE : ENFRENTE);
+pintar(); medir();
+requestAnimationFrame(t => { antes = t; cuadro(t); });
+</script>
+</body>
+</html>
