@@ -49,7 +49,7 @@ body.modo-regalo .taller{display:none}
 .herramientas .fila{display:flex;flex-wrap:wrap;gap:var(--mal-e2)}
 .chip--s{min-height:40px;padding-inline:.8rem}
 .herramientas__acc{display:flex;flex-direction:column;gap:var(--mal-e3);padding-top:var(--mal-e2);border-top:var(--mal-separador)}
-.herramientas__acc .fila{justify-content:space-between}
+.herramientas__acc .fila{justify-content:space-between;flex-wrap:wrap;gap:var(--mal-e2)}
 
 /* la paleta: una gota de cada crema */
 .cremas{display:grid;grid-template-columns:repeat(8, minmax(0, 1fr));gap:var(--mal-e2)}
@@ -64,7 +64,46 @@ body.modo-regalo .taller{display:none}
 .crema[aria-pressed="true"]{box-shadow:inset 0 -4px 0 rgba(0,0,0,.14), 0 0 0 3px var(--mal-bg), 0 0 0 6px var(--mal-primary);transform:scale(1.06)}
 .crema:focus-visible{outline:2px solid var(--mal-primary);outline-offset:3px}
 .taller[data-herramienta="grageas"] .grupo--crema,
+.taller[data-herramienta="pasa"] .grupo--crema,
+.taller[data-herramienta="carita"] .grupo--crema,
 .taller[data-herramienta="mordisco"] .grupo--crema{opacity:.55}
+.taller:not([data-herramienta="carita"]) .grupo--carita{display:none}
+.taller:not([data-herramienta="chorizo"]) .grupo--grosor{opacity:.55}
+.etapa{display:flex;flex-direction:column;gap:var(--mal-e5)}
+.etapa[hidden]{display:none}
+
+/* las tres etapas, como un camino */
+.etapas{display:flex;gap:var(--mal-e2);list-style:none;padding:0;margin:0 0 var(--mal-e4);flex-wrap:wrap}
+.etapas button{
+  display:inline-flex;align-items:center;gap:.5rem;min-height:44px;padding:0 1rem 0 .4rem;cursor:pointer;
+  border-radius:var(--mal-r-full);border:var(--mal-borde-fuerte);background:var(--mal-surface);
+  color:var(--mal-on-surface-2);font:600 var(--mal-t-caption) var(--mal-texto);
+}
+.etapas button span{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;
+  background:var(--mal-bg-2);color:var(--mal-on-surface);font-weight:800}
+.etapas button[aria-current]{border-color:var(--mal-primary);color:var(--mal-on-surface)}
+.etapas button[aria-current] span{background:var(--mal-primary);color:var(--mal-on-primary)}
+.etapas button.hecha span{background:var(--mal-ok);color:#fff}
+.etapas button:disabled{opacity:.45;cursor:not-allowed}
+
+/* el horno */
+.mesa.en-horno{background:radial-gradient(circle at 50% 70%, #ff9a3c 0, #c2410c 38%, #3b1206 85%)}
+.mesa.en-horno::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  box-shadow:inset 0 0 0 14px #2b2129, inset 0 0 0 18px #6b6f76, inset 0 0 80px rgba(255,140,30,.55)}
+.taller[data-etapa="amasar"] .mesa__giro{display:none}
+.taller[data-etapa="amasar"] .lienzo{cursor:copy}
+.taller[data-etapa="amasar"][data-herramienta="mover"] .lienzo{cursor:move}
+.taller[data-etapa="horno"] .lienzo{cursor:grab}
+.horno__estado{font-family:var(--mal-display);font-weight:800;font-size:var(--mal-t-h2);margin:0;line-height:1}
+.termo{position:relative;height:22px;border-radius:999px;overflow:hidden;border:var(--mal-borde-fuerte);
+  background:linear-gradient(90deg, #f1e4c8 0%, #e8b062 45%, #c77a2c 62%, #5a2a0c 80%, #1a0d06 100%)}
+.termo__punto{position:absolute;top:0;bottom:0;left:57.5%;width:10%;border-inline:2px solid #fff;
+  background:rgba(255,255,255,.28)}
+.termo__nivel{position:absolute;top:-2px;bottom:-2px;left:0;width:0;border-right:4px solid var(--mal-on-surface);
+  box-shadow:4px 0 0 rgba(255,255,255,.6)}
+.termo__escala{display:flex;justify-content:space-between;margin:-.6rem 0 0}
+.horno__fin{display:flex;flex-direction:column;gap:var(--mal-e3)}
+.horno__veredicto{font-family:var(--mal-display);font-weight:700;font-size:var(--mal-t-h4);margin:0}
 
 /* ─── cuando te llega una ─────────────────────────────────── */
 .regalo{
