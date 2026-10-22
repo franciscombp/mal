@@ -19,7 +19,7 @@
      · La crema es un tubo con sección de boquilla de estrella que
        se apoya sobre lo que tocaste, siguiendo la normal.
      · El mordisco y el horno los hace el shader: uno descarta lo
-       que cae en la mordida y pinta de miga el revés; el otro
+       que cae en la mordida, de lado a lado, y pinta de miga el revés; el otro
        mezcla la masa cruda con el dorado (y con el carbón).
    ══════════════════════════════════════════════════════════════ */
 import * as THREE from 'three';
@@ -73,7 +73,8 @@ const NOMBRES = {
   gallinita: ['Cocoroca', 'Pinta', 'Pollita', 'Josefina', 'Plumita', 'Clueca'],
   libre: ['Criatura', 'Animalito', 'Sorpresa', 'Bichito', 'Invento', 'Misterio'],
 };
-NOMBRES.envuelta = NOMBRES.guagua;
+NOMBRES.tradicional = NOMBRES.guagua;
+NOMBRES.guaguau = ['Firulais', 'Canelo', 'Pulgoso', 'Tobi', 'Manchas', 'Pelusa', 'Bobby', 'Chocolate', 'Lazarillo'];
 const MENSAJES = [
   'Para que este 2 de noviembre no te falte guagua.',
   'Con colada morada sabe mejor. Te la mando para acompañar.',
@@ -151,11 +152,29 @@ const MOLDES = {
       bolita(V(0, 3.48, 0.04), V(0.46, 0.48, 0.42)),       // la cabeza
     ];
   },
-  // la de panadería: un solo pan alargado con la cabeza en la punta
-  envuelta() {
+  // la de panadería: más larga, y el bulto de los pies termina en colita cónica
+  tradicional() {
     return [
-      chorizo(0.6, [V(0, 0.5, 0), V(0, 2.62, 0)]),
-      bolita(V(0, 2.98, 0.06), V(0.52, 0.54, 0.47)),
+      bolita(V(0, 0.4, 0), V(0.17, 0.38, 0.16)),           // la punta de la colita
+      bolita(V(0, 1.05, 0), V(0.4, 0.78, 0.34)),           // la colita
+      bolita(V(0, 2.25, 0), V(0.62, 1.0, 0.47)),           // el cuerpo envuelto, con hombros
+      bolita(V(0, 3.2, 0), V(0.27, 0.14, 0.27)),           // el cuello
+      bolita(V(0, 3.6, 0.04), V(0.46, 0.48, 0.42)),        // la cabeza
+    ];
+  },
+  // un perrito echado, con la panza en la lata, de perfil
+  guaguau() {
+    return [
+      bolita(V(-1.72, 0.36, 0), V(0.26, 0.16, 0.15), 0.12),   // la punta de la cola
+      bolita(V(-1.2, 0.45, 0), V(0.55, 0.3, 0.28), 0.1),      // la cola
+      bolita(V(-0.1, 0.55, 0), V(1.25, 0.53, 0.5)),            // el lomo
+      bolita(V(-0.55, 0.2, 0.36), V(0.32, 0.17, 0.14)),        // la pata de atrás
+      chorizo(0.13, [V(0.75, 0.15, 0.3), V(1.6, 0.13, 0.3)]),  // las patitas de adelante
+      chorizo(0.13, [V(0.75, 0.15, -0.25), V(1.55, 0.13, -0.25)]),
+      bolita(V(1.3, 0.92, 0.04), V(0.5, 0.48, 0.46)),          // la cabeza
+      bolita(V(1.76, 0.78, 0.04), V(0.27, 0.21, 0.25)),        // el hocico
+      bolita(V(1.12, 0.8, 0.42), V(0.15, 0.33, 0.1), -0.3),    // la oreja que se ve
+      bolita(V(1.12, 0.8, -0.38), V(0.15, 0.33, 0.1), -0.3),   // la otra oreja
     ];
   },
   caballito() {
@@ -453,6 +472,7 @@ function comestible(mat, U, horno) {
   mat.onBeforeCompile = (sh) => {
     sh.uniforms.uBocados = U.uBocados;
     sh.uniforms.uNBocados = U.uNBocados;
+    sh.uniforms.uBoca = U.uBoca;
     sh.uniforms.uCoccion = U.uCoccion;
     sh.vertexShader = sh.vertexShader
       .replace('#include <common>', '#include <common>\nvarying vec3 vMundo;')
@@ -467,12 +487,14 @@ function comestible(mat, U, horno) {
         varying vec3 vMundo;
         uniform vec4 uBocados[${MAX_BOCADOS}];
         uniform int uNBocados;
+        uniform mat3 uBoca;
         uniform float uCoccion;`)
       .replace('void main() {', `void main() {
         for (int i = 0; i < ${MAX_BOCADOS}; i++) {
           if (i >= uNBocados) break;
-          vec3 d = vMundo - uBocados[i].xyz;
-          float dientes = 1.0 + 0.08 * sin(16.0 * atan(d.y, d.x + d.z * 0.7));
+          // el mordisco atraviesa todo el grosor del pan, de adelante atrás
+          vec2 d = (uBoca * (vMundo - uBocados[i].xyz)).xy;
+          float dientes = 1.0 + 0.08 * sin(16.0 * atan(d.y, d.x));
           if (length(d) < uBocados[i].w * dientes) discard;
         }`)
       .replace('#include <color_fragment>', `#include <color_fragment>
@@ -530,6 +552,7 @@ class Visor {
     this.U = {
       uBocados: { value: Array.from({ length: MAX_BOCADOS }, () => new THREE.Vector4()) },
       uNBocados: { value: 0 },
+      uBoca: { value: new THREE.Matrix3() },   // del mundo a los ejes de la figura
       uCoccion: { value: 1 },
     };
     this.mat = materiales(this.U);
@@ -1015,6 +1038,9 @@ class Visor {
     this.camara.position.set(o.x, o.y + Math.sin(this.cabeceo) * this.dist, o.z + Math.cos(this.cabeceo) * this.dist);
     this.camara.lookAt(o);
     // los mordiscos viven en la figura: se llevan al mundo en cada cuadro
+    const e = this.acostada.matrixWorld.elements;
+    const ex = V(e[0], e[1], e[2]).normalize(), ey = V(e[4], e[5], e[6]).normalize(), ez = V(e[8], e[9], e[10]).normalize();
+    this.U.uBoca.value.set(ex.x, ex.y, ex.z, ey.x, ey.y, ey.z, ez.x, ez.y, ez.z);
     this.bocados().forEach((op, i) => {
       const p = this.acostada.localToWorld(V(op[1] / Q, op[2] / Q, op[3] / Q));
       this.U.uBocados.value[i].set(p.x, p.y, p.z, MORDIDA);
@@ -1180,7 +1206,7 @@ function veredicto(e) {
   else if (grag > trazos + rosetas) frase = 'Llena de grageas: alegre y de fiesta.';
   else if (colores === 1 && trazos > 4) frase = 'Sobria y elegante, de un solo color.';
   else if (e.f === 'libre' && e.a.length > 3) frase = 'Una figura propia, hecha a mano. Así empiezan las tradiciones.';
-  else if (!cara && (e.f === 'guagua' || e.f === 'envuelta')) frase = 'Bonita, aunque le falta la carita. Toca su cara con Carita y píntale ojos y sonrisa.';
+  else if (!cara && (e.f === 'guagua' || e.f === 'tradicional')) frase = 'Bonita, aunque le falta la carita. Toca su cara con Carita y píntale ojos y sonrisa.';
   else if (e.f === 'caballito') frase = 'Un caballito bien adornado, listo para la mesa.';
   else frase = elige([
     'Muy bonita. Así se decoraban en casa de la abuela.',
@@ -1244,8 +1270,8 @@ function colada(ctx, x, y, s) {
   }
   ctx.restore();
 }
-const queEs = (e) => ({ guagua: 'una guagua', envuelta: 'una guagua', caballito: 'un caballito', chanchito: 'un chanchito', gallinita: 'una gallinita' }[e.f] || 'un animalito');
-const nombreDe = (e) => e.n || ({ guagua: 'Guagua', envuelta: 'Guagua', caballito: 'Caballito', chanchito: 'Chanchito', gallinita: 'Gallinita' }[e.f] || 'Animalito');
+const queEs = (e) => ({ guagua: 'una guagua', tradicional: 'una guagua', guaguau: 'un guaguau', caballito: 'un caballito', chanchito: 'un chanchito', gallinita: 'una gallinita' }[e.f] || 'un animalito');
+const nombreDe = (e) => e.n || ({ guagua: 'Guagua', tradicional: 'Guagua', guaguau: 'Guaguau', caballito: 'Caballito', chanchito: 'Chanchito', gallinita: 'Gallinita' }[e.f] || 'Animalito');
 async function tarjeta(e) {
   try { await Promise.all([document.fonts.load('800 80px Syne'), document.fonts.load('600 30px Inter'), document.fonts.load('italic 400 30px Inter')]); } catch (err) { /* sin fuentes, igual sale */ }
   const c = lienzo(1080, 1350);
@@ -1849,7 +1875,7 @@ function montarTaller() {
   });
   $('#sorpresa').addEventListener('click', () => {
     if (estado.etapa === 'amasar') {
-      const f = elige(['guagua', 'caballito', 'chanchito', 'gallinita'].filter((x) => x !== estado.f));
+      const f = elige(['guagua', 'tradicional', 'guaguau', 'caballito', 'chanchito', 'gallinita'].filter((x) => x !== estado.f));
       $(`[data-molde="${f}"]`).click();
       return;
     }
@@ -1936,8 +1962,16 @@ function sorpresa() {
      ondas, espirales y puntitos en el cuerpo, sin tocar la cabeza. */
   const cabezas = estado.a.filter((p) => p[0] === 0 && Math.min(p[4], p[5]) > 25);
   const alta = cabezas.length ? cabezas.reduce((a, b) => (b[2] > a[2] ? b : a)) : null;
-  const techo = alta ? Math.min(max.y - Al * 0.12, (alta[2] - alta[5] * 0.95) / Q * esc) : max.y - Al * 0.25;
-  const piso = min.y + Al * 0.1;
+  // de frente (guagua) la cabeza va arriba; de perfil (animalito), a un lado
+  const centro = (min.x + max.x) / 2;
+  const deFrente = alta && Math.abs(alta[1] / Q * esc - centro) < An * 0.15;
+  let x0 = min.x, x1 = max.x;
+  if (alta && !deFrente) {
+    const borde = (alta[1] - Math.sign(alta[1] / Q * esc - centro) * alta[4] * 0.9) / Q * esc;
+    if (alta[1] / Q * esc > centro) x1 = borde; else x0 = borde;
+  }
+  const techo = deFrente ? Math.min(max.y - Al * 0.12, (alta[2] - alta[5] * 0.95) / Q * esc) : max.y - Al * (alta ? 0.1 : 0.25);
+  const piso = min.y + Al * 0.1, Ax = x1 - x0;
   const colores = [1, 2, 3, 4, 5, 6, 0].sort(() => r() - 0.5).slice(0, 3);
   const franjas = Math.max(2, Math.min(5, Math.round((techo - piso) / 0.45)));
   const alto = (techo - piso) / franjas;
@@ -1946,18 +1980,18 @@ function sorpresa() {
     const y = piso + alto * (f + 0.5), c = colores[f % colores.length];
     const w = r() < 0.85 ? 0 : 1;
     switch (Math.floor(r() * 5)) {
-      case 0: linea(c, w, (t, i) => [min.x + An * t, y + (i % 2 ? amp : -amp)], 22); break;
-      case 1: linea(c, w, (t) => [min.x + An * t, y + Math.sin(t * Math.PI * 8) * amp], 60); break;
+      case 0: linea(c, w, (t, i) => [x0 + Ax * t, y + (i % 2 ? amp : -amp)], 22); break;
+      case 1: linea(c, w, (t) => [x0 + Ax * t, y + Math.sin(t * Math.PI * 8) * amp], 60); break;
       case 2: linea(c, w, (t) => {
         const a = t * Math.PI * 2 * 7;
-        return [min.x + An * t + Math.cos(a) * amp * 0.7, y + Math.sin(a) * amp];
+        return [x0 + Ax * t + Math.cos(a) * amp * 0.7, y + Math.sin(a) * amp];
       }, 110); break;
       case 3: for (let i = 1; i < 9; i++) {
-        const h = golpe(min.x + An * i / 9, y);
+        const h = golpe(x0 + Ax * i / 9, y);
         if (h) ops.push([1, i % 2 ? c : colores[(f + 1) % colores.length], 0, ...pn(h)]);
       } break;
       default: [0.3, 0.7].forEach((u) => {
-        const cx = min.x + An * u;
+        const cx = x0 + Ax * u;
         linea(c, w, (t) => {
           const a = t * Math.PI * 2 * 2.5, rr = amp * 1.1 * t;
           return [cx + Math.cos(a) * rr, y + Math.sin(a) * rr];
@@ -1968,7 +2002,7 @@ function sorpresa() {
   if (r() < 0.5) {
     const g = [2, Math.floor(r() * 1e9)];
     for (let i = 0; i < 8; i++) {
-      const h = golpe(min.x + An * (0.2 + r() * 0.6), piso + (techo - piso) * r());
+      const h = golpe(x0 + Ax * (0.2 + r() * 0.6), piso + (techo - piso) * r());
       if (h) g.push(...pn(h));
     }
     if (g.length > 2) ops.push(g);
@@ -1979,8 +2013,7 @@ function sorpresa() {
   if (!alta || tieneCara(estado)) return ops;
   const cab = alta;
   const cx = cab[1] / Q * esc, cy = cab[2] / Q * esc, rx = cab[4] / Q, ry = cab[5] / Q;
-  const centro = (min.x + max.x) / 2;
-  if (Math.abs(cx - centro) < An * 0.15) {
+  if (deFrente) {
     const h = golpe(cx, cy - ry * 0.05);
     if (!h) return ops;
     caraPintada(h, rx > 0.6 ? 2 : 1).forEach((op) => ops.push(op));
