@@ -104,9 +104,28 @@
     }
     return r;
   }
+  /* Esfera o cúpula de pocas caras: se ve tallada, como el resto. */
+  function esfera(c, r, desde, partes = 6, gajos = 12) {
+    const vs = [], caras = [];
+    const idx = (i, j) => i * gajos + (j % gajos);
+    for (let i = 0; i <= partes; i++) {
+      const lat = desde + ((Math.PI / 2 - desde) * i) / partes;
+      for (let j = 0; j < gajos; j++) {
+        const lon = (j / gajos) * Math.PI * 2;
+        vs.push(v3(c.x + r * Math.cos(lat) * Math.cos(lon), c.y + r * Math.cos(lat) * Math.sin(lon), c.z + r * Math.sin(lat)));
+      }
+    }
+    for (let i = 0; i < partes; i++)
+      for (let j = 0; j < gajos; j++) caras.push([idx(i, j), idx(i, j + 1), idx(i + 1, j + 1), idx(i + 1, j)]);
+    caras.push(Array.from({ length: gajos }, (_, j) => idx(0, gajos - 1 - j)));
+    return { vs, caras };
+  }
   function solidosDe(pz) {
     if (pz.t === 'esc') return escalera(pz);
-    if (pz.t === 'techo') return [piramide(pz.x, pz.y, pz.z, 0.9)];
+    if (pz.t === 'techo') return [piramide(pz.x, pz.y, pz.z, pz.alto || 0.9)];
+    if (pz.t === 'cupula') return [esfera(v3(pz.x + 0.5, pz.y + 0.5, pz.z), 0.42, 0, 3, 12)];
+    if (pz.t === 'globo') return [esfera(v3(pz.x + 0.5, pz.y + 0.5, pz.z + 0.45), 0.42, -Math.PI / 2, 6, 12)];
+    if (pz.t === 'figura') return [];
     return [caja(pz.x, pz.y, pz.z, 1, 1, 1)];
   }
 
@@ -128,7 +147,7 @@
   let ganado = false, depurar = false, toques = [];
   let tiempo = 0;
 
-  function cargar(i) {
+  function cargar(i, conRelato) {
     indice = Math.max(0, Math.min(NIVELES.length - 1, i));
     nivel = NIVELES[indice];
     paleta = Object.fromEntries(Object.entries(nivel.paleta).map(([k, v]) => [k, typeof v === 'string' ? hex(v) : v]));
@@ -147,7 +166,7 @@
     construir();
     const n = nodoDePieza(inicioPz);
     quien = { nodo: n, pos: { ...n.pos }, ruta: [], seg: null, mira: 1, paso: 0, brillo: 0 };
-    interfaz();
+    interfaz(conRelato);
   }
 
   /* ─── el grafo: qué se puede caminar y qué se ve unido ──────── */
@@ -241,6 +260,11 @@
       }
     }
     if (!conIds) {
+      for (const pz of piezas) {
+        if (pz.t !== 'figura') continue;
+        const p = transformador(grupos[pz.g], grupoValor(grupos[pz.g])).p(v3(pz.x + 0.5, pz.y + 0.5, pz.z));
+        items.push({ prof: p.x + p.y + p.z + 0.1, tipo: 'figura', pz, p });
+      }
       for (const g of Object.values(grupos)) items.push(manijaItem(g));
       if (metaPz) {
         const T = transformador(grupos[metaPz.g], grupoValor(grupos[metaPz.g]));
@@ -394,35 +418,115 @@
     return mejor;
   }
 
-  /* ─── el personaje ─────────────────────────────────────────── */
+  /* ─── el personaje: un chasqui, el mensajero del Qhapaq Ñan ── */
   function pintarQuien(p) {
     const s = proy(p), k = S / 48;
+    const andar = quien.seg ? Math.sin(quien.paso * Math.PI * 2) : 0;
     const bob = quien.seg ? Math.abs(Math.sin(quien.paso * Math.PI)) * 2.5 * k : Math.sin(tiempo * 2) * 0.6 * k;
     const sube = quien.brillo * 30 * k;
     ctx.save();
     ctx.translate(s.x, s.y - bob - sube);
     ctx.scale(quien.mira * k, k);
     ctx.globalAlpha = 1 - quien.brillo * 0.8;
-    ctx.fillStyle = 'rgba(0,0,0,.12)';
+    ctx.fillStyle = 'rgba(0,0,0,.14)';
     ctx.beginPath(); ctx.ellipse(0, bob / k + sube / k, 9, 4, 0, 0, Math.PI * 2); ctx.fill();
-    // túnica
-    ctx.fillStyle = '#fbfaf7';
-    ctx.beginPath(); ctx.moveTo(-9, 0); ctx.lineTo(9, 0); ctx.lineTo(3.5, -24); ctx.lineTo(-3.5, -24); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = '#e4e0d8';
-    ctx.beginPath(); ctx.moveTo(1, 0); ctx.lineTo(9, 0); ctx.lineTo(3.5, -24); ctx.lineTo(1, -24); ctx.closePath(); ctx.fill();
-    // bufanda
-    ctx.fillStyle = rgb(paleta.o);
-    ctx.fillRect(-4.5, -25, 9, 3.5);
-    ctx.beginPath(); ctx.moveTo(-4, -22); ctx.lineTo(-9, -15); ctx.lineTo(-6, -14); ctx.lineTo(-1.5, -22); ctx.fill();
-    // cabeza
-    ctx.fillStyle = '#fbfaf7';
-    ctx.beginPath(); ctx.arc(0, -29, 5, 0, Math.PI * 2); ctx.fill();
-    // gorro
-    ctx.beginPath(); ctx.moveTo(-6, -30); ctx.lineTo(6, -30); ctx.lineTo(0.5, -46); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = '#e4e0d8';
-    ctx.beginPath(); ctx.moveTo(1, -30); ctx.lineTo(6, -30); ctx.lineTo(0.5, -46); ctx.closePath(); ctx.fill();
+    // piernas
+    ctx.fillStyle = '#3a2a24';
+    ctx.fillRect(-4.5 + andar * 1.5, -10, 3, 10);
+    ctx.fillRect(1.5 - andar * 1.5, -10, 3, 10);
+    // poncho
+    ctx.fillStyle = '#b8322a';
+    ctx.beginPath(); ctx.moveTo(-6, -27); ctx.lineTo(6, -27); ctx.lineTo(10.5, -9); ctx.lineTo(-10.5, -9); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#8f2620';
+    ctx.beginPath(); ctx.moveTo(1, -27); ctx.lineTo(6, -27); ctx.lineTo(10.5, -9); ctx.lineTo(1, -9); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#f2c14e';
+    ctx.fillRect(-9.2, -14, 18.4, 1.8);
+    ctx.fillRect(-7.6, -20, 15.2, 1.4);
+    // quipu: el mensaje que lleva
+    ctx.strokeStyle = '#f2e3c2'; ctx.lineWidth = 1;
+    for (const [dx, largo, col] of [[8.5, 9, '#f2e3c2'], [10, 11, '#d98a3d'], [11.5, 8, '#f2e3c2']]) {
+      ctx.strokeStyle = col;
+      ctx.beginPath(); ctx.moveTo(dx, -13); ctx.lineTo(dx + andar * 0.6, -13 + largo); ctx.stroke();
+    }
+    // cabeza y pelo
+    ctx.fillStyle = '#2b2422';
+    ctx.beginPath(); ctx.arc(-0.8, -31, 5.4, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#b5815a';
+    ctx.beginPath(); ctx.arc(0.6, -31, 4.6, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = '#2b2a33';
-    ctx.beginPath(); ctx.arc(2.2, -28.5, 0.9, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(2.6, -31, 0.9, 0, Math.PI * 2); ctx.fill();
+    // sombrero de paja toquilla
+    ctx.fillStyle = '#efe2bf';
+    ctx.beginPath(); ctx.ellipse(0, -35, 10, 2.8, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(-5, -35); ctx.lineTo(-4.5, -41); ctx.quadraticCurveTo(0, -43.5, 4.5, -41); ctx.lineTo(5, -35); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#d9c897';
+    ctx.beginPath(); ctx.moveTo(1, -35); ctx.lineTo(1, -42.5); ctx.quadraticCurveTo(3.5, -42.5, 4.5, -41); ctx.lineTo(5, -35); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#2b2a33';
+    ctx.fillRect(-4.9, -37.4, 9.8, 1.8);
+    ctx.restore();
+  }
+
+  /* La Virgen del Panecillo, alada, en aluminio. Es decoración: no se pisa. */
+  function pintarVirgen(p) {
+    const s = proy(p), k = S / 48;
+    const claro = '#e6eaef', medio = '#c3cad3', oscuro = '#9aa4b0', linea = 'rgba(70,80,95,.35)';
+    ctx.save();
+    ctx.translate(s.x, s.y);
+    ctx.scale(k, k);
+    ctx.lineWidth = 1; ctx.strokeStyle = linea;
+    // el mundo bajo sus pies
+    ctx.fillStyle = medio;
+    ctx.beginPath(); ctx.ellipse(0, -4, 13, 7, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    // alas
+    const ala = (sx, col) => {
+      ctx.fillStyle = col;
+      ctx.beginPath();
+      ctx.moveTo(sx * 5, -70);
+      ctx.bezierCurveTo(sx * 20, -78, sx * 30, -98, sx * 27, -126);
+      ctx.lineTo(sx * 22, -112); ctx.lineTo(sx * 21, -118); ctx.lineTo(sx * 16, -102); ctx.lineTo(sx * 14, -107);
+      ctx.bezierCurveTo(sx * 12, -92, sx * 8, -84, sx * 4, -80);
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+    };
+    ala(-1, medio);
+    ala(1, oscuro);
+    // manto, en curva: está bailando
+    ctx.fillStyle = claro;
+    ctx.beginPath();
+    ctx.moveTo(-12, -8);
+    ctx.quadraticCurveTo(-15, -40, -6, -60);
+    ctx.lineTo(-7, -74); ctx.quadraticCurveTo(0, -80, 7, -74); ctx.lineTo(7, -60);
+    ctx.quadraticCurveTo(16, -36, 12, -8);
+    ctx.quadraticCurveTo(0, -3, -12, -8);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = medio;
+    ctx.beginPath();
+    ctx.moveTo(1, -78); ctx.quadraticCurveTo(5, -78, 7, -74); ctx.lineTo(7, -60);
+    ctx.quadraticCurveTo(16, -36, 12, -8); ctx.quadraticCurveTo(6, -5.5, 2, -5.5);
+    ctx.quadraticCurveTo(8, -36, 1, -78); ctx.fill();
+    // brazo alzado
+    ctx.strokeStyle = claro; ctx.lineWidth = 3; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(-5, -72); ctx.quadraticCurveTo(-14, -66, -16, -78); ctx.stroke();
+    // cabeza y corona de estrellas
+    ctx.fillStyle = claro; ctx.lineWidth = 1; ctx.strokeStyle = linea;
+    ctx.beginPath(); ctx.arc(0, -85, 5.5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#f4e3a1';
+    for (let i = 0; i < 12; i++) {
+      const a = Math.PI + (i / 11) * Math.PI;
+      ctx.beginPath(); ctx.arc(Math.cos(a) * 9, -88 + Math.sin(a) * 6, 1.3, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  /* La línea equinoccial pintada sobre las losas. */
+  function pintarFranja(pz) {
+    const T = transformador(grupos[pz.g], grupoValor(grupos[pz.g]));
+    const d = EJES[pz.franja], c = T.p(v3(pz.x + 0.5, pz.y + 0.5, pz.z + 1));
+    const a = proy(suma(c, escala(T.v(d), 0.5))), b = proy(suma(c, escala(T.v(d), -0.5)));
+    if (T.v(EJES.z).z < 0.9) return;
+    ctx.save();
+    ctx.strokeStyle = rgb(paleta.linea || paleta.o);
+    ctx.lineWidth = Math.max(2, S * 0.1);
+    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
     ctx.restore();
   }
 
@@ -459,7 +563,8 @@
 
     const colorCara = (n, it) => sombra(it.base, n);
     for (const it of escena(false)) {
-      if (it.tipo === 'solido') pintarCaras(ctx, it, colorCara);
+      if (it.tipo === 'solido') { pintarCaras(ctx, it, colorCara); if (it.pz.franja) pintarFranja(it.pz); }
+      else if (it.tipo === 'figura') pintarVirgen(it.p);
       else if (it.tipo === 'manija') pintarManija(it);
       else if (it.tipo === 'meta') pintarMeta(it.p);
       else if (it.tipo === 'quien') pintarQuien(it.p);
@@ -551,7 +656,6 @@
       sonido.ganar();
       guardarAvance(indice + 1);
       setTimeout(() => { $('fin').hidden = false; $('fin-siguiente').focus(); }, quieto ? 200 : 1400);
-      interfaz();
     }
   }
 
@@ -660,7 +764,7 @@
     lienzo.style.cursor = 'pointer';
     let destino;
     if (g.tipo === 'gira') {
-      if (!a.movido) destino = g.min !== undefined ? (a.v0 === g.max ? g.min : g.max) : a.v0 + 90;
+      if (!a.movido) destino = g.min !== undefined && a.v0 + 90 > g.max ? g.min : a.v0 + 90;
       else destino = Math.round(a.valor / 90) * 90;
       if (a.lleva && g.eje !== 'z') { destino = a.v0; sonido.no(); }
       if (g.min !== undefined) destino = Math.max(g.min, Math.min(g.max, destino));
@@ -759,36 +863,75 @@
   function guardarAvance(n) {
     try { if (n > avance()) localStorage.setItem('umbral.avance', String(n)); } catch (e) { /* sin almacenamiento */ }
   }
-  const ROMANOS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
-  function interfaz() {
-    $('nivel-num').textContent = ROMANOS[indice] || String(indice + 1);
-    $('nivel-nombre').textContent = nivel.nombre;
-    const pista = $('pista');
-    pista.textContent = nivel.pista;
-    pista.classList.remove('ver');
-    void pista.offsetWidth;
-    pista.classList.add('ver');
-    const lista = $('niveles');
-    const hasta = Math.max(avance(), indice);
-    lista.replaceChildren(...NIVELES.map((nv, i) => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.textContent = ROMANOS[i] || String(i + 1);
-      b.title = nv.nombre;
-      b.setAttribute('aria-label', `Nivel ${i + 1}: ${nv.nombre}`);
-      if (i === indice) b.setAttribute('aria-current', 'true');
-      b.disabled = i > hasta;
-      b.addEventListener('click', () => cargar(i));
-      return b;
-    }));
+  const ROMANOS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+  const romano = (i) => ROMANOS[i] || String(i + 1);
+  /* El primer nivel de cada capítulo siempre está abierto. */
+  const abierto = (i) => i <= Math.max(avance(), indice) || i === 0 || NIVELES[i - 1].capitulo !== NIVELES[i].capitulo;
+
+  function pista() {
+    const el = $('pista');
+    el.textContent = nivel.pista;
+    el.classList.remove('ver');
+    void el.offsetWidth;
+    el.classList.add('ver');
+  }
+  function interfaz(conRelato) {
+    $('nivel-num').textContent = romano(indice);
+    $('nivel-nombre').textContent = `${nivel.capitulo} · ${nivel.nombre}`;
     $('fin').hidden = true;
     const ultimo = indice === NIVELES.length - 1;
-    $('fin-titulo').textContent = ultimo ? 'Fin del camino' : 'Umbral cruzado';
+    const cierraCapitulo = ultimo || NIVELES[indice + 1].capitulo !== nivel.capitulo;
+    $('fin-titulo').textContent = ultimo ? 'Fin del camino' : cierraCapitulo ? `Fin de «${nivel.capitulo}»` : 'Umbral cruzado';
     $('fin-texto').textContent = ultimo ? 'Gracias por mirar con atención.' : `Has terminado «${nivel.nombre}».`;
-    $('fin-siguiente').textContent = ultimo ? 'Volver a empezar' : 'Siguiente';
+    $('fin-dato').textContent = nivel.dato || '';
+    $('fin-dato').hidden = !nivel.dato;
+    $('fin-siguiente').textContent = ultimo ? 'Volver a empezar' : cierraCapitulo ? `Seguir: ${NIVELES[indice + 1].capitulo}` : 'Siguiente';
     $('sonido').setAttribute('aria-pressed', String(sonido.activo));
+    if (conRelato && nivel.relato) {
+      $('relato-cap').textContent = `${nivel.capitulo} · ${romano(indice)}`;
+      $('relato-titulo').textContent = nivel.nombre;
+      $('relato-texto').textContent = nivel.relato;
+      $('relato').hidden = false;
+      $('relato-empezar').focus();
+      $('pista').classList.remove('ver');
+    } else {
+      $('relato').hidden = true;
+      pista();
+    }
   }
-  $('fin-siguiente').addEventListener('click', () => cargar(indice === NIVELES.length - 1 ? 0 : indice + 1));
+  function panel() {
+    const caps = [];
+    NIVELES.forEach((nv, i) => {
+      let c = caps[caps.length - 1];
+      if (!c || c.nombre !== nv.capitulo) caps.push((c = { nombre: nv.capitulo, niveles: [] }));
+      c.niveles.push(i);
+    });
+    $('capitulos').replaceChildren(...caps.map((c) => {
+      const sec = document.createElement('section');
+      const h = document.createElement('h3');
+      h.textContent = c.nombre;
+      const ol = document.createElement('ol');
+      for (const i of c.niveles) {
+        const li = document.createElement('li');
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.innerHTML = `<b>${romano(i)}</b> <span></span>`;
+        b.querySelector('span').textContent = NIVELES[i].nombre;
+        if (i === indice) b.setAttribute('aria-current', 'true');
+        b.disabled = !abierto(i);
+        b.addEventListener('click', () => { $('panel').close(); cargar(i, true); });
+        li.append(b);
+        ol.append(li);
+      }
+      sec.append(h, ol);
+      return sec;
+    }));
+    $('panel').showModal();
+  }
+  $('menu').addEventListener('click', panel);
+  $('panel-cerrar').addEventListener('click', () => $('panel').close());
+  $('relato-empezar').addEventListener('click', () => { $('relato').hidden = true; pista(); });
+  $('fin-siguiente').addEventListener('click', () => cargar(indice === NIVELES.length - 1 ? 0 : indice + 1, true));
   $('reiniciar').addEventListener('click', () => cargar(indice));
   $('sonido').addEventListener('click', () => { sonido.despertar(); $('sonido').setAttribute('aria-pressed', String(sonido.alternar())); });
 
@@ -857,6 +1000,6 @@
 
   const params = new URLSearchParams(location.search);
   const pedido = parseInt(params.get('nivel') || '', 10);
-  cargar(Number.isFinite(pedido) ? pedido - 1 : Math.min(avance(), NIVELES.length - 1));
+  cargar(Number.isFinite(pedido) ? pedido - 1 : Math.min(avance(), NIVELES.length - 1), true);
   requestAnimationFrame(cuadro);
 })();

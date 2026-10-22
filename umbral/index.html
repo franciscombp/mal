@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Umbral · UNA</title>
-<meta name="description" content="Un puzle de geometría imposible: si dos caminos se ven unidos, están unidos. Gira puentes, desliza rieles y cruza el umbral.">
+<meta name="description" content="Un puzle de geometría imposible por el Qhapaq Ñan: si dos caminos se ven unidos, están unidos. Un chasqui cruza el atrio de Cantuña, el Panecillo y la Mitad del Mundo.">
 <meta name="theme-color" content="#f0a98f">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="preload" href="../ds/fonts/syne.woff2" as="font" type="font/woff2" crossorigin>
@@ -31,7 +31,7 @@
   .titulo a { font: 800 13px/1 Syne, sans-serif; letter-spacing: .28em; text-transform: uppercase; color: inherit; text-decoration: none; }
   .titulo span { font: 600 13px/1 Inter, sans-serif; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .acciones { display: flex; gap: 6px; align-items: center; }
-  #niveles { display: flex; gap: 4px; margin-right: 6px; }
+  #menu { margin-right: 4px; }
   button {
     font: 600 12px/1 Inter, sans-serif; color: var(--tinta);
     min-width: 34px; height: 34px; padding: 0 10px; border-radius: 17px;
@@ -41,11 +41,12 @@
   button:hover { background: #fff; }
   button:focus-visible { outline: 2px solid var(--tinta); outline-offset: 2px; }
   button:disabled { opacity: .35; cursor: default; background: var(--papel); }
-  #niveles button[aria-current] { background: var(--tinta); color: #fff; border-color: var(--tinta); }
   #sonido[aria-pressed="false"] { text-decoration: line-through; opacity: .7; }
 
   body.noche { --tinta: #fbf4ee; --papel: rgba(43, 38, 70, .55); --borde: rgba(255, 255, 255, .22); }
-  body.noche #niveles button[aria-current] { color: #2b2a33; }
+  body.noche #capitulos button[aria-current] { color: #2b2a33; }
+  body.noche #relato > div, body.noche #panel { background: rgba(43, 38, 70, .92); color: var(--tinta); }
+  body.noche #relato button { color: #2b2a33; }
   body.noche #fin > div { background: rgba(43, 38, 70, .88); }
   body.noche #fin button { color: #2b2a33; }
   #pista {
@@ -58,12 +59,27 @@
   #pista.ver { animation: pista 7s ease forwards; }
   @keyframes pista { 0% { opacity: 0; } 8%, 80% { opacity: 1; } 100% { opacity: 0; } }
 
-  #fin {
+  #fin, #relato {
     position: fixed; inset: 0; z-index: 3; display: grid; place-items: center;
     background: rgba(255, 255, 255, .28); backdrop-filter: blur(3px);
     animation: aparece .6s ease;
   }
-  #fin[hidden] { display: none; }
+  #fin[hidden], #relato[hidden] { display: none; }
+  #relato > div { max-width: min(460px, calc(100% - 32px)); padding: 28px 30px; border-radius: 22px; background: rgba(255, 255, 255, .9); }
+  #relato .kicker { margin: 0 0 6px; font: 700 11px/1 Inter, sans-serif; letter-spacing: .2em; text-transform: uppercase; opacity: .6; }
+  #relato h2 { margin: 0 0 12px; font: 800 28px/1.1 Syne, sans-serif; }
+  #relato-texto { margin: 0 0 20px; font-size: 16px; line-height: 1.55; }
+  #relato button { height: 42px; padding: 0 22px; border-radius: 21px; background: var(--tinta); color: #fff; font-size: 14px; }
+  #fin .dato { max-width: 400px; margin: -6px auto 20px; font-size: 13px; line-height: 1.5; text-align: left; opacity: .85; border-left: 3px solid currentColor; padding-left: 12px; }
+  #panel { width: min(380px, calc(100% - 32px)); max-height: calc(100% - 64px); padding: 20px 22px 24px; border: 0; border-radius: 22px; background: rgba(255, 255, 255, .95); color: var(--tinta); }
+  #panel::backdrop { background: rgba(0, 0, 0, .25); backdrop-filter: blur(2px); }
+  #panel header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  #panel h2 { margin: 0; font: 800 20px/1 Syne, sans-serif; }
+  #capitulos h3 { margin: 16px 0 8px; font: 700 11px/1 Inter, sans-serif; letter-spacing: .2em; text-transform: uppercase; opacity: .6; }
+  #capitulos ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  #capitulos button { width: 100%; height: 40px; display: flex; gap: 10px; align-items: center; text-align: left; border-radius: 12px; font-size: 14px; }
+  #capitulos button b { min-width: 28px; font-family: Syne, sans-serif; }
+  #capitulos button[aria-current] { background: var(--tinta); color: #fff; border-color: var(--tinta); }
   #fin > div { text-align: center; padding: 28px 32px; border-radius: 22px; background: rgba(255, 255, 255, .86); max-width: calc(100% - 32px); }
   #fin h2 { margin: 0 0 6px; font: 800 26px/1.1 Syne, sans-serif; letter-spacing: .02em; }
   #fin p { margin: 0 0 18px; opacity: .75; }
@@ -72,10 +88,9 @@
   @media (max-width: 560px) {
     .titulo span { display: none; }
     .titulo a { letter-spacing: .18em; }
-    .acciones, #niveles { gap: 3px; }
-    button { min-width: 28px; height: 28px; padding: 0 5px; font-size: 11px; }
+    .barra button { min-width: 30px; height: 30px; padding: 0 8px; }
   }
-  @media (prefers-reduced-motion: reduce) { #pista.ver { animation: none; opacity: 1; } #fin { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { #pista.ver { animation: none; opacity: 1; } #fin, #relato { animation: none; } }
 </style>
 </head>
 <body>
@@ -86,7 +101,7 @@
     <span><b id="nivel-num">I</b> · <span id="nivel-nombre"></span></span>
   </div>
   <div class="acciones">
-    <nav id="niveles" aria-label="Niveles"></nav>
+    <button id="menu" type="button" aria-haspopup="dialog">Niveles</button>
     <button id="reiniciar" type="button" title="Reiniciar nivel (R)" aria-label="Reiniciar nivel">↺</button>
     <button id="sonido" type="button" title="Sonido" aria-label="Sonido" aria-pressed="true">♪</button>
   </div>
@@ -96,9 +111,22 @@
   <div>
     <h2 id="fin-titulo">Umbral cruzado</h2>
     <p id="fin-texto"></p>
+    <p id="fin-dato" class="dato" hidden></p>
     <button id="fin-siguiente" type="button">Siguiente</button>
   </div>
 </div>
+<div id="relato" hidden>
+  <div>
+    <p id="relato-cap" class="kicker"></p>
+    <h2 id="relato-titulo"></h2>
+    <p id="relato-texto"></p>
+    <button id="relato-empezar" type="button">Empezar</button>
+  </div>
+</div>
+<dialog id="panel" aria-labelledby="panel-titulo">
+  <header><h2 id="panel-titulo">Niveles</h2><button id="panel-cerrar" type="button" aria-label="Cerrar">✕</button></header>
+  <div id="capitulos"></div>
+</dialog>
 <script src="niveles.js"></script>
 <script src="motor.js"></script>
 </body>
