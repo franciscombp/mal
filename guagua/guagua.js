@@ -6,9 +6,9 @@
      2. Hornear: la masa se infla y se dora mientras corre el
         termómetro. Hay que sacarla a tiempo: antes queda blanca,
         después se quema.
-     3. Decorar: manga de crema, rosetas, grageas, pasas y una
-        carita de crema. La cara también se dibuja: ojos de pasa y boca
-        de pincel.
+     3. Decorar: manga de crema, rosetas, grageas, pasas y la
+        carita. La cara es el mismo pan: se le pintan ojos, nariz y
+        sonrisa con glaseado fino.
 
    Cómo está hecho:
      · Todo es una lista de números. La masa (`a`) son piezas; la
@@ -117,13 +117,19 @@ function guaguaConBrazos() {
     A.z = frenteDe(CUERPO.c, CUERPO.s, A.x, A.y) - 0.05; B.z = frenteDe(CUERPO.c, CUERPO.s, B.x, B.y) - 0.05;
     return chorizo(30 * SG, [A, B]);
   });
-  return MOLDES.guagua().concat(brazos);
+  return [bolita(CUERPO.c, CUERPO.s), bolita(CABEZA.c, CABEZA.s)].concat(brazos);
 }
 
 const MOLDES = {
-  // la guagua simple: cuerpo y cabeza. Los brazos, si los quiere, se los amasa.
+  // la guagua de panadería: larga y angosta, envuelta como una criatura,
+  // con los pies que se afinan, un cuello y la cabeza redonda.
   guagua() {
-    return [bolita(CUERPO.c, CUERPO.s), bolita(CABEZA.c, CABEZA.s)];
+    return [
+      chorizo(0.5, [V(0, 0.52, 0), V(0, 1.75, 0)]),       // el bulto de los pies, redondeado
+      bolita(V(0, 2.15, 0), V(0.62, 0.95, 0.46)),          // el cuerpo envuelto, con hombros
+      bolita(V(0, 3.08, 0), V(0.27, 0.14, 0.27)),          // el cuello
+      bolita(V(0, 3.48, 0.04), V(0.46, 0.48, 0.42)),       // la cabeza
+    ];
   },
   caballito() {
     const pata = (a, b, z) => chorizo(30 * SC, [C(a[0], a[1], z), C(b[0], b[1], z)]);
@@ -1123,12 +1129,14 @@ function punto(k) {
   if (k <= 1.25) return { t: 'Tostadita', f: 'Tostadita y crocante, como la prefieren algunos.' };
   return { t: 'Quemada', f: 'Se pasó de horno. La próxima vez, sácala un poco antes.' };
 }
+/* Hay cara si hay pasas, una máscara de las de antes o puntitos de chocolate finos. */
+const tieneCara = (e) => e.o.some((op) => op[0] === 4 || op[0] === 5 || (op[0] === 0 && op[1] === 7 && op[2] <= 1));
 function veredicto(e) {
   const cuenta = (t) => e.o.filter((op) => op[0] === t).length;
   const trazos = cuenta(0), rosetas = cuenta(1), grag = cuenta(2), bocados = cuenta(3);
   const colores = new Set(e.o.filter((op) => op[0] < 2).map((op) => op[1])).size;
   const k = e.k / 100, total = e.o.length;
-  const cara = cuenta(4) || cuenta(5);
+  const cara = tieneCara(e);
   let frase;
   if (k > 1.25) frase = punto(k).f;
   else if (!total) frase = 'Le falta la decoración: con un poco de crema queda lista.';
@@ -1140,7 +1148,7 @@ function veredicto(e) {
   else if (grag > trazos + rosetas) frase = 'Llena de grageas: alegre y de fiesta.';
   else if (colores === 1 && trazos > 4) frase = 'Sobria y elegante, de un solo color.';
   else if (e.f === 'libre' && e.a.length > 3) frase = 'Una figura propia, hecha a mano. Así empiezan las tradiciones.';
-  else if (!cara && e.f === 'guagua') frase = 'Bonita, aunque le falta la carita. Prueba con una carita de crema y unas pasas.';
+  else if (!cara && e.f === 'guagua') frase = 'Bonita, aunque le falta la carita. Toca su cara con Carita y píntale ojos y sonrisa.';
   else if (e.f === 'caballito') frase = 'Un caballito bien adornado, listo para la mesa.';
   else frase = elige([
     'Muy bonita. Así se decoraban en casa de la abuela.',
@@ -1516,34 +1524,49 @@ function fijar(op) {
    medio grosor por la normal, para que quede encima y no adentro. */
 const puntoDeCrema = (hit, r) => hit.p.clone().addScaledVector(hit.n, r * 0.55);
 const pn = (hit) => [ent(hit.p.x), ent(hit.p.y), ent(hit.p.z), ent(hit.n.x), ent(hit.n.y), ent(hit.n.z)];
-/* La carita es de crema, no un sticker: una espiral que empieza en el borde
-   y termina en el centro, como se rellena con la manga. Cada punto se amolda
-   a la cabeza con un rayo, y las vueltas quedan tan juntas que se funden.
-   Sale como un trazo de manga más, así que viaja en el enlace igual que el resto. */
-function medidasCarita(tam) {
-  const T = TAMANOS[tam] || 1, boq = tam === 0 ? 1 : 2;
-  return { ax: 0.32 * T, ay: 0.38 * T, boq, r: BOQUILLAS[boq] };
-}
-function caritaDeCrema(hit, tam, crema) {
-  const { ax, ay, boq, r } = medidasCarita(tam);
+/* La carita no se tapa con nada: la cara es el mismo pan, dorado, y se le
+   pintan las facciones con glaseado fino, como en las guaguas de panadería:
+   dos puntitos oscuros de ojos, una naricita, una sonrisa roja y, si se
+   quiere, las chapitas. Se toca el centro de la cara y salen todas juntas,
+   amoldadas a la cabeza; cada una es un trazo de manga y se puede deshacer
+   o retocar con el pincel. */
+function caraPintada(hit, tam) {
+  const T = (TAMANOS[tam] || 1) * 0.5;           // medio ancho de la cara
   const { x, y, z } = base(hit.n);
-  // vueltas muy juntas (menos que el grosor del chorro) para que no queden surcos
-  const vueltas = Math.max(1.4, Math.min(ax, ay) / (2 * r * 0.62));
-  const total = Math.PI * 2 * vueltas;
-  const op = [0, crema, boq];
-  const poner = (u, v) => {
-    const q = hit.p.clone().addScaledVector(x, u).addScaledVector(y, v);
-    const h = taller.rayoLocal(q.addScaledVector(z, 0.8), z.clone().negate(), false);
-    if (h) { const c = puntoDeCrema(h, r); op.push(ent(c.x), ent(c.y), ent(c.z)); }
+  const ops = [];
+  const sobre = (u, v, r) => {
+    const q = hit.p.clone().addScaledVector(x, u * T).addScaledVector(y, v * T).addScaledVector(z, 0.8);
+    const h = taller.rayoLocal(q, z.clone().negate(), false);
+    return h && puntoDeCrema(h, r);
   };
-  // empieza en la barbilla, donde el arranque del chorro no se nota, y gira hacia adentro
-  for (let th = 0; th <= total && op.length < 1100;) {
-    const s = 1 - th / total, a = th + Math.PI;
-    poner(Math.sin(a) * ax * s, Math.cos(a) * ay * s);
-    th += (r * 0.6) / Math.max(Math.max(ax, ay) * s, r * 0.8);
-  }
-  poner(0, 0);                                   // y termina tapando el centro
-  return op.length > 6 ? op : null;
+  const punto = (crema, boq, u, v) => {
+    const c = sobre(u, v, BOQUILLAS[boq]);
+    if (c) ops.push([0, crema, boq, ent(c.x), ent(c.y), ent(c.z)]);
+  };
+  const linea = (crema, boq, puntos) => {
+    const op = [0, crema, boq];
+    puntos.forEach(([u, v]) => { const c = sobre(u, v, BOQUILLAS[boq]); if (c) op.push(ent(c.x), ent(c.y), ent(c.z)); });
+    if (op.length > 6) ops.push(op);
+  };
+  const ojo = tam === 0 ? 0 : 1;
+  punto(7, ojo, -0.3, 0.12);                     // los ojos, de chocolate
+  punto(7, ojo, 0.3, 0.12);
+  linea(7, 0, [[-0.02, -0.02], [0.03, -0.1], [-0.03, -0.12]]);          // la naricita
+  linea(2, 0, Array.from({ length: 9 }, (_, i) => {                     // la sonrisa
+    const t = i / 8;
+    return [-0.26 + t * 0.52, -0.3 - Math.sin(t * Math.PI) * 0.1];
+  }));
+  return ops;
+}
+function chapitas(hit, tam, ops) {
+  const T = (TAMANOS[tam] || 1) * 0.5;
+  const { x, y, z } = base(hit.n);
+  [-0.48, 0.48].forEach((u) => {
+    const q = hit.p.clone().addScaledVector(x, u * T).addScaledVector(y, -0.16 * T).addScaledVector(z, 0.8);
+    const h = taller.rayoLocal(q, z.clone().negate(), false);
+    if (h) { const c = puntoDeCrema(h, BOQUILLAS[1]); ops.push([0, 1, 1, ent(c.x), ent(c.y), ent(c.z)]); }
+  });
+  return ops;
 }
 function tocarDecorar(ev) {
   const hit = taller.tocar(ev);
@@ -1561,8 +1584,7 @@ function tocarDecorar(ev) {
   } else if (h === 'pasa') {
     fijar([5, ...pn(hit)]);
   } else if (h === 'carita') {
-    const cara = caritaDeCrema(hit, estado.tamano, estado.crema);
-    if (cara) fijar(cara);
+    chapitas(hit, estado.tamano, caraPintada(hit, estado.tamano)).forEach((op) => fijar(op));
   } else if (h === 'mordisco') {
     if (estado.o.filter((op) => op[0] === 3).length >= BOCADOS_TALLER) {
       avisa('Ya tiene suficientes mordiscos. Deja algo para quien la reciba.');
@@ -1868,39 +1890,16 @@ function sorpresa() {
   if (g.length > 2) ops.push(g);
 
   /* La cara va en la bolita más alta que sea cabeza de verdad. Si está
-     al centro, es una guagua: carita de crema con ojos de pasa y boca
-     de pincel. Si está a un lado, es un animal mirando hacia allá. */
+     al centro, es una guagua: se le pintan ojos, nariz y sonrisa. Si está a un lado, es un animal mirando hacia allá. */
   const cabezas = estado.a.filter((p) => p[0] === 0 && Math.min(p[4], p[5]) > 25);
-  if (!cabezas.length || estado.o.some((op) => op[0] === 4 || op[0] === 5)) return ops;
+  if (!cabezas.length || tieneCara(estado)) return ops;
   const cab = cabezas.reduce((a, b) => (b[2] > a[2] ? b : a));
   const cx = cab[1] / Q * esc, cy = cab[2] / Q * esc, rx = cab[4] / Q, ry = cab[5] / Q;
   const centro = (min.x + max.x) / 2;
   if (Math.abs(cx - centro) < An * 0.15) {
     const h = golpe(cx, cy - ry * 0.05);
     if (!h) return ops;
-    const tam = rx > 0.6 ? 1 : 0;
-    const cara = caritaDeCrema(h, tam, 0);
-    if (!cara) return ops;
-    ops.push(cara);
-    // ojos y boca van encima de la crema, que todavía no está en la escena:
-    // se apuntan al pan y se levantan lo que mide de alto la crema
-    const { ax, ay, r } = medidasCarita(tam);
-    const { x, y, z } = base(h.n);
-    const sobre = (u, v, alto) => {
-      const q = h.p.clone().addScaledVector(x, u * ax).addScaledVector(y, v * ay).addScaledVector(z, 0.8);
-      const g = taller.rayoLocal(q, z.clone().negate(), true);
-      return g && { p: g.p.addScaledVector(g.n, alto), n: g.n };
-    };
-    [-0.34, 0.34].forEach((u) => {
-      const o = sobre(u, 0.18, r * 1.45);
-      if (o) ops.push([5, ...pn(o)]);
-    });
-    const boca = [0, 2, 0];
-    for (let i = 0; i <= 8; i++) {
-      const o = sobre(-0.3 + i * 0.075, -0.3 - Math.sin(i / 8 * Math.PI) * 0.14, r * 1.55 + BOQUILLAS[0] * 0.6);
-      if (o) boca.push(ent(o.p.x), ent(o.p.y), ent(o.p.z));
-    }
-    if (boca.length > 6) ops.push(boca);
+    caraPintada(h, rx > 0.6 ? 2 : 1).forEach((op) => ops.push(op));
   } else {
     const lado = cx > centro ? 1 : -1;
     const h = golpe(cx + lado * rx * 0.25, cy + ry * 0.15);
