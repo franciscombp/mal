@@ -231,6 +231,10 @@
       </div>
     </div>
   </div>
+  <p class="regalar__entrar" id="r-entrar-fila" hidden>
+    <span>Con tu cuenta, el enlace sale corto y la guagua queda guardada en la nube.</span>
+    <button class="btn btn--sm btn-ghost" id="r-entrar" type="button">Entrar</button>
+  </p>
   <div class="modal__pie regalar__pie">
     <button class="btn btn--rojo" id="r-compartir" type="button"><svg class="icono" aria-hidden="true"><use href="#i-compartir"/></svg> Compartir</button>
     <button class="btn" id="r-whatsapp" type="button"><svg class="icono" aria-hidden="true"><use href="#g-whatsapp"/></svg> WhatsApp</button>
@@ -246,13 +250,17 @@
     <button class="btn btn--sm btn--icono btn-ghost" type="button" data-cierra aria-label="Cerrar"><svg class="icono" aria-hidden="true"><use href="#i-cerrar"/></svg></button>
   </div>
   <div class="modal__cuerpo">
+    <div class="vitrina__cuenta" id="v-cuenta" hidden>
+      <p class="caption" id="v-cuenta-texto"></p>
+      <button class="btn btn--sm" id="v-cuenta-boton" type="button">Entrar</button>
+    </div>
     <div class="fila vitrina__pestanas" role="group" aria-label="Qué guaguas ver">
       <button class="chip" type="button" data-vitrina="mia" aria-pressed="true">Las mías <span class="badge" id="cuenta-mia">0</span></button>
       <button class="chip" type="button" data-vitrina="recibida" aria-pressed="false">Me regalaron <span class="badge" id="cuenta-recibida">0</span></button>
     </div>
     <div class="vitrina__rej" id="vitrina-rej"></div>
     <p class="vitrina__vacia caption" id="vitrina-vacia" hidden></p>
-    <p class="micro vitrina__nota">La vitrina vive solo en este navegador. Las guaguas que regalas viajan enteras
+    <p class="micro vitrina__nota" id="vitrina-nota">La vitrina vive solo en este navegador. Las guaguas que regalas viajan enteras
     dentro del enlace: no pasan por ningún servidor.</p>
   </div>
   <div class="modal__pie">
@@ -278,6 +286,38 @@
   </div>
 </dialog>
 
+<!-- ══ La cuenta ═════════════════════════════════════════════ -->
+<dialog class="modal cuenta" id="d-cuenta" aria-labelledby="d-cuenta-t">
+  <div class="modal__cab">
+    <h2 id="d-cuenta-t">Tu cuenta</h2>
+    <button class="btn btn--sm btn--icono btn-ghost" type="button" data-cierra aria-label="Cerrar"><svg class="icono" aria-hidden="true"><use href="#i-cerrar"/></svg></button>
+  </div>
+  <div class="modal__cuerpo">
+    <div id="cuenta-fuera">
+      <p class="caption">Entrar es opcional. Con tu cuenta, tu vitrina se guarda en la nube, la ves en
+      cualquier teléfono y los regalos llevan un enlace corto.</p>
+      <button class="btn btn-block cuenta__google" id="c-google" type="button"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" stroke="none" d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3z"/><path fill="#34A853" stroke="none" d="M12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22z"/><path fill="#FBBC05" stroke="none" d="M6.4 14c-.2-.6-.3-1.3-.3-2s.1-1.4.3-2V7.4H3.1a10 10 0 0 0 0 9.2L6.4 14z"/><path fill="#EA4335" stroke="none" d="M12 6c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 0 0 3.1 7.4L6.4 10C7.2 7.7 9.4 6 12 6z"/></svg> Entrar con Google</button>
+      <p class="cuenta__o"><span>o con tu correo</span></p>
+      <form class="pila" id="c-form" novalidate>
+        <div class="campo" id="c-campo-nombre" hidden><label for="c-nombre-in">Tu nombre</label><input id="c-nombre-in" maxlength="40" autocomplete="name"></div>
+        <div class="campo"><label for="c-correo-in">Correo</label><input id="c-correo-in" type="email" autocomplete="email" inputmode="email" required></div>
+        <div class="campo"><label for="c-clave">Contraseña</label><input id="c-clave" type="password" minlength="6" autocomplete="current-password" required></div>
+        <p class="campo__error cuenta__error" id="c-error" role="alert"></p>
+        <button class="btn btn--rojo btn-block" id="c-enviar" type="submit">Entrar</button>
+        <div class="cuenta__acc">
+          <button class="btn btn--sm btn-ghost" id="c-cambiar" type="button">Crear una cuenta</button>
+          <button class="btn btn--sm btn-ghost" id="c-olvido" type="button">Olvidé mi contraseña</button>
+        </div>
+      </form>
+    </div>
+    <div id="cuenta-dentro" hidden>
+      <p>Entraste como <b id="c-nombre"></b> <span class="caption" id="c-correo"></span></p>
+      <p class="caption">Tu vitrina se guarda en tu cuenta. Si sales, la vitrina de este navegador sigue aquí.</p>
+      <button class="btn" id="c-salir" type="button">Salir de la cuenta</button>
+    </div>
+  </div>
+</dialog>
+
 <!-- ══ Cómo se juega ═════════════════════════════════════════ -->
 <dialog class="modal info" id="d-info" aria-labelledby="d-info-t">
   <div class="modal__cab">
@@ -297,6 +337,10 @@
     <p class="caption">En kichwa, <i>wawa</i> es la criatura. Cada 2 de noviembre, en los Andes del Ecuador, se hornean guaguas
     y caballitos de pan, se pintan con crema y se acompañan con colada morada. Se comparten con la familia y con
     los que ya no están. Esta se regala por el teléfono; la de verdad se sigue comprando en la panadería del barrio.</p>
+    <h3 class="info__h">Tus datos</h3>
+    <p class="caption">Sin cuenta, todo se queda en este navegador y el regalo viaja entero dentro del enlace.
+    Si entras con tu cuenta, tus guaguas y los regalos que envías se guardan en Firebase, de Google; solo tú ves
+    tu vitrina, y un regalo solo lo abre quien tenga su enlace.</p>
     <p class="micro info__pie"><a href="https://una.red/#juegos">Más juegos</a> · <a href="../ds/">Sistema de diseño</a> ·
     <a href="https://github.com/franciscombp/mal/tree/main/guagua">Código</a> · Hecho en Quito</p>
   </div>
@@ -307,7 +351,13 @@
 </dialog>
 
 <script src="../ds/mal/mal.js?v=1.0.17" defer></script>
-<script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js" } }</script>
+<!-- El SDK de Firebase importa firebase-app.js desde gstatic: aquí se manda a la copia local. -->
+<script type="importmap">{ "imports": {
+  "three": "./vendor/three.module.min.js",
+  "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js": "./vendor/firebase/firebase-app.js",
+  "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js": "./vendor/firebase/firebase-auth.js",
+  "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-lite.js": "./vendor/firebase/firebase-firestore-lite.js"
+} }</script>
 <script type="module" src="guagua.js"></script>
 </body>
 </html>

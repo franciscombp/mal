@@ -23,6 +23,7 @@
    ══════════════════════════════════════════════════════════════ */
 import * as THREE from 'three';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
+import * as nube from './nube.js';
 
 const $ = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
@@ -1207,11 +1208,25 @@ const almacen = {
   leer(k, def) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } },
   poner(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } },
 };
+/* La vitrina vive en el navegador y, si hay cuenta, también en la nube.
+   El navegador es la copia de siempre (funciona sin red); la nube es la
+   que se ve cuando hay sesión, y la que sigue a la persona de un teléfono a otro. */
 const vitrina = () => almacen.leer(CLAVE, []);
 function guardarEnVitrina(item) {
   const lista = vitrina().filter((x) => x.id !== item.id && !(item.t === 'recibida' && x.e === item.e));
   lista.unshift(item);
   if (!almacen.poner(CLAVE, lista.slice(0, 80))) avisa('No hay espacio en la vitrina de este navegador.', 'error');
+  if (nube.actual()) nube.guardar(item).catch((e) => avisa(nube.explicar(e), 'error'));
+}
+function sacarDeVitrina(id) {
+  almacen.poner(CLAVE, vitrina().filter((x) => x.id !== id));
+  if (nube.actual()) return nube.borrar(id).catch((e) => avisa(nube.explicar(e), 'error'));
+}
+async function listaVitrina() {
+  if (nube.actual()) {
+    try { return await nube.vitrina(); } catch (e) { avisa(nube.explicar(e), 'error'); }
+  }
+  return vitrina();
 }
 const nuevoId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 
@@ -1695,9 +1710,11 @@ function nueva(molde = 'guagua') {
   taller.cargar(estado);
   irA('amasar');
 }
-async function guardarMia() {
+async function guardarMia(regalo) {
   if (!estado.id) estado.id = nuevoId();
-  guardarEnVitrina({ id: estado.id, t: 'mia', e: await codificar(receta()), f: Date.now() });
+  const item = { id: estado.id, t: 'mia', e: await codificar(receta()), f: Date.now() };
+  if (regalo) item.g = regalo;
+  guardarEnVitrina(item);
   guardarBorrador();
   pintarVitrina();
 }
@@ -1791,7 +1808,21 @@ function sorpresa() {
 }
 
 /* ─── regalar ──────────────────────────────────────────────── */
-let ultimoEnlace = '', ultimaTarjeta = null, reloj = null;
+let ultimoEnlace = '', ultimaTarjeta = null, ultimaReceta = '', reloj = null;
+const publicados = new Map();      // receta → id del regalo, para no publicar dos veces la misma
+/* Con cuenta, el regalo se publica en /guaguas y el enlace es corto (#g=…).
+   Sin cuenta, o si la nube falla, la receta va entera en el enlace (#r=…). */
+async function enlaceDeRegalo(cod) {
+  if (!nube.actual()) return { url: direccion() + '#r=' + cod, id: null };
+  try {
+    let id = publicados.get(cod);
+    if (!id) { id = await nube.publicarRegalo(cod); publicados.set(cod, id); }
+    return { url: direccion() + '#g=' + id, id };
+  } catch (e) {
+    avisa(nube.explicar(e), 'error');
+    return { url: direccion() + '#r=' + cod, id: null };
+  }
+}
 async function abrirRegalo() {
   const v = veredicto(estado);
   $('#panadera-frase').textContent = v.frase;
@@ -1814,7 +1845,8 @@ async function refrescarTarjeta() {
   leerFormulario();
   ultimaTarjeta = await tarjeta(receta());
   $('#r-vista').src = ultimaTarjeta.toDataURL('image/jpeg', 0.82);
-  ultimoEnlace = direccion() + '#r=' + await codificar(receta());
+  ultimaReceta = await codificar(receta());
+  ultimoEnlace = direccion() + '#r=' + ultimaReceta;
   guardarBorrador();
 }
 const textoRegalo = () => {
@@ -1830,7 +1862,14 @@ function montarRegalo() {
   $$('#d-regalar input, #d-regalar textarea').forEach((x) => x.addEventListener('input', () => {
     clearTimeout(reloj); reloj = setTimeout(refrescarTarjeta, 350);
   }));
-  const listo = async () => { clearTimeout(reloj); await refrescarTarjeta(); await guardarMia(); };
+  const listo = async () => {
+    clearTimeout(reloj);
+    await refrescarTarjeta();
+    const { url, id } = await enlaceDeRegalo(ultimaReceta);
+    ultimoEnlace = url;
+    await guardarMia(id);
+  };
+  $('#r-entrar').addEventListener('click', () => abrirCuenta());
   $('#r-compartir').addEventListener('click', async () => {
     await listo();
     const texto = textoRegalo();
@@ -1864,12 +1903,16 @@ function montarRegalo() {
 /* ══════════════════ LA VITRINA ══════════════════════════════ */
 let pestana = 'mia', visorPieza = null, piezaActual = null;
 const fecha = (t) => new Date(t).toLocaleDateString('es-EC', { day: 'numeric', month: 'short' });
+let turnoVitrina = 0;
 async function pintarVitrina(cual) {
   if (cual) pestana = cual;
+  const turno = ++turnoVitrina;          // si llega otra pintada mientras se espera a la nube, gana la última
   $$('[data-vitrina]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.vitrina === pestana)));
   const rej = $('#vitrina-rej');
-  const todas = vitrina();
+  const todas = await listaVitrina();
+  if (turno !== turnoVitrina) return;
   const lista = todas.filter((x) => x.t === pestana);
+  pintarCuentaEnVitrina();
   $('#cuenta-mia').textContent = todas.filter((x) => x.t === 'mia').length;
   $('#cuenta-recibida').textContent = todas.filter((x) => x.t === 'recibida').length;
   const hud = $('#cuenta-hud');
@@ -1883,6 +1926,7 @@ async function pintarVitrina(cual) {
   for (const item of lista) {
     let e;
     try { e = await decodificar(item.e); } catch (err) { continue; }
+    if (turno !== turnoVitrina) return;
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'pieza';
     const c = foto(e, 240, 300);
@@ -1923,7 +1967,14 @@ function montarVitrina() {
     if ($('#d-vitrina').open) $('#d-vitrina').close();
   });
   $('#p-regalar').addEventListener('click', async () => {
-    const enlace = direccion() + '#r=' + piezaActual.item.e;
+    const { item } = piezaActual;
+    let enlace;
+    if (item.g) enlace = direccion() + '#g=' + item.g;
+    else {
+      const r = await enlaceDeRegalo(item.e);
+      enlace = r.url;
+      if (r.id && item.t === 'mia') { item.g = r.id; guardarEnVitrina(item); }
+    }
     if (navigator.share) {
       try { await navigator.share({ title: 'Una guagua de pan', text: 'Te regalo esta guagua de pan por el Día de Difuntos:', url: enlace }); return; }
       catch (err) { if (err && err.name === 'AbortError') return; }
@@ -1932,7 +1983,7 @@ function montarVitrina() {
   });
   $('#p-borrar').addEventListener('click', () => {
     if (!confirm('¿Quitar esta guagua de la vitrina? No se puede deshacer.')) return;
-    almacen.poner(CLAVE, vitrina().filter((x) => x.id !== piezaActual.item.id));
+    sacarDeVitrina(piezaActual.item.id);
     if (estado.id === piezaActual.item.id) estado.id = null;
     $('#d-pieza').close();
     pintarVitrina();
@@ -1941,7 +1992,7 @@ function montarVitrina() {
 
 /* ══════════════════ CUANDO TE LLEGA UNA ═════════════════════ */
 let recibida = null, visorRegalo = null, mordidas = 0;
-async function recibir(cod) {
+async function recibir(cod, regalo) {
   let e;
   try { e = await decodificar(cod); }
   catch (err) { avisa('No se pudo abrir esta guagua. Pide que te la envíen otra vez.', 'error'); return; }
@@ -1983,7 +2034,9 @@ async function recibir(cod) {
   const medirRegalo = () => { visorRegalo.margen = margenes($('#regalo-lienzo'), null, $('#regalo-tarjeta')); visorRegalo.dibujar(); };
   requestAnimationFrame(medirRegalo);
   if (!visorRegalo._observa) { visorRegalo._observa = new ResizeObserver(medirRegalo); visorRegalo._observa.observe($('#regalo-tarjeta')); }
-  guardarEnVitrina({ id: nuevoId(), t: 'recibida', e: cod, f: Date.now() });
+  const item = { id: nuevoId(), t: 'recibida', e: cod, f: Date.now() };
+  if (regalo) item.g = regalo;
+  guardarEnVitrina(item);
   pintarVitrina('recibida');
 }
 function montarRecibir() {
@@ -2024,12 +2077,114 @@ function arrancar() {
     almacen.poner('guagua:visto', true);
     window.malDS.abrir('#d-info');
   }
-  const leerHash = () => {
-    const h = location.hash.match(/^#r=([zj][A-Za-z0-9_-]+)$/);
-    if (h) recibir(h[1]);
+  const arranqueNube = nube.iniciar().then((hay) => {
+    if (hay) nube.alCambiar(alCambiarCuenta);
+    return hay;
+  });
+  const leerHash = async () => {
+    const largo = location.hash.match(/^#r=([zj][A-Za-z0-9_-]+)$/);
+    if (largo) { recibir(largo[1]); return; }
+    const corto = location.hash.match(/^#g=([A-Za-z0-9]{10,40})$/);
+    if (!corto) return;
+    if (!(await arranqueNube)) { avisa('Para abrir este regalo hace falta conexión con la nube.', 'error'); return; }
+    try {
+      const cod = await nube.leerRegalo(corto[1]);
+      if (cod) recibir(cod, corto[1]);
+      else avisa('Esta guagua ya no está disponible. Pide que te la envíen otra vez.', 'error');
+    } catch (e) { avisa(nube.explicar(e), 'error'); }
   };
   leerHash();
   window.addEventListener('hashchange', leerHash);
+  montarCuenta();
+}
+
+/* ══════════════════ LA CUENTA ═══════════════════════════════
+   Entrar es opcional: sin cuenta todo funciona en este navegador. Con
+   cuenta, la vitrina se guarda en la nube y los regalos llevan enlace corto. */
+let modoCuenta = 'entrar';
+function abrirCuenta() {
+  $('#c-error').textContent = '';
+  window.malDS.abrir('#d-cuenta');
+}
+function pintarCuentaEnVitrina() {
+  const u = nube.actual();
+  $('#v-cuenta').hidden = !nube.disponible();
+  $('#v-cuenta-texto').textContent = u
+    ? `Tu vitrina se guarda en tu cuenta (${u.nombre || u.correo}).`
+    : 'Entra con tu cuenta para guardar tu vitrina en la nube y verla en cualquier teléfono.';
+  $('#v-cuenta-boton').textContent = u ? 'Tu cuenta' : 'Entrar';
+  $('#vitrina-nota').textContent = u
+    ? 'Tu vitrina se guarda en tu cuenta: la ves en cualquier teléfono donde entres. Los regalos se abren con su enlace corto.'
+    : 'Sin cuenta, la vitrina vive solo en este navegador y los regalos viajan enteros dentro del enlace.';
+  $('#r-entrar-fila').hidden = !nube.disponible() || !!u;
+}
+async function alCambiarCuenta(u) {
+  $('#cuenta-fuera').hidden = !!u;
+  $('#cuenta-dentro').hidden = !u;
+  if (u) {
+    $('#c-nombre').textContent = u.nombre || u.correo;
+    $('#c-correo').textContent = u.nombre ? u.correo : '';
+    // lo que estaba guardado solo en este navegador sube a la cuenta, una sola vez
+    const clave = 'guagua:subidas:' + u.uid;
+    const subidas = new Set(almacen.leer(clave, []));
+    const pendientes = vitrina().filter((x) => !subidas.has(x.id));
+    for (const item of pendientes) {
+      try { await nube.guardar(item); subidas.add(item.id); } catch (e) { break; }
+    }
+    almacen.poner(clave, [...subidas]);
+    if (pendientes.length) avisa('Tus guaguas de este navegador ya están en tu cuenta.', 'ok');
+  }
+  pintarCuentaEnVitrina();
+  pintarVitrina();
+}
+function montarCuenta() {
+  const error = (e) => { $('#c-error').textContent = typeof e === 'string' ? e : nube.explicar(e); };
+  const ocupado = (si) => $$('#d-cuenta button, #d-cuenta input').forEach((x) => { x.disabled = si; });
+  const intentar = async (fn) => {
+    error('');
+    ocupado(true);
+    try { await fn(); } catch (e) { error(e); } finally { ocupado(false); }
+  };
+  const ponerModo = (m) => {
+    modoCuenta = m;
+    $('#c-campo-nombre').hidden = m !== 'crear';
+    $('#c-enviar').textContent = m === 'crear' ? 'Crear la cuenta' : 'Entrar';
+    $('#c-cambiar').textContent = m === 'crear' ? 'Ya tengo cuenta' : 'Crear una cuenta';
+    $('#c-clave').autocomplete = m === 'crear' ? 'new-password' : 'current-password';
+    error('');
+  };
+  $('#v-cuenta-boton').addEventListener('click', abrirCuenta);
+  $('#c-cambiar').addEventListener('click', () => ponerModo(modoCuenta === 'crear' ? 'entrar' : 'crear'));
+  $('#c-google').addEventListener('click', () => intentar(async () => {
+    await nube.entrarConGoogle();
+    $('#d-cuenta').close();
+    avisa('Listo, entraste con Google.', 'ok');
+  }));
+  $('#c-form').addEventListener('submit', (ev) => {
+    ev.preventDefault();
+    const correo = $('#c-correo-in').value.trim(), clave = $('#c-clave').value;
+    intentar(async () => {
+      if (modoCuenta === 'crear') await nube.crearCuenta(correo, clave, $('#c-nombre-in').value.trim().slice(0, 40));
+      else await nube.entrarConCorreo(correo, clave);
+      $('#c-clave').value = '';
+      $('#d-cuenta').close();
+      avisa(modoCuenta === 'crear' ? 'Tu cuenta está lista.' : 'Listo, entraste.', 'ok');
+    });
+  });
+  $('#c-olvido').addEventListener('click', () => {
+    const correo = $('#c-correo-in').value.trim();
+    if (!correo) { error('Escribe tu correo y te enviamos un enlace para cambiar la contraseña.'); return; }
+    intentar(async () => {
+      await nube.recuperarClave(correo);
+      error('Te enviamos un correo para cambiar la contraseña.');
+    });
+  });
+  $('#c-salir').addEventListener('click', () => intentar(async () => {
+    await nube.salir();
+    $('#d-cuenta').close();
+    avisa('Saliste de tu cuenta. La vitrina de este navegador sigue aquí.', 'ok');
+  }));
+  ponerModo('entrar');
 }
 
 window.guagua = {
