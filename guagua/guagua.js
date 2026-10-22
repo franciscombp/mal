@@ -83,6 +83,37 @@ const MENSAJES = [
   'Para compartir en la mesa, como en casa.',
 ];
 
+/* Dedicada a quien ya no está: Finados también es para recordar. */
+const MENSAJES_MEMORIA = [
+  'Para que en tu mesa del cielo nunca falte pan.',
+  'Te recordamos cada 2 de noviembre, y todos los días.',
+  'La amasé pensando en ti, como cuando la hacíamos juntos.',
+  'Con colada morada, como te gustaba.',
+];
+const MENSAJE_GUAGUAU = 'Para que en el cielo de los guaguaus de pan nunca te falte nada.';
+/* Lo que puede venir con un regalo, para que quien la recibe responda. */
+const VALES = [
+  null,
+  {
+    sello: ['VALE POR', 'una guagua', 'de verdad'], texto: 'Y vale por una guagua de verdad.',
+    titulo: 'Vale por una guagua de verdad', detalle: 'Cóbralo: avisa que ya es hora.',
+    pista: 'Quien la reciba podrá cobrarlo con un mensaje.', boton: 'Cobrar el vale',
+    cobrar: (d) => `Hola${d ? ' ' + d : ''}, vengo a cobrar mi vale por una guagua de verdad. ¿Cuándo nos vemos?`,
+  },
+  {
+    sello: ['INVITACIÓN', 'a una colada', 'morada'], texto: 'Y viene con invitación a una colada morada.',
+    titulo: 'Invitación a una colada morada', detalle: 'Responde y pónganse de acuerdo.',
+    pista: 'Quien la reciba podrá aceptar con un mensaje.', boton: 'Aceptar la invitación',
+    cobrar: (d) => `Hola${d ? ' ' + d : ''}, acepto la invitación a la colada morada. ¿Cuándo y dónde?`,
+  },
+  {
+    sello: ['PÁSALA', 'amasa una para', 'alguien más'], texto: 'Viene con una tarea: pasarla a alguien más.',
+    titulo: 'Pásala', detalle: 'Esta guagua viaja: amásale una a otra persona para que siga la cadena.',
+    pista: 'Quien la reciba tendrá que amasarle una a otra persona.', boton: null,
+  },
+];
+const enMemoria = (e) => e.t === 'm';
+
 /* ─── utilidades ───────────────────────────────────────────── */
 function azar(semilla) {            // mulberry32: el mismo número, la misma grajea
   let a = semilla >>> 0;
@@ -106,14 +137,15 @@ function lienzo(w, h) {
    Una pieza es un arreglo de enteros (centésimas):
      bolita   [0, x, y, z, rx, ry, rz, giro×100]
      chorizo  [1, grosor×100, x, y, z, x, y, z…]               */
-const bolita = (c, s, rot) => [0, ent(c.x), ent(c.y), ent(c.z), ent(s.x), ent(s.y), ent(s.z), Math.round((rot || 0) * 100)];
+const bolita = (c, s, rot, punta) => [0, ent(c.x), ent(c.y), ent(c.z), ent(s.x), ent(s.y), ent(s.z), Math.round((rot || 0) * 100)]
+  .concat(punta ? [0, Math.round(punta * 100)] : []);
 const chorizo = (r, pts) => [1, ent(r)].concat(...pts.map((p) => [ent(p.x), ent(p.y), ent(p.z)]));
 /* El color de masa va aparte para no tocar las piezas de siempre: la bolita
    lleva un noveno número; el chorizo teñido es el tipo 3, [3, grosor, masa, x, y, z…]. */
 const masaDe = (p) => (p[0] === 0 ? p[8] || 0 : p[0] === 3 ? p[2] : 0);
 const iniPuntos = (p) => (p[0] === 3 ? 3 : 2);
 function conMasa(p, m) {
-  if (p[0] === 0) return m ? p.slice(0, 8).concat([m]) : p.slice(0, 8);
+  if (p[0] === 0) return p[9] ? p.slice(0, 8).concat([m, p[9]]) : m ? p.slice(0, 8).concat([m]) : p.slice(0, 8);
   const pts = p.slice(iniPuntos(p));
   return m ? [3, p[1], m].concat(pts) : [1, p[1]].concat(pts);
 }
@@ -155,11 +187,9 @@ const MOLDES = {
   // la de panadería: más larga, y el bulto de los pies termina en colita cónica
   tradicional() {
     return [
-      bolita(V(0, 0.4, 0), V(0.17, 0.38, 0.16)),           // la punta de la colita
-      bolita(V(0, 1.05, 0), V(0.4, 0.78, 0.34)),           // la colita
-      bolita(V(0, 2.25, 0), V(0.62, 1.0, 0.47)),           // el cuerpo envuelto, con hombros
-      bolita(V(0, 3.2, 0), V(0.27, 0.14, 0.27)),           // el cuello
-      bolita(V(0, 3.6, 0.04), V(0.46, 0.48, 0.42)),        // la cabeza
+      bolita(V(0, 1.75, 0), V(0.62, 1.65, 0.47), 0, 0.72), // el cuerpo envuelto, que se afina en colita
+      bolita(V(0, 3.38, 0), V(0.27, 0.14, 0.27)),          // el cuello
+      bolita(V(0, 3.78, 0.04), V(0.46, 0.48, 0.42)),       // la cabeza
     ];
   },
   // un perrito echado, con la panza en la lata, de perfil
@@ -219,8 +249,18 @@ const MOLDES = {
 };
 
 /* ─── geometrías ───────────────────────────────────────────── */
-function elipsoide(c, s, rotZ) {
+/* Con `punta`, la mitad de abajo se afina hacia una punta redonda:
+   así sale la colita cónica de la guagua tradicional. */
+function elipsoide(c, s, rotZ, punta = 0) {
   const g = new THREE.SphereGeometry(1, 64, 48);
+  if (punta) {
+    const p = g.attributes.position;
+    for (let i = 0; i < p.count; i++) {
+      const f = 1 - punta * Math.max(0, -p.getY(i)) ** 1.3;
+      p.setX(i, p.getX(i) * f); p.setZ(i, p.getZ(i) * f);
+    }
+    g.computeVertexNormals();
+  }
   g.scale(s.x, s.y, s.z);
   if (rotZ) g.rotateZ(rotZ);
   g.translate(c.x, c.y, c.z);
@@ -296,7 +336,7 @@ function aplanar(g) {
   return g;
 }
 function geometriaPieza(p) {
-  if (p[0] === 0) return aplanar(elipsoide(V(p[1], p[2], p[3]).divideScalar(Q), V(p[4], p[5], p[6]).divideScalar(Q), p[7] / 100));
+  if (p[0] === 0) return aplanar(elipsoide(V(p[1], p[2], p[3]).divideScalar(Q), V(p[4], p[5], p[6]).divideScalar(Q), p[7] / 100, (p[9] || 0) / 100));
   const pts = [];
   for (let i = iniPuntos(p); i < p.length; i += 3) pts.push(V(p[i], p[i + 1], p[i + 2]).divideScalar(Q));
   const r = p[1] / Q;
@@ -1154,7 +1194,10 @@ function sano(d) {
   const lista = (x, max) => (Array.isArray(x) ? x.slice(0, max).filter((y) => Array.isArray(y) && y.every((v, i) => num(v) || semilla(y, v, i))) : []);
   const a = lista(d.a, MAX_PIEZAS).filter((p) => {
     puntos += p.length;
-    if (p[0] === 0) return (p.length === 8 || (p.length === 9 && MASAS[p[8]] && Number.isInteger(p[8]))) && p[4] > 0 && p[5] > 0 && p[6] > 0;
+    if (p[0] === 0) {
+      return p.length >= 8 && p.length <= 10 && (p.length === 8 || (MASAS[p[8]] && Number.isInteger(p[8])))
+        && (p.length < 10 || (p[9] >= 0 && p[9] <= 90)) && p[4] > 0 && p[5] > 0 && p[6] > 0;
+    }
     if (p[0] === 1) return p.length >= 5 && (p.length - 2) % 3 === 0 && p[1] > 0;
     if (p[0] === 3) return p.length >= 6 && (p.length - 3) % 3 === 0 && p[1] > 0 && MASAS[p[2]] && Number.isInteger(p[2]);
     return false;
@@ -1176,6 +1219,8 @@ function sano(d) {
     k: num(d.k) ? limita(Math.round(d.k), 0, 160) : 100,
     f: typeof d.f === 'string' && MOLDES[d.f] ? d.f : 'libre',
     n: txt(d.n, 40), p: txt(d.p, 40), d: txt(d.d, 40), m: txt(d.m, 160),
+    t: d.t === 'm' ? 'm' : '',
+    l: d.t !== 'm' && Number.isInteger(d.l) && VALES[d.l] ? d.l : 0,
   };
 }
 
@@ -1247,6 +1292,44 @@ function envolver(ctx, texto, x, y, ancho, alto, max) {
   if (l) lineas.push(l);
   lineas.slice(0, max).forEach((ln, i) => ctx.fillText(i === max - 1 && lineas.length > max ? ln + '…' : ln, x, y + i * alto));
 }
+/* Una velita encendida, para las que se dedican a quien ya no está. */
+function vela(ctx, x, y, s) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+  const brillo = ctx.createRadialGradient(0, -150, 4, 0, -150, 120);
+  brillo.addColorStop(0, 'rgba(255,201,60,.45)'); brillo.addColorStop(1, 'rgba(255,201,60,0)');
+  ctx.fillStyle = brillo; ctx.beginPath(); ctx.arc(0, -150, 120, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#f6eadb';
+  ctx.beginPath(); ctx.roundRect(-34, -110, 68, 150, 10); ctx.fill();
+  ctx.fillStyle = 'rgba(0,0,0,.12)'; ctx.fillRect(14, -110, 20, 150);
+  ctx.fillStyle = '#f6eadb';
+  ctx.beginPath(); ctx.ellipse(-10, -110, 12, 20, 0, 0, Math.PI * 2); ctx.fill();   // la cera que chorrea
+  ctx.strokeStyle = '#2e0f36'; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.moveTo(0, -110); ctx.lineTo(0, -126); ctx.stroke();
+  ctx.fillStyle = '#ffb02e';
+  ctx.beginPath(); ctx.moveTo(0, -186); ctx.bezierCurveTo(22, -150, 16, -124, 0, -124); ctx.bezierCurveTo(-16, -124, -22, -150, 0, -186); ctx.fill();
+  ctx.fillStyle = '#fff3c4';
+  ctx.beginPath(); ctx.ellipse(0, -138, 6, 12, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#e01b6a';
+  ctx.beginPath(); ctx.roundRect(-58, 36, 116, 16, 8); ctx.fill();
+  ctx.restore();
+}
+/* El vale, como un sello de papel recortado sobre la tarjeta. */
+function sello(ctx, vale, x, y) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(0.08);
+  ctx.fillStyle = 'rgba(46,15,54,.82)';
+  ctx.beginPath(); ctx.roundRect(-150, -72, 300, 144, 16); ctx.fill();
+  ctx.setLineDash([12, 8]); ctx.lineWidth = 4; ctx.strokeStyle = '#ffc93c';
+  ctx.beginPath(); ctx.roundRect(-140, -62, 280, 124, 10); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.textAlign = 'center'; ctx.fillStyle = '#ffc93c';
+  ctx.font = '600 22px Inter, system-ui, sans-serif';
+  ctx.fillText(vale.sello[0], 0, -22, 250);
+  ctx.fillStyle = '#fff';
+  ctx.font = '800 32px Syne, Inter, system-ui, sans-serif';
+  ctx.fillText(vale.sello[1], 0, 16, 260);
+  ctx.fillText(vale.sello[2], 0, 50, 260);
+  ctx.restore();
+}
 function colada(ctx, x, y, s) {
   ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
   ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 6; ctx.lineCap = 'round';
@@ -1300,14 +1383,20 @@ async function tarjeta(e) {
   ctx.fillText('2 DE NOVIEMBRE · DÍA DE DIFUNTOS', 540, 104);
   ctx.fillStyle = '#ffffff';
   ctx.font = '800 84px Syne, Inter, system-ui, sans-serif';
-  const que = queEs(e);
-  ctx.fillText(e.d ? 'Te regalo' : que.charAt(0).toUpperCase() + que.slice(1), 540, 196, 1000);
-  ctx.fillText(e.d ? que : 'para ti', 540, 282, 1000);
+  const que = queEs(e), memoria = enMemoria(e);
+  if (memoria) {
+    ctx.fillText(e.p ? 'En memoria' : 'Para recordar', 540, 196, 1000);
+    ctx.fillText(e.p ? 'de ' + e.p : 'a quien ya no está', 540, 282, 1000);
+  } else {
+    ctx.fillText(e.d ? 'Te regalo' : que.charAt(0).toUpperCase() + que.slice(1), 540, 196, 1000);
+    ctx.fillText(e.d ? que : 'para ti', 540, 282, 1000);
+  }
   const alto = 780, ancho = alto * 0.8, gx = 540 - ancho / 2 - 60, gy = 300;
   ctx.fillStyle = 'rgba(0,0,0,.35)';
   ctx.beginPath(); ctx.ellipse(gx + ancho / 2, gy + alto - 70, ancho * 0.34, 24, 0, 0, Math.PI * 2); ctx.fill();
   ctx.drawImage(foto(e, 800, 1000), gx, gy, ancho, alto);
-  colada(ctx, 870, 960, 0.9);
+  if (memoria) vela(ctx, 880, 990, 0.9); else colada(ctx, 870, 960, 0.9);
+  if (!memoria && VALES[e.l]) sello(ctx, VALES[e.l], 860, 470);
   const nombre = '«' + nombreDe(e) + '»';
   ctx.font = '800 46px Syne, Inter, system-ui, sans-serif';
   const an = Math.min(900, ctx.measureText(nombre).width + 80);
@@ -1318,7 +1407,7 @@ async function tarjeta(e) {
   ctx.fillStyle = '#fff';
   ctx.fillText(nombre, 540, 1132, 860);
   let y = 1206;
-  const quien = [e.p && 'Para ' + e.p, e.d && 'de ' + e.d].filter(Boolean).join(' · ');
+  const quien = memoria ? (e.d ? 'Con cariño, de ' + e.d : '') : [e.p && 'Para ' + e.p, e.d && 'de ' + e.d].filter(Boolean).join(' · ');
   if (quien) {
     ctx.font = '600 34px Inter, system-ui, sans-serif'; ctx.fillStyle = '#ffffff';
     ctx.fillText(quien, 540, y, 960); y += 46;
@@ -1328,7 +1417,7 @@ async function tarjeta(e) {
     envolver(ctx, e.m, 540, y, 900, 40, quien ? 1 : 2);
   }
   ctx.font = '600 24px Inter, system-ui, sans-serif'; ctx.fillStyle = 'rgba(255,201,60,.9)';
-  ctx.fillText('Amasa y decora la tuya en ' + DIRECCION, 540, 1322);
+  ctx.fillText((memoria ? '¿A quién recuerdas tú? Dedica la tuya en ' : 'Amasa y decora la tuya en ') + DIRECCION, 540, 1322, 1000);
   return c;
 }
 const aBlob = (c) => new Promise((ok) => c.toBlob(ok, 'image/png'));
@@ -1403,13 +1492,14 @@ const estado = {
   f: 'guagua', a: [], k: 0, o: [],
   mano: 'bolita', grosor: 1, masa: 0,
   herramienta: 'manga', crema: 1, boquilla: 2, tamano: 1,
-  id: null, n: '', p: '', d: '', m: '',
+  id: null, n: '', p: '', d: '', m: '', t: '', l: 0,
 };
 let taller = null;       // el visor del taller
 let trazo = null;        // lo que el dedo está haciendo al decorar
 let amase = null;        // …y al amasar
 let historia = [];       // las masas de antes, para deshacer al amasar
-const receta = () => ({ v: 3, f: estado.f, a: estado.a, k: estado.k, o: estado.o, n: estado.n, p: estado.p, d: estado.d, m: estado.m });
+const receta = () => Object.assign({ v: 3, f: estado.f, a: estado.a, k: estado.k, o: estado.o, n: estado.n, p: estado.p, d: estado.d, m: estado.m },
+  estado.t === 'm' ? { t: 'm' } : estado.l ? { l: estado.l } : {});
 
 function guardarBorrador() {
   almacen.poner(BORRADOR, Object.assign(receta(), { id: estado.id, etapa: estado.etapa }));
@@ -1909,7 +1999,7 @@ function deshacer() {
   guardarBorrador(); actualizarEtiqueta();
 }
 function nueva(molde = 'guagua') {
-  Object.assign(estado, { a: MOLDES[molde](), f: molde, k: 0, o: [], id: null, n: elige(NOMBRES[molde]), p: '', m: '' });
+  Object.assign(estado, { a: MOLDES[molde](), f: molde, k: 0, o: [], id: null, n: elige(NOMBRES[molde]), p: '', m: '', l: 0 });
   historia = [];
   sincronizarControles();
   taller.cargar(estado);
@@ -2047,6 +2137,19 @@ async function enlaceDeRegalo(cod) {
     return { url: direccion() + '#r=' + cod, id: null };
   }
 }
+const mensajeDe = (t) => (t === 'm' ? (estado.f === 'guaguau' ? MENSAJE_GUAGUAU : elige(MENSAJES_MEMORIA)) : elige(MENSAJES));
+const esDeCajon = (m) => MENSAJES.includes(m) || MENSAJES_MEMORIA.includes(m) || m === MENSAJE_GUAGUAU;
+/* Regalar o dedicar cambia las etiquetas, el mensaje sugerido y los vales. */
+function pintarTipo() {
+  const m = estado.t === 'm';
+  $$('button[data-tipo]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.tipo === estado.t)));
+  $$('button[data-vale]').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.vale === estado.l)));
+  $('#r-para-rotulo').textContent = m ? 'En memoria de' : 'Para';
+  $('#r-para').placeholder = m ? 'Mi abuela Rosa, mi perrita Lobita' : 'Mi hermana, mi abuelo, la familia';
+  $('#r-vale-campo').hidden = m;
+  $('#r-vale-pista').textContent = VALES[estado.l] ? VALES[estado.l].pista : '';
+  $('#r-compartir').lastChild.textContent = m ? ' Compartir en redes' : ' Compartir';
+}
 async function abrirRegalo() {
   const v = veredicto(estado);
   $('#panadera-frase').textContent = v.frase;
@@ -2054,7 +2157,8 @@ async function abrirRegalo() {
   $('#r-nombre').value = estado.n;
   $('#r-para').value = estado.p;
   $('#r-de').value = estado.d || almacen.leer('guagua:firma', '');
-  $('#r-mensaje').value = estado.m || elige(MENSAJES);
+  $('#r-mensaje').value = estado.m || mensajeDe(estado.t);
+  pintarTipo();
   window.malDS.abrir('#d-regalar');
   await refrescarTarjeta();
 }
@@ -2073,10 +2177,14 @@ async function refrescarTarjeta() {
   ultimoEnlace = direccion() + '#r=' + ultimaReceta;
   guardarBorrador();
 }
-const textoRegalo = () => {
-  const quien = estado.d ? estado.d + ' te regaló' : 'Te regalaron';
-  const que = queEs(estado) + ' de pan' + (estado.n ? ' que se llama ' + estado.n : '');
-  return `${quien} ${que} por el Día de Difuntos:`;
+const textoRegalo = (e = estado) => {
+  const que = queEs(e) + ' de pan';
+  if (enMemoria(e)) {
+    return `Amasé ${que} en memoria de ${e.p || 'quienes ya no están'}. En Finados también se recuerda. ¿A quién recuerdas tú? Dedica la tuya:`;
+  }
+  const quien = e.d ? e.d + ' te regaló' : 'Te regalaron';
+  const vale = VALES[e.l] ? ' ' + VALES[e.l].texto : '';
+  return `${quien} ${que}${e.n ? ' que se llama ' + e.n : ''} por el Día de Difuntos.${vale} Ábrela aquí:`;
 };
 async function copiar(texto) {
   try { await navigator.clipboard.writeText(texto); avisa('Enlace copiado. Pégalo donde quieras.', 'ok'); }
@@ -2085,6 +2193,17 @@ async function copiar(texto) {
 function montarRegalo() {
   $$('#d-regalar input, #d-regalar textarea').forEach((x) => x.addEventListener('input', () => {
     clearTimeout(reloj); reloj = setTimeout(refrescarTarjeta, 350);
+  }));
+  $$('button[data-tipo]').forEach((b) => b.addEventListener('click', () => {
+    if (estado.t === b.dataset.tipo) return;
+    estado.t = b.dataset.tipo;
+    const msg = $('#r-mensaje');
+    if (!msg.value.trim() || esDeCajon(msg.value.trim())) msg.value = mensajeDe(estado.t);
+    pintarTipo(); refrescarTarjeta();
+  }));
+  $$('button[data-vale]').forEach((b) => b.addEventListener('click', () => {
+    estado.l = +b.dataset.vale;
+    pintarTipo(); refrescarTarjeta();
   }));
   const listo = async () => {
     clearTimeout(reloj);
@@ -2158,7 +2277,8 @@ async function pintarVitrina(cual) {
     const t = document.createElement('span'); t.className = 'pieza__nombre';
     t.textContent = nombreDe(e);
     const s = document.createElement('span'); s.className = 'pieza__meta';
-    s.textContent = item.t === 'recibida' ? (e.d ? 'de ' + e.d : 'regalada') + ' · ' + fecha(item.f) : (e.p ? 'para ' + e.p + ' · ' : '') + fecha(item.f);
+    const para = e.p ? (enMemoria(e) ? 'en memoria de ' : 'para ') + e.p + ' · ' : '';
+    s.textContent = item.t === 'recibida' ? (e.d ? 'de ' + e.d : 'regalada') + ' · ' + fecha(item.f) : para + fecha(item.f);
     b.append(c, t, s);
     b.addEventListener('click', () => abrirPieza(item, e));
     rej.appendChild(b);
@@ -2167,7 +2287,7 @@ async function pintarVitrina(cual) {
 function abrirPieza(item, e) {
   piezaActual = { item, e };
   $('#p-titulo').textContent = nombreDe(e);
-  const quien = [e.p && 'Para ' + e.p, e.d && 'de ' + e.d].filter(Boolean).join(' · ');
+  const quien = [e.p && (enMemoria(e) ? 'En memoria de ' : 'Para ') + e.p, e.d && 'de ' + e.d].filter(Boolean).join(' · ');
   $('#p-quien').textContent = quien;
   $('#p-quien').hidden = !quien;
   $('#p-mensaje').textContent = e.m || '';
@@ -2183,7 +2303,7 @@ function montarVitrina() {
   $$('[data-vitrina]').forEach((b) => b.addEventListener('click', () => pintarVitrina(b.dataset.vitrina)));
   $('#p-editar').addEventListener('click', () => {
     const { item, e } = piezaActual;
-    Object.assign(estado, { f: e.f, a: e.a, k: e.k, o: e.o.slice(), n: e.n, p: e.p, d: e.d, m: e.m, id: item.id });
+    Object.assign(estado, { f: e.f, a: e.a, k: e.k, o: e.o.slice(), n: e.n, p: e.p, d: e.d, m: e.m, t: e.t, l: e.l, id: item.id });
     historia = [];
     taller.cargar(estado);
     irA('decorar');
@@ -2200,7 +2320,7 @@ function montarVitrina() {
       if (r.id && item.t === 'mia') { item.g = r.id; guardarEnVitrina(item); }
     }
     if (navigator.share) {
-      try { await navigator.share({ title: 'Una guagua de pan', text: 'Te regalo esta guagua de pan por el Día de Difuntos:', url: enlace }); return; }
+      try { await navigator.share({ title: 'Una guagua de pan', text: textoRegalo(piezaActual.e), url: enlace }); return; }
       catch (err) { if (err && err.name === 'AbortError') return; }
     }
     copiar(enlace);
@@ -2223,14 +2343,29 @@ async function recibir(cod, regalo) {
   recibida = e; mordidas = 0;
   document.body.classList.add('modo-regalo');
   $('#regalo').hidden = false;
-  $('#regalo-titulo').textContent = e.d ? `${e.d} te regaló ${queEs(e)}` : `Te regalaron ${queEs(e)}`;
+  const memoria = enMemoria(e), vale = memoria ? null : VALES[e.l];
+  const que = queEs(e);
+  $('#regalo-kicker').textContent = memoria ? 'Una guagua para recordar' : 'Te llegó una guagua';
+  $('#regalo-titulo').textContent = memoria
+    ? `${e.d ? e.d + ' amasó ' + que : que.charAt(0).toUpperCase() + que.slice(1)} en memoria de ${e.p || 'quienes ya no están'}`
+    : e.d ? `${e.d} te regaló ${que}` : `Te regalaron ${que}`;
   $('#regalo-nombre').textContent = '«' + nombreDe(e) + '»';
-  $('#regalo-para').textContent = e.p ? 'Para ' + e.p : '';
-  $('#regalo-para').hidden = !e.p;
+  $('#regalo-para').textContent = !memoria && e.p ? 'Para ' + e.p : '';
+  $('#regalo-para').hidden = memoria || !e.p;
   $('#regalo-mensaje').textContent = e.m || '';
   $('#regalo-mensaje').hidden = !e.m;
-  $('#regalo-pista').textContent = 'Gírala con dos dedos. Tócala para darle un mordisco.';
-  $('#regalo-devolver').classList.remove('latido');
+  $('#regalo-vale').hidden = !vale;
+  if (vale) {
+    $('#regalo-vale-t').textContent = vale.titulo;
+    $('#regalo-vale-d').textContent = vale.detalle;
+    $('#regalo-cobrar').hidden = !vale.boton;
+    $('#regalo-cobrar-t').textContent = vale.boton || '';
+  }
+  $('#regalo-pista').textContent = memoria
+    ? 'En Finados se comparte el pan con los que recordamos. Tócala para darle un mordisco.'
+    : 'Gírala con dos dedos. Tócala para darle un mordisco.';
+  $('#regalo-devolver-t').textContent = memoria ? 'Dedica una tú también' : e.l === 3 ? 'Pasarla a alguien más' : 'Amasar una de vuelta';
+  $('#regalo-devolver').classList.toggle('latido', e.l === 3);
   if (!visorRegalo) {
     visorRegalo = new Visor($('#regalo-lienzo'), {
       toca(ev) {
@@ -2242,7 +2377,7 @@ async function recibir(cod, regalo) {
         mordidas++;
         const pista = $('#regalo-pista');
         if (visorRegalo.bocados().length >= MAX_BOCADOS || mordidas === 9) {
-          pista.textContent = 'Se acabó. Ahora te toca amasar una para alguien más.';
+          pista.textContent = enMemoria(recibida) ? 'Se acabó. ¿A quién recuerdas tú? Dedícale una.' : 'Se acabó. Ahora te toca amasar una para alguien más.';
           $('#regalo-devolver').classList.add('latido');
         } else if (mordidas === 1) pista.textContent = 'Crocante por fuera, suave por dentro.';
         else if (mordidas === 4) pista.textContent = 'Va por la mitad. Con colada morada sabría mejor.';
@@ -2265,12 +2400,21 @@ async function recibir(cod, regalo) {
 }
 function montarRecibir() {
   $('#regalo-devolver').addEventListener('click', () => {
-    const para = recibida && recibida.d;
+    const e = recibida || {};
+    // a quien te la regaló se la devuelves; una dedicada o una que se pasa, a alguien más
+    const para = !enMemoria(e) && e.l !== 3 ? e.d : '';
     cerrarRegalo();
-    nueva();
+    nueva(e.f === 'guaguau' ? 'guaguau' : 'guagua');
     estado.p = para || '';
+    estado.t = enMemoria(e) ? 'm' : '';
     guardarBorrador();
-    avisa(para ? `Amasa una para ${para}.` : 'Amasa la tuya.', 'ok');
+    avisa(enMemoria(e) ? '¿A quién quieres recordar? Amasa su guagua.'
+      : para ? `Amasa una para ${para}.` : e.l === 3 ? 'Amasa una para alguien más y que siga la cadena.' : 'Amasa la tuya.', 'ok');
+  });
+  $('#regalo-cobrar').addEventListener('click', () => {
+    const vale = recibida && VALES[recibida.l];
+    if (!vale || !vale.cobrar) return;
+    window.open('https://wa.me/?text=' + encodeURIComponent(vale.cobrar(recibida.d)), '_blank', 'noopener');
   });
   $('#regalo-taller').addEventListener('click', cerrarRegalo);
 }

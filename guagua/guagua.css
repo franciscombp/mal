@@ -287,3 +287,14 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 .cuenta__error{display:block;min-height:1.2em;margin:0}
 .cuenta__acc{display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--mal-e2)}
 #cuenta-fuera[hidden],#cuenta-dentro[hidden],#c-campo-nombre[hidden]{display:none}
+
+/* regalar o dedicar, y los vales */
+.regalar__tipo{gap:var(--mal-e2);flex-wrap:wrap}
+.regalar__vales{gap:6px;flex-wrap:wrap}
+.campo__pista:empty{display:none}
+.regalo__vale{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:12px 0 0;padding:10px 12px;
+  border:2px dashed var(--mal-tertiary);border-radius:12px;background:color-mix(in srgb, var(--mal-tertiary) 12%, transparent)}
+.regalo__vale[hidden]{display:none}
+.regalo__vale p{margin:0;flex:1 1 180px;font-size:var(--mal-t-caption);line-height:1.35}
+.regalo__vale b{display:block;font-family:var(--mal-display);font-size:1.05em}
+.regalo__vale .btn{flex:none}
