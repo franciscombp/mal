@@ -14,6 +14,14 @@ Vive en `franciscombp.github.io/mal/guagua/` y la carpeta se basta sola: Three.j
 `vendor/` (r170, licencia MIT en `vendor/LICENSE-three.txt`) y el sistema de diseño se pide
 con ruta relativa desde `../ds/`.
 
+## Cómo se toca
+
+Con un dedo se amasa y se decora; con dos dedos se gira y se acerca a la vez. El primer dedo
+espera un instante antes de pintar: si en ese rato llega el segundo, era un gesto y no se mancha
+nada. En la computadora, el clic derecho gira y la rueda acerca. La cámara encuadra la figura en
+el hueco que dejan la barra de arriba y el dock de herramientas (abajo; a la derecha si el
+teléfono está de lado). Hay botón de pantalla completa y un manifiesto para instalarla como app.
+
 ## Incrustarla en otro sitio
 
 Dos parámetros en la URL:
@@ -28,12 +36,13 @@ Para EL MERCIO., en un bloque HTML de WordPress:
 ```html
 <iframe src="https://franciscombp.github.io/mal/guagua/?embed&marca=mercio"
   title="Decora tu guagua de pan" loading="lazy"
-  style="width:100%;height:1500px;border:0"
-  allow="web-share; clipboard-write"></iframe>
+  style="width:100%;height:min(88vh, 820px);border:0;border-radius:16px"
+  allow="web-share; clipboard-write; fullscreen"></iframe>
 ```
 
-`allow="web-share; clipboard-write"` hace falta para que, desde dentro del iframe, funcionen
-el botón de compartir del teléfono y el de copiar enlace. Los enlaces que se regalan llevan
+El juego ocupa todo el iframe (es una pantalla de juego, no una página), así que conviene darle
+un alto fijo. `allow="web-share; clipboard-write; fullscreen"` hace falta para que, desde dentro del
+iframe, funcionen el botón de compartir del teléfono, el de copiar enlace y el de pantalla completa. Los enlaces que se regalan llevan
 la piel (`?marca=mercio`) pero no el `embed`: quien los recibe abre la guagua a pantalla entera.
 
 ## Cómo viaja una guagua
