@@ -194,19 +194,20 @@ const MOLDES = {
     ];
   },
   // un perrito echado, con la panza en la lata, visto desde arriba: la cabeza
-  // hacia arriba, las patas de adelante a los lados y la cola enroscada abajo
+  // hacia abajo, mirando a quien lo ve, las patas de adelante a los lados y
+  // la cola enroscada arriba. El lomo va girado para que se afine hacia la cola.
   guaguau() {
     return [
-      bolita(V(0, 1.55, 0.05), V(0.66, 1.2, 0.48), 0, 0.3),                       // el lomo
-      chorizo(0.11, [V(0.05, 0.6, -0.2), V(0.12, 0.15, -0.2), V(0.4, -0.1, -0.2)]), // la cola
-      bolita(V(0.55, 0.85, -0.18), V(0.24, 0.4, 0.15), -0.35),                    // las patas de atrás
-      bolita(V(-0.55, 0.85, -0.18), V(0.24, 0.4, 0.15), 0.35),
-      chorizo(0.14, [V(0.4, 2.2, -0.17), V(0.36, 3.25, -0.17)]),                  // las de adelante
-      chorizo(0.14, [V(-0.4, 2.2, -0.17), V(-0.36, 3.25, -0.17)]),
-      bolita(V(0, 3.0, 0.12), V(0.52, 0.5, 0.42)),                                // la cabeza
-      bolita(V(0, 3.45, 0.02), V(0.26, 0.22, 0.2)),                               // el hocico
-      bolita(V(0.46, 2.92, 0.08), V(0.16, 0.32, 0.1), 0.25),                      // las orejas caídas
-      bolita(V(-0.46, 2.92, 0.08), V(0.16, 0.32, 0.1), -0.25),
+      bolita(V(0, 1.95, 0.05), V(0.66, 1.2, 0.48), Math.PI, 0.3),                 // el lomo
+      chorizo(0.11, [V(0.05, 2.9, -0.2), V(0.12, 3.35, -0.2), V(0.4, 3.6, -0.2)]),  // la cola
+      bolita(V(0.55, 2.65, -0.18), V(0.24, 0.4, 0.15), 0.35),                     // las patas de atrás
+      bolita(V(-0.55, 2.65, -0.18), V(0.24, 0.4, 0.15), -0.35),
+      chorizo(0.14, [V(0.4, 1.3, -0.17), V(0.36, 0.25, -0.17)]),                  // las de adelante
+      chorizo(0.14, [V(-0.4, 1.3, -0.17), V(-0.36, 0.25, -0.17)]),
+      bolita(V(0, 0.5, 0.12), V(0.52, 0.5, 0.42)),                                // la cabeza
+      bolita(V(0, 0.05, 0.02), V(0.26, 0.22, 0.2)),                               // el hocico
+      bolita(V(0.46, 0.58, 0.08), V(0.16, 0.32, 0.1), -0.25),                     // las orejas caídas
+      bolita(V(-0.46, 0.58, 0.08), V(0.16, 0.32, 0.1), 0.25),
     ];
   },
   caballito() {
@@ -2153,7 +2154,9 @@ function sorpresa() {
   /* Glaseado fino, como en las panaderías: franjas de rulos, zigzags,
      ondas, espirales y puntitos en el cuerpo, sin tocar la cabeza. */
   const cabezas = estado.a.filter((p) => p[0] === 0 && Math.min(p[4], p[5]) > 25);
-  const alta = cabezas.length ? cabezas.reduce((a, b) => (b[2] > a[2] ? b : a)) : null;
+  // la cabeza es la bolita grande más alta; en el perrito echado, la más baja
+  const abajo = echada(estado);
+  const alta = cabezas.length ? cabezas.reduce((a, b) => ((abajo ? b[2] < a[2] : b[2] > a[2]) ? b : a)) : null;
   // de frente (guagua) la cabeza va arriba; de perfil (animalito), a un lado
   const centro = (min.x + max.x) / 2;
   const deFrente = alta && Math.abs(alta[1] / Q * esc - centro) < An * 0.15;
@@ -2162,8 +2165,8 @@ function sorpresa() {
     const borde = (alta[1] - Math.sign(alta[1] / Q * esc - centro) * alta[4] * 0.9) / Q * esc;
     if (alta[1] / Q * esc > centro) x1 = borde; else x0 = borde;
   }
-  const techo = deFrente ? Math.min(max.y - Al * 0.12, (alta[2] - alta[5] * 0.95) / Q * esc) : max.y - Al * (alta ? 0.1 : 0.25);
-  const piso = min.y + Al * 0.1, Ax = x1 - x0;
+  const techo = deFrente && !abajo ? Math.min(max.y - Al * 0.12, (alta[2] - alta[5] * 0.95) / Q * esc) : max.y - Al * (alta ? 0.1 : 0.25);
+  const piso = deFrente && abajo ? (alta[2] + alta[5] * 0.95) / Q * esc : min.y + Al * 0.1, Ax = x1 - x0;
   const colores = [1, 2, 3, 4, 5, 6, 0].sort(() => r() - 0.5).slice(0, 3);
   const franjas = Math.max(2, Math.min(5, Math.round((techo - piso) / 0.45)));
   const alto = (techo - piso) / franjas;
