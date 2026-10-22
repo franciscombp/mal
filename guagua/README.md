@@ -4,7 +4,8 @@ Una guagua de pan en 3D, en tres actos, para regalar por el Día de Difuntos:
 
 1. **Amasar.** Bolitas (arrastrar hacia el lado las hace anchas; hacia arriba, altas) y chorizos
    (se estiran con el dedo). Lo que cae encima de otra pieza se pega. Hay moldes: guagua,
-   caballito, chanchito, gallinita y la lata vacía.
+   caballito, chanchito, gallinita y la lata vacía. La masa viene en seis colores (natural,
+   cacao, mora, añil, achiote y verde), y Teñir cambia el de una pieza ya amasada.
 2. **Hornear.** La masa se infla y se dora en seis segundos; hay que sacarla en su punto. Antes
    queda blanca, después se quema, y la panadera lo comenta.
 3. **Decorar.** Manga de crema con pincel y tres boquillas, rosetas, grageas, pasas, carita y

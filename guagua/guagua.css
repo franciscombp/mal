@@ -90,7 +90,7 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 
 .pista{
   position:absolute;z-index:2;left:50%;top:calc(70px + env(safe-area-inset-top));transform:translateX(-50%);
-  width:min(92vw, 520px);margin:0;padding:10px 16px;border-radius:16px;text-align:center;
+  width:min(calc(100vw - 2 * var(--orilla) - 112px), 520px);margin:0;padding:10px 16px;border-radius:16px;text-align:center;
   background:rgba(20,4,24,.62);color:#fff;font-size:var(--mal-t-caption);line-height:1.4;
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);pointer-events:none;
   transition:opacity .5s, transform .5s var(--mal-ease);
@@ -138,6 +138,9 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 /* las filas que dependen de la herramienta */
 .juego:not([data-herramienta="chorizo"]) .dock__fila[data-con="chorizo"],
 .juego[data-herramienta="chorizo"] .dock__fila[data-sin="chorizo"],
+.juego[data-herramienta="tenir"] .dock__fila[data-sin="chorizo"],
+.juego[data-herramienta="mover"] .dock__fila[data-con="masa"],
+.juego[data-herramienta="quitar"] .dock__fila[data-con="masa"],
 .juego:not([data-herramienta="manga"]):not([data-herramienta="roseta"]) .dock__fila[data-con="manga roseta"],
 .juego:not([data-herramienta="carita"]) .dock__fila[data-con="carita"],
 .juego:not([data-herramienta="grageas"]) .dock__fila[data-con="grageas"],

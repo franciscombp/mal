@@ -48,6 +48,16 @@ const CREMAS = [
 ];
 const BOQUILLAS = [0.026, 0.05, 0.085, 0.13];   // pincel, fina, media, gruesa
 const GROSORES = [0.1, 0.17, 0.26];             // los chorizos de masa
+/* Las masas: la natural y las teñidas que se ven en las panaderías.
+   Cada una con su tono tostado (cantos y base) y su dorado (arriba). */
+const MASAS = [
+  { n: 'Natural', tostado: '#6a300c', dorado: '#d8913f' },
+  { n: 'Cacao', tostado: '#140905', dorado: '#4b2a19' },
+  { n: 'Mora', tostado: '#230b26', dorado: '#62295e' },
+  { n: 'Añil', tostado: '#101a28', dorado: '#3d5675' },
+  { n: 'Achiote', tostado: '#6e1f08', dorado: '#d0552a' },
+  { n: 'Verde', tostado: '#1a2e0c', dorado: '#5f8f35' },
+];
 const TAMANOS = [0.7, 1, 1.35];                 // las caritas
 const GRAGEAS = ['#e01b6a', '#ffcf3d', '#8fd0f2', '#93c84a', '#ffffff', '#7d3c98', '#ff8a3d'];
 const MAX_BOCADOS = 16;              // lo que cabe en el shader
@@ -96,6 +106,15 @@ function lienzo(w, h) {
      chorizo  [1, grosor×100, x, y, z, x, y, z…]               */
 const bolita = (c, s, rot) => [0, ent(c.x), ent(c.y), ent(c.z), ent(s.x), ent(s.y), ent(s.z), Math.round((rot || 0) * 100)];
 const chorizo = (r, pts) => [1, ent(r)].concat(...pts.map((p) => [ent(p.x), ent(p.y), ent(p.z)]));
+/* El color de masa va aparte para no tocar las piezas de siempre: la bolita
+   lleva un noveno número; el chorizo teñido es el tipo 3, [3, grosor, masa, x, y, z…]. */
+const masaDe = (p) => (p[0] === 0 ? p[8] || 0 : p[0] === 3 ? p[2] : 0);
+const iniPuntos = (p) => (p[0] === 3 ? 3 : 2);
+function conMasa(p, m) {
+  if (p[0] === 0) return m ? p.slice(0, 8).concat([m]) : p.slice(0, 8);
+  const pts = p.slice(iniPuntos(p));
+  return m ? [3, p[1], m].concat(pts) : [1, p[1]].concat(pts);
+}
 
 /* Los moldes se dibujaron primero en un papel de 600 × 750; `G` y `C`
    pasan esas medidas al espacio 3D, con el pie sobre la lata (y = 0). */
@@ -121,14 +140,12 @@ function guaguaConBrazos() {
 }
 
 const MOLDES = {
-  // la guagua de panadería: larga y angosta, envuelta como una criatura,
-  // con los pies que se afinan, un cuello y la cabeza redonda.
+  // la guagua de panadería: un pan alargado, envuelto como una criatura,
+  // con la cabeza redonda en la punta.
   guagua() {
     return [
-      chorizo(0.5, [V(0, 0.52, 0), V(0, 1.75, 0)]),       // el bulto de los pies, redondeado
-      bolita(V(0, 2.15, 0), V(0.62, 0.95, 0.46)),          // el cuerpo envuelto, con hombros
-      bolita(V(0, 3.08, 0), V(0.27, 0.14, 0.27)),          // el cuello
-      bolita(V(0, 3.48, 0.04), V(0.46, 0.48, 0.42)),       // la cabeza
+      chorizo(0.6, [V(0, 0.5, 0), V(0, 2.62, 0)]),       // un solo pan alargado, el cuerpo envuelto
+      bolita(V(0, 2.98, 0.06), V(0.52, 0.54, 0.47)),        // la cabeza en la punta, pegada al cuerpo
     ];
   },
   caballito() {
@@ -252,24 +269,25 @@ function aplanar(g) {
 function geometriaPieza(p) {
   if (p[0] === 0) return aplanar(elipsoide(V(p[1], p[2], p[3]).divideScalar(Q), V(p[4], p[5], p[6]).divideScalar(Q), p[7] / 100));
   const pts = [];
-  for (let i = 2; i < p.length; i += 3) pts.push(V(p[i], p[i + 1], p[i + 2]).divideScalar(Q));
+  for (let i = iniPuntos(p); i < p.length; i += 3) pts.push(V(p[i], p[i + 1], p[i + 2]).divideScalar(Q));
   const r = p[1] / Q;
   if (pts.length < 2) return aplanar(elipsoide(pts[0], V(r * 1.2, r * 1.2, r * 1.1)));
   return aplanar(tubo(pts, r, 0));
 }
 function moverPieza(p, dx, dy) {
   const o = p.slice();
-  const ini = p[0] === 0 ? 1 : 2, fin = p[0] === 0 ? 4 : p.length;
+  const ini = p[0] === 0 ? 1 : iniPuntos(p), fin = p[0] === 0 ? 4 : p.length;
   for (let i = ini; i < fin; i += 3) { o[i] += dx; o[i + 1] += dy; }
   return o;
 }
 /* El dorado del horno, horneado en los vértices: más tostado en los
    cantos y en la base que tocó la lata, más claro arriba. */
-const TOSTADO = new THREE.Color('#6a300c'), DORADO = new THREE.Color('#d8913f');
-function dorar(g) {
+const TONOS = MASAS.map((m) => [new THREE.Color(m.tostado), new THREE.Color(m.dorado)]);
+function dorar(g, masa = 0) {
   const n = g.attributes.normal, p = g.attributes.position;
   const col = new Float32Array(n.count * 3);
   const L = V(0.25, 0.55, 0.8).normalize(), c = new THREE.Color();
+  const [TOSTADO, DORADO] = TONOS[masa] || TONOS[0];
   for (let i = 0; i < n.count; i++) {
     const t = 0.5 + 0.5 * (n.getX(i) * L.x + n.getY(i) * L.y + n.getZ(i) * L.z);
     const piso = limita((p.getZ(i) - PISO) / 0.3, 0, 1);
@@ -449,7 +467,8 @@ function comestible(mat, U, horno) {
         }`)
       .replace('#include <color_fragment>', `#include <color_fragment>
         ${horno ? `
-        diffuseColor.rgb = mix(vec3(0.86, 0.76, 0.56), diffuseColor.rgb, smoothstep(0.05, 1.0, uCoccion));
+        vec3 cruda = mix(min(diffuseColor.rgb * 1.6, vec3(1.0)), vec3(0.86, 0.76, 0.56), 0.5);
+        diffuseColor.rgb = mix(cruda, diffuseColor.rgb, smoothstep(0.05, 1.0, uCoccion));
         diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.025, 0.012, 0.006), smoothstep(1.1, 1.55, uCoccion) * 0.92);` : ''}
         if (!gl_FrontFacing) diffuseColor.rgb = vec3(0.93, 0.80, 0.56);`);
   };
@@ -643,7 +662,7 @@ class Visor {
     this.dibujar();
   }
   mallaPieza(p, i) {
-    const o = this.malla(dorar(geometriaPieza(p)), this.mat.pan);
+    const o = this.malla(dorar(geometriaPieza(p), masaDe(p)), this.mat.pan);
     o.userData.pieza = i;
     return o;
   }
@@ -1042,7 +1061,7 @@ async function exprimir(bytes, modo) {
 }
 /* Los trazos van en diferencias: números chicos, que se comprimen mejor.
    `PASOS` dice, por tipo, dónde empiezan los puntos y cuánto mide cada uno. */
-const PASOS = { op: { 0: [3, 3], 2: [2, 6] }, pieza: { 1: [2, 3] } };
+const PASOS = { op: { 0: [3, 3], 2: [2, 6] }, pieza: { 1: [2, 3], 3: [3, 3] } };
 function aDeltas(x, tabla) {
   const p = tabla[x[0]];
   if (!p) return x.slice();
@@ -1097,8 +1116,9 @@ function sano(d) {
   const lista = (x, max) => (Array.isArray(x) ? x.slice(0, max).filter((y) => Array.isArray(y) && y.every(num)) : []);
   const a = lista(d.a, MAX_PIEZAS).filter((p) => {
     puntos += p.length;
-    if (p[0] === 0) return p.length === 8 && p[4] > 0 && p[5] > 0 && p[6] > 0;
+    if (p[0] === 0) return (p.length === 8 || (p.length === 9 && MASAS[p[8]] && Number.isInteger(p[8]))) && p[4] > 0 && p[5] > 0 && p[6] > 0;
     if (p[0] === 1) return p.length >= 5 && (p.length - 2) % 3 === 0 && p[1] > 0;
+    if (p[0] === 3) return p.length >= 6 && (p.length - 3) % 3 === 0 && p[1] > 0 && MASAS[p[2]] && Number.isInteger(p[2]);
     return false;
   });
   const o = lista(d.o, 800).filter((op) => {
@@ -1343,7 +1363,7 @@ function ding() {
 const estado = {
   etapa: 'amasar',
   f: 'guagua', a: [], k: 0, o: [],
-  mano: 'bolita', grosor: 1,
+  mano: 'bolita', grosor: 1, masa: 0,
   herramienta: 'manga', crema: 1, boquilla: 2, tamano: 1,
   id: null, n: '', p: '', d: '', m: '',
 };
@@ -1380,15 +1400,26 @@ function cambiarMasa(a, molde) {
 function tocarMasa(ev) {
   const mano = estado.mano;
   const hit = taller.tocar(ev, true);
-  if (mano === 'mover' || mano === 'quitar') {
+  if (mano === 'mover' || mano === 'quitar' || mano === 'tenir') {
     if (!hit || hit.pieza == null) return true;
+    if (mano === 'tenir') {
+      if (masaDe(estado.a[hit.pieza]) === estado.masa) return true;
+      recordar();
+      const a = estado.a.slice();
+      a[hit.pieza] = conMasa(a[hit.pieza], estado.masa);
+      estado.a = a;
+      taller.cambiarPieza(hit.pieza, a[hit.pieza]);
+      cambiarMasa(a); vibra();
+      return true;
+    }
     if (mano === 'quitar') {
       recordar();
       const a = estado.a.filter((_, i) => i !== hit.pieza);
       taller.ponerMasa(a); cambiarMasa(a);
       return true;
     }
-    const z = estado.a[hit.pieza][estado.a[hit.pieza][0] === 0 ? 3 : 4] / Q;
+    const pz = estado.a[hit.pieza];
+    const z = pz[pz[0] === 0 ? 3 : iniPuntos(pz) + 2] / Q;
     amase = { mano, i: hit.pieza, z, desde: taller.alPlano(ev, z), original: estado.a[hit.pieza], movido: false };
     return true;
   }
@@ -1414,7 +1445,7 @@ function estirarBolita(q) {
   const rx = Math.max(dx, d * 0.6, 0.12), ry = Math.max(dy, d * 0.6, 0.12);
   const rz = Math.min(0.75, Math.min(rx, ry) * 0.7);
   const z = amase.sobre ? c.z - rz * 0.35 : PISO + rz * 0.8;   // en la lata, apoyada
-  amase.pieza = bolita(V(c.x, c.y, z), V(rx, ry, rz));
+  amase.pieza = conMasa(bolita(V(c.x, c.y, z), V(rx, ry, rz)), estado.masa);
   taller.previaPieza(amase.pieza);
 }
 function arrastrarMasa(ev) {
@@ -1445,13 +1476,13 @@ function soltarMasa() {
   if (m.mano === 'bolita' && m.pieza) {
     recordar();
     // un toque, sin estirar: una bolita mediana
-    const pieza = m.estirada ? m.pieza : (() => { const r = 0.3, z = m.sobre ? m.c.z - r * 0.25 : PISO + r * 0.6; return bolita(V(m.c.x, m.c.y, z), V(r, r, r * 0.75)); })();
+    const pieza = m.estirada ? m.pieza : (() => { const r = 0.3, z = m.sobre ? m.c.z - r * 0.25 : PISO + r * 0.6; return conMasa(bolita(V(m.c.x, m.c.y, z), V(r, r, r * 0.75)), estado.masa); })();
     vibra();
     const a = estado.a.concat([pieza]);
     taller.ponerMasa(a); cambiarMasa(a);
   } else if (m.mano === 'chorizo') {
     recordar();
-    const p = m.pts.length > 1 ? chorizo(m.r, m.pts) : bolita(m.pts[0], V(m.r * 1.3, m.r * 1.3, m.r * 1.1));
+    const p = conMasa(m.pts.length > 1 ? chorizo(m.r, m.pts) : bolita(m.pts[0], V(m.r * 1.3, m.r * 1.3, m.r * 1.1)), estado.masa);
     vibra();
     const a = estado.a.concat([p]);
     taller.ponerMasa(a); cambiarMasa(a);
@@ -1721,6 +1752,20 @@ function montarTaller() {
     requestAnimationFrame(medirTaller);
   }));
   grupoDe('data-mano', 'mano');
+  const masas = $('#masas');
+  MASAS.forEach((ms, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'crema masa';
+    b.style.setProperty('--crema', ms.dorado);
+    b.setAttribute('aria-label', 'Masa ' + ms.n.toLowerCase());
+    b.setAttribute('aria-pressed', String(i === estado.masa));
+    b.title = ms.n;
+    b.addEventListener('click', () => {
+      estado.masa = i;
+      $$('.masa', masas).forEach((x, j) => x.setAttribute('aria-pressed', String(j === i)));
+    });
+    masas.appendChild(b);
+  });
   grupoDe('data-grosor', 'grosor', true);
   grupoDe('data-herramienta', 'herramienta');
   grupoDe('data-boquilla', 'boquilla', true);
@@ -1875,25 +1920,52 @@ function sorpresa() {
     }
     if (op && op.length > 6) ops.push(op);
   };
-  const c1 = col(), c2 = col(), c3 = col();
-  linea(c1, 2, (t, i) => [min.x + An * t, min.y + Al * 0.45 + (i % 2 ? 1 : -1) * Al * 0.025], 26);
-  linea(c2, 1, (t) => [min.x + An * t, min.y + Al * 0.32 + Math.sin(t * Math.PI * 6) * Al * 0.02], 40);
-  for (let i = 1; i < 8; i++) {
-    const h = golpe(min.x + An * i / 8, min.y + Al * 0.22);
-    if (h) ops.push([1, i % 2 ? c3 : c1, 1, ...pn(h)]);
+  /* Glaseado fino, como en las panaderías: franjas de rulos, zigzags,
+     ondas, espirales y puntitos en el cuerpo, sin tocar la cabeza. */
+  const cabezas = estado.a.filter((p) => p[0] === 0 && Math.min(p[4], p[5]) > 25);
+  const alta = cabezas.length ? cabezas.reduce((a, b) => (b[2] > a[2] ? b : a)) : null;
+  const techo = alta ? Math.min(max.y - Al * 0.12, (alta[2] - alta[5] * 0.95) / Q * esc) : max.y - Al * 0.25;
+  const piso = min.y + Al * 0.1;
+  const colores = [1, 2, 3, 4, 5, 6, 0].sort(() => r() - 0.5).slice(0, 3);
+  const franjas = Math.max(2, Math.min(5, Math.round((techo - piso) / 0.45)));
+  const alto = (techo - piso) / franjas;
+  const amp = Math.min(alto * 0.3, 0.14);
+  for (let f = 0; f < franjas; f++) {
+    const y = piso + alto * (f + 0.5), c = colores[f % colores.length];
+    const w = r() < 0.85 ? 0 : 1;
+    switch (Math.floor(r() * 5)) {
+      case 0: linea(c, w, (t, i) => [min.x + An * t, y + (i % 2 ? amp : -amp)], 22); break;
+      case 1: linea(c, w, (t) => [min.x + An * t, y + Math.sin(t * Math.PI * 8) * amp], 60); break;
+      case 2: linea(c, w, (t) => {
+        const a = t * Math.PI * 2 * 7;
+        return [min.x + An * t + Math.cos(a) * amp * 0.7, y + Math.sin(a) * amp];
+      }, 110); break;
+      case 3: for (let i = 1; i < 9; i++) {
+        const h = golpe(min.x + An * i / 9, y);
+        if (h) ops.push([1, i % 2 ? c : colores[(f + 1) % colores.length], 0, ...pn(h)]);
+      } break;
+      default: [0.3, 0.7].forEach((u) => {
+        const cx = min.x + An * u;
+        linea(c, w, (t) => {
+          const a = t * Math.PI * 2 * 2.5, rr = amp * 1.1 * t;
+          return [cx + Math.cos(a) * rr, y + Math.sin(a) * rr];
+        }, 40);
+      });
+    }
   }
-  const g = [2, Math.floor(r() * 1e9)];
-  for (let i = 0; i < 10; i++) {
-    const h = golpe(min.x + An * (0.2 + r() * 0.6), min.y + Al * (0.55 + r() * 0.15));
-    if (h) g.push(...pn(h));
+  if (r() < 0.5) {
+    const g = [2, Math.floor(r() * 1e9)];
+    for (let i = 0; i < 8; i++) {
+      const h = golpe(min.x + An * (0.2 + r() * 0.6), piso + (techo - piso) * r());
+      if (h) g.push(...pn(h));
+    }
+    if (g.length > 2) ops.push(g);
   }
-  if (g.length > 2) ops.push(g);
 
   /* La cara va en la bolita más alta que sea cabeza de verdad. Si está
      al centro, es una guagua: se le pintan ojos, nariz y sonrisa. Si está a un lado, es un animal mirando hacia allá. */
-  const cabezas = estado.a.filter((p) => p[0] === 0 && Math.min(p[4], p[5]) > 25);
-  if (!cabezas.length || tieneCara(estado)) return ops;
-  const cab = cabezas.reduce((a, b) => (b[2] > a[2] ? b : a));
+  if (!alta || tieneCara(estado)) return ops;
+  const cab = alta;
   const cx = cab[1] / Q * esc, cy = cab[2] / Q * esc, rx = cab[4] / Q, ry = cab[5] / Q;
   const centro = (min.x + max.x) / 2;
   if (Math.abs(cx - centro) < An * 0.15) {
