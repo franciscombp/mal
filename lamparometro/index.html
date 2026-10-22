@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="es" data-marca="mercio">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>El Lamparómetro · EL MERCIO.</title>
+<meta name="description" content="Cinco tests satíricos: a qué lámpara ecuatoriana te pareces en el espectro político, en la carta astral y en la playlist, qué provincia eres y qué producto del Tuti eres. Un juego de EL MERCIO.">
+<link rel="canonical" href="https://franciscombp.github.io/mal/lamparometro/">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141414" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="EL MERCIO.">
+<meta property="og:locale" content="es_EC">
+<meta property="og:title" content="El Lamparómetro · ¿A qué lámpara ecuatoriana te pareces?">
+<meta property="og:description" content="Cinco tests satíricos: el espectro político, la carta astral, la playlist, qué provincia eres y qué producto del Tuti eres.">
+<meta property="og:url" content="https://franciscombp.github.io/mal/lamparometro/">
+<meta property="og:image" content="https://franciscombp.github.io/mal/img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../ds/fonts/pt-serif.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../ds/fonts/montserrat.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../ds/mal/mal.css?v=1.0.17">
+<script src="../ds/mal/mal.js?v=1.0.17" defer></script>
+<style>
+/* El periódico pone la tipografía, el color y la escuadra. Aquí solo va lo
+   que es del juego: la caja del test, las opciones, la ficha del resultado
+   y el plano del Lamparómetro. */
+.lm{width:min(100% - 2rem, 760px);margin-inline:auto;padding-bottom:var(--em-64)}
+.lm-cab{text-align:center;padding-block:var(--em-32) var(--em-24)}
+.lm-cab .em-frase{margin-top:var(--em-8)}
+.lm-fecha{
+  display:flex;justify-content:space-between;gap:var(--em-16);flex-wrap:wrap;
+  padding-block:var(--em-12);margin-top:var(--em-24);border-block:1px solid var(--em-border);
+  font-family:var(--em-sans);font-size:var(--em-t-caption);font-weight:500;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--em-contrast-3);
+}
+.lm-pantalla{outline:none}
+.lm-pantalla[hidden]{display:none}
+
+/* ─── portada: los tests ─── */
+.lm-tests{display:grid;gap:var(--em-16);grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));margin-top:var(--em-32)}
+.lm-test{
+  display:flex;flex-direction:column;gap:var(--em-8);text-align:left;
+  padding:var(--em-24);background:var(--em-surface);border:0;border-radius:0;
+  color:var(--em-contrast);cursor:pointer;font:inherit;transition:background .2s ease;
+}
+.lm-test:hover,.lm-test:focus-visible{background:var(--em-surface-2,var(--em-surface));outline:2px solid var(--em-accent);outline-offset:-2px}
+.lm-test h2{font-family:var(--em-serif);font-size:var(--mal-t-h2);font-weight:700;margin:0;line-height:1.2}
+.lm-test p{margin:0;color:var(--em-contrast-2)}
+.lm-test .em-meta{margin-top:auto;padding-top:var(--em-8)}
+.lm-elenco{display:flex;flex-wrap:wrap;gap:var(--em-4);margin-top:var(--em-16);justify-content:center}
+
+/* ─── el monograma: una lámpara sin foto ─── */
+.lm-mono{
+  --c:#141414;--t:#fff;
+  display:inline-grid;place-items:center;flex:none;width:44px;height:44px;border-radius:50%;
+  background:var(--c);color:var(--t);font-family:var(--em-sans);font-weight:800;font-size:15px;letter-spacing:.02em;
+}
+.lm-mono--xl{width:112px;height:112px;font-size:36px}
+.lm-mono--s{width:30px;height:30px;font-size:11px}
+
+/* ─── pregunta ─── */
+.lm-barra{height:6px;background:var(--em-surface);margin-block:var(--em-16) var(--em-32)}
+.lm-barra i{display:block;height:100%;width:0;background:var(--em-accent);transition:width .3s ease}
+.lm-pregunta{font-family:var(--em-serif);font-size:var(--mal-t-h1);font-weight:700;line-height:1.25;margin:var(--em-8) 0 var(--em-24)}
+.lm-opciones{display:grid;gap:var(--em-8);list-style:none;padding:0;margin:0}
+.lm-opcion{
+  width:100%;min-height:52px;text-align:left;padding:var(--em-12) var(--em-16);
+  background:var(--em-surface);color:var(--em-contrast);border:0;border-radius:0;cursor:pointer;
+  font-family:var(--em-serif);font-size:var(--mal-t-cuerpo);line-height:1.35;
+  display:flex;align-items:center;gap:var(--em-12);transition:background .15s ease,color .15s ease;
+}
+.lm-opcion:hover,.lm-opcion:focus-visible{background:var(--em-contrast);color:var(--em-base);outline:none}
+.lm-opcion b{font-family:var(--em-sans);font-size:12px;letter-spacing:.06em;text-transform:uppercase;min-width:2.2em;opacity:.65}
+.lm-escala .lm-opcion{justify-content:space-between}
+.lm-escala .lm-opcion span:last-child{font-family:var(--em-sans);font-size:12px;letter-spacing:.06em;text-transform:uppercase;opacity:.6}
+.lm-pie-q{display:flex;justify-content:space-between;align-items:center;margin-top:var(--em-24);gap:var(--em-16)}
+.lm-link{background:none;border:0;padding:0;font:inherit;color:var(--em-contrast-3);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.lm-link:hover{color:var(--em-accent)}
+
+/* fecha de nacimiento de la carta astral */
+.lm-fechas{display:grid;grid-template-columns:1fr 2fr;gap:var(--em-12);margin-bottom:var(--em-24)}
+.lm-fechas label{display:grid;gap:var(--em-4);font-family:var(--em-sans);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--em-contrast-3)}
+.lm-fechas select{
+  min-height:52px;padding:0 var(--em-12);font:inherit;font-family:var(--em-serif);font-size:var(--mal-t-cuerpo);
+  text-transform:none;letter-spacing:0;color:var(--em-contrast);background:var(--em-surface);border:0;border-radius:0;
+}
+
+/* ─── resultado ─── */
+.lm-ficha{display:grid;grid-template-columns:auto 1fr;gap:var(--em-24);align-items:center;margin-top:var(--em-16)}
+.lm-ficha h1{font-family:var(--em-serif);font-size:var(--mal-t-display);line-height:1.1;margin:var(--em-4) 0 0}
+.lm-ficha .em-meta{margin:var(--em-4) 0 0}
+@media (max-width:520px){.lm-ficha{grid-template-columns:1fr;justify-items:start}}
+.lm-res .em-quote{margin-block:var(--em-32)}
+.lm-rasgos{padding-left:1.1em;margin:var(--em-16) 0 0}
+.lm-rasgos li{margin-bottom:var(--em-8)}
+.lm-carta{display:flex;flex-wrap:wrap;gap:var(--em-8);margin-top:var(--em-16);padding:0;list-style:none}
+.lm-carta li{background:var(--em-surface);padding:var(--em-8) var(--em-12);font-family:var(--em-sans);font-size:13px;font-weight:600}
+.lm-sec{margin-top:var(--em-48)}
+.lm-sec > .em-kicker{display:block;margin-bottom:var(--em-12)}
+.lm-podio{list-style:none;padding:0;margin:0;display:grid;gap:var(--em-12)}
+.lm-podio li{display:grid;grid-template-columns:auto 1fr auto;gap:var(--em-12);align-items:center}
+.lm-podio .lm-medida{height:8px;background:var(--em-surface);grid-column:2;margin-top:var(--em-4)}
+.lm-podio .lm-medida i{display:block;height:100%;background:var(--c,var(--em-accent))}
+.lm-podio b{font-family:var(--em-sans);font-size:14px}
+.lm-podio .tabular{font-family:var(--em-sans);font-weight:700;font-variant-numeric:tabular-nums}
+.lm-acciones{display:flex;flex-wrap:wrap;gap:var(--em-8);margin-top:var(--em-32)}
+.lm-acciones .em-btn{display:inline-flex;align-items:center;gap:var(--em-8)}
+.lm-ajeno{background:var(--mal-pastel-azul,var(--em-surface));color:#141414;padding:var(--em-12) var(--em-16);margin-top:var(--em-16);font-family:var(--em-sans);font-size:14px}
+
+/* ─── el plano del Lamparómetro ─── */
+.lm-plano{width:100%;max-width:560px;display:block;margin-inline:auto;font-family:var(--em-sans)}
+.lm-plano .cuad{opacity:.12}
+.lm-plano .eje{stroke:var(--em-contrast);stroke-width:.08}
+.lm-plano .rej{stroke:var(--em-contrast);stroke-width:.02;opacity:.35}
+.lm-plano .rot{fill:var(--em-contrast-3);font-size:.62px;font-weight:700;letter-spacing:.03px;text-transform:uppercase}
+.lm-plano .nom{fill:var(--em-contrast);font-size:.68px;font-weight:600}
+.lm-plano .pj{cursor:pointer;outline:none}
+.lm-plano .pj:focus-visible circle,.lm-plano .pj.activo circle{stroke:var(--em-contrast);stroke-width:.18}
+.lm-quien{text-align:center;font-family:var(--em-sans);font-size:14px;font-weight:600;color:var(--em-contrast-3);margin:var(--em-8) 0 0;min-height:1.5em}
+.lm-plano .tu-nom{fill:var(--em-accent);font-size:.9px;font-weight:800}
+.lm-ejes{display:grid;grid-template-columns:1fr 1fr;gap:var(--em-12);margin-top:var(--em-16)}
+.lm-ejes > div{background:var(--em-surface);padding:var(--em-12) var(--em-16)}
+.lm-ejes b{display:block;font-family:var(--em-sans);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--em-contrast-3)}
+.lm-ejes span{font-family:var(--em-serif);font-size:var(--mal-t-h4);font-weight:700}
+
+.lm-plano .ini{font-size:.5px;font-weight:800;pointer-events:none}
+.lm-ejes__z{grid-column:1 / -1}
+.lm-medida--z{height:10px;background:var(--em-base);margin-top:var(--em-8)}
+.lm-medida--z i{display:block;height:100%;background:linear-gradient(90deg,var(--em-contrast-3),var(--em-accent))}
+.lm-adn{list-style:none;padding:0;margin:0;display:grid;gap:var(--em-12)}
+.lm-adn li{display:grid;grid-template-columns:5.5em 1fr;gap:var(--em-4) var(--em-12);align-items:center}
+.lm-adn b{font-family:var(--em-sans);font-size:13px}
+.lm-adn span{grid-column:2;font-size:var(--em-t-caption);color:var(--em-contrast-3);font-style:italic}
+.lm-adn .lm-medida{height:10px;background:var(--em-surface);position:relative}
+.lm-adn .lm-medida i{display:block;height:100%;background:var(--em-accent)}
+.lm-adn .lm-medida s{position:absolute;top:-4px;bottom:-4px;width:3px;margin-left:-1.5px;background:var(--em-contrast)}
+.lm-aviso{margin-top:var(--em-48);padding-top:var(--em-16);border-top:1px solid var(--em-border);color:var(--em-contrast-3);font-size:var(--em-t-caption)}
+.lm .em-header{flex-wrap:nowrap}
+.lm .em-header .em-logo{font-size:clamp(22px, 6vw, 32px)}
+.lm > footer{padding-inline:0}
+.lm-nav .em-btn{padding:var(--em-8) var(--em-16);white-space:nowrap}
+@media (prefers-reduced-motion:reduce){.lm-barra i,.lm-opcion,.lm-test{transition:none}}
+</style>
+</head>
+<body>
+<a class="salta" href="#principal">Saltar al contenido</a>
+<div class="lm">
+  <header class="em-header">
+    <a class="em-logo" href="https://elmercio.com/">EL MERCIO<span class="em-logo-dot">.</span></a>
+    <nav class="lm-nav" aria-label="Secciones">
+      <a class="em-btn em-btn--linea" href="#" data-ir="portada">Los tests</a>
+    </nav>
+  </header>
+
+  <main id="principal">
+    <!-- PORTADA -->
+    <section class="lm-pantalla" id="portada" tabindex="-1" aria-labelledby="portada-t">
+      <div class="lm-cab">
+        <p class="em-kicker">Juegos · Sátira</p>
+        <h1 class="em-h1" id="portada-t" style="font-size:var(--mal-t-display)">El Lamparómetro</h1>
+        <p class="em-frase">¿A qué lámpara ecuatoriana te pareces? Cinco tests con rigor
+        científico cero y margen de error del cien por ciento.</p>
+        <div class="lm-elenco" id="elenco" aria-label="El elenco"></div>
+        <p class="lm-fecha"><span>Quito · edición de los tests</span><span>Sin registro · sin datos · sin vergüenza</span></p>
+      </div>
+      <div class="lm-tests" id="tests"></div>
+      <p class="lm-aviso"><svg class="icono icono--s" aria-hidden="true"><use href="#i-info"/></svg>
+      Esto es sátira. Ninguna de las personas ni de los personajes que salen aquí participó,
+      aprobó ni se enteró de este test, y las posiciones del plano son una exageración de su
+      figura pública, no un dato. Las cartas astrales son inventadas: nadie revisó la partida
+      de nacimiento de nadie. Las provincias son cariño, no geografía. El Tuti tampoco sabe que existimos. Tus respuestas no salen de tu
+      teléfono.</p>
+    </section>
+
+    <!-- PREGUNTA -->
+    <section class="lm-pantalla" id="test" tabindex="-1" hidden aria-live="polite">
+      <p class="em-kicker" id="q-kicker"></p>
+      <div class="lm-barra" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="q-barra"><i></i></div>
+      <p class="em-meta" id="q-n"></p>
+      <h2 class="lm-pregunta" id="q-t"></h2>
+      <div id="q-extra"></div>
+      <ul class="lm-opciones" id="q-op"></ul>
+      <div class="lm-pie-q">
+        <button class="lm-link" type="button" id="q-atras">← Atrás</button>
+        <button class="lm-link" type="button" data-ir="portada">Salir del test</button>
+      </div>
+    </section>
+
+    <!-- RESULTADO -->
+    <section class="lm-pantalla lm-res" id="resultado" tabindex="-1" hidden aria-labelledby="r-t"></section>
+  </main>
+
+  <footer class="em-section-padded">
+    <p class="em-frase">EL MERCIO. · Las noticias, el entretenimiento y la desinformación de ayer.</p>
+    <p class="em-frase">Un juego de MAL en <a class="em-link" href="../#juegos">una.red</a> · Quito, Ecuador</p>
+  </footer>
+</div>
+
+<script src="datos.js?v=2"></script>
+<script>
+(() => {
+'use strict';
+
+const { PJ, RASGOS, ESCALA, TESTS, SIGNOS } = window.LAMP;
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const EJES = ['x', 'y', 'z'];
+
+function signo(mes, dia) {
+  const v = mes * 100 + dia;
+  let s = SIGNOS[0];  // capricornio cubre del 22 de diciembre al 19 de enero
+  for (const g of SIGNOS.slice(1)) if (v >= g[1] * 100 + g[2]) s = g;
+  if (v >= 1222) s = SIGNOS[0];
+  return s;
+}
+
+/* El tope de cada rasgo sale de las preguntas: el mínimo y el máximo que se
+   pueden sumar eligiendo en cada pregunta la opción que más resta o más suma.
+   Así el perfil va de 0 a 10 aunque se añadan preguntas. La media es lo que
+   saca quien responde al azar: se compara contra ella y no contra el 5, o
+   todo el mundo caería en la provincia más tibia. */
+function topes(T) {
+  const t = Object.fromEntries(RASGOS.map((r) => [r.k, [0, 0, 0]]));
+  for (const q of T.preguntas) for (const r of RASGOS) {
+    const v = q.op.map((o) => o.r[r.k] || 0);
+    t[r.k][0] += Math.min(...v); t[r.k][1] += Math.max(...v);
+    t[r.k][2] += v.reduce((a, b) => a + b, 0) / v.length;
+  }
+  return t;
+}
+const escala = (tp, k, n) => (n - tp[k][0]) / (tp[k][1] - tp[k][0]) * 10;
+const FIRMA = .07;   // cuánto pesa un punto de firma frente al coseno (−1…1)
+
+/* ══════════ ESTADO Y PANTALLAS ══════════ */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+let st = null;   // { id, i, resp: [], fecha: {mes, dia} }
+
+function mostrar(id) {
+  for (const p of document.querySelectorAll('.lm-pantalla')) p.hidden = p.id !== id;
+  const p = $('#' + id);
+  window.scrollTo({ top: 0 });
+  p.focus({ preventScroll: true });
+}
+function mono(o, mod = '') {
+  return `<span class="lm-mono ${mod}" style="--c:${o.c};--t:${o.t}" aria-hidden="true">${esc(o.ini)}</span>`;
+}
+
+function portada() {
+  st = null;
+  history.replaceState(null, '', location.pathname + location.search);
+  mostrar('portada');
+}
+
+function empezar(id) {
+  st = { id, i: 0, resp: [], fecha: null };
+  pregunta();
+  mostrar('test');
+}
+
+function pregunta() {
+  const T = TESTS[st.id];
+  const q = T.preguntas[st.i];
+  const total = T.preguntas.length;
+  $('#q-kicker').textContent = T.kicker;
+  $('#q-n').textContent = `Pregunta ${st.i + 1} de ${total}`;
+  const pct = Math.round(st.i / total * 100);
+  $('#q-barra i').style.width = pct + '%';
+  $('#q-barra').setAttribute('aria-valuenow', pct);
+  $('#q-t').textContent = q.astro ? `${q.astro}. ${q.t}` : q.t;
+  $('#q-atras').hidden = st.i === 0 && !T.fecha;
+
+  const extra = $('#q-extra');
+  extra.innerHTML = '';
+  // el primer paso de la carta astral es el cumpleaños
+  if (T.fecha && st.i === 0 && !st.fecha) return fechaPaso();
+
+  const ul = $('#q-op');
+  ul.className = 'lm-opciones' + (T.tipo === 'plano' ? ' lm-escala' : '');
+  const ops = T.tipo === 'plano' ? ESCALA : q.op;
+  ul.innerHTML = ops.map((o, k) => `<li><button class="lm-opcion" type="button" data-k="${k}">` +
+    (T.tipo === 'plano' ? `<span>${esc(o.t)}</span><span>${esc(o.n)}</span>`
+                        : `<b>${'ABCDEFGHI'[k]}</b><span>${esc(o.t)}</span>`) +
+    `</button></li>`).join('');
+}
+
+function fechaPaso() {
+  $('#q-n').textContent = 'Antes de empezar';
+  $('#q-t').textContent = 'Sol. ¿Cuándo es tu cumpleaños?';
+  $('#q-atras').hidden = true;
+  const dias = Array.from({ length: 31 }, (_, k) => `<option>${k + 1}</option>`).join('');
+  const meses = MESES.map((m, k) => `<option value="${k + 1}">${m}</option>`).join('');
+  $('#q-extra').innerHTML = `<div class="lm-fechas">
+    <label>Día<select id="f-dia">${dias}</select></label>
+    <label>Mes<select id="f-mes">${meses}</select></label></div>`;
+  $('#q-op').className = 'lm-opciones';
+  $('#q-op').innerHTML = `<li><button class="em-btn" type="button" id="f-ok">Ver mi sol y seguir</button></li>`;
+  $('#f-ok').addEventListener('click', () => {
+    const dia = +$('#f-dia').value, mes = +$('#f-mes').value;
+    const max = new Date(2024, mes, 0).getDate();   // 2024 es bisiesto: el 29 de febrero vale
+    st.fecha = { dia: Math.min(dia, max), mes };
+    pregunta();
+  });
+}
+
+function responder(k) {
+  st.resp[st.i] = k;
+  const T = TESTS[st.id];
+  if (st.i < T.preguntas.length - 1) { st.i++; pregunta(); $('#test').focus({ preventScroll: true }); }
+  else { const r = calcular(); location.hash = codigo(r); }
+}
+
+function atras() {
+  const T = TESTS[st.id];
+  if (st.i > 0) { st.i--; pregunta(); }
+  else if (T.fecha && st.fecha) { st.fecha = null; pregunta(); }
+}
+
+/* ══════════ CÁLCULO ══════════ */
+function calcular() {
+  const T = TESTS[st.id];
+  if (T.tipo === 'plano') {
+    const acc = { x: [0, 0], y: [0, 0], z: [0, 0] };
+    T.preguntas.forEach((q, i) => {
+      acc[q.eje][0] += ESCALA[st.resp[i]].v * q.s * q.w;
+      acc[q.eje][1] += 2 * q.w;
+    });
+    const r = { id: st.id };
+    for (const e of EJES) r[e] = Math.round(acc[e][0] / acc[e][1] * 100) / 10;
+    return r;
+  }
+  if (T.tipo === 'rasgos') return perfil(st.id, st.resp.slice());
+  const pts = Object.fromEntries(Object.keys(T.grupo).map((k) => [k, 0]));
+  const carta = [];
+  const suma = (p) => { for (const [k, v] of Object.entries(p)) pts[k] += v; };
+  if (T.fecha) {
+    const s = signo(st.fecha.mes, st.fecha.dia);
+    suma(s[3]);
+    carta.push(s[0]);
+  }
+  T.preguntas.forEach((q, i) => {
+    const o = q.op[st.resp[i]];
+    suma(o.p);
+    if (o.casa) carta.push(o.casa);
+  });
+  return { id: st.id, pts, carta };
+}
+
+/* Con las respuestas se arma todo: el perfil de 0 a 10, lo que se aparta de
+   la media y los puntos de firma. Por eso el hash guarda las respuestas. */
+function perfil(id, resp) {
+  const T = TESTS[id], tp = topes(T);
+  const sum = Object.fromEntries(RASGOS.map((r) => [r.k, 0]));
+  const firma = {};
+  T.preguntas.forEach((q, i) => {
+    const o = q.op[resp[i]];
+    for (const [k, v] of Object.entries(o.r)) sum[k] += v;
+    for (const [k, v] of Object.entries(o.b || {})) firma[k] = (firma[k] || 0) + v;
+  });
+  const v = RASGOS.map((r) => Math.round(escala(tp, r.k, sum[r.k]) * 10) / 10);
+  const media = RASGOS.map((r) => escala(tp, r.k, tp[r.k][2]));
+  return { id, resp, v, media, firma };
+}
+
+/* El resultado viaja en el hash para poder compartirlo sin servidor:
+   #r=lamparometro,3.5,-2,6  ·  #r=provincia,7.5.2.10…  ·  #r=playlist,2.0.1…,Leo.Tarima */
+function codigo(r) {
+  const T = TESTS[r.id];
+  if (T.tipo === 'plano') return `r=${r.id},${r.x},${r.y},${r.z}`;
+  if (T.tipo === 'rasgos') return `r=${r.id},${r.resp.join('.')}`;
+  const claves = Object.keys(T.grupo);
+  let c = `r=${r.id},${claves.map((k) => r.pts[k]).join('.')}`;
+  if (r.carta.length) c += ',' + r.carta.map(encodeURIComponent).join('.');
+  return c;
+}
+function leer(h) {
+  const m = /^#?r=([a-z]+),(.+)$/.exec(h);
+  if (!m || !TESTS[m[1]]) return null;
+  const T = TESTS[m[1]];
+  const partes = m[2].split(',');
+  if (T.tipo === 'plano') {
+    const n = partes.map(Number);
+    const r = { id: m[1], x: clamp(n[0]), y: clamp(n[1]), z: clamp(partes[2] === undefined ? 0 : n[2]) };
+    return EJES.some((e) => Number.isNaN(r[e])) ? null : r;
+  }
+  if (T.tipo === 'rasgos') {
+    const resp = partes[0].split('.').map(Number);
+    if (resp.length !== T.preguntas.length || resp.some((n, i) => !Number.isInteger(n) || n < 0 || n >= T.preguntas[i].op.length)) return null;
+    return perfil(m[1], resp);
+  }
+  const claves = Object.keys(T.grupo);
+  const v = partes[0].split('.').map(Number);
+  if (v.length !== claves.length || v.some((n) => !Number.isFinite(n) || n < 0 || n > 60)) return null;
+  const carta = partes[1] ? partes[1].split('.').map((s) => { try { return decodeURIComponent(s).slice(0, 40); } catch { return ''; } }) : [];
+  return { id: m[1], pts: Object.fromEntries(claves.map((k, i) => [k, v[i]])), carta };
+}
+const clamp = (n) => Math.max(-10, Math.min(10, n));
+
+function ranking(r) {
+  const T = TESTS[r.id];
+  if (T.tipo === 'plano') {
+    // afinidad: 100 % encima; 0 % a veinticinco puntos de distancia en los tres ejes
+    return Object.entries(PJ).map(([k, p]) => {
+      const d = Math.hypot(p.x - r.x, p.y - r.y, (p.z - r.z) * .8);
+      return { k, o: p, pct: Math.max(0, Math.round(100 - d / 25 * 100)) };
+    }).sort((a, b) => b.pct - a.pct);
+  }
+  if (T.tipo === 'rasgos') {
+    // coseno entre lo que te apartas de la media y lo que se aparta la provincia
+    const lista = Object.entries(T.grupo);
+    const pm = RASGOS.map((_, i) => lista.reduce((a, [, p]) => a + p.v[i], 0) / lista.length);
+    const u = r.v.map((n, i) => n - r.media[i]);
+    const nu = Math.hypot(...u) || 1;
+    return lista.map(([k, p]) => {
+      const c = p.v.map((n, i) => n - pm[i]);
+      const cos = c.reduce((a, n, i) => a + n * u[i], 0) / ((Math.hypot(...c) || 1) * nu);
+      const s = cos + FIRMA * (r.firma[k] || 0);
+      return { k, o: p, s, pct: Math.max(0, Math.min(99, Math.round(s / 1.3 * 100))) };
+    }).sort((a, b) => b.s - a.s);
+  }
+  const total = Object.values(r.pts).reduce((a, b) => a + b, 0) || 1;
+  return Object.entries(r.pts).map(([k, v]) => ({ k, o: T.grupo[k], pct: Math.round(v / total * 100) }))
+    .sort((a, b) => b.pct - a.pct || a.k.localeCompare(b.k));
+}
+
+/* ══════════ RESULTADO ══════════ */
+function resultado(r, ajeno) {
+  const T = TESTS[r.id];
+  const rk = ranking(r);
+  const g = rk[0].o;
+  const otros = Object.keys(TESTS).filter((k) => k !== r.id);
+  const que = T.cosa ? 'Eres' : 'Te pareces a';
+  const cuantos = T.tipo === 'puntos' ? 5 : 6;
+  const el = $('#resultado');
+
+  el.innerHTML = `
+    <p class="em-kicker" style="margin-top:var(--em-32)">${esc(T.kicker)}</p>
+    ${ajeno ? `<p class="lm-ajeno">A alguien le salió esto. Haz el test y compara.</p>` : ''}
+    <div class="lm-ficha">
+      ${mono(g, 'lm-mono--xl')}
+      <div>
+        <p class="em-meta">${que}</p>
+        <h1 id="r-t">${esc(g.nombre)}</h1>
+        <p class="em-meta">${g.region ? esc(g.region) + ' · ' : ''}${esc(g.apodo)} · ${rk[0].pct} % de afinidad</p>
+      </div>
+    </div>
+    <blockquote class="em-quote">${esc(g.frase)}</blockquote>
+    <p>${esc(g.desc)}</p>
+    <ul class="lm-rasgos">${g.rasgos.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
+    ${r.carta && r.carta.length ? `<div class="lm-sec"><span class="em-kicker">Tu carta</span>
+      <ul class="lm-carta">${r.carta.map((c, i) => `<li>${esc(T.astros[i] || '')} ${esc(c)}</li>`).join('')}</ul></div>` : ''}
+    ${T.tipo === 'plano' ? planoHTML(r) : ''}
+    ${T.tipo === 'rasgos' ? adnHTML(r, g) : ''}
+    <div class="lm-sec"><span class="em-kicker">${T.tipo === 'rasgos' ? 'También podrías ser' : T.cosa ? 'Tu percha' : 'Tu podio'}</span>
+      <ol class="lm-podio">${rk.slice(T.tipo === 'rasgos' ? 1 : 0, cuantos + 1).filter((x) => x.pct > 0).map((x) => `<li>${mono(x.o, 'lm-mono--s')}
+        <div><b>${esc(x.o.nombre)}</b><div class="lm-medida" style="--c:${x.o.c}"><i style="width:${x.pct}%"></i></div></div>
+        <span class="tabular">${x.pct} %</span></li>`).join('')}</ol></div>
+    <div class="lm-acciones">
+      <button class="em-btn" type="button" data-accion="compartir"><svg class="icono icono--s" aria-hidden="true"><use href="#i-compartir"/></svg> Compartir</button>
+      <button class="em-btn em-btn--linea" type="button" data-accion="tarjeta"><svg class="icono icono--s" aria-hidden="true"><use href="#i-descargar"/></svg> Descargar la tarjeta</button>
+      <button class="em-btn em-btn--linea" type="button" data-empezar="${r.id}"><svg class="icono icono--s" aria-hidden="true"><use href="#i-reiniciar"/></svg> ${ajeno ? 'Hacer este test' : 'Repetir'}</button>
+    </div>
+    <div class="lm-sec"><span class="em-kicker">Sigue midiéndote</span>
+      <div class="lm-tests" style="margin-top:0">${otros.map(tarjetaTest).join('')}</div></div>
+    <p class="lm-aviso">Sátira. Las personas, personajes y provincias de este test no participaron
+    ni lo aprobaron, y lo que dice de ellos es una exageración cariñosa, no un dato.</p>`;
+  el._r = r;
+  mostrar('resultado');
+}
+
+function adnHTML(r, g) {
+  return `<div class="lm-sec"><span class="em-kicker">Tu ADN provincial</span>
+    <ul class="lm-adn">${RASGOS.map((x, i) => `<li>
+      <b>${esc(x.nombre)}</b>
+      <div class="lm-medida"><i style="width:${r.v[i] * 10}%"></i><s style="left:${g.v[i] * 10}%" title="${esc(g.nombre)}"></s></div>
+      <span>${esc(r.v[i] >= 5 ? x.alto : x.bajo)}</span></li>`).join('')}</ul>
+    <p class="em-meta">La barra es tuya; la rayita, de ${esc(g.nombre)}.</p></div>`;
+}
+
+function planoHTML(r) {
+  const L = 11;   // el plano va de −10 a 10 con un margen
+  const pjs = Object.values(PJ).map((p) => `<g class="pj" data-n="${esc(p.nombre)}" tabindex="0" role="button" aria-label="${esc(p.nombre)}"><title>${esc(p.nombre)}</title>
+      <circle cx="${p.x}" cy="${-p.y}" r=".78" fill="${p.c}"/>
+      <text class="ini" x="${p.x}" y="${-p.y + .2}" text-anchor="middle" fill="${p.t}">${esc(p.ini)}</text></g>`).join('');
+  const rej = [-5, 5].map((v) => `<line class="rej" x1="${v}" y1="-10" x2="${v}" y2="10"/><line class="rej" x1="-10" y1="${v}" x2="10" y2="${v}"/>`).join('');
+  const ex = r.x < -3 ? 'Que pague el Estado' : r.x > 3 ? 'Que cada quien se rebusque' : 'Que pague el que pueda';
+  const ey = r.y > 3 ? 'Mando yo' : r.y < -3 ? 'Aquí nadie manda' : 'Mandan todos y nadie';
+  const ez = r.z > 5 ? 'Tarima, luces y humo' : r.z > 0 ? 'Lámpara con moderación' : r.z > -5 ? 'Perfil bajo, con escapadas' : 'Un Excel con patas';
+  const sg = (n) => `${n > 0 ? '+' : ''}${n}`;
+  return `<div class="lm-sec"><span class="em-kicker">Tu lugar en el plano</span>
+    <svg class="lm-plano" viewBox="${-L} ${-L - 1} ${2 * L} ${2 * L + 2}" role="img" aria-label="Plano político: estás en x ${r.x}, y ${r.y}">
+      <rect class="cuad" x="-10" y="-10" width="10" height="10" fill="#c53b2b"/>
+      <rect class="cuad" x="0" y="-10" width="10" height="10" fill="#1f3b70"/>
+      <rect class="cuad" x="-10" y="0" width="10" height="10" fill="#e8790c"/>
+      <rect class="cuad" x="0" y="0" width="10" height="10" fill="#d9a400"/>
+      ${rej}
+      <line class="eje" x1="-10" y1="0" x2="10" y2="0"/><line class="eje" x1="0" y1="-10" x2="0" y2="10"/>
+      <text class="rot" x="0" y="-10.5" text-anchor="middle">Mando yo · sabatina</text>
+      <text class="rot" x="0" y="11.1" text-anchor="middle">Aquí nadie manda · farra</text>
+      <text class="rot" x="-9.8" y="1">← Estado</text>
+      <text class="rot" x="9.8" y="1" text-anchor="end">Rebusque →</text>
+      ${pjs}
+      <circle class="tu" cx="${r.x}" cy="${-r.y}" r="1.05" fill="none" stroke="var(--em-accent)" stroke-width=".3"/>
+      <text class="tu-nom" x="${r.x}" y="${-r.y - 1.25}" text-anchor="middle">TÚ</text>
+    </svg>
+    <p class="lm-quien" id="plano-quien" aria-live="polite">Toca un círculo para ver quién es.</p>
+    <div class="lm-ejes">
+      <div><b>¿Quién paga?</b><span>${ex}</span> <span class="em-meta">(${sg(r.x)})</span></div>
+      <div><b>¿Quién manda?</b><span>${ey}</span> <span class="em-meta">(${sg(r.y)})</span></div>
+      <div class="lm-ejes__z"><b>¿Cuánta lámpara? · el Lamparómetro</b><span>${ez}</span> <span class="em-meta">(${sg(r.z)})</span>
+        <div class="lm-medida lm-medida--z"><i style="width:${(r.z + 10) * 5}%"></i></div></div>
+    </div></div>`;
+}
+
+/* ══════════ COMPARTIR Y LA TARJETA ══════════ */
+function textoCompartir(r) {
+  const T = TESTS[r.id], g = ranking(r)[0];
+  return `${T.titulo}: ${T.cosa ? 'soy' : 'me parezco a'} ${g.o.nombre} (${g.pct} %). ¿Y tú?`;
+}
+async function compartir() {
+  const r = $('#resultado')._r;
+  const url = location.href;
+  const text = textoCompartir(r);
+  if (navigator.share) {
+    try {
+      const f = await tarjetaArchivo(r);
+      const datos = { title: 'El Lamparómetro · EL MERCIO.', text, url };
+      if (f && navigator.canShare?.({ files: [f] })) datos.files = [f];
+      await navigator.share(datos);
+      return;
+    } catch (e) { if (e.name === 'AbortError') return; }
+  }
+  try { await navigator.clipboard.writeText(`${text} ${url}`); window.malDS?.aviso('Enlace copiado', 'ok'); }
+  catch { window.malDS?.aviso('No se pudo copiar el enlace', 'error'); }
+}
+
+function lineas(ctx, txt, ancho) {
+  const out = []; let l = '';
+  for (const w of txt.split(' ')) {
+    const p = l ? l + ' ' + w : w;
+    if (ctx.measureText(p).width > ancho && l) { out.push(l); l = w; } else l = p;
+  }
+  if (l) out.push(l);
+  return out;
+}
+
+async function tarjeta(r) {
+  const T = TESTS[r.id], rk = ranking(r), g = rk[0].o;
+  const W = 1080, H = 1350, M = 88;
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const x = cv.getContext('2d');
+  try { await document.fonts.load('700 40px "PT Serif"'); await document.fonts.load('800 40px Montserrat'); } catch {}
+  const serif = '"PT Serif", Georgia, serif', sans = 'Montserrat, "Helvetica Neue", Arial, sans-serif';
+  x.fillStyle = '#ffffff'; x.fillRect(0, 0, W, H);
+  // cabecera del periódico
+  x.fillStyle = '#141414'; x.font = `800 54px ${sans}`; x.textAlign = 'left';
+  x.fillText('EL MERCIO', M, 130);
+  const ancho = x.measureText('EL MERCIO').width;
+  x.fillStyle = '#c53b2b'; x.fillText('.', M + ancho, 130);
+  x.fillStyle = '#646464'; x.font = `600 24px ${sans}`; x.textAlign = 'right';
+  x.fillText('EL LAMPARÓMETRO', W - M, 128);
+  x.fillStyle = '#e6e6e6'; x.fillRect(M, 170, W - 2 * M, 2);
+  // kicker y nombre
+  x.textAlign = 'left';
+  x.fillStyle = '#c53b2b'; x.font = `800 26px ${sans}`;
+  x.fillText(T.kicker.toUpperCase(), M, 250);
+  x.fillStyle = '#646464'; x.font = `500 34px ${sans}`;
+  x.fillText(T.cosa ? 'Soy' : 'Me parezco a', M, 320);
+  // monograma
+  const R = 120, cx = W - M - R, cy = 420;
+  x.fillStyle = g.c; x.beginPath(); x.arc(cx, cy, R, 0, Math.PI * 2); x.fill();
+  x.fillStyle = g.t; x.font = `800 ${g.ini.length > 2 ? 64 : 80}px ${sans}`; x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.fillText(g.ini, cx, cy + 4); x.textBaseline = 'alphabetic'; x.textAlign = 'left';
+  x.fillStyle = '#141414'; x.font = `700 92px ${serif}`;
+  let y = 420;
+  for (const l of lineas(x, g.nombre, W - 2 * M - 2 * R - 40)) { x.fillText(l, M, y); y += 100; }
+  x.fillStyle = '#646464'; x.font = `600 30px ${sans}`;
+  x.fillText(`${g.apodo} · ${rk[0].pct} %`, M, Math.max(y, 600));
+  y = Math.max(y, 600) + 90;
+  // la frase
+  x.fillStyle = '#c53b2b'; x.font = `700 150px ${serif}`; x.fillText('“', M - 6, y + 70);
+  x.fillStyle = '#141414'; x.font = `italic 400 48px ${serif}`;
+  for (const l of lineas(x, g.frase, W - 2 * M - 70)) { x.fillText(l, M + 80, y); y += 62; }
+  y += 40;
+  // el plano en miniatura, o el podio
+  if (T.tipo === 'plano') {
+    const S = 300, ox = W / 2, oy = Math.min(y + S / 2 + 10, H - 220 - S / 2), k = S / 20;
+    x.fillStyle = '#f3f3f3'; x.fillRect(ox - S / 2, oy - S / 2, S, S);
+    x.strokeStyle = '#141414'; x.lineWidth = 2; x.beginPath();
+    x.moveTo(ox - S / 2, oy); x.lineTo(ox + S / 2, oy); x.moveTo(ox, oy - S / 2); x.lineTo(ox, oy + S / 2); x.stroke();
+    for (const p of Object.values(PJ)) { x.fillStyle = p.c; x.beginPath(); x.arc(ox + p.x * k, oy - p.y * k, 9, 0, 7); x.fill(); }
+    x.fillStyle = '#c53b2b'; x.beginPath(); x.arc(ox + r.x * k, oy - r.y * k, 16, 0, 7); x.fill();
+    x.strokeStyle = '#fff'; x.lineWidth = 4; x.stroke();
+    x.fillStyle = '#646464'; x.font = `700 18px ${sans}`; x.textAlign = 'center';
+    x.fillText('MANDO YO', ox, oy - S / 2 - 12); x.fillText('NADIE MANDA', ox, oy + S / 2 + 28);
+    x.textAlign = 'right'; x.fillText('ESTADO', ox - S / 2 - 12, oy + 6);
+    x.textAlign = 'left'; x.fillText('REBUSQUE', ox + S / 2 + 12, oy + 6);
+    x.textAlign = 'left'; x.font = `800 22px ${sans}`; x.fillStyle = '#c53b2b';
+    x.fillText(`LAMPARÓMETRO ${r.z > 0 ? '+' : ''}${r.z}`, M, oy + S / 2 + 28);
+  } else {
+    x.font = `600 30px ${sans}`;
+    for (const it of rk.slice(1, 4)) {
+      if (y > H - 220) break;
+      x.fillStyle = it.o.c; x.beginPath(); x.arc(M + 18, y - 10, 18, 0, 7); x.fill();
+      x.fillStyle = '#282828'; x.textAlign = 'left'; x.fillText(it.o.nombre, M + 54, y);
+      x.textAlign = 'right'; x.fillText(`${it.pct} %`, W - M, y); y += 62;
+    }
+  }
+  // pie
+  x.textAlign = 'left';
+  x.fillStyle = '#141414'; x.fillRect(0, H - 150, W, 150);
+  x.fillStyle = '#ffffff'; x.font = `700 36px ${serif}`;
+  x.fillText(T.pie, M, H - 84);
+  x.fillStyle = '#a0a0a0'; x.font = `600 24px ${sans}`;
+  x.fillText(`${(location.host + location.pathname).replace(/\/(index\.html)?$/, '')} · sátira de EL MERCIO.`, M, H - 44);
+  return cv;
+}
+async function tarjetaArchivo(r) {
+  const cv = await tarjeta(r);
+  const b = await new Promise((ok) => cv.toBlob(ok, 'image/png'));
+  return b ? new File([b], `lamparometro-${r.id}.png`, { type: 'image/png' }) : null;
+}
+async function descargar() {
+  const r = $('#resultado')._r;
+  const f = await tarjetaArchivo(r);
+  if (!f) return window.malDS?.aviso('No se pudo dibujar la tarjeta', 'error');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(f); a.download = f.name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+
+/* ══════════ ARRANQUE ══════════ */
+function tarjetaTest(id) {
+  const T = TESTS[id];
+  return `<button class="lm-test" type="button" data-empezar="${id}">
+    <span class="em-kicker">${esc(T.kicker)}</span>
+    <h2>${esc(T.titulo)}</h2>
+    <p>${esc(T.bajada)}</p>
+    <span class="em-meta">${esc(T.meta)} →</span></button>`;
+}
+$('#tests').innerHTML = Object.keys(TESTS).map(tarjetaTest).join('');
+$('#elenco').innerHTML = Object.values(PJ).map((p) => `<span title="${esc(p.nombre)}">${mono(p, 'lm-mono--s')}</span>`).join('');
+
+document.addEventListener('click', (e) => {
+  const pj = e.target.closest('.lm-plano .pj');
+  if (pj) return quien(pj);
+  const b = e.target.closest('[data-empezar],[data-ir],[data-accion],.lm-opcion,#q-atras');
+  if (!b) return;
+  if (b.dataset.empezar) { e.preventDefault(); history.replaceState(null, '', location.pathname + location.search); empezar(b.dataset.empezar); }
+  else if (b.dataset.ir) { e.preventDefault(); portada(); }
+  else if (b.dataset.accion === 'compartir') compartir();
+  else if (b.dataset.accion === 'tarjeta') descargar();
+  else if (b.id === 'q-atras') atras();
+  else if (b.classList.contains('lm-opcion')) responder(+b.dataset.k);
+});
+
+function quien(g) {
+  for (const o of document.querySelectorAll('.lm-plano .pj.activo')) o.classList.remove('activo');
+  g.classList.add('activo');
+  $('#plano-quien').textContent = g.dataset.n;
+}
+document.addEventListener('keydown', (e) => {
+  const pj = e.target.closest?.('.lm-plano .pj');
+  if (pj && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); quien(pj); }
+});
+
+function enrutar() {
+  if (!location.hash.startsWith('#r=')) { if (!st && $('#resultado').hidden) mostrar('portada'); return; }
+  const r = leer(location.hash);
+  if (!r) return portada();
+  resultado(r, !st);   // sin test en curso, el resultado es de otra persona
+  st = null;
+}
+window.addEventListener('hashchange', enrutar);
+enrutar();
+})();
+</script>
+</body>
+</html>
