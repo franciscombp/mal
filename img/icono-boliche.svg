@@ -1,22 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <!-- El boliche: la tina vista desde arriba, el borde pintado de feria,
-       el anillo de huecos y las dos bolas, celeste y blanca. Todo dentro
-       de la zona segura maskable (80% central). -->
+  <!-- El boliche: la hondonada de cemento vista desde arriba, el
+       agujero redondo con su aro de lata (pares), la cajita cuadrada
+       (nones), el tope de madera y las canicas celeste y blanca. Todo
+       dentro de la zona segura maskable (80% central). -->
   <defs>
     <radialGradient id="fondo" cx="50%" cy="30%" r="80%">
       <stop offset="0%" stop-color="#3a2f44"/>
       <stop offset="100%" stop-color="#1d1822"/>
     </radialGradient>
-    <radialGradient id="cuenco" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#8c7a66"/>
-      <stop offset="60%" stop-color="#b8a58c"/>
-      <stop offset="92%" stop-color="#d9c8ae"/>
-      <stop offset="100%" stop-color="#a8957b"/>
-    </radialGradient>
-    <radialGradient id="hueco" cx="58%" cy="62%" r="60%">
-      <stop offset="0%" stop-color="#0b0709"/>
-      <stop offset="80%" stop-color="#241a17"/>
-      <stop offset="100%" stop-color="#5a4a3c"/>
+    <radialGradient id="cono" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#6f6a62"/>
+      <stop offset="45%" stop-color="#8f8a81"/>
+      <stop offset="92%" stop-color="#b3aea4"/>
+      <stop offset="100%" stop-color="#8a857c"/>
     </radialGradient>
     <radialGradient id="celeste" cx="35%" cy="30%" r="70%">
       <stop offset="0%" stop-color="#d8f1ff"/>
@@ -32,33 +28,27 @@
 
   <rect width="512" height="512" rx="116" fill="url(#fondo)"/>
 
-  <!-- el borde, en bandas de colores -->
-  <g transform="translate(256 256)" stroke-width="30" fill="none">
-    <circle r="170" stroke="#e01b6a"/>
-    <circle r="170" stroke="#f5a623" stroke-dasharray="89 267" stroke-dashoffset="-89"/>
-    <circle r="170" stroke="#1b5faa" stroke-dasharray="89 267" stroke-dashoffset="-178"/>
-    <circle r="170" stroke="#6fae2e" stroke-dasharray="89 267" stroke-dashoffset="-267"/>
-  </g>
-  <circle cx="256" cy="256" r="155" fill="url(#cuenco)"/>
-  <circle cx="256" cy="256" r="87" fill="none" stroke="#1b5faa" stroke-opacity=".3" stroke-width="30"/>
-  <circle cx="256" cy="256" r="28" fill="#e01b6a" fill-opacity=".6"/>
+  <!-- el piso y la hondonada -->
+  <circle cx="256" cy="256" r="186" fill="#a9a49b"/>
+  <circle cx="256" cy="256" r="164" fill="url(#cono)"/>
+  <circle cx="256" cy="256" r="164" fill="none" stroke="#5a554e" stroke-opacity=".5" stroke-width="3"/>
 
-  <!-- los huecos -->
-  <g fill="url(#hueco)">
-    <circle cx="256" cy="169" r="11"/><circle cx="299.5" cy="180.7" r="11"/>
-    <circle cx="331.3" cy="212.5" r="11"/><circle cx="343" cy="256" r="11"/>
-    <circle cx="331.3" cy="299.5" r="11"/><circle cx="299.5" cy="331.3" r="11"/>
-    <circle cx="256" cy="343" r="11"/><circle cx="212.5" cy="331.3" r="11"/>
-    <circle cx="180.7" cy="299.5" r="11"/><circle cx="169" cy="256" r="11"/>
-    <circle cx="180.7" cy="212.5" r="11"/><circle cx="212.5" cy="180.7" r="11"/>
-    <circle cx="256" cy="256" r="15"/>
-  </g>
+  <!-- el redondo, pares -->
+  <circle cx="283" cy="258" r="25" fill="#0b0909"/>
+  <circle cx="283" cy="258" r="27" fill="none" stroke="#c9c6be" stroke-width="5"/>
+  <!-- la cajita, nones -->
+  <rect x="207" y="236" width="34" height="34" fill="#0b0909" stroke="#b4834f" stroke-width="5"/>
+  <!-- el tope -->
+  <rect x="268" y="292" width="64" height="16" rx="2" fill="#b4834f" transform="rotate(-34 300 300)"/>
 
-  <!-- las bolas -->
-  <ellipse cx="341" cy="352" rx="22" ry="19" fill="#1d1010" opacity=".35"/>
-  <circle cx="334" cy="343" r="22" fill="url(#celeste)"/>
-  <circle cx="326" cy="334" r="5" fill="#fff" opacity=".85"/>
-  <ellipse cx="203" cy="146" rx="22" ry="19" fill="#1d1010" opacity=".35"/>
-  <circle cx="196" cy="137" r="22" fill="url(#blanca)"/>
-  <circle cx="188" cy="128" r="5" fill="#fff" opacity=".85"/>
+  <!-- las canicas -->
+  <ellipse cx="179" cy="337" rx="21" ry="17" fill="#1d1010" opacity=".35"/>
+  <circle cx="173" cy="330" r="21" fill="url(#celeste)"/>
+  <circle cx="166" cy="322" r="5" fill="#fff" opacity=".85"/>
+  <ellipse cx="337" cy="183" rx="21" ry="17" fill="#1d1010" opacity=".35"/>
+  <circle cx="331" cy="176" r="21" fill="url(#blanca)"/>
+  <circle cx="324" cy="168" r="5" fill="#fff" opacity=".85"/>
+  <ellipse cx="231" cy="171" rx="17" ry="14" fill="#1d1010" opacity=".3"/>
+  <circle cx="226" cy="165" r="17" fill="url(#celeste)"/>
+  <circle cx="220" cy="159" r="4" fill="#fff" opacity=".85"/>
 </svg>
