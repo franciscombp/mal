@@ -1174,49 +1174,65 @@ function vela3d() {
   return g;
 }
 let bodega = null;
-/* Renderiza el bodegón y lo recorta a lo que tiene algo: devuelve la
-   imagen y dónde quedó, en ella, la boca de la taza (o la llama). */
-function bodegon(e, lado = 1400) {
+/* Las piezas del bodegón se renderizan por separado y sin plato, cada una
+   recortada a lo que tiene: así la tarjeta las acomoda como mejor queden. */
+function estudioBodegon(lado) {
   if (!bodega) {
     bodega = new Visor(lienzo(lado, lado), { foto: true, giro: 0 });
-    bodega.lata.visible = false; bodega.mantel.visible = false;
-    const piso = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.ShadowMaterial({ opacity: 0.32 }));
-    piso.rotation.x = -Math.PI / 2; piso.position.y = -0.121; piso.receiveShadow = true;
-    bodega.scene.add(piso);
+    bodega.plato.visible = false; bodega.lata.visible = false; bodega.mantel.visible = false;
     bodega.taza = taza3d(); bodega.vela = vela3d();
     bodega.scene.add(bodega.taza, bodega.vela);
+    bodega.taza.position.set(0, -0.12, 0); bodega.vela.position.set(0, -0.12, 0);
     Object.assign(bodega.sol.shadow.camera, { left: -6, right: 6, top: 6, bottom: -6 });
     bodega.sol.shadow.camera.updateProjectionMatrix();
     bodega.sol.shadow.mapSize.set(2048, 2048);
   }
-  const b = bodega, memoria = enMemoria(e), cosa = memoria ? b.vela : b.taza;
+  const b = bodega;
   b.renderer.setSize(lado, lado, false);
   b.camara.aspect = 1; b.camara.updateProjectionMatrix();
-  b.ambiente('decorar'); b.lata.visible = false; b.mantel.visible = false;
-  Object.assign(b, posturaDe(e));
-  b.cabeceo = echada(e) ? 0.75 : 0.32;
-  b.cargar(e);
-  b.ubicar();
-  b.taza.visible = !memoria; b.vela.visible = memoria;
-  // al lado del plato, un poco adelante: a la derecha si cabe, siempre sobre la mesa
-  cosa.position.set(3.25, -0.12, 0.9);
-  cosa.scale.setScalar(1.15);
-  // la cámara encuadra todo lo que hay en la mesa
-  const caja = new THREE.Box3().setFromObject(b.figura).union(new THREE.Box3().setFromObject(b.plato)).union(new THREE.Box3().setFromObject(cosa));
-  const centro = caja.getCenter(V(0, 0, 0)), radio = caja.getSize(V(0, 0, 0)).length() / 2;
-  const d = radio / Math.sin(THREE.MathUtils.degToRad(b.camara.fov / 2)) * 1.02;
+  b.plato.visible = false; b.lata.visible = false; b.mantel.visible = false;
+  b.taza.visible = false; b.vela.visible = false;
   if (b.camara.view) b.camara.clearViewOffset();
-  b.camara.position.set(centro.x, centro.y + Math.sin(b.cabeceo) * d, centro.z + Math.cos(b.cabeceo) * d);
+  return b;
+}
+function encuadrarBodegon(b, objeto, cabeceo, holgura = 1.04) {
+  const caja = new THREE.Box3().setFromObject(objeto);
+  const centro = caja.getCenter(V(0, 0, 0)), radio = caja.getSize(V(0, 0, 0)).length() / 2;
+  const d = radio / Math.sin(THREE.MathUtils.degToRad(b.camara.fov / 2)) * holgura;
+  b.camara.position.set(centro.x, centro.y + Math.sin(cabeceo) * d, centro.z + Math.cos(cabeceo) * d);
   b.camara.lookAt(centro);
-  b.renderer.render(b.scene, b.camara);
-  const boca = cosa.localToWorld(cosa.userData.boca.clone()).project(b.camara);
+}
+function recortado(b, lado) {
   const c = lienzo(lado, lado);
-  const ctx = c.getContext('2d');
-  ctx.drawImage(b.canvas, 0, 0);
+  c.getContext('2d').drawImage(b.canvas, 0, 0);
   const r = recorte(c);
   const out = lienzo(r.w, r.h);
   out.getContext('2d').drawImage(c, r.x, r.y, r.w, r.h, 0, 0, r.w, r.h);
-  return { img: out, boca: { x: (boca.x + 1) / 2 * lado - r.x, y: (1 - boca.y) / 2 * lado - r.y } };
+  return { img: out, r };
+}
+/* La guagua sola, de frente (o desde arriba si va echada), sin plato. */
+function retrato(e, lado = 1400) {
+  const b = estudioBodegon(lado);
+  Object.assign(b, posturaDe(e));
+  b.cabeceo = echada(e) ? 0.8 : 0.22;
+  b.cargar(e);
+  b.ubicar();
+  encuadrarBodegon(b, b.figura, b.cabeceo);
+  b.renderer.render(b.scene, b.camara);
+  return recortado(b, lado).img;
+}
+/* La taza de colada o la velita, solas, y dónde queda su boca en la imagen. */
+function adorno(memoria, lado = 900) {
+  const b = estudioBodegon(lado);
+  b.vaciar(b.pan); b.vaciar(b.adornos);
+  const cosa = memoria ? b.vela : b.taza;
+  cosa.visible = true;
+  cosa.rotation.y = memoria ? 0 : -0.5;
+  encuadrarBodegon(b, cosa, memoria ? 0.2 : 0.42, 1.08);
+  b.renderer.render(b.scene, b.camara);
+  const boca = cosa.localToWorld(cosa.userData.boca.clone()).project(b.camara);
+  const { img, r } = recortado(b, lado);
+  return { img, boca: { x: (boca.x + 1) / 2 * lado - r.x, y: (1 - boca.y) / 2 * lado - r.y } };
 }
 /* El rectángulo con algo pintado (la sombra cuenta), con un margen. */
 function recorte(c) {
@@ -1472,21 +1488,38 @@ async function tarjeta(e, formato = 'historia') {
     : (e.d ? ['Te regalo', que] : [que.charAt(0).toUpperCase() + que.slice(1), 'para ti']);
   titulo.forEach((t, i) => ctx.fillText(t, W / 2, F.titulo[i], W - 80));
 
-  // el bodegón 3D, centrado y apoyado abajo en su espacio
-  const { img, boca } = bodegon(e);
-  const k = Math.min((W - 60) / img.width, (e1 - e0) / img.height);
-  const bw = img.width * k, bh = img.height * k, bx = (W - bw) / 2, by = e0 + (e1 - e0 - bh) / 2;
-  ctx.drawImage(img, bx, by, bw, bh);
-  const px = bx + boca.x * k, py = by + boca.y * k;
+  // la guagua, grande y al centro; la colada (o la velita) abajo a un lado,
+  // un poco por delante, como en una mesa; cada una con su sombra en el mantel
+  const sombra = (x, y, rx, ry, a) => {
+    const g = ctx.createRadialGradient(x, y, 0, x, y, rx);
+    g.addColorStop(0, `rgba(0,0,0,${a})`); g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.save(); ctx.translate(x, y); ctx.scale(1, ry / rx); ctx.translate(-x, -y);
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, rx, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  };
+  const cuadrada = formato === 'cuadrada';
+  const g3 = retrato(e);
+  const altoG = (e1 - e0 - (cuadrada ? 50 : 90)) * (echada(e) ? 0.92 : 1), anchoG = W * (cuadrada ? 0.56 : 0.72);
+  const kg = Math.min(anchoG / g3.width, altoG / g3.height);
+  const gw = g3.width * kg, gh = g3.height * kg;
+  const gx = W / 2 - gw / 2 - (cuadrada ? 70 : 40), gy = e1 - gh - (cuadrada ? 30 : 60);
+  sombra(gx + gw / 2, gy + gh + 4, gw * 0.62, gw * 0.16, 0.55);
+  ctx.drawImage(g3, gx, gy, gw, gh);
+  const { img: a3, boca } = adorno(memoria);
+  const ka = (cuadrada ? 250 : 330) / a3.height;
+  const aw = a3.width * ka, ah = a3.height * ka;
+  const ax = Math.min(W - aw - 40, gx + gw - aw * 0.08), ay = e1 - ah + (cuadrada ? 30 : 50);
+  sombra(ax + aw / 2, ay + ah + 2, aw * 0.6, aw * 0.16, 0.5);
+  ctx.drawImage(a3, ax, ay, aw, ah);
+  const px = ax + boca.x * ka, py = ay + boca.y * ka;
   if (memoria) {
-    const brillo = ctx.createRadialGradient(px, py, 4, px, py, 150 * k + 60);
+    const brillo = ctx.createRadialGradient(px, py, 4, px, py, 190);
     brillo.addColorStop(0, 'rgba(255,190,80,.55)'); brillo.addColorStop(1, 'rgba(255,190,80,0)');
-    ctx.fillStyle = brillo; ctx.beginPath(); ctx.arc(px, py, 150 * k + 60, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = brillo; ctx.beginPath(); ctx.arc(px, py, 190, 0, Math.PI * 2); ctx.fill();
   } else {
     // el vapor de la colada
-    ctx.strokeStyle = 'rgba(255,255,255,.4)'; ctx.lineWidth = 5; ctx.lineCap = 'round';
+    ctx.strokeStyle = 'rgba(255,255,255,.42)'; ctx.lineWidth = 5; ctx.lineCap = 'round';
     [-30, 0, 30].forEach((dx, i) => {
-      const x = px + dx * (0.6 + k), y = py - 10;
+      const x = px + dx, y = py - 10;
       ctx.beginPath(); ctx.moveTo(x, y);
       ctx.bezierCurveTo(x + 18, y - 30, x - 18, y - 60 - i * 8, x, y - 95 - i * 10); ctx.stroke();
     });
