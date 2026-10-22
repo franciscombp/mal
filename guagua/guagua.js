@@ -108,14 +108,21 @@ function frenteDe(c, s, x, y) {      // la z de la cara de adelante de un elipso
 const CUERPO = { c: V(0, 1.463, 0), s: V(1.042, 1.463, 0.62) };
 const CABEZA = { c: V(0, 3.212, 0.03), s: V(0.72, 0.69, 0.52) };
 
+/* La guagua de la primera versión traía los brazos cruzados; solo se
+   usa para abrir los enlaces de entonces, que pueden tener crema encima. */
+function guaguaConBrazos() {
+  const brazos = [[[182, 372], [336, 452]], [[418, 372], [264, 452]]].map(([a, b]) => {
+    const A = G(a[0], a[1]), B = G(b[0], b[1]);
+    A.z = frenteDe(CUERPO.c, CUERPO.s, A.x, A.y) - 0.05; B.z = frenteDe(CUERPO.c, CUERPO.s, B.x, B.y) - 0.05;
+    return chorizo(30 * SG, [A, B]);
+  });
+  return MOLDES.guagua().concat(brazos);
+}
+
 const MOLDES = {
+  // la guagua simple: cuerpo y cabeza. Los brazos, si los quiere, se los amasa.
   guagua() {
-    const brazos = [[[182, 372], [336, 452]], [[418, 372], [264, 452]]].map(([a, b]) => {
-      const A = G(a[0], a[1]), B = G(b[0], b[1]);
-      A.z = frenteDe(CUERPO.c, CUERPO.s, A.x, A.y) - 0.05; B.z = frenteDe(CUERPO.c, CUERPO.s, B.x, B.y) - 0.05;
-      return chorizo(30 * SG, [A, B]);
-    });
-    return [bolita(CUERPO.c, CUERPO.s), bolita(CABEZA.c, CABEZA.s), ...brazos];
+    return [bolita(CUERPO.c, CUERPO.s), bolita(CABEZA.c, CABEZA.s)];
   },
   caballito() {
     const pata = (a, b, z) => chorizo(30 * SC, [C(a[0], a[1], z), C(b[0], b[1], z)]);
@@ -901,7 +908,7 @@ function deLaPrimeraHornada(d, o) {
     pasa(272, 188); pasa(328, 188); pasa(300, 214);
     for (let i = 0; i < 5; i++) pasa(270 + i * 15, 242 + Math.sin(i / 4 * Math.PI) * 9);
   }
-  return Object.assign({}, d, { v: 3, a: MOLDES[f](), k: 100, o: cara.concat(ops), f });
+  return Object.assign({}, d, { v: 3, a: f === 'guagua' ? guaguaConBrazos() : MOLDES[f](), k: 100, o: cara.concat(ops), f });
 }
 /* Lo que llega por un enlace lo escribió cualquiera: se filtra todo. */
 function sano(d) {
