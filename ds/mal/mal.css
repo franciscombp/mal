@@ -74,6 +74,7 @@
        <html data-marca="mercio">     periódico
        <html data-marca="apps">       producto
        <html data-marca="juegos">     juegos
+       <html data-marca="taller">     el juego de la guagua (hijo de juegos, siempre oscuro)
        <html>                         MAL, por defecto
 
    y son ortogonales al claro/oscuro (`data-tema`), así que se
@@ -501,6 +502,42 @@
   --ref-marca-rgb:255,119,171;
 }
 
+
+/* ─── taller: el juego de la guagua ───────────────────────────
+   Hijo de «juegos», pero siempre oscuro y sobre vidrio morado, así que
+   no tiene modo claro. Lo que cambia respecto a su padre:
+     · el rosa de marca es más hondo (#ec2f7f) para que el blanco encima
+       llegue a 4:1 también en la parada peor del holograma;
+     · el texto secundario sube (t1 #e6e0d9, t2 #c9c0cf) y los bordes se
+       ven (18 % y 38 % de blanco): sobre vidrio, el 14 % desaparecía;
+     · los controles miden 48 px: el dedo manda, pero el dock es denso;
+     · tres tiempos de movimiento y un anillo de foco blanco, los mismos
+       para todos los controles del juego. */
+:root[data-marca="taller"]{
+  --ref-marca:#ec2f7f; --ref-marca-2:#c01462; --ref-marca-txt:#ff8ab9;
+  --ref-sobre-marca:#ffffff; --ref-acento:#4f86c8; --ref-acento-2:#ffc93c;
+  --ref-n0:#1d1822; --ref-n1:#2f2733; --ref-n2:#272031; --ref-n3:#352c3d;
+  --ref-t0:#ffffff; --ref-t1:#e6e0d9; --ref-t2:#c9c0cf; --ref-borde-rgb:255,255,255;
+  --ref-marca-rgb:236,47,127;
+  --ref-peso-display:800;
+  --ref-tracking:-.03em;
+  --ref-radio:1.3;
+  --ref-borde:2px;
+  --ref-densidad:1;
+  --ref-tap:48px;
+  --ref-elev-1:0 4px 0 var(--mal-primary-hover);
+  --ref-elev-2:0 7px 0 var(--mal-primary-hover), 0 14px 26px rgba(0,0,0,.35);
+  --ref-salto:translateY(-2px);
+  --ref-presion:translateY(3px);
+  --ref-relleno-marca:linear-gradient(135deg, var(--ref-marca) 0%, #8d2d8f 52%, var(--ref-acento) 100%);
+  --ref-destello:linear-gradient(135deg, var(--ref-acento-2), #ff77ab, var(--ref-acento));
+  --mal-ok:#6fae2e; --mal-warn:#f5a623; --mal-danger:#ff6b6b;
+  --mal-outline:rgba(255,255,255,.18); --mal-outline-2:rgba(255,255,255,.38);
+  --mal-primary-container:rgba(236,47,127,.16);
+  --mal-dur-1:120ms; --mal-dur-2:220ms; --mal-dur-3:360ms;
+  --mal-foco:0 0 0 3px #fff;
+  color-scheme:dark;
+}
 
 /* ─── vidrio ──────────────────────────────────────────────────
    Las superficies que, en el tema de APPS, se vuelven translúcidas y

@@ -29,7 +29,7 @@ con ruta relativa desde `../ds/`.
 
 La versión va en el `<meta name="guagua-version">`, en los `?v=` de `guagua.css`, `guagua.js`,
 `masa.js`, `nube.js` y `nube-config.js`, y en `version.json`. Al publicar, se sube la misma
-cadena en todos (`grep -rn 2026.10.23.1 guagua/`). Al abrir, el juego pide `version.json`
+cadena en todos (`grep -rn 2026.10.23.2 guagua/`). Al abrir, el juego pide `version.json`
 sin caché y, si hay una versión más nueva, se recarga una sola vez: así nadie se queda con el
 juego viejo por el caché del navegador.
 
