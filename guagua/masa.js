@@ -177,17 +177,22 @@ const MOLDES = {
   // un perrito dormido, hecho un ovillo: el cuerpo es una media dona gruesa
   // y la cabeza descansa en la abertura, con las orejas caídas y la cola metida
   dormilon() {
+    // el cuerpo es un pan redondo: un anillo grueso cerrado, con apenas un
+    // hoyito al centro, más alto que la cabeza; la cabeza se apoya abajo a la
+    // izquierda, fuera del anillo, con una oreja plana en el plato y la otra
+    // doblada encima; la cola asoma por abajo a la derecha
     const anillo = [];
-    for (let i = 0; i <= 10; i++) {
-      const a = (-0.3 + i / 10 * 1.55) * Math.PI;         // de abajo a la derecha, por arriba, hasta abajo a la izquierda
-      anillo.push(V(Math.cos(a) * 0.72, 1.78 + Math.sin(a) * 0.72, 0.3));
+    for (let i = 0; i < 16; i++) {
+      const a = i / 16 * Math.PI * 2;
+      anillo.push(V(Math.cos(a) * 0.62, 1.82 + Math.sin(a) * 0.62, 0.3));
     }
+    anillo.push(anillo[0].clone());
     return [
-      chorizo(0.62, anillo),                                          // el cuerpo gordito, enroscado
-      bolita(V(0, 0.8, 0.18), V(0.62, 0.56, 0.48)),                   // la cabeza, acurrucada en la abertura
-      bolita(V(0.6, 1.0, 0.42), V(0.2, 0.38, 0.12), 0.5),            // la oreja caída de la derecha, sobre el cuerpo
-      bolita(V(-0.6, 1.0, 0.42), V(0.2, 0.38, 0.12), -0.5),          // y la de la izquierda
-      chorizo(0.11, [V(0.8, 1.05, -0.05), V(1.1, 0.62, -0.1), V(1.32, 0.74, -0.1)]),  // la cola asoma junto a la cabeza
+      chorizo(0.66, anillo),                                          // el cuerpo, con apenas un hoyito
+      bolita(V(-0.5, 0.64, 0.1), V(0.54, 0.48, 0.4)),                 // la cabeza, pegada al cuerpo y mirando al frente
+      bolita(V(-1.06, 0.74, -0.1), V(0.32, 0.2, 0.09), 0.2),          // la oreja plana en el plato
+      bolita(V(-0.34, 1.0, 0.52), V(0.2, 0.32, 0.1), 0.7),            // la oreja doblada, apoyada en el cuerpo
+      chorizo(0.11, [V(0.5, 0.78, -0.08), V(0.88, 0.42, -0.1), V(1.15, 0.5, -0.1)]),  // la cola, desde debajo del cuerpo
     ];
   },
   caballito() {
@@ -249,11 +254,14 @@ function elipsoide(c, s, rotZ, punta = 0) {
 }
 function tubo(puntos, r, estrias = 6) {
   if (puntos.length === 2) puntos = [puntos[0], puntos[0].clone().lerp(puntos[1], 0.5), puntos[1]];
-  const curva = new THREE.CatmullRomCurve3(puntos, false, 'centripetal');
+  // si el último punto repite al primero, es un anillo: la curva se cierra y no lleva tapas
+  const cerrado = puntos.length > 3 && puntos[0].distanceTo(puntos[puntos.length - 1]) < 1e-6;
+  if (cerrado) puntos = puntos.slice(0, -1);
+  const curva = new THREE.CatmullRomCurve3(puntos, cerrado, 'centripetal');
   const L = Math.max(curva.getLength(), 1e-3);
   const n = limita(Math.ceil(L / (r * 0.3)), 8, 700);
   const rad = estrias ? 18 : 24;
-  const marcos = curva.computeFrenetFrames(n, false);
+  const marcos = curva.computeFrenetFrames(n, cerrado);
   const pos = new Float32Array((n + 1) * (rad + 1) * 3);
   const P = new THREE.Vector3();
   let k = 0;
@@ -261,7 +269,7 @@ function tubo(puntos, r, estrias = 6) {
     const u = i / n, s = u * L;
     curva.getPointAt(u, P);
     const N = marcos.normals[i], B = marcos.binormals[i];
-    const borde = Math.min(1, Math.min(s, L - s) / (r * 1.05));
+    const borde = cerrado ? 1 : Math.min(1, Math.min(s, L - s) / (r * 1.05));
     const tapa = Math.sqrt(1 - (1 - borde) ** 2);
     for (let j = 0; j <= rad; j++) {
       const a = (j / rad) * Math.PI * 2;
@@ -474,7 +482,7 @@ function caraPintada(hit, tam, sonda, dormido = false) {
   if (dormido) {                                 // dormido: dos arquitos cerrados y la nariz redonda
     [-0.3, 0.3].forEach((u) => linea(7, 0, Array.from({ length: 6 }, (_, i) => {
       const t = i / 5;
-      return [u - 0.14 + t * 0.28, 0.1 + Math.sin(t * Math.PI) * 0.07];
+      return [u - 0.14 + t * 0.28, 0.14 - Math.sin(t * Math.PI) * 0.07];   // «︶», relajados
     })));
     punto(7, 1, 0, -0.26);
   } else {
@@ -532,7 +540,8 @@ function sorpresa(estado, sonda, opciones = {}) {
   const alta = cabezas.length ? cabezas.reduce((a, b) => ((abajo ? b[2] < a[2] : b[2] > a[2]) ? b : a)) : null;
   // de frente (guagua) la cabeza va arriba; de perfil (animalito), a un lado
   const centro = (min.x + max.x) / 2;
-  const deFrente = alta && Math.abs(alta[1] / Q * esc - centro) < An * 0.15;
+  // el dormilón duerme de frente aunque la cabeza esté a un lado
+  const deFrente = alta && (dormida(estado) || Math.abs(alta[1] / Q * esc - centro) < An * 0.15);
   let x0 = min.x, x1 = max.x;
   if (alta && !deFrente) {
     const borde = (alta[1] - Math.sign(alta[1] / Q * esc - centro) * alta[4] * 0.9) / Q * esc;
