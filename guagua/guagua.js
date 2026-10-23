@@ -24,10 +24,10 @@
    ══════════════════════════════════════════════════════════════ */
 import * as THREE from 'three';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
-import * as nube from './nube.js';
+import * as nube from './nube.js?v=2026.10.23.1';
 import {
   DIRECCION, V, Q, ent, CREMAS, BOQUILLAS, GROSORES, MASAS, TAMANOS, GRAGEAS, MAX_BOCADOS, BOCADOS_TALLER, MAX_PIEZAS, MORDIDA, NOMBRES, MENSAJES, MENSAJES_MEMORIA, MENSAJE_GUAGUAU, VALES, enMemoria, echada, posturaDe, azar, elige, limita, bolita, chorizo, masaDe, iniPuntos, conMasa, SG, G, C, frenteDe, CUERPO, CABEZA, guaguaConBrazos, MOLDES, elipsoide, tubo, PISO, aplanar, geometriaPieza, moverPieza, base, b64, exprimir, PASOS, aDeltas, deDeltas, codificar, decodificar, deLaPrimeraHornada, sano, punto, tieneCara, queEs, nombreDe, puntoDeCrema, pn, caraPintada, chapitas, sorpresa, Sonda, amasarReceta,
-} from './masa.js';
+} from './masa.js?v=2026.10.23.1';
 
 const $ = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
@@ -1522,18 +1522,39 @@ function resumenDock() {
   }
 }
 function montarAsas() {
+  const deLado = () => matchMedia('(orientation:landscape) and (max-height:560px)').matches;
   $$('.dock__asa').forEach((b) => {
-    b.addEventListener('click', () => plegarDock(!estado.plegado));
-    // también se arrastra: hacia abajo pliega, hacia arriba despliega
-    let y0 = null;
-    b.addEventListener('pointerdown', (e) => { y0 = e.clientY; b.setPointerCapture(e.pointerId); });
-    b.addEventListener('pointermove', (e) => {
-      if (y0 == null) return;
-      const d = e.clientY - y0;
-      if (d > 28 && !estado.plegado) { plegarDock(true); y0 = null; }
-      else if (d < -28 && estado.plegado) { plegarDock(false); y0 = null; }
+    const dock = b.closest('.dock');
+    let ini = null, movido = 0, fue = false;
+    b.addEventListener('pointerdown', (e) => {
+      ini = { x: e.clientX, y: e.clientY }; movido = 0; fue = false;
+      b.setPointerCapture(e.pointerId);
+      dock.classList.add('arrastrando');
     });
-    b.addEventListener('pointerup', () => { y0 = null; });
+    b.addEventListener('pointermove', (e) => {
+      if (!ini) return;
+      // de frente se arrastra en vertical; con el teléfono de lado, en horizontal
+      const d = deLado() ? e.clientX - ini.x : e.clientY - ini.y;
+      movido = d;
+      if (Math.abs(d) > 4) fue = true;
+      if (deLado()) return;                 // de lado solo decide al soltar
+      // abierto: baja hasta dejar solo la cabecera; plegado: sube un poco, como invitación
+      const tope = estado.plegado ? -36 : Math.max(0, dock.offsetHeight - 96);
+      const dy = estado.plegado ? limita(d, tope, 24) : limita(d, -24, tope);
+      dock.style.transform = `translate(-50%, ${dy}px)`;
+    });
+    const suelta = () => {
+      if (!ini) return;
+      ini = null;
+      dock.classList.remove('arrastrando');
+      dock.style.transform = '';
+      if (!fue) { plegarDock(!estado.plegado); return; }   // un toque: cambia
+      if (estado.plegado && movido < -24) plegarDock(false);
+      else if (!estado.plegado && movido > 40) plegarDock(true);
+    };
+    b.addEventListener('pointerup', suelta);
+    b.addEventListener('pointercancel', suelta);
+    b.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); plegarDock(!estado.plegado); } });
   });
   $$('.dock__cab .dock__t').forEach((t) => t.addEventListener('click', () => { if (estado.plegado) plegarDock(false); }));
 }
@@ -2148,7 +2169,22 @@ function cerrarRegalo() {
 }
 
 /* ─── arranque ─────────────────────────────────────────────── */
+/* Cuando sale una versión nueva, la página se recarga sola una vez: así nadie
+   se queda con el juego viejo por el caché del navegador. La versión va en
+   el <meta> y en los ?v= de cada archivo; version.json se pide sin caché. */
+function vigilarVersion() {
+  const mia = (document.querySelector('meta[name="guagua-version"]') || {}).content;
+  if (!mia || !navigator.onLine) return;
+  fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then((r) => r.json()).then((d) => {
+    if (!d || d.v === mia) return;
+    const clave = 'guagua:recargada';
+    if (sessionStorage.getItem(clave) === d.v) return;   // ya se recargó por esta: no insistir
+    sessionStorage.setItem(clave, d.v);
+    location.reload();
+  }).catch(() => { /* sin red o sin archivo: nada */ });
+}
 function arrancar() {
+  vigilarVersion();
   $('#cuenta').textContent = rotuloFinados();
   if (!montarTaller()) return;
   montarRegalo(); montarVitrina(); montarRecibir(); montarAsas();
