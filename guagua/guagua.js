@@ -1522,18 +1522,39 @@ function resumenDock() {
   }
 }
 function montarAsas() {
+  const deLado = () => matchMedia('(orientation:landscape) and (max-height:560px)').matches;
   $$('.dock__asa').forEach((b) => {
-    b.addEventListener('click', () => plegarDock(!estado.plegado));
-    // también se arrastra: hacia abajo pliega, hacia arriba despliega
-    let y0 = null;
-    b.addEventListener('pointerdown', (e) => { y0 = e.clientY; b.setPointerCapture(e.pointerId); });
-    b.addEventListener('pointermove', (e) => {
-      if (y0 == null) return;
-      const d = e.clientY - y0;
-      if (d > 28 && !estado.plegado) { plegarDock(true); y0 = null; }
-      else if (d < -28 && estado.plegado) { plegarDock(false); y0 = null; }
+    const dock = b.closest('.dock');
+    let ini = null, movido = 0, fue = false;
+    b.addEventListener('pointerdown', (e) => {
+      ini = { x: e.clientX, y: e.clientY }; movido = 0; fue = false;
+      b.setPointerCapture(e.pointerId);
+      dock.classList.add('arrastrando');
     });
-    b.addEventListener('pointerup', () => { y0 = null; });
+    b.addEventListener('pointermove', (e) => {
+      if (!ini) return;
+      // de frente se arrastra en vertical; con el teléfono de lado, en horizontal
+      const d = deLado() ? e.clientX - ini.x : e.clientY - ini.y;
+      movido = d;
+      if (Math.abs(d) > 4) fue = true;
+      if (deLado()) return;                 // de lado solo decide al soltar
+      // abierto: baja hasta dejar solo la cabecera; plegado: sube un poco, como invitación
+      const tope = estado.plegado ? -36 : Math.max(0, dock.offsetHeight - 96);
+      const dy = estado.plegado ? limita(d, tope, 24) : limita(d, -24, tope);
+      dock.style.transform = `translate(-50%, ${dy}px)`;
+    });
+    const suelta = () => {
+      if (!ini) return;
+      ini = null;
+      dock.classList.remove('arrastrando');
+      dock.style.transform = '';
+      if (!fue) { plegarDock(!estado.plegado); return; }   // un toque: cambia
+      if (estado.plegado && movido < -24) plegarDock(false);
+      else if (!estado.plegado && movido > 40) plegarDock(true);
+    };
+    b.addEventListener('pointerup', suelta);
+    b.addEventListener('pointercancel', suelta);
+    b.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); plegarDock(!estado.plegado); } });
   });
   $$('.dock__cab .dock__t').forEach((t) => t.addEventListener('click', () => { if (estado.plegado) plegarDock(false); }));
 }

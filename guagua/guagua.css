@@ -302,22 +302,55 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 .regalar__formato{gap:6px;flex-wrap:wrap;justify-content:center}
 .regalar__pie .btn[aria-busy="true"]{opacity:.6;cursor:progress}
 
-/* ─── el dock se pliega: asa arriba, resumen en la cabecera ─── */
-.dock__asa{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:22px;padding:0;border:0;background:none;cursor:grab;touch-action:none;display:flex;align-items:center;justify-content:center}
-.dock__asa i{display:block;width:44px;height:5px;border-radius:3px;background:rgba(255,255,255,.35);transition:background .2s, width .2s}
-.dock__asa:hover i,.dock__asa:focus-visible i{background:rgba(255,255,255,.7);width:56px}
-.dock__asa:focus-visible{outline:0}
+/* ─── el dock se pliega: un chevron arriba que se arrastra ─── */
+/* Apunta hacia abajo cuando está abierto («bájame») y hacia arriba cuando
+   está plegado («súbeme»). Mientras se arrastra, el dock sigue al dedo. */
+.dock__asa{position:absolute;top:0;left:50%;transform:translateX(-50%);width:96px;height:30px;padding:0;border:0;background:none;
+  cursor:grab;touch-action:none;display:flex;align-items:flex-start;justify-content:center;color:#fff;border-radius:0 0 14px 14px}
+.dock__asa i{display:block;width:14px;height:14px;margin-top:4px;border-right:3px solid currentColor;border-bottom:3px solid currentColor;border-radius:2px;
+  opacity:.92;transform:rotate(45deg) translate(-3px, -3px);transition:transform .3s var(--mal-ease), opacity .2s}
+.dock__asa:hover i,.dock__asa:focus-visible i{opacity:1}
+.dock__asa:focus-visible{outline:2px solid #fff;outline-offset:-2px}
 .dock__asa:active{cursor:grabbing}
-.dock{padding-top:22px}
-.dock__resumen{display:none;font:600 13px var(--mal-texto);letter-spacing:0;color:var(--mal-on-surface-2);margin-left:6px}
+.juego[data-plegado="1"] .dock__asa i{transform:rotate(-135deg) translate(-4px, -4px);margin-top:10px}
+.dock{padding-top:26px;transition:transform .28s var(--mal-ease)}
+.dock.arrastrando{transition:none}
+.dock__resumen{display:none;font:600 13px var(--mal-texto);letter-spacing:0;color:rgba(255,255,255,.78);margin-left:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .juego[data-plegado="1"] .dock > :not(.dock__asa):not(.dock__cab){display:none}
-.juego[data-plegado="1"] .dock__resumen{display:inline}
-.juego[data-plegado="1"] .dock__t{cursor:pointer}
+.juego[data-plegado="1"] .dock__resumen{display:inline-block;vertical-align:bottom;max-width:min(46vw, 260px)}
+.juego[data-plegado="1"] .dock__t{cursor:pointer;display:flex;align-items:baseline;gap:4px;min-width:0}
 .juego[data-plegado="1"] .dock{gap:0}
 @media (orientation:landscape) and (max-height:560px){
-  .dock__asa{left:0;top:50%;transform:translateY(-50%) rotate(90deg);width:80px;height:22px}
-  .dock{padding-top:calc(12px + env(safe-area-inset-top));padding-left:24px}
+  .dock__asa{left:0;top:50%;transform:translateY(-50%) rotate(90deg);width:80px;height:30px}
+  .dock{padding-top:calc(12px + env(safe-area-inset-top));padding-left:28px}
 }
+
+/* ─── fork del DS para el juego: más contraste sobre el vidrio oscuro ─── */
+/* El DS está pensado para fondos de papel; aquí todo va sobre vidrio morado,
+   así que los botones, chips, rótulos y pistas se afirman en blanco. */
+.juego-cuerpo .btn:not(.btn--rojo):not(.btn-ghost):not(.btn--ok){color:#fff;border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.1)}
+.juego-cuerpo .btn:not(.btn--rojo):not(.btn-ghost):not(.btn--ok):hover{color:#fff;border-color:#fff;background:rgba(255,255,255,.18)}
+.juego-cuerpo .btn-ghost{color:#fff;border-color:rgba(255,255,255,.28)}
+.juego-cuerpo .btn-ghost:hover{color:#fff;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.5)}
+.juego-cuerpo .btn:disabled,.juego-cuerpo .btn[aria-busy="true"]{opacity:.55}
+.juego-cuerpo .chip{color:#fff;border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.07)}
+.juego-cuerpo .chip:hover{border-color:#fff}
+.juego-cuerpo .chip[aria-pressed="true"]{background:var(--mal-primary);border-color:var(--mal-primary);color:#fff}
+.juego-cuerpo .tool{color:rgba(255,255,255,.9);border-color:rgba(255,255,255,.18)}
+.juego-cuerpo .tool:hover{background:rgba(255,255,255,.12)}
+.juego-cuerpo .dock__rotulo{color:rgba(255,255,255,.72)}
+.juego-cuerpo .dock__nota{color:rgba(255,255,255,.8)}
+.juego-cuerpo .tam{color:rgba(255,255,255,.85);border-color:rgba(255,255,255,.3)}
+.juego-cuerpo .campo > label,.juego-cuerpo .campo__etiqueta{color:#fff}
+.juego-cuerpo .campo__pista,.juego-cuerpo .caption,.juego-cuerpo .regalar__panadera{color:rgba(255,255,255,.78)}
+.juego-cuerpo .regalar__panadera b{color:#fff}
+.juego-cuerpo input,.juego-cuerpo textarea{color:#fff;border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.06)}
+.juego-cuerpo input::placeholder,.juego-cuerpo textarea::placeholder{color:rgba(255,255,255,.45)}
+.juego-cuerpo input:focus-visible,.juego-cuerpo textarea:focus-visible{border-color:var(--mal-primary);outline:2px solid var(--mal-primary);outline-offset:1px}
+.juego-cuerpo .modal__cab h2{color:#fff}
+.juego-cuerpo .pasos__punto{background:rgba(255,255,255,.4)}
+.juego-cuerpo .regalo__pista,.juego-cuerpo .regalo__msg{color:rgba(255,255,255,.85)}
+.juego-cuerpo .btn:focus-visible,.juego-cuerpo .chip:focus-visible{outline:3px solid #fff;outline-offset:2px}
 
 /* ─── regalar por pasos ─── */
 .pasos{display:flex;gap:6px;margin:0 auto 0 12px;padding:0;list-style:none;align-items:center}
