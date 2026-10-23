@@ -221,6 +221,7 @@
 <!-- ══ Regalar ═══════════════════════════════════════════════ -->
 <dialog class="modal regalar" id="d-regalar" aria-labelledby="d-regalar-t">
   <div class="modal__cab">
+    <button class="btn btn--sm btn--icono btn-ghost" id="r-atras" type="button" hidden aria-label="Paso anterior"><svg class="icono" aria-hidden="true"><use href="#i-flecha-izq"/></svg></button>
     <h2 id="d-regalar-t">Regálala</h2>
     <ol class="pasos" aria-label="Pasos">
       <li class="pasos__punto" aria-current="true"><span class="sr-only">Para quién</span></li>
@@ -231,13 +232,10 @@
   </div>
   <div class="modal__cuerpo regalar__cuerpo">
     <!-- 1 · para quién -->
-    <fieldset class="paso" data-paso="1">
+    <fieldset class="regalar__paso" data-paso="1">
       <legend class="sr-only">Para quién</legend>
-      <figure class="panadera">
-        <p class="panadera__frase" id="panadera-frase"></p>
-        <figcaption><b>Doña Rosa, la panadera</b> · <span id="panadera-nota"></span></figcaption>
-      </figure>
-      <div class="fila regalar__tipo" role="group" aria-label="Qué vas a hacer con ella">
+      <p class="regalar__panadera"><b>Doña Rosa, la panadera:</b> <span id="panadera-frase"></span> <span id="panadera-nota" class="sr-only"></span></p>
+      <div class="regalar__tipo" role="group" aria-label="Qué vas a hacer con ella">
         <button class="chip" type="button" data-tipo="" aria-pressed="true">Regalarla</button>
         <button class="chip" type="button" data-tipo="m" aria-pressed="false">Dedicarla a quien ya no está</button>
       </div>
@@ -248,7 +246,7 @@
       </div>
     </fieldset>
     <!-- 2 · unas palabras -->
-    <fieldset class="paso" data-paso="2" hidden>
+    <fieldset class="regalar__paso" data-paso="2" hidden>
       <legend class="sr-only">Unas palabras</legend>
       <div class="pila">
         <div class="campo"><label for="r-mensaje">Unas palabras</label><textarea id="r-mensaje" maxlength="160" rows="3"></textarea></div>
@@ -265,7 +263,7 @@
       </div>
     </fieldset>
     <!-- 3 · compartir -->
-    <fieldset class="paso" data-paso="3" hidden>
+    <fieldset class="regalar__paso" data-paso="3" hidden>
       <legend class="sr-only">Compartir</legend>
       <div class="regalar__previa">
         <img class="regalar__vista" id="r-vista" alt="Vista previa de la imagen que se va a compartir" width="1080" height="1920">
@@ -281,12 +279,11 @@
     </fieldset>
   </div>
   <div class="modal__pie regalar__pie">
-    <button class="btn btn-ghost" id="r-atras" type="button" hidden><svg class="icono" aria-hidden="true"><use href="#i-flecha-izq"/></svg> Atrás</button>
     <button class="btn btn--rojo regalar__sig" id="r-siguiente" type="button">Siguiente <svg class="icono" aria-hidden="true"><use href="#i-flecha-der"/></svg></button>
     <button class="btn btn--rojo regalar__final" id="r-compartir" type="button"><svg class="icono" aria-hidden="true"><use href="#i-compartir"/></svg> Compartir</button>
-    <button class="btn regalar__final" id="r-whatsapp" type="button"><svg class="icono" aria-hidden="true"><use href="#g-whatsapp"/></svg> WhatsApp</button>
-    <button class="btn regalar__final" id="r-copiar" type="button"><svg class="icono" aria-hidden="true"><use href="#i-enlace"/></svg> Copiar enlace</button>
-    <button class="btn regalar__final" id="r-descargar" type="button"><svg class="icono" aria-hidden="true"><use href="#i-descargar"/></svg> Imagen</button>
+    <button class="btn btn--sm regalar__final" id="r-whatsapp" type="button"><svg class="icono" aria-hidden="true"><use href="#g-whatsapp"/></svg> WhatsApp</button>
+    <button class="btn btn--sm regalar__final" id="r-copiar" type="button"><svg class="icono" aria-hidden="true"><use href="#i-enlace"/></svg> Copiar</button>
+    <button class="btn btn--sm regalar__final" id="r-descargar" type="button"><svg class="icono" aria-hidden="true"><use href="#i-descargar"/></svg> Imagen</button>
   </div>
 </dialog>
 

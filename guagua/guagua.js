@@ -743,7 +743,7 @@ class Visor {
       const k = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 120 : 1;
       const dy = limita(e.deltaY * k, -60, 60), dx = limita(e.deltaX * k, -60, 60);
       if (!e.ctrlKey && !this.fijo && (e.shiftKey || Math.abs(dx) > Math.abs(dy) * 1.5)) {
-        this.giro += (e.shiftKey ? dy : dx) * 0.004;
+        this.giro += (Math.abs(dx) > Math.abs(dy) ? dx : dy) * 0.004;   // con Shift el navegador ya lo vuelve horizontal
       } else {
         this.zoom = limita(this.zoom * Math.exp(dy * 0.0016), 0.45, 1.7);
       }
@@ -1810,14 +1810,14 @@ async function abrirRegalo() {
 let paso = 1;
 function irPaso(n) {
   paso = limita(n, 1, 3);
-  $$('#d-regalar .paso').forEach((f) => { f.hidden = +f.dataset.paso !== paso; });
+  $$('#d-regalar .regalar__paso').forEach((f) => { f.hidden = +f.dataset.paso !== paso; });
   $$('#d-regalar .pasos__punto').forEach((p, i) => p.setAttribute('aria-current', String(i + 1 === paso)));
   $('#r-atras').hidden = paso === 1;
   $('#r-siguiente').hidden = paso === 3;
   $('#d-regalar').classList.toggle('regalar--final', paso === 3);
   $('#d-regalar-t').textContent = ['', estado.t === 'm' ? 'Dedícala' : 'Regálala', 'Unas palabras', 'Compártela'][paso];
   if (paso === 3) refrescarTarjeta();
-  else { const c = $(`#d-regalar .paso[data-paso="${paso}"] input, #d-regalar .paso[data-paso="${paso}"] textarea`); if (c && matchMedia('(hover:hover)').matches) c.focus(); }
+  else { const c = $(`#d-regalar .regalar__paso[data-paso="${paso}"] input, #d-regalar .regalar__paso[data-paso="${paso}"] textarea`); if (c && matchMedia('(hover:hover)').matches) c.focus(); }
 }
 function leerFormulario() {
   estado.n = $('#r-nombre').value.trim().slice(0, 40);
@@ -2152,6 +2152,9 @@ function arrancar() {
   $('#cuenta').textContent = rotuloFinados();
   if (!montarTaller()) return;
   montarRegalo(); montarVitrina(); montarRecibir(); montarAsas();
+  // el DS cierra el diálogo si el clic cae fuera de su caja; como los pasos
+  // cambian su tamaño en el mismo clic, lo de adentro no le llega
+  $$('dialog.modal > *').forEach((x) => x.addEventListener('click', (e) => e.stopPropagation()));
   const b = almacen.leer(BORRADOR, null);
   if (b && Array.isArray(b.a)) {
     Object.assign(estado, sano(b), { id: typeof b.id === 'string' ? b.id : null });

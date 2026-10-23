@@ -257,7 +257,6 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
   .barra{gap:6px}
   .regalar__rej{grid-template-columns:1fr}
   .regalar__vista{max-width:180px;max-height:40vh;width:auto;margin:0 auto}
-  .regalar__pie .btn{flex:1 1 calc(50% - var(--mal-e2))}
 }
 @media (prefers-reduced-motion:reduce){
   .latido,.dock{animation:none}
@@ -266,7 +265,7 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 /* los diálogos no pasan del alto de la pantalla: el cuerpo se desplaza y el pie queda a la vista */
 .juego-cuerpo .modal{max-height:calc(100dvh - 24px);display:none;flex-direction:column}
 .juego-cuerpo .modal[open]{display:flex}
-.juego-cuerpo .modal .modal__cuerpo{overflow-y:auto;overscroll-behavior:contain;min-height:0}
+.juego-cuerpo .modal .modal__cuerpo{flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain;min-height:0}
 .juego-cuerpo .modal .modal__cab,.juego-cuerpo .modal .modal__pie{flex:none}
 .juego-cuerpo .modal .modal__pie{padding-top:var(--mal-e3)}
 
@@ -289,7 +288,8 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 #cuenta-fuera[hidden],#cuenta-dentro[hidden],#c-campo-nombre[hidden]{display:none}
 
 /* regalar o dedicar, y los vales */
-.regalar__tipo{gap:var(--mal-e2);flex-wrap:wrap}
+.regalar__tipo{display:grid;grid-template-columns:1fr 1fr;gap:var(--mal-e2)}
+.regalar__tipo .chip{justify-content:center;text-align:center;white-space:normal;line-height:1.2;min-height:44px}
 .regalar__vales{gap:6px;flex-wrap:wrap}
 .campo__pista:empty{display:none}
 .regalo__vale{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:12px 0 0;padding:10px 12px;
@@ -323,15 +323,22 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 .pasos{display:flex;gap:6px;margin:0 auto 0 12px;padding:0;list-style:none;align-items:center}
 .pasos__punto{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);transition:width .2s, background .2s}
 .pasos__punto[aria-current="true"]{width:22px;background:var(--mal-primary)}
-.paso{border:0;padding:0;margin:0;min-width:0;display:flex;flex-direction:column;gap:var(--mal-e4)}
-.paso[hidden]{display:none}
-.regalar__cuerpo{overflow:hidden}
-.regalar__previa .regalar__vista{max-height:min(48vh, 520px);width:auto;max-width:100%}
+.regalar__paso{border:0;padding:0;margin:0;min-width:0;display:flex;flex-direction:column;gap:var(--mal-e4)}
+.regalar__paso[hidden]{display:none}
+.regalar__cuerpo{overflow-y:auto}
+.regalar__previa .regalar__vista{max-height:clamp(150px, 100dvh - 470px, 560px);width:auto;max-width:100%}
+.regalar__formato{display:flex;gap:6px;justify-content:center}
+.regalar__formato .chip{flex:none;white-space:nowrap}
 .regalar__previa .regalar__entrar{margin:0;width:100%}
-.regalar__pie{justify-content:space-between}
+.regalar__pie{display:flex}
 .regalar__pie .regalar__final{display:none}
-.regalar--final .regalar__pie .regalar__final{display:inline-flex}
-.regalar--final .regalar__pie{justify-content:flex-start}
-.regalar__sig{margin-left:auto}
+.regalar__sig{flex:1 1 auto;justify-content:center}
+.regalar--final .regalar__pie{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px}
+.regalar--final .regalar__pie .regalar__final{display:inline-flex;justify-content:center;min-width:0;padding-inline:8px;white-space:nowrap}
+.regalar--final .regalar__pie #r-compartir{grid-column:1 / -1}
+#d-regalar .modal__cab{gap:8px}
+#d-regalar .modal__cab h2{flex:1 1 auto;font-size:var(--mal-t-h4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#d-regalar .regalar__entrar{font-size:12px;padding:8px 10px}
 .btn--ok{background:var(--mal-ok)!important;border-color:var(--mal-ok)!important;color:#fff!important}
-.panadera{margin:0}
+.regalar__panadera{margin:0;font-size:var(--mal-t-caption);color:var(--mal-on-surface-2);line-height:1.35}
+.regalar__panadera b{color:var(--mal-on-surface)}
