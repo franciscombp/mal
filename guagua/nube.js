@@ -15,7 +15,7 @@
    Para probar contra los emuladores: abrir en localhost con ?emuladores
    (auth en el 9099 y Firestore en el 8080, ver firebase/firebase.json).
    ══════════════════════════════════════════════════════════════ */
-import { firebaseConfig } from './nube-config.js?v=2026.10.23.1';
+import { firebaseConfig } from './nube-config.js?v=2026.10.23.2';
 
 const SDK = 'https://www.gstatic.com/firebasejs/12.19.0/';
 const RECETA_MAX = 12000;

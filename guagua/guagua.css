@@ -13,6 +13,38 @@
   --mantel-punto:rgba(255,201,60,.12);
   --vidrio-juego:color-mix(in srgb, var(--mal-surface) 82%, transparent);
   --orilla:calc(12px + env(safe-area-inset-left));
+  /* ── los tokens del taller: todo control sale de aquí ──
+     tamaños: toque (acciones), toque-2 (redondos, chips, tamaños), toque-3 (gotas);
+     vidrio: dos bordes y dos rellenos; texto: tres niveles sobre morado;
+     movimiento: los tres tiempos del tema. */
+  --toque:var(--mal-tap, 48px);
+  --toque-2:44px;
+  --toque-3:40px;
+  --vidrio-borde:rgba(255,255,255,.16);
+  --vidrio-borde-2:rgba(255,255,255,.36);
+  --vidrio-relleno:rgba(255,255,255,.07);
+  --vidrio-relleno-2:rgba(255,255,255,.15);
+  --texto-1:#fff;
+  --texto-2:rgba(255,255,255,.82);
+  --texto-3:rgba(255,255,255,.64);
+  --dur-1:var(--mal-dur-1, 120ms);
+  --dur-2:var(--mal-dur-2, 220ms);
+  --dur-3:var(--mal-dur-3, 360ms);
+  --anillo:0 0 0 2px var(--mantel-1), 0 0 0 4px #fff;   /* lo elegido en gotas y tamaños */
+}
+/* ── una sola manera de pulsar y de tener el foco ──
+   Los controles planos de vidrio se encogen un poco al pulsar; los de
+   marca (btn--rojo) se hunden hasta su sombra, como manda el DS. El foco
+   de teclado es siempre el mismo anillo blanco. */
+.redondo,.tool,.tam,.crema,.etapas button,.pieza,.juego-cuerpo .chip{
+  transition:transform var(--dur-1) var(--mal-ease), background-color var(--dur-2), border-color var(--dur-2), color var(--dur-2), box-shadow var(--dur-2);
+}
+.redondo:active,.tool:active,.tam:active,.crema:active,.etapas button:not(:disabled):active,.pieza:active,.juego-cuerpo .chip:active{transform:scale(.95)}
+.redondo:focus-visible,.tool:focus-visible,.tam:focus-visible,.crema:focus-visible,.etapas button:focus-visible,.pieza:focus-visible,
+.dock__asa:focus-visible,.juego-cuerpo .btn:focus-visible,.juego-cuerpo .chip:focus-visible,.juego-cuerpo input:focus-visible,.juego-cuerpo textarea:focus-visible{
+  outline:3px solid #fff;outline-offset:2px;box-shadow:none}
+@media (hover:hover){
+  .redondo:hover:not(:disabled),.tool:hover:not([aria-pressed="true"]),.tam:hover,.etapas button:hover:not([aria-current]):not(:disabled){background:var(--vidrio-relleno-2)}
 }
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 html,body.juego-cuerpo{height:100%;overflow:hidden;overscroll-behavior:none}
@@ -34,7 +66,7 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
   background:radial-gradient(ellipse 85% 75% at 50% 45%, transparent 55%, rgba(10,0,12,.55));
 }
 .juego__lienzo{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;outline:0;z-index:0}
-.juego__lienzo:focus-visible{box-shadow:inset 0 0 0 3px var(--mal-primary)}
+.juego__lienzo:focus-visible{box-shadow:inset 0 0 0 3px #fff}
 .juego__sin3d{position:absolute;z-index:3;inset:40% 24px auto;padding:var(--mal-e5);border-radius:var(--mal-r);
   background:var(--mal-surface);text-align:center}
 .juego[data-etapa="amasar"] .juego__lienzo{cursor:copy}
@@ -58,16 +90,14 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 
 /* ─── botones redondos de vidrio ──────────────────────────── */
 .redondo{
-  position:relative;display:inline-grid;place-items:center;width:46px;height:46px;flex:none;padding:0;cursor:pointer;
-  border-radius:50%;border:1px solid rgba(255,255,255,.14);color:var(--mal-on-surface);
+  position:relative;display:inline-grid;place-items:center;width:var(--toque-2);height:var(--toque-2);flex:none;padding:0;cursor:pointer;
+  border-radius:50%;border:1px solid var(--vidrio-borde);color:var(--texto-1);
   background:var(--vidrio-juego);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
-  box-shadow:0 6px 18px rgba(0,0,0,.28);transition:transform .15s var(--mal-ease), opacity .2s;
+  box-shadow:0 6px 18px rgba(0,0,0,.28);
 }
-.redondo:active{transform:scale(.92)}
 .redondo:disabled{opacity:.4;cursor:default}
-.redondo:focus-visible{outline:3px solid var(--mal-primary);outline-offset:2px}
 .redondo__cuenta{position:absolute;top:-3px;right:-3px;min-width:19px;height:19px;padding:0 5px;border-radius:999px;
-  background:var(--mal-primary);color:var(--mal-on-primary);font:800 11px/19px var(--mal-texto);font-style:normal}
+  background:var(--mal-primary);color:#fff;font:800 11px/19px var(--mal-texto);font-style:normal}
 
 /* ─── la barra de arriba ──────────────────────────────────── */
 .barra{
@@ -77,23 +107,22 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 }
 .barra__acc{display:flex;gap:8px;margin-left:auto}
 .etapas{display:flex;gap:4px;list-style:none;margin:0 auto;padding:4px;border-radius:999px;
-  background:var(--vidrio-juego);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12)}
-.etapas button{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 12px 0 4px;border:0;border-radius:999px;cursor:pointer;
-  background:transparent;color:var(--mal-on-surface-2);font:600 var(--mal-t-caption) var(--mal-texto)}
-.etapas button span{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;
-  background:rgba(255,255,255,.08);color:var(--mal-on-surface);font-weight:800}
+  background:var(--vidrio-juego);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--vidrio-borde)}
+.etapas button{display:inline-flex;align-items:center;gap:6px;height:calc(var(--toque-2) - 8px);padding:0 12px 0 4px;border:0;border-radius:999px;cursor:pointer;
+  background:transparent;color:var(--texto-2);font:600 var(--mal-t-caption) var(--mal-texto)}
+.etapas button span{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;
+  background:var(--vidrio-relleno-2);color:var(--texto-1);font-weight:800}
 .etapas button[aria-current]{background:var(--mal-relleno-marca);color:#fff}
-.etapas button[aria-current] span{background:rgba(255,255,255,.22);color:#fff}
+.etapas button[aria-current] span{background:rgba(255,255,255,.24);color:#fff}
 .etapas button.hecha span{background:var(--mal-ok);color:#fff}
 .etapas button:disabled{opacity:.4;cursor:not-allowed}
-.etapas button:focus-visible{outline:3px solid var(--mal-primary);outline-offset:2px}
 
 .pista{
   position:absolute;z-index:2;left:50%;top:calc(70px + env(safe-area-inset-top));transform:translateX(-50%);
   width:min(calc(100vw - 2 * var(--orilla) - 112px), 520px);margin:0;padding:10px 16px;border-radius:16px;text-align:center;
-  background:rgba(20,4,24,.62);color:#fff;font-size:var(--mal-t-caption);line-height:1.4;
+  background:rgba(20,4,24,.62);color:var(--texto-1);font-size:var(--mal-t-caption);line-height:1.4;
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);pointer-events:none;
-  transition:opacity .5s, transform .5s var(--mal-ease);
+  transition:opacity var(--dur-3), transform var(--dur-3) var(--mal-ease);
 }
 .pista.oculta{opacity:0;transform:translate(-50%, -8px)}
 
@@ -108,33 +137,31 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
   padding:14px var(--orilla) calc(14px + env(safe-area-inset-bottom));
   border-radius:26px 26px 0 0;background:var(--vidrio-juego);
   -webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);
-  border:1px solid rgba(255,255,255,.12);border-bottom:0;box-shadow:0 -10px 40px rgba(0,0,0,.35);
-  animation:dock-sube .35s var(--mal-ease);
+  border:1px solid var(--vidrio-borde);border-bottom:0;box-shadow:0 -10px 40px rgba(0,0,0,.35);
+  animation:dock-sube var(--dur-3) var(--mal-ease);
 }
 .dock[hidden]{display:none}
 @keyframes dock-sube{from{transform:translate(-50%, 30px);opacity:0}to{transform:translate(-50%, 0);opacity:1}}
 .dock__cab{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px}
 .dock__t{margin:0;font-family:var(--mal-display);font-weight:800;font-size:var(--mal-t-h4);letter-spacing:-.02em}
-.dock__accion{min-height:46px;padding-inline:20px;font-size:1rem}
+.dock__accion{padding-inline:20px;font-size:1rem;white-space:nowrap}
 .dock__herr{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-inline:-4px;padding:2px 4px}
 .dock__herr::-webkit-scrollbar{display:none}
 .tool{
   flex:1 0 64px;max-width:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
   min-height:64px;padding:8px 4px;border-radius:18px;cursor:pointer;
-  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:var(--mal-on-surface-2);
-  font:600 12px var(--mal-texto);transition:transform .15s var(--mal-ease), background .2s, color .2s;
+  border:1px solid var(--vidrio-borde);background:var(--vidrio-relleno);color:var(--texto-2);
+  font:600 12px var(--mal-texto);
 }
 .tool .icono{width:26px;height:26px}
-.tool:active{transform:scale(.94)}
 .tool[aria-pressed="true"]{background:var(--mal-relleno-marca);border-color:transparent;color:#fff;
   box-shadow:0 4px 0 var(--mal-primary-hover), 0 8px 18px rgba(0,0,0,.3)}
-.tool:focus-visible{outline:3px solid var(--mal-primary);outline-offset:2px}
 .dock__fila{display:flex;align-items:center;gap:8px;min-height:44px;margin:0}
 .dock__fila--desliza{overflow-x:auto;scrollbar-width:none;margin-inline:calc(-1 * var(--orilla));padding-inline:var(--orilla)}
 .dock__fila--desliza::-webkit-scrollbar{display:none}
 .dock__fila--desliza .chip{flex:none}
-.dock__rotulo{flex:none;font-family:var(--mal-mono);font-size:var(--mal-t-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--mal-on-surface-3);min-width:4.6em}
-.dock__nota{font-size:var(--mal-t-caption);color:var(--mal-on-surface-2)}
+.dock__rotulo{flex:none;font-family:var(--mal-mono);font-size:var(--mal-t-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--texto-3);min-width:4.6em}
+.dock__nota{font-size:var(--mal-t-caption);color:var(--texto-2)}
 /* las filas que dependen de la herramienta */
 .juego:not([data-herramienta="chorizo"]) .dock__fila[data-con="chorizo"],
 .juego[data-herramienta="chorizo"] .dock__fila[data-sin="chorizo"],
@@ -145,31 +172,30 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 .juego:not([data-herramienta="mordisco"]) .dock__fila[data-con="mordisco"]{display:none}
 
 /* los tamaños: un círculo del grosor que va a salir */
-.tam{display:grid;place-items:center;width:44px;height:44px;flex:none;padding:0;border-radius:50%;cursor:pointer;
-  border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--mal-on-surface)}
+.tam{display:grid;place-items:center;width:var(--toque-2);height:var(--toque-2);flex:none;padding:0;border-radius:50%;cursor:pointer;
+  border:1px solid var(--vidrio-borde);background:var(--vidrio-relleno);color:var(--texto-2)}
 .tam i{width:var(--t);height:var(--t);border-radius:50%;background:currentColor}
-.tam[aria-pressed="true"]{border-color:var(--mal-primary);box-shadow:0 0 0 2px var(--mal-primary);color:var(--mal-primary-txt)}
+.tam[aria-pressed="true"]{border-color:transparent;background:var(--vidrio-relleno-2);box-shadow:var(--anillo);color:#fff}
 
 /* la paleta: una gota de cada crema */
 .cremas{display:flex;gap:8px}
 .crema{
-  flex:none;width:40px;height:40px;border-radius:50%;cursor:pointer;padding:0;
-  border:2px solid rgba(255,255,255,.18);
+  flex:none;width:var(--toque-3);height:var(--toque-3);border-radius:50%;cursor:pointer;padding:0;
+  border:2px solid var(--vidrio-borde-2);
   background:radial-gradient(circle at 34% 30%, rgba(255,255,255,.75) 0 12%, transparent 30%), var(--crema);
-  box-shadow:inset 0 -4px 0 rgba(0,0,0,.18);transition:transform .15s var(--mal-ease);
+  box-shadow:inset 0 -4px 0 rgba(0,0,0,.18);
 }
-.crema[aria-pressed="true"]{box-shadow:inset 0 -4px 0 rgba(0,0,0,.18), 0 0 0 3px var(--mantel-1), 0 0 0 5px #fff;transform:scale(1.08)}
-.crema:focus-visible{outline:2px solid var(--mal-primary);outline-offset:3px}
+.crema[aria-pressed="true"]{border-color:transparent;box-shadow:inset 0 -4px 0 rgba(0,0,0,.18), var(--anillo)}
 
 /* el termómetro del horno */
 .horno__estado{margin:0;font-family:var(--mal-display);font-weight:800;font-size:var(--mal-t-h2);line-height:1}
-.dock--horno .dock__t{font-family:var(--mal-texto);font-weight:600;font-size:var(--mal-t-caption);color:var(--mal-on-surface-2)}
+.dock--horno .dock__t{font-family:var(--mal-texto);font-weight:600;font-size:var(--mal-t-caption);color:var(--texto-2)}
 .termo{position:relative;height:24px;border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.2);
   background:linear-gradient(90deg, #f1e4c8 0%, #e8b062 45%, #c77a2c 62%, #5a2a0c 80%, #1a0d06 100%)}
 .termo__punto{position:absolute;top:0;bottom:0;left:57.5%;width:10%;border-inline:2px solid #fff;background:rgba(255,255,255,.3)}
 .termo__nivel{position:absolute;top:-2px;bottom:-2px;left:0;width:0;border-right:4px solid #fff;box-shadow:3px 0 8px rgba(0,0,0,.5)}
 .termo__escala{display:flex;justify-content:space-between;margin:-4px 0 0;font-family:var(--mal-mono);font-size:var(--mal-t-micro);
-  letter-spacing:.1em;text-transform:uppercase;color:var(--mal-on-surface-3)}
+  letter-spacing:.1em;text-transform:uppercase;color:var(--texto-3)}
 .horno__fin{display:flex;flex-direction:column;gap:10px}
 .horno__fin[hidden]{display:none}
 .horno__veredicto{margin:0;font-family:var(--mal-display);font-weight:700;font-size:var(--mal-t-h4);line-height:1.25}
@@ -183,32 +209,26 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
   position:absolute;z-index:2;left:50%;bottom:0;transform:translateX(-50%);width:min(100%, 620px);
   padding:20px var(--orilla) calc(18px + env(safe-area-inset-bottom));border-radius:26px 26px 0 0;
   background:var(--vidrio-juego);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
-  border:1px solid rgba(255,255,255,.12);border-bottom:0;box-shadow:0 -10px 40px rgba(0,0,0,.35);
+  border:1px solid var(--vidrio-borde);border-bottom:0;box-shadow:0 -10px 40px rgba(0,0,0,.35);
 }
 .regalo__tarjeta h1{font-family:var(--mal-display);font-size:var(--mal-t-h3);line-height:1.05;letter-spacing:-.02em;margin:.2em 0 0}
 .regalo__nombre{font-family:var(--mal-display);font-weight:800;font-size:var(--mal-t-h3);color:var(--mal-primary-txt);margin:.1em 0 0}
 .regalo__para{font-weight:600;margin:.2em 0 0}
 .regalo__para[hidden],.regalo__msg[hidden]{display:none}
-.regalo__msg{margin:10px 0 0;padding-left:12px;border-left:3px solid var(--mal-tertiary);font-style:italic;color:var(--mal-on-surface-2)}
-.regalo__pista{margin:10px 0 0;font-size:var(--mal-t-caption);font-weight:600;color:var(--mal-on-surface-2)}
+.regalo__msg{margin:10px 0 0;padding-left:12px;border-left:3px solid var(--mal-tertiary);font-style:italic;color:var(--texto-2)}
+.regalo__pista{margin:10px 0 0;font-size:var(--mal-t-caption);font-weight:600;color:var(--texto-2)}
 .regalo__acc{display:flex;gap:8px;margin-top:12px;justify-content:flex-end;flex-wrap:wrap}
 .regalo__acc .boton-juego{flex:1 1 auto}
 .latido{animation:guagua-latido 1.1s var(--mal-ease) infinite}
+.latido:active{animation:none}
 @keyframes guagua-latido{0%,100%{transform:none}50%{transform:scale(1.04)}}
 
 /* ─── los diálogos ────────────────────────────────────────── */
 .regalar{max-width:min(94vw, 760px)}
 .regalar__cuerpo{display:flex;flex-direction:column;gap:var(--mal-e4)}
-.regalar__rej{display:grid;grid-template-columns:minmax(0, 200px) minmax(0, 1fr);gap:var(--mal-e5);align-items:start}
 .regalar__vista{width:100%;height:auto;border-radius:var(--mal-r-s);border:var(--mal-borde);background:var(--mantel-1);box-shadow:var(--mal-elev-1)}
 .regalar .pila{display:flex;flex-direction:column;gap:var(--mal-e3)}
 .regalar textarea{min-height:0}
-.regalar__pie{justify-content:flex-start}
-.panadera{margin:0;padding:var(--mal-e4);border-radius:var(--mal-r-s);background:var(--mal-primary-container);border:var(--mal-borde)}
-.panadera__frase{margin:0 0 .4em;font-family:var(--mal-display);font-weight:700;font-size:var(--mal-t-h4);line-height:1.25}
-.panadera__frase::before{content:"«"}
-.panadera__frase::after{content:"»"}
-.panadera figcaption{font-size:var(--mal-t-caption);color:var(--mal-on-surface-2)}
 
 .vitrina{max-height:88dvh}
 .vitrina .modal__cuerpo{overflow:auto}
@@ -217,15 +237,14 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 .vitrina__rej{display:grid;grid-template-columns:repeat(auto-fill, minmax(130px, 1fr));gap:var(--mal-e3)}
 .pieza{
   display:flex;flex-direction:column;align-items:center;gap:.15rem;padding:var(--mal-e2) var(--mal-e2) var(--mal-e3);
-  border-radius:var(--mal-r);border:1px solid rgba(255,255,255,.12);cursor:pointer;color:#fff;text-align:center;font:inherit;
+  border-radius:var(--mal-r);border:1px solid var(--vidrio-borde);cursor:pointer;color:#fff;text-align:center;font:inherit;
   background:radial-gradient(var(--mantel-punto) 1.5px, transparent 2px) 0 0/18px 18px, linear-gradient(160deg, var(--mantel-2), var(--mantel-1));
-  box-shadow:var(--mal-elev-1);transition:transform .18s var(--mal-ease);
+  box-shadow:0 6px 18px rgba(0,0,0,.28);
 }
-.pieza:active{transform:scale(.96)}
-.pieza:focus-visible{outline:3px solid var(--mal-primary);outline-offset:3px}
+@media (hover:hover){ .pieza:hover{border-color:var(--vidrio-borde-2)} }
 .pieza__img{width:100%;height:auto;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35))}
 .pieza__nombre{font-family:var(--mal-display);font-weight:800;font-size:var(--mal-t-h4);line-height:1.15}
-.pieza__meta{font-size:var(--mal-t-mini);color:rgba(255,255,255,.75)}
+.pieza__meta{font-size:var(--mal-t-mini);color:var(--texto-2)}
 .vitrina__vacia{padding:var(--mal-e5);text-align:center;border:2px dashed var(--mal-outline-2);border-radius:var(--mal-r)}
 .vitrina__nota{margin-top:var(--mal-e4)}
 .lienzo--vista{display:block;width:100%;max-width:300px;aspect-ratio:4/5;margin:0 auto var(--mal-e3);border-radius:var(--mal-r-s);
@@ -241,7 +260,7 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 /* ─── teléfono de lado y pantallas bajas: el dock va a la derecha ─── */
 @media (orientation:landscape) and (max-height:560px){
   .dock,.regalo__tarjeta{left:auto;right:0;top:0;bottom:0;transform:none;width:min(44vw, 380px);overflow-y:auto;
-    border-radius:26px 0 0 26px;border:1px solid rgba(255,255,255,.12);border-right:0;
+    border-radius:26px 0 0 26px;border:1px solid var(--vidrio-borde);border-right:0;
     padding:calc(12px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right)) 12px 14px;animation:none}
   .barra{right:min(44vw, 380px)}
   .lado{right:calc(min(44vw, 380px) + 12px)}
@@ -253,13 +272,11 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 @media (max-width:420px){
   .etapas button{padding:0 8px 0 4px}
   .etapas button:not([aria-current]) b{display:none}
-  .redondo{width:42px;height:42px}
   .barra{gap:6px}
-  .regalar__rej{grid-template-columns:1fr}
-  .regalar__vista{max-width:180px;max-height:40vh;width:auto;margin:0 auto}
 }
 @media (prefers-reduced-motion:reduce){
   .latido,.dock{animation:none}
+  .redondo,.tool,.tam,.crema,.etapas button,.pieza,.juego-cuerpo .chip,.dock,.pista,.dock__asa i{transition:none}
 }
 
 /* los diálogos no pasan del alto de la pantalla: el cuerpo se desplaza y el pie queda a la vista */
@@ -281,7 +298,7 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 .regalar__entrar .btn{flex:none}
 .cuenta{max-width:min(94vw, 440px)}
 .cuenta__google{background:#fff;color:#1f1f1f;border-color:#dadce0}
-.cuenta__o{display:flex;align-items:center;gap:.8em;margin:var(--mal-e4) 0;color:var(--mal-on-surface-3);font-size:var(--mal-t-caption)}
+.cuenta__o{display:flex;align-items:center;gap:.8em;margin:var(--mal-e4) 0;color:var(--texto-3);font-size:var(--mal-t-caption)}
 .cuenta__o::before,.cuenta__o::after{content:"";flex:1;border-top:var(--mal-separador)}
 .cuenta__error{display:block;min-height:1.2em;margin:0}
 .cuenta__acc{display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--mal-e2)}
@@ -308,14 +325,13 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 .dock__asa{position:absolute;top:0;left:50%;transform:translateX(-50%);width:96px;height:30px;padding:0;border:0;background:none;
   cursor:grab;touch-action:none;display:flex;align-items:flex-start;justify-content:center;color:#fff;border-radius:0 0 14px 14px}
 .dock__asa i{display:block;width:14px;height:14px;margin-top:4px;border-right:3px solid currentColor;border-bottom:3px solid currentColor;border-radius:2px;
-  opacity:.92;transform:rotate(45deg) translate(-3px, -3px);transition:transform .3s var(--mal-ease), opacity .2s}
+  opacity:.92;transform:rotate(45deg) translate(-3px, -3px);transition:transform var(--dur-3) var(--mal-ease), opacity var(--dur-2)}
 .dock__asa:hover i,.dock__asa:focus-visible i{opacity:1}
-.dock__asa:focus-visible{outline:2px solid #fff;outline-offset:-2px}
 .dock__asa:active{cursor:grabbing}
 .juego[data-plegado="1"] .dock__asa i{transform:rotate(-135deg) translate(-4px, -4px);margin-top:10px}
-.dock{padding-top:26px;transition:transform .28s var(--mal-ease)}
+.dock{padding-top:26px;transition:transform var(--dur-3) var(--mal-ease)}
 .dock.arrastrando{transition:none}
-.dock__resumen{display:none;font:600 13px var(--mal-texto);letter-spacing:0;color:rgba(255,255,255,.78);margin-left:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dock__resumen{display:none;font:600 13px var(--mal-texto);letter-spacing:0;color:var(--texto-2);margin-left:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .juego[data-plegado="1"] .dock > :not(.dock__asa):not(.dock__cab){display:none}
 .juego[data-plegado="1"] .dock__resumen{display:inline-block;vertical-align:bottom;max-width:min(46vw, 260px)}
 .juego[data-plegado="1"] .dock__t{cursor:pointer;display:flex;align-items:baseline;gap:4px;min-width:0}
@@ -325,36 +341,30 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
   .dock{padding-top:calc(12px + env(safe-area-inset-top));padding-left:28px}
 }
 
-/* ─── fork del DS para el juego: más contraste sobre el vidrio oscuro ─── */
-/* El DS está pensado para fondos de papel; aquí todo va sobre vidrio morado,
-   así que los botones, chips, rótulos y pistas se afirman en blanco. */
-.juego-cuerpo .btn:not(.btn--rojo):not(.btn-ghost):not(.btn--ok){color:#fff;border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.1)}
-.juego-cuerpo .btn:not(.btn--rojo):not(.btn-ghost):not(.btn--ok):hover{color:#fff;border-color:#fff;background:rgba(255,255,255,.18)}
-.juego-cuerpo .btn-ghost{color:#fff;border-color:rgba(255,255,255,.28)}
-.juego-cuerpo .btn-ghost:hover{color:#fff;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.5)}
+/* ─── lo que el tema no puede saber: los componentes del DS sobre vidrio ─── */
+/* El tema «taller» ya trae el contraste de texto y bordes. Aquí solo va lo
+   que depende de estar sobre vidrio morado: rellenos de los botones de
+   segundo nivel, chips, campos y los avisos. */
+.juego-cuerpo .btn:not(.btn--rojo):not(.btn-ghost):not(.btn--ok){color:var(--texto-1);border-color:var(--vidrio-borde-2);background:var(--vidrio-relleno)}
+.juego-cuerpo .btn:not(.btn--rojo):not(.btn-ghost):not(.btn--ok):hover{color:var(--texto-1);border-color:#fff;background:var(--vidrio-relleno-2)}
+.juego-cuerpo .btn-ghost{color:var(--texto-1);border-color:var(--vidrio-borde)}
+.juego-cuerpo .btn-ghost:hover{color:var(--texto-1);background:var(--vidrio-relleno-2);border-color:var(--vidrio-borde-2)}
 .juego-cuerpo .btn:disabled,.juego-cuerpo .btn[aria-busy="true"]{opacity:.55}
-.juego-cuerpo .chip{color:#fff;border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.07)}
-.juego-cuerpo .chip:hover{border-color:#fff}
+.juego-cuerpo .btn--rojo{color:#fff}
+.juego-cuerpo .chip{color:var(--texto-1);border-color:var(--vidrio-borde-2);background:var(--vidrio-relleno)}
+.juego-cuerpo .chip:hover{border-color:#fff;background:var(--vidrio-relleno-2)}
 .juego-cuerpo .chip[aria-pressed="true"]{background:var(--mal-primary);border-color:var(--mal-primary);color:#fff}
-.juego-cuerpo .tool{color:rgba(255,255,255,.9);border-color:rgba(255,255,255,.18)}
-.juego-cuerpo .tool:hover{background:rgba(255,255,255,.12)}
-.juego-cuerpo .dock__rotulo{color:rgba(255,255,255,.72)}
-.juego-cuerpo .dock__nota{color:rgba(255,255,255,.8)}
-.juego-cuerpo .tam{color:rgba(255,255,255,.85);border-color:rgba(255,255,255,.3)}
-.juego-cuerpo .campo > label,.juego-cuerpo .campo__etiqueta{color:#fff}
-.juego-cuerpo .campo__pista,.juego-cuerpo .caption,.juego-cuerpo .regalar__panadera{color:rgba(255,255,255,.78)}
-.juego-cuerpo .regalar__panadera b{color:#fff}
-.juego-cuerpo input,.juego-cuerpo textarea{color:#fff;border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.06)}
-.juego-cuerpo input::placeholder,.juego-cuerpo textarea::placeholder{color:rgba(255,255,255,.45)}
-.juego-cuerpo input:focus-visible,.juego-cuerpo textarea:focus-visible{border-color:var(--mal-primary);outline:2px solid var(--mal-primary);outline-offset:1px}
-.juego-cuerpo .modal__cab h2{color:#fff}
-.juego-cuerpo .pasos__punto{background:rgba(255,255,255,.4)}
-.juego-cuerpo .regalo__pista,.juego-cuerpo .regalo__msg{color:rgba(255,255,255,.85)}
-.juego-cuerpo .btn:focus-visible,.juego-cuerpo .chip:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.juego-cuerpo .campo > label,.juego-cuerpo .campo__etiqueta{color:var(--texto-1)}
+.juego-cuerpo .campo__pista,.juego-cuerpo .caption,.juego-cuerpo .regalar__panadera{color:var(--texto-2)}
+.juego-cuerpo .regalar__panadera b{color:var(--texto-1)}
+.juego-cuerpo input,.juego-cuerpo textarea{color:var(--texto-1);border-color:var(--vidrio-borde-2);background:var(--vidrio-relleno);transition:border-color var(--dur-2)}
+.juego-cuerpo input::placeholder,.juego-cuerpo textarea::placeholder{color:var(--texto-3)}
+.juego-cuerpo .modal__cab h2{color:var(--texto-1)}
+.juego-cuerpo .pasos__punto{background:var(--vidrio-borde-2)}
 
 /* ─── regalar por pasos ─── */
 .pasos{display:flex;gap:6px;margin:0 auto 0 12px;padding:0;list-style:none;align-items:center}
-.pasos__punto{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);transition:width .2s, background .2s}
+.pasos__punto{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);transition:width var(--dur-2) var(--mal-ease), background var(--dur-2)}
 .pasos__punto[aria-current="true"]{width:22px;background:var(--mal-primary)}
 .regalar__paso{border:0;padding:0;margin:0;min-width:0;display:flex;flex-direction:column;gap:var(--mal-e4)}
 .regalar__paso[hidden]{display:none}
@@ -373,5 +383,4 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 #d-regalar .modal__cab h2{flex:1 1 auto;font-size:var(--mal-t-h4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #d-regalar .regalar__entrar{font-size:12px;padding:8px 10px}
 .btn--ok{background:var(--mal-ok)!important;border-color:var(--mal-ok)!important;color:#fff!important}
-.regalar__panadera{margin:0;font-size:var(--mal-t-caption);color:var(--mal-on-surface-2);line-height:1.35}
-.regalar__panadera b{color:var(--mal-on-surface)}
+.regalar__panadera{margin:0;font-size:var(--mal-t-caption);line-height:1.35}

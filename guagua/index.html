@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-marca="juegos">
+<html lang="es" data-marca="taller">
 <head>
 <meta charset="utf-8">
 <!-- Una sola carpeta que se puede incrustar en cualquier sitio:
@@ -9,7 +9,7 @@
 (function () {
   var q = new URLSearchParams(location.search), m = q.get('marca'), r = document.documentElement;
   if (m === 'mal') r.removeAttribute('data-marca');
-  else if (m === 'mercio' || m === 'apps') r.setAttribute('data-marca', m);
+  else if (m === 'mercio' || m === 'apps' || m === 'juegos') r.setAttribute('data-marca', m);
   else r.setAttribute('data-tema', 'oscuro');   // el juego se juega de noche
   if (q.has('embed')) r.classList.add('embebido');
 })();
@@ -56,9 +56,9 @@
  "author": { "@id": "https://una.red/#fran" }
 }
 </script>
-<link rel="stylesheet" href="../ds/mal/mal.css?v=1.0.17">
-<meta name="guagua-version" content="2026.10.23.1">
-<link rel="stylesheet" href="guagua.css?v=2026.10.23.1">
+<link rel="stylesheet" href="../ds/mal/mal.css?v=1.0.18">
+<meta name="guagua-version" content="2026.10.23.2">
+<link rel="stylesheet" href="guagua.css?v=2026.10.23.2">
 </head>
 <body class="juego-cuerpo">
 <svg width="0" height="0" class="sr-only" aria-hidden="true" focusable="false">
@@ -397,7 +397,7 @@
   </div>
 </dialog>
 
-<script src="../ds/mal/mal.js?v=1.0.17" defer></script>
+<script src="../ds/mal/mal.js?v=1.0.18" defer></script>
 <!-- El SDK de Firebase importa firebase-app.js desde gstatic: aquí se manda a la copia local. -->
 <script type="importmap">{ "imports": {
   "three": "./vendor/three.module.min.js",
@@ -405,6 +405,6 @@
   "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js": "./vendor/firebase/firebase-auth.js",
   "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-lite.js": "./vendor/firebase/firebase-firestore-lite.js"
 } }</script>
-<script type="module" src="guagua.js?v=2026.10.23.1"></script>
+<script type="module" src="guagua.js?v=2026.10.23.2"></script>
 </body>
 </html>
