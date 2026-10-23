@@ -586,8 +586,8 @@ function resultadoQuiz(r, ajeno, vs) {
   const log = !ajeno ? ultimaPartida : null;
   const el = $('#resultado');
   el.innerHTML = `
-    <div class="g-res-hero">
-      <p class="g-hero__k">${esc(T.kicker)} · ${esc(T.titulo)}</p>
+    <div class="g-res-hero g-res-hero--quiz">
+      <p class="g-hero__k">${esc(T.titulo)}</p>
       ${ajeno ? `<p class="g-ajeno">A alguien le salió esto. Juega y supéralo.</p>` : ''}
       <p class="g-anuncio" id="r-anuncio"><span class="g-puntos">Contando votos</span></p>
       <p class="g-puntaje"><b id="r-puntos" data-n="${r.puntos}">0</b><small>puntos</small></p>
