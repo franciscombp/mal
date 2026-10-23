@@ -25,6 +25,14 @@ Vive en `franciscombp.github.io/mal/guagua/` y la carpeta se basta sola: Three.j
 `vendor/` (r170, licencia MIT en `vendor/LICENSE-three.txt`) y el sistema de diseño se pide
 con ruta relativa desde `../ds/`.
 
+## Versiones y caché
+
+La versión va en el `<meta name="guagua-version">`, en los `?v=` de `guagua.css`, `guagua.js`,
+`masa.js`, `nube.js` y `nube-config.js`, y en `version.json`. Al publicar, se sube la misma
+cadena en todos (`grep -rn 2026.10.23.1 guagua/`). Al abrir, el juego pide `version.json`
+sin caché y, si hay una versión más nueva, se recarga una sola vez: así nadie se queda con el
+juego viejo por el caché del navegador.
+
 ## Cómo se toca
 
 El panel de herramientas se pliega con el asa de arriba (o deslizándola hacia abajo) para

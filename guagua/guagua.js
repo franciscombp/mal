@@ -24,10 +24,10 @@
    ══════════════════════════════════════════════════════════════ */
 import * as THREE from 'three';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
-import * as nube from './nube.js';
+import * as nube from './nube.js?v=2026.10.23.1';
 import {
   DIRECCION, V, Q, ent, CREMAS, BOQUILLAS, GROSORES, MASAS, TAMANOS, GRAGEAS, MAX_BOCADOS, BOCADOS_TALLER, MAX_PIEZAS, MORDIDA, NOMBRES, MENSAJES, MENSAJES_MEMORIA, MENSAJE_GUAGUAU, VALES, enMemoria, echada, posturaDe, azar, elige, limita, bolita, chorizo, masaDe, iniPuntos, conMasa, SG, G, C, frenteDe, CUERPO, CABEZA, guaguaConBrazos, MOLDES, elipsoide, tubo, PISO, aplanar, geometriaPieza, moverPieza, base, b64, exprimir, PASOS, aDeltas, deDeltas, codificar, decodificar, deLaPrimeraHornada, sano, punto, tieneCara, queEs, nombreDe, puntoDeCrema, pn, caraPintada, chapitas, sorpresa, Sonda, amasarReceta,
-} from './masa.js';
+} from './masa.js?v=2026.10.23.1';
 
 const $ = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
@@ -2169,7 +2169,22 @@ function cerrarRegalo() {
 }
 
 /* ─── arranque ─────────────────────────────────────────────── */
+/* Cuando sale una versión nueva, la página se recarga sola una vez: así nadie
+   se queda con el juego viejo por el caché del navegador. La versión va en
+   el <meta> y en los ?v= de cada archivo; version.json se pide sin caché. */
+function vigilarVersion() {
+  const mia = (document.querySelector('meta[name="guagua-version"]') || {}).content;
+  if (!mia || !navigator.onLine) return;
+  fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then((r) => r.json()).then((d) => {
+    if (!d || d.v === mia) return;
+    const clave = 'guagua:recargada';
+    if (sessionStorage.getItem(clave) === d.v) return;   // ya se recargó por esta: no insistir
+    sessionStorage.setItem(clave, d.v);
+    location.reload();
+  }).catch(() => { /* sin red o sin archivo: nada */ });
+}
 function arrancar() {
+  vigilarVersion();
   $('#cuenta').textContent = rotuloFinados();
   if (!montarTaller()) return;
   montarRegalo(); montarVitrina(); montarRecibir(); montarAsas();
