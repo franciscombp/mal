@@ -60,6 +60,12 @@ Para hacer un tema nuevo se redefine la capa 1 y ya:
 Eso es exactamente lo que hace el tema de [Acolita](https://acolita.org/): declara su
 referencia y hereda todo lo demás.
 
+Y lo mismo hace **El boliche**, que es un fork del tema de juegos: vive junto al juego
+([`apps/boliche/juego/boliche.css`](../apps/boliche/juego/boliche.css)), se activa con
+`data-marca="boliche"` y viste los mismos componentes con la feria de Finados: el maíz
+de la guagua de marca, celeste y morado de colada para pares y nones, paneles de tabla
+con banderines, botones-rótulo en Montserrat y chapas de cola.
+
 ## Teñir una app
 
 Sobre el tema `apps`, el color de cada producto entra por `data-app`:
