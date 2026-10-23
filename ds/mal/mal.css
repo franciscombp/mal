@@ -1,4 +1,4 @@
-/* mal-ds v1.0.17 · https://franciscombp.github.io/mal/ds/ */
+/* mal-ds v1.0.18 · https://franciscombp.github.io/mal/ds/ */
 /* ══════════════════════════════════════════════════════════════
    MAL DESIGN SYSTEM · v2
    https://franciscombp.github.io/mal/ds/mal/mal.css
@@ -576,6 +576,14 @@
    dentro de `@layer` el reset pierde igualmente contra cualquier
    componente, que va sin capa. */
 *,*::before,*::after{box-sizing:border-box}
+/* SIN ZOOM POR DOBLE TOQUE. En el teléfono, dos toques seguidos sobre la
+   página la agrandan, y en un juego donde se toca rápido el mismo botón eso
+   pasa a cada rato y no hay cómo volver. `manipulation` deja el
+   desplazamiento y el zoom con dos dedos —que hace falta para leer— y quita
+   solo el del doble toque, y de paso la espera de 300 ms antes del clic.
+   Va sin capa pero con especificidad cero: cualquier componente o juego que
+   pida otra cosa (`touch-action:none` en un lienzo, por ejemplo) gana. */
+:where(*){touch-action:manipulation}
 @layer reset{
   html:not([data-ds="invitado"]) *,
   html:not([data-ds="invitado"]) *::before,

@@ -17,6 +17,8 @@
     --borde: rgba(43, 42, 51, .14);
   }
   * { box-sizing: border-box; }
+  /* sin zoom por doble toque: Umbral no carga mal.css, así que lo pide aquí */
+  :where(*) { touch-action: manipulation; }
   html, body { margin: 0; height: 100%; overflow: hidden; background: #f0a98f; color: var(--tinta); }
   body { font: 15px/1.4 Inter, system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
   #lienzo { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: pointer; }
