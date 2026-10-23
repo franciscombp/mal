@@ -27,6 +27,12 @@ con ruta relativa desde `../ds/`.
 
 ## Cómo se toca
 
+El panel de herramientas se pliega con el asa de arriba (o deslizándola hacia abajo) para
+dejarle más pantalla a la guagua; queda la cabecera con un resumen de lo elegido. Regalar va
+en tres pasos que caben sin desplazarse: para quién, unas palabras y la imagen para compartir.
+En la compu, la rueda acerca y, con Shift (o el desplazamiento horizontal del trackpad), gira.
+
+
 Con un dedo se amasa y se decora; con dos dedos se gira y se acerca a la vez. El primer dedo
 espera un instante antes de pintar: si en ese rato llega el segundo, era un gesto y no se mancha
 nada. En la computadora, el clic derecho gira y la rueda acerca. La cámara encuadra la figura en
@@ -99,3 +105,9 @@ Para ponerla en marcha en el proyecto real:
 3. Activar en Authentication los proveedores «Correo/contraseña» y «Google», y agregar en
    *Dominios autorizados*: `franciscombp.github.io`, `elmercio.com` y `una.red`.
 4. Publicar las reglas: `cd guagua/firebase && npx -y firebase-tools@latest deploy --only firestore`.
+
+## Desde un chat de IA
+
+`masa.js` es la receta sin pantalla (moldes, geometría, enlace y «Sorpréndeme»), y la comparten
+el juego y el servidor MCP de `mcp/`: con él, una IA amasa una guagua con lo que sabe de la
+persona y devuelve el enlace que la abre en 3D. Ver `mcp/README.md`.

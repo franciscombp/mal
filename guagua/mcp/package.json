@@ -1,0 +1,14 @@
+{
+  "name": "guagua-de-pan-mcp",
+  "version": "1.0.0",
+  "description": "Servidor MCP para amasar, hornear y decorar guaguas de pan desde un chat de IA",
+  "type": "module",
+  "private": true,
+  "bin": { "guagua-mcp": "./servidor.mjs" },
+  "scripts": { "start": "node servidor.mjs", "test": "node prueba.mjs" },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "zod": "^4.6.7"
+  }
+}

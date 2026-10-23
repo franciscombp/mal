@@ -109,8 +109,9 @@
 
   <!-- 1 · amasar -->
   <section class="dock" data-etapa="amasar" aria-label="Amasar">
+    <button class="dock__asa" type="button" aria-expanded="true" aria-label="Ocultar o mostrar las herramientas"><i></i></button>
     <div class="dock__cab">
-      <p class="dock__t">Amasa tu figura</p>
+      <p class="dock__t">Amasa tu figura <span class="dock__resumen"></span></p>
       <button class="btn btn--rojo dock__accion" id="al-horno" type="button"><svg class="icono" aria-hidden="true"><use href="#g-horno"/></svg> Al horno</button>
     </div>
     <div class="dock__herr" role="group" aria-label="Qué hacer con la masa">
@@ -160,8 +161,9 @@
 
   <!-- 3 · decorar -->
   <section class="dock" data-etapa="decorar" aria-label="Decorar" hidden>
+    <button class="dock__asa" type="button" aria-expanded="true" aria-label="Ocultar o mostrar las herramientas"><i></i></button>
     <div class="dock__cab">
-      <p class="dock__t" id="decorar-t">Decórala</p>
+      <p class="dock__t" id="decorar-t">Decórala <span class="dock__resumen"></span></p>
       <button class="btn btn--rojo dock__accion" id="regalar" type="button"><svg class="icono" aria-hidden="true"><use href="#i-regalo"/></svg> Regalar</button>
     </div>
     <div class="dock__herr" role="group" aria-label="Herramienta">
@@ -219,31 +221,35 @@
 <!-- ══ Regalar ═══════════════════════════════════════════════ -->
 <dialog class="modal regalar" id="d-regalar" aria-labelledby="d-regalar-t">
   <div class="modal__cab">
-    <h2 id="d-regalar-t">Regálala o dedícala</h2>
+    <button class="btn btn--sm btn--icono btn-ghost" id="r-atras" type="button" hidden aria-label="Paso anterior"><svg class="icono" aria-hidden="true"><use href="#i-flecha-izq"/></svg></button>
+    <h2 id="d-regalar-t">Regálala</h2>
+    <ol class="pasos" aria-label="Pasos">
+      <li class="pasos__punto" aria-current="true"><span class="sr-only">Para quién</span></li>
+      <li class="pasos__punto" aria-current="false"><span class="sr-only">Unas palabras</span></li>
+      <li class="pasos__punto" aria-current="false"><span class="sr-only">Compartir</span></li>
+    </ol>
     <button class="btn btn--sm btn--icono btn-ghost" type="button" data-cierra aria-label="Cerrar"><svg class="icono" aria-hidden="true"><use href="#i-cerrar"/></svg></button>
   </div>
   <div class="modal__cuerpo regalar__cuerpo">
-    <figure class="panadera">
-      <p class="panadera__frase" id="panadera-frase"></p>
-      <figcaption><b>Doña Rosa, la panadera</b> · <span id="panadera-nota"></span></figcaption>
-    </figure>
-    <div class="fila regalar__tipo" role="group" aria-label="Qué vas a hacer con ella">
-      <button class="chip" type="button" data-tipo="" aria-pressed="true">Regalarla</button>
-      <button class="chip" type="button" data-tipo="m" aria-pressed="false">Dedicarla a quien ya no está</button>
-    </div>
-    <div class="regalar__rej">
-      <div class="regalar__previa">
-        <img class="regalar__vista" id="r-vista" alt="Vista previa de la imagen que se va a compartir" width="1080" height="1920">
-        <div class="fila regalar__formato" role="group" aria-label="Formato de la imagen">
-          <button class="chip chip--s" type="button" data-formato="historia" aria-pressed="true">Historia 9:16</button>
-          <button class="chip chip--s" type="button" data-formato="cuadrada" aria-pressed="false">Publicación 1:1</button>
-        </div>
+    <!-- 1 · para quién -->
+    <fieldset class="regalar__paso" data-paso="1">
+      <legend class="sr-only">Para quién</legend>
+      <p class="regalar__panadera"><b>Doña Rosa, la panadera:</b> <span id="panadera-frase"></span> <span id="panadera-nota" class="sr-only"></span></p>
+      <div class="regalar__tipo" role="group" aria-label="Qué vas a hacer con ella">
+        <button class="chip" type="button" data-tipo="" aria-pressed="true">Regalarla</button>
+        <button class="chip" type="button" data-tipo="m" aria-pressed="false">Dedicarla a quien ya no está</button>
       </div>
       <div class="pila">
-        <div class="campo"><label for="r-nombre">Se llama</label><input id="r-nombre" maxlength="40" autocomplete="off"></div>
-        <div class="campo"><label for="r-para" id="r-para-rotulo">Para</label><input id="r-para" maxlength="40" autocomplete="off" placeholder="Mi hermana, mi abuelo, la familia"></div>
-        <div class="campo"><label for="r-de">De</label><input id="r-de" maxlength="40" autocomplete="nickname" placeholder="Tu nombre"></div>
-        <div class="campo"><label for="r-mensaje">Unas palabras</label><textarea id="r-mensaje" maxlength="160" rows="2"></textarea></div>
+        <div class="campo"><label for="r-nombre">Se llama</label><input id="r-nombre" maxlength="40" autocomplete="off" enterkeyhint="next"></div>
+        <div class="campo"><label for="r-para" id="r-para-rotulo">Para</label><input id="r-para" maxlength="40" autocomplete="off" placeholder="Mi hermana, mi abuelo, la familia" enterkeyhint="next"></div>
+        <div class="campo"><label for="r-de">De</label><input id="r-de" maxlength="40" autocomplete="nickname" placeholder="Tu nombre" enterkeyhint="next"></div>
+      </div>
+    </fieldset>
+    <!-- 2 · unas palabras -->
+    <fieldset class="regalar__paso" data-paso="2" hidden>
+      <legend class="sr-only">Unas palabras</legend>
+      <div class="pila">
+        <div class="campo"><label for="r-mensaje">Unas palabras</label><textarea id="r-mensaje" maxlength="160" rows="3"></textarea></div>
         <div class="campo" id="r-vale-campo">
           <span class="campo__etiqueta" id="r-vale-rotulo">Y además</span>
           <div class="fila regalar__vales" role="group" aria-labelledby="r-vale-rotulo">
@@ -255,17 +261,29 @@
           <span class="campo__pista" id="r-vale-pista"></span>
         </div>
       </div>
-    </div>
+    </fieldset>
+    <!-- 3 · compartir -->
+    <fieldset class="regalar__paso" data-paso="3" hidden>
+      <legend class="sr-only">Compartir</legend>
+      <div class="regalar__previa">
+        <img class="regalar__vista" id="r-vista" alt="Vista previa de la imagen que se va a compartir" width="1080" height="1920">
+        <div class="fila regalar__formato" role="group" aria-label="Formato de la imagen">
+          <button class="chip chip--s" type="button" data-formato="historia" aria-pressed="true">Historia 9:16</button>
+          <button class="chip chip--s" type="button" data-formato="cuadrada" aria-pressed="false">Publicación 1:1</button>
+        </div>
+        <p class="regalar__entrar" id="r-entrar-fila" hidden>
+          <span>Con tu cuenta, el enlace sale corto y la guagua queda guardada en la nube.</span>
+          <button class="btn btn--sm btn-ghost" id="r-entrar" type="button">Entrar</button>
+        </p>
+      </div>
+    </fieldset>
   </div>
-  <p class="regalar__entrar" id="r-entrar-fila" hidden>
-    <span>Con tu cuenta, el enlace sale corto y la guagua queda guardada en la nube.</span>
-    <button class="btn btn--sm btn-ghost" id="r-entrar" type="button">Entrar</button>
-  </p>
   <div class="modal__pie regalar__pie">
-    <button class="btn btn--rojo" id="r-compartir" type="button"><svg class="icono" aria-hidden="true"><use href="#i-compartir"/></svg> Compartir</button>
-    <button class="btn" id="r-whatsapp" type="button"><svg class="icono" aria-hidden="true"><use href="#g-whatsapp"/></svg> WhatsApp</button>
-    <button class="btn" id="r-copiar" type="button"><svg class="icono" aria-hidden="true"><use href="#i-enlace"/></svg> Copiar enlace</button>
-    <button class="btn" id="r-descargar" type="button"><svg class="icono" aria-hidden="true"><use href="#i-descargar"/></svg> Imagen</button>
+    <button class="btn btn--rojo regalar__sig" id="r-siguiente" type="button">Siguiente <svg class="icono" aria-hidden="true"><use href="#i-flecha-der"/></svg></button>
+    <button class="btn btn--rojo regalar__final" id="r-compartir" type="button"><svg class="icono" aria-hidden="true"><use href="#i-compartir"/></svg> Compartir</button>
+    <button class="btn btn--sm regalar__final" id="r-whatsapp" type="button"><svg class="icono" aria-hidden="true"><use href="#g-whatsapp"/></svg> WhatsApp</button>
+    <button class="btn btn--sm regalar__final" id="r-copiar" type="button"><svg class="icono" aria-hidden="true"><use href="#i-enlace"/></svg> Copiar</button>
+    <button class="btn btn--sm regalar__final" id="r-descargar" type="button"><svg class="icono" aria-hidden="true"><use href="#i-descargar"/></svg> Imagen</button>
   </div>
 </dialog>
 
@@ -359,7 +377,7 @@
       <li><b>Regálala o dedícala.</b> Mándala con un vale por una guagua de verdad o con una invitación a tomar colada morada. También puedes dedicarla a alguien que ya no está y compartirla en tus redes.</li>
     </ol>
     <p class="info__gesto"><svg class="icono" aria-hidden="true"><use href="#g-dos-dedos"/></svg>
-    <span>Con un dedo se amasa y se decora. Con dos dedos se gira y se acerca. En la compu: clic derecho para girar y la rueda para acercar.</span></p>
+    <span>Con un dedo se amasa y se decora. Con dos dedos se gira y se acerca. En la compu: clic derecho para girar, la rueda para acercar y Shift + rueda para girar. Desliza el asa del panel hacia abajo para esconder las herramientas.</span></p>
     <h3 class="info__h">Guagua quiere decir bebé</h3>
     <p class="caption">En kichwa, <i>wawa</i> es la criatura. Cada 2 de noviembre, en los Andes del Ecuador, se hornean guaguas
     y caballitos de pan, se pintan con crema y se acompañan con colada morada. Se comparten con la familia y con
