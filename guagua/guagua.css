@@ -160,6 +160,7 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 .dock__fila--desliza{overflow-x:auto;scrollbar-width:none;margin-inline:calc(-1 * var(--orilla));padding-inline:var(--orilla)}
 .dock__fila--desliza::-webkit-scrollbar{display:none}
 .dock__fila--desliza .chip{flex:none}
+.dock__fila--desliza .chip[hidden]{display:none}
 .dock__rotulo{flex:none;font-family:var(--mal-mono);font-size:var(--mal-t-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--texto-3);min-width:4.6em}
 .dock__nota{font-size:var(--mal-t-caption);color:var(--texto-2)}
 /* las filas que dependen de la herramienta */

@@ -2183,8 +2183,25 @@ function vigilarVersion() {
     location.reload();
   }).catch(() => { /* sin red o sin archivo: nada */ });
 }
+/* Moldes secretos: no salen en la fila hasta que alguien abre el juego con
+   su llave (?llave=dormilon); el navegador la recuerda. Los regalos hechos
+   con ellos se ven igual: lo secreto es poder amasarlos, no recibirlos. */
+function abrirSecretos() {
+  const llaves = new Set(almacen.leer('guagua:llaves', []));
+  const q = new URLSearchParams(location.search), llave = q.get('llave');
+  if (llave && MOLDES[llave]) {
+    llaves.add(llave);
+    almacen.poner('guagua:llaves', [...llaves]);
+    q.delete('llave');
+    const resto = q.toString();
+    history.replaceState(null, '', location.pathname + (resto ? '?' + resto : '') + location.hash);
+    avisa('Molde secreto desbloqueado: ' + llave.charAt(0).toUpperCase() + llave.slice(1) + '.', 'ok');
+  }
+  $$('[data-molde][data-secreto]').forEach((b) => { b.hidden = !llaves.has(b.dataset.molde); });
+}
 function arrancar() {
   vigilarVersion();
+  abrirSecretos();
   $('#cuenta').textContent = rotuloFinados();
   if (!montarTaller()) return;
   montarRegalo(); montarVitrina(); montarRecibir(); montarAsas();
