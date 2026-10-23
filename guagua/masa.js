@@ -52,6 +52,7 @@ const NOMBRES = {
 };
 NOMBRES.tradicional = NOMBRES.guagua;
 NOMBRES.guaguau = ['Firulais', 'Canelo', 'Pulgoso', 'Tobi', 'Manchas', 'Pelusa', 'Bobby', 'Chocolate', 'Lazarillo'];
+NOMBRES.dormilon = ['Dormilón', 'Siesta', 'Pelusa', 'Canelo', 'Ñaño', 'Motita', 'Bollito', 'Lobita'];
 const MENSAJES = [
   'Para que este 2 de noviembre no te falte guagua.',
   'Con colada morada sabe mejor. Te la mando para acompañar.',
@@ -90,7 +91,9 @@ const VALES = [
 ];
 const enMemoria = (e) => e.t === 'm';
 /* Casi todo se decora de pie; el perrito de pan se queda echado y se mira desde arriba. */
-const echada = (e) => e.f === 'guaguau';
+const echada = (e) => e.f === 'guaguau' || e.f === 'dormilon';
+/* El dormilón duerme: ojitos cerrados y nada de glaseado encima. */
+const dormida = (e) => e.f === 'dormilon';
 const posturaDe = (e) => (echada(e) ? { dePie: 0, cabeceo: 0.95 } : { dePie: 1, cabeceo: 0.2 });
 function azar(semilla) {            // mulberry32: el mismo número, la misma grajea
   let a = semilla >>> 0;
@@ -169,6 +172,22 @@ const MOLDES = {
       bolita(V(0, 0.05, 0.02), V(0.26, 0.22, 0.2)),                               // el hocico
       bolita(V(0.46, 0.58, 0.08), V(0.16, 0.32, 0.1), -0.25),                     // las orejas caídas
       bolita(V(-0.46, 0.58, 0.08), V(0.16, 0.32, 0.1), 0.25),
+    ];
+  },
+  // un perrito dormido, hecho un ovillo: el cuerpo es una media dona gruesa
+  // y la cabeza descansa en la abertura, con las orejas caídas y la cola metida
+  dormilon() {
+    const anillo = [];
+    for (let i = 0; i <= 10; i++) {
+      const a = (-0.3 + i / 10 * 1.55) * Math.PI;         // de abajo a la derecha, por arriba, hasta abajo a la izquierda
+      anillo.push(V(Math.cos(a) * 0.72, 1.78 + Math.sin(a) * 0.72, 0.3));
+    }
+    return [
+      chorizo(0.62, anillo),                                          // el cuerpo gordito, enroscado
+      bolita(V(0, 0.8, 0.18), V(0.62, 0.56, 0.48)),                   // la cabeza, acurrucada en la abertura
+      bolita(V(0.6, 1.0, 0.42), V(0.2, 0.38, 0.12), 0.5),            // la oreja caída de la derecha, sobre el cuerpo
+      bolita(V(-0.6, 1.0, 0.42), V(0.2, 0.38, 0.12), -0.5),          // y la de la izquierda
+      chorizo(0.11, [V(0.8, 1.05, -0.05), V(1.1, 0.62, -0.1), V(1.32, 0.74, -0.1)]),  // la cola asoma junto a la cabeza
     ];
   },
   caballito() {
@@ -427,13 +446,13 @@ function punto(k) {
 }
 /* Hay cara si hay pasas, una máscara de las de antes o puntitos de chocolate finos. */
 const tieneCara = (e) => e.o.some((op) => op[0] === 4 || op[0] === 5 || (op[0] === 0 && op[1] === 7 && op[2] <= 1));
-const queEs = (e) => ({ guagua: 'una guagua', tradicional: 'una guagua', guaguau: 'un guaguau', caballito: 'un caballito', chanchito: 'un chanchito', gallinita: 'una gallinita' }[e.f] || 'un animalito');
-const nombreDe = (e) => e.n || ({ guagua: 'Guagua', tradicional: 'Guagua', guaguau: 'Guaguau', caballito: 'Caballito', chanchito: 'Chanchito', gallinita: 'Gallinita' }[e.f] || 'Animalito');
+const queEs = (e) => ({ guagua: 'una guagua', tradicional: 'una guagua', guaguau: 'un guaguau', dormilon: 'un perrito dormilón', caballito: 'un caballito', chanchito: 'un chanchito', gallinita: 'una gallinita' }[e.f] || 'un animalito');
+const nombreDe = (e) => e.n || ({ guagua: 'Guagua', tradicional: 'Guagua', guaguau: 'Guaguau', dormilon: 'Dormilón', caballito: 'Caballito', chanchito: 'Chanchito', gallinita: 'Gallinita' }[e.f] || 'Animalito');
 /* El chorro de la manga se apoya sobre lo que tocaste, levantado
    medio grosor por la normal, para que quede encima y no adentro. */
 const puntoDeCrema = (hit, r) => hit.p.clone().addScaledVector(hit.n, r * 0.55);
 const pn = (hit) => [ent(hit.p.x), ent(hit.p.y), ent(hit.p.z), ent(hit.n.x), ent(hit.n.y), ent(hit.n.z)];
-function caraPintada(hit, tam, sonda) {
+function caraPintada(hit, tam, sonda, dormido = false) {
   const T = (TAMANOS[tam] || 1) * 0.5;           // medio ancho de la cara
   const { x, y, z } = base(hit.n);
   const ops = [];
@@ -452,10 +471,18 @@ function caraPintada(hit, tam, sonda) {
     if (op.length > 6) ops.push(op);
   };
   const ojo = tam === 0 ? 0 : 1;
-  punto(7, ojo, -0.3, 0.12);                     // los ojos, de chocolate
-  punto(7, ojo, 0.3, 0.12);
-  linea(7, 0, [[-0.02, -0.02], [0.03, -0.1], [-0.03, -0.12]]);          // la naricita
-  linea(2, 0, Array.from({ length: 9 }, (_, i) => {                     // la sonrisa
+  if (dormido) {                                 // dormido: dos arquitos cerrados y la nariz redonda
+    [-0.3, 0.3].forEach((u) => linea(7, 0, Array.from({ length: 6 }, (_, i) => {
+      const t = i / 5;
+      return [u - 0.14 + t * 0.28, 0.1 + Math.sin(t * Math.PI) * 0.07];
+    })));
+    punto(7, 1, 0, -0.26);
+  } else {
+    punto(7, ojo, -0.3, 0.12);                   // los ojos, de chocolate
+    punto(7, ojo, 0.3, 0.12);
+  }
+  if (!dormido) linea(7, 0, [[-0.02, -0.02], [0.03, -0.1], [-0.03, -0.12]]);   // la naricita
+  if (!dormido) linea(2, 0, Array.from({ length: 9 }, (_, i) => {       // la sonrisa (dormido no sonríe)
     const t = i / 8;
     return [-0.26 + t * 0.52, -0.3 - Math.sin(t * Math.PI) * 0.1];
   }));
@@ -515,7 +542,7 @@ function sorpresa(estado, sonda, opciones = {}) {
   const piso = deFrente && abajo ? (alta[2] + alta[5] * 0.95) / Q * esc : min.y + Al * 0.1, Ax = x1 - x0;
   const pedidas = (opciones.cremas || []).filter((i) => CREMAS[i] && i !== 7);
   const colores = pedidas.length ? pedidas.slice(0, 3) : [1, 2, 3, 4, 5, 6, 0].sort(() => r() - 0.5).slice(0, 3);
-  const franjas = Math.max(2, Math.min(5, Math.round((techo - piso) / 0.45)));
+  const franjas = dormida(estado) || opciones.soloCara ? 0 : Math.max(2, Math.min(5, Math.round((techo - piso) / 0.45)));
   const alto = (techo - piso) / franjas;
   const amp = Math.min(alto * 0.3, 0.14);
   for (let f = 0; f < franjas; f++) {
@@ -541,7 +568,7 @@ function sorpresa(estado, sonda, opciones = {}) {
       });
     }
   }
-  if (r() < 0.5) {
+  if (franjas && r() < 0.5) {
     const g = [2, Math.floor(r() * 1e9)];
     for (let i = 0; i < 8; i++) {
       const h = golpe(x0 + Ax * (0.2 + r() * 0.6), piso + (techo - piso) * r());
@@ -558,7 +585,7 @@ function sorpresa(estado, sonda, opciones = {}) {
   if (deFrente) {
     const h = golpe(cx, cy - ry * 0.05);
     if (!h) return ops;
-    caraPintada(h, rx > 0.6 ? 2 : 1, sonda).forEach((op) => ops.push(op));
+    caraPintada(h, rx > 0.6 ? 2 : 1, sonda, dormida(estado)).forEach((op) => ops.push(op));
   } else {
     const lado = cx > centro ? 1 : -1;
     const h = golpe(cx + lado * rx * 0.25, cy + ry * 0.15);
@@ -605,5 +632,5 @@ export class Sonda {
 }
 
 export {
-  DIRECCION, V, Q, ent, CREMAS, BOQUILLAS, GROSORES, MASAS, TAMANOS, GRAGEAS, MAX_BOCADOS, BOCADOS_TALLER, MAX_PIEZAS, MORDIDA, NOMBRES, MENSAJES, MENSAJES_MEMORIA, MENSAJE_GUAGUAU, VALES, enMemoria, echada, posturaDe, azar, elige, limita, bolita, chorizo, masaDe, iniPuntos, conMasa, SG, G, C, frenteDe, CUERPO, CABEZA, guaguaConBrazos, MOLDES, elipsoide, tubo, PISO, aplanar, geometriaPieza, moverPieza, base, b64, exprimir, PASOS, aDeltas, deDeltas, codificar, decodificar, deLaPrimeraHornada, sano, punto, tieneCara, queEs, nombreDe, puntoDeCrema, pn, caraPintada, chapitas, sorpresa,
+  dormida, DIRECCION, V, Q, ent, CREMAS, BOQUILLAS, GROSORES, MASAS, TAMANOS, GRAGEAS, MAX_BOCADOS, BOCADOS_TALLER, MAX_PIEZAS, MORDIDA, NOMBRES, MENSAJES, MENSAJES_MEMORIA, MENSAJE_GUAGUAU, VALES, enMemoria, echada, posturaDe, azar, elige, limita, bolita, chorizo, masaDe, iniPuntos, conMasa, SG, G, C, frenteDe, CUERPO, CABEZA, guaguaConBrazos, MOLDES, elipsoide, tubo, PISO, aplanar, geometriaPieza, moverPieza, base, b64, exprimir, PASOS, aDeltas, deDeltas, codificar, decodificar, deLaPrimeraHornada, sano, punto, tieneCara, queEs, nombreDe, puntoDeCrema, pn, caraPintada, chapitas, sorpresa,
 };
