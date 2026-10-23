@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs><linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b3561"/><stop offset="1" stop-color="#e7957a"/></linearGradient>
+  <linearGradient id="haz" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+  <rect width="192" height="192" rx="40" fill="url(#cielo)"/>
+  <circle cx="146" cy="50" r="22" fill="#fff" fill-opacity=".18"/>
+  <path d="M96.0 74.0 L74.0 85.0 L74.0 107.0 L96.0 96.0 Z" fill="#c9b8b0"/><path d="M52.0 74.0 L74.0 85.0 L74.0 107.0 L52.0 96.0 Z" fill="#a99592"/><path d="M74.0 63.0 L96.0 74.0 L74.0 85.0 L52.0 74.0 Z" fill="#f4e9e1"/><path d="M118.0 41.0 L96.0 52.0 L96.0 74.0 L118.0 63.0 Z" fill="#c9b8b0"/><path d="M74.0 41.0 L96.0 52.0 L96.0 74.0 L74.0 63.0 Z" fill="#a99592"/><path d="M96.0 30.0 L118.0 41.0 L96.0 52.0 L74.0 41.0 Z" fill="#f4e9e1"/><path d="M140.0 118.0 L118.0 129.0 L118.0 151.0 L140.0 140.0 Z" fill="#c9b8b0"/><path d="M96.0 118.0 L118.0 129.0 L118.0 151.0 L96.0 140.0 Z" fill="#a99592"/><path d="M118.0 107.0 L140.0 118.0 L118.0 129.0 L96.0 118.0 Z" fill="#f4e9e1"/><path d="M118.0 85.0 L96.0 96.0 L96.0 118.0 L118.0 107.0 Z" fill="#d8924c"/><path d="M74.0 85.0 L96.0 96.0 L96.0 118.0 L74.0 107.0 Z" fill="#b8743a"/><path d="M96.0 74.0 L118.0 85.0 L96.0 96.0 L74.0 85.0 Z" fill="#f6c27a"/><path d="M118.0 129.0 L96.0 140.0 L96.0 162.0 L118.0 151.0 Z" fill="#c9b8b0"/><path d="M74.0 129.0 L96.0 140.0 L96.0 162.0 L74.0 151.0 Z" fill="#a99592"/><path d="M96.0 118.0 L118.0 129.0 L96.0 140.0 L74.0 129.0 Z" fill="#f4e9e1"/><path d="M96.0 140.0 L74.0 151.0 L74.0 173.0 L96.0 162.0 Z" fill="#c9b8b0"/><path d="M52.0 140.0 L74.0 151.0 L74.0 173.0 L52.0 162.0 Z" fill="#a99592"/><path d="M74.0 129.0 L96.0 140.0 L74.0 151.0 L52.0 140.0 Z" fill="#f4e9e1"/>
+  <path d="M84.0 41.0h24v-34h-24z" fill="url(#haz)"/>
+  <g transform="translate(74.0 136.0)">
+    <path d="M-7 0h14l-4-16h-6z" fill="#b8322a"/>
+    <circle cy="-20" r="4" fill="#b5815a"/>
+    <ellipse cy="-23" rx="8" ry="2.2" fill="#efe2bf"/>
+    <path d="M-4 -23v-5q4-2 8 0v5z" fill="#efe2bf"/>
+  </g>
+</svg>
