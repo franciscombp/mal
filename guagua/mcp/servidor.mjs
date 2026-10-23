@@ -25,6 +25,7 @@ const DESCRIPCION_MOLDE = {
   guagua: 'la guagua de siempre: cuerpo de huevo y cabeza redonda, de pie',
   tradicional: 'la de panadería: más larga, con colita cónica',
   guaguau: 'un perrito de pan echado, que se mira desde arriba',
+  dormilon: 'un perrito dormido hecho un ovillo: el cuerpo es una media dona, con la cabeza apoyada, orejitas caídas y ojos cerrados',
   caballito: 'un caballito de perfil',
   chanchito: 'un chanchito gordito',
   gallinita: 'una gallinita con su cresta',
@@ -48,7 +49,7 @@ async function amasar(args) {
     // la misma decoración de panadería que «Sorpréndeme» en el juego; con
     // semilla, la misma petición da la misma guagua
     const cremas = (args.colores || []).map(indiceCrema).filter((i) => i >= 0);
-    e.o = sorpresa(e, new Sonda(e), { cremas, semilla: args.semilla });
+    e.o = sorpresa(e, new Sonda(e), { cremas, semilla: args.semilla, soloCara: args.decoracion === 'carita' });
   }
   const cod = await codificar(e);
   return { e, url: BASE + '#r=' + cod };
@@ -103,7 +104,7 @@ server.registerTool('crear_guagua', {
     dedicada: z.boolean().default(false).describe('true si es en memoria de alguien que ya no está'),
     vale: z.number().int().min(0).max(3).default(0).describe('0 nada, 1 guagua de verdad, 2 colada morada, 3 pásala'),
     coccion: z.enum(Object.keys(COCCION)).default('punto').describe('Cuánto horno'),
-    decoracion: z.enum(['panaderia', 'ninguna']).default('panaderia').describe('«panaderia» la decora con glaseado y carita; «ninguna» la deja lisa para decorarla en el juego'),
+    decoracion: z.enum(['panaderia', 'carita', 'ninguna']).default('panaderia').describe('«panaderia» la decora con glaseado y carita; «carita» solo le pinta la cara; «ninguna» la deja lisa para decorarla en el juego'),
     colores: z.array(z.string()).optional().describe('Cremas preferidas, por nombre de la despensa (p. ej. ["Rosa", "Celeste"])'),
     semilla: z.number().int().optional().describe('Para repetir exactamente la misma decoración'),
   },
