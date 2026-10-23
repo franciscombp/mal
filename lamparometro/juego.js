@@ -4,7 +4,7 @@
 (() => {
 'use strict';
 
-const { PJ, PROD, PROV, RASGOS, ESCALA, SALTO, QUIPS, TESTS, SIGNOS } = window.LAMP;
+const { PJ, PROD, PROV, RASGOS, ESCALA, SALTO, QUIPS, TESTS, SIGNOS, FALSOS, REALES } = window.LAMP;
 const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 const EJES = ['x', 'y', 'z'];
 const quieto = matchMedia('(prefers-reduced-motion: reduce)');
@@ -60,6 +60,9 @@ function registra(cat, k) {
   try { localStorage.setItem(LLAVE, JSON.stringify(a)); } catch {}
   return nueva;
 }
+const LLAVE_RECORD = 'lamparometro.record.v1';
+function record() { try { return +localStorage.getItem(LLAVE_RECORD) || 0; } catch { return 0; } }
+function guardaRecord(n) { const viejo = record(); if (n > viejo) { try { localStorage.setItem(LLAVE_RECORD, n); } catch {} return true; } return false; }
 const totalAlbum = () => Object.values(ALBUM).reduce((n, g) => n + Object.keys(g).length, 0);
 const tienesDe = (a, cat) => Object.keys(a[cat]).filter((k) => ALBUM[cat][k]).length;
 const tienes = (a = album()) => Object.keys(ALBUM).reduce((n, c) => n + tienesDe(a, c), 0);
@@ -72,7 +75,7 @@ function pintaAlbum() {
 
 /* ══════════ ESTADO ══════════ */
 let st = null;   // { id, orden: [índices], i, resp: [], fecha, decidido, asi, lider, reto }
-let reloj = 0, ultimoQuip = '';
+let reloj = 0, ultimoQuip = '', ultimaPartida = null;
 
 function mostrar(id) {
   const juego = id === 'test';
@@ -94,6 +97,12 @@ function portada() {
 
 /* qué preguntas salen en esta partida */
 function sorteo(T) {
+  if (T.tipo === 'quiz') {
+    const reales = Math.min(REALES.length, Math.round(T.ronda / 2) + Math.floor(Math.random() * 3) - 1);   // cuatro, cinco o seis
+    const r = baraja(REALES).slice(0, reales).map((o) => ({ ...o, real: true }));
+    const f = baraja(FALSOS).slice(0, T.ronda - r.length).map((o) => ({ ...o, real: false }));
+    return baraja(r.concat(f));
+  }
   const idx = T.preguntas.map((_, i) => i);
   if (T.tipo === 'plano') {
     const n = Math.round(T.ronda / 3);
@@ -112,7 +121,8 @@ function sorteo(T) {
 function empezar(id, reto) {
   for (const c of document.querySelectorAll('.g-papeles')) c.remove();
   colorTest(id);
-  st = { id, orden: sorteo(TESTS[id]), i: 0, resp: [], fecha: null, decidido: false, asi: false, lider: null, reto: reto || null };
+  st = { id, orden: sorteo(TESTS[id]), i: 0, resp: [], fecha: null, decidido: false, asi: false, lider: null, reto: reto || null,
+    puntos: 0, racha: 0, mejor: 0, aciertos: 0, log: [] };
   ocultaHoja();
   history.replaceState(null, '', location.pathname + location.search);
   mostrar('test');
@@ -135,6 +145,7 @@ function pregunta() {
   $('#q-n').textContent = `${Math.min(hecho() + 1, pasos())}/${pasos()}`;
   anima($('#q-n'), 'salta');
   if (T.fecha && !st.fecha) return fechaPaso();
+  if (T.tipo === 'quiz') return preguntaQuiz();
 
   const q = T.preguntas[st.orden[st.i]];
   const plano = T.tipo === 'plano';
@@ -179,6 +190,58 @@ function fechaPaso() {
   });
 }
 
+/* ══════════ ¿NOTICIA REAL O EL MERCIO? ══════════
+   Contra reloj: cuanto más rápido aciertas, más puntos, y la racha suma. */
+function preguntaQuiz() {
+  const T = TESTS[st.id];
+  const it = st.orden[st.i];
+  $('#q-cuerpo').innerHTML = `
+    <div class="g-carta g-recorte g-entra">
+      <p class="g-carta__k"><span>Titular ${st.i + 1}</span><span class="g-marcador">${st.racha >= 2 ? `<b class="g-racha"><svg class="icono icono--s" aria-hidden="true"><use href="#i-rayo"/></svg>${st.racha}</b>` : ''}${st.puntos} pts</span></p>
+      <h2 class="g-titular" id="q-t">${esc(it.t)}</h2>
+      <span class="g-reloj" aria-hidden="true"><i style="animation-duration:${T.tiempo}ms"></i></span>
+    </div>
+    <ul class="g-ops g-ops--quiz">
+      <li><button class="g-op g-op--real" type="button" data-k="0" style="--i:0"><span class="g-op__f" aria-hidden="true"><svg class="icono"><use href="#i-check"/></svg></span><span>Pasó de verdad</span></button></li>
+      <li><button class="g-op g-op--falso" type="button" data-k="1" style="--i:1"><span class="g-op__f" aria-hidden="true"><svg class="icono"><use href="#i-periodico"/></svg></span><span>Es de EL MERCIO</span></button></li>
+    </ul>`;
+  $('.g-carta').prepend(lampara());
+  st.t0 = performance.now();
+  clearTimeout(reloj);
+  reloj = setTimeout(() => responderQuiz(-1), T.tiempo);
+}
+
+function responderQuiz(k) {
+  if (!st || st.decidido) return;
+  clearTimeout(reloj);
+  const T = TESTS[st.id];
+  const it = st.orden[st.i];
+  st.decidido = true;
+  st.resp[st.i] = k;
+  const bien = k >= 0 && (k === 0) === it.real;
+  const resta = Math.max(0, T.tiempo - (performance.now() - st.t0));
+  let gana = 0;
+  if (bien) {
+    gana = 100 + Math.round(resta / T.tiempo * 100) + 25 * st.racha;
+    st.racha++; st.aciertos++;
+    st.mejor = Math.max(st.mejor, st.racha);
+  } else st.racha = 0;
+  st.puntos += gana;
+  st.log.push({ t: it.t, real: it.real, k, bien, fuente: it.fuente, url: it.url });
+  vibra(bien ? 12 : [30, 40, 30]);
+  const ops = $('#q-cuerpo .g-ops');
+  ops.classList.add('decidido');
+  const correcta = ops.querySelector(`[data-k="${it.real ? 0 : 1}"]`);
+  correcta.classList.add('correcta');
+  if (k >= 0) ops.querySelector(`[data-k="${k}"]`).classList.add(bien ? 'elegida' : 'mal');
+  $('.g-reloj')?.classList.add('parado');
+  reacciona($('#q-cuerpo .g-lamp'));
+  progreso(st.i + 1);
+  const titulo = k < 0 ? 'Se te fue el bus' : bien ? `¡Correcto! +${gana}` : it.real ? '¡Era real!' : '¡Te la creíste!';
+  const texto = it.real ? it.dato : `Lo inventó EL MERCIO. ${it.q || ''}`.trim();
+  muestraHoja(texto, 5200, { titulo, bien, fuente: it.real ? it : null });
+}
+
 /* tocar una opción: se hunde, las demás se apagan, Lamparita se mece y sube
    la hoja con lo que dice la redacción */
 function elegir(k) {
@@ -201,8 +264,14 @@ function elegir(k) {
   muestraHoja(texto, ESPERA);
 }
 
-function muestraHoja(texto, espera) {
+function muestraHoja(texto, espera, extra = {}) {
   $('#hoja-q').textContent = texto;
+  const de = $('#hoja-de');
+  de.textContent = extra.titulo || 'La redacción dice';
+  de.dataset.estado = extra.titulo ? (extra.bien ? 'bien' : 'mal') : '';
+  const f = $('#hoja-fuente');
+  f.hidden = !extra.fuente;
+  if (extra.fuente) { f.href = extra.fuente.url; f.textContent = `Fuente: ${extra.fuente.fuente}${extra.fuente.fecha ? ', ' + extra.fuente.fecha : ''}`; }
   const h = $('#hoja');
   h.style.setProperty('--espera', espera + 'ms');
   h.classList.remove('ve'); void h.offsetWidth; h.classList.add('ve');
@@ -219,7 +288,7 @@ function avanzar() {
   if (T.fecha && st.fecha && st.i === 0 && st.resp.length === 0) return pregunta();
   if (st.i < st.orden.length - 1) {
     st.i++;
-    if (st.i % CADA === 0 && st.orden.length - st.i >= 2) return asiVas();
+    if (T.tipo !== 'quiz' && st.i % CADA === 0 && st.orden.length - st.i >= 2) return asiVas();
     return pregunta();
   }
   const r = calcular();
@@ -269,12 +338,14 @@ $('#salir').addEventListener('click', (e) => {
   if (b.value === 'salgo') portada();
   else if (st?.asi) reloj = setTimeout(sigueAsi, 1200);
   else if (st?.decidido) reloj = setTimeout(avanzar, 800);
+  else if (st && TESTS[st.id].tipo === 'quiz') preguntaQuiz();
 });
 
 /* ══════════ CÁLCULO ══════════
    `parcial` cuenta solo lo respondido hasta ahora (para «Así vas»). */
 function calcular(parcial) {
   const T = TESTS[st.id];
+  if (T.tipo === 'quiz') { ultimaPartida = st.log.slice(); return { id: st.id, puntos: st.puntos, aciertos: st.aciertos, racha: st.mejor, total: st.orden.length }; }
   const n = parcial ? st.resp.length : st.orden.length;
   const pares = st.orden.slice(0, n).map((qi, i) => [qi, st.resp[i]]).filter(([, a]) => a !== undefined);
   if (T.tipo === 'plano') {
@@ -329,6 +400,7 @@ function perfil(id, pares) {
    lamparometro,3.5,-2,6 · provincia,3-1.7-0… · playlist,2.0.1…,Leo.Tarima */
 function cod(r) {
   const T = TESTS[r.id];
+  if (T.tipo === 'quiz') return `${r.id},${r.puntos},${r.aciertos},${r.racha},${r.total}`;
   if (T.tipo === 'plano') return `${r.id},${r.x},${r.y},${r.z}`;
   if (T.tipo === 'rasgos') return `${r.id},${r.pares.map(([q, a]) => q + '-' + a).join('.')}`;
   let c = `${r.id},${Object.keys(T.grupo).map((k) => r.pts[k]).join('.')}`;
@@ -341,6 +413,12 @@ function leer(txt) {
   if (!m || !TESTS[m[1]]) return null;
   const T = TESTS[m[1]];
   const partes = m[2].split(',');
+  if (T.tipo === 'quiz') {
+    const [puntos, aciertos, racha, total] = partes.map(Number);
+    const ok = [puntos, aciertos, racha, total].every(Number.isInteger) && total > 0 && total <= 20 && aciertos >= 0 && aciertos <= total
+      && racha >= 0 && racha <= aciertos && puntos >= 0 && puntos <= total * 500;
+    return ok ? { id: m[1], puntos, aciertos, racha, total } : null;
+  }
   if (T.tipo === 'plano') {
     const n = partes.map(Number);
     const r = { id: m[1], x: clamp(n[0]), y: clamp(n[1]), z: clamp(partes[2] === undefined ? 0 : n[2]) };
@@ -409,6 +487,7 @@ function fraseCompat(p) {
    primero. Después cae el confeti y aparece la carta coleccionable. */
 function resultado(r, ajeno, vs) {
   const T = TESTS[r.id];
+  if (T.tipo === 'quiz') return resultadoQuiz(r, ajeno, vs);
   colorTest(r.id);
   const rk = ranking(r);
   const g = rk[0].o;
@@ -489,6 +568,83 @@ function resultado(r, ajeno, vs) {
   }, 2000);
 }
 
+const RANGOS = [
+  [10, 'Director de EL MERCIO.', 'Nadie te engaña. Ni nosotros.'],
+  [8, 'Periodista de investigación', 'Tienes olfato. Y fuentes.'],
+  [6, 'Columnista de opinión', 'Opinas con datos, a veces.'],
+  [4, 'Pasante con buena intención', 'Vas aprendiendo, mijo.'],
+  [2, 'Tío del grupo de WhatsApp', 'Lo reenvías todo, por si acaso.'],
+  [0, 'Reenviador profesional de cadenas', 'Te creíste hasta lo del cuy.']
+];
+const rango = (r) => { const a = Math.round(r.aciertos / r.total * 10); return RANGOS.find(([n]) => a >= n); };
+
+function resultadoQuiz(r, ajeno, vs) {
+  const T = TESTS[r.id];
+  colorTest(r.id);
+  const [, nombre, sub] = rango(r);
+  const nuevoRecord = !ajeno && guardaRecord(r.puntos);
+  const log = !ajeno ? ultimaPartida : null;
+  const el = $('#resultado');
+  el.innerHTML = `
+    <div class="g-res-hero">
+      <p class="g-hero__k">${esc(T.kicker)} · ${esc(T.titulo)}</p>
+      ${ajeno ? `<p class="g-ajeno">A alguien le salió esto. Juega y supéralo.</p>` : ''}
+      <p class="g-anuncio" id="r-anuncio"><span class="g-puntos">Contando votos</span></p>
+      <p class="g-puntaje"><b id="r-puntos" data-n="${r.puntos}">0</b><small>puntos</small></p>
+    </div>
+    <div class="g-despues">
+      <article class="g-coleccionable">
+        ${nuevoRecord ? '<span class="g-nueva">¡Nuevo récord!</span>' : ''}
+        ${mono({ ini: `${r.aciertos}/${r.total}`, c: T.color, t: T.tinta }, 'g-mono--xl')}
+        <p class="g-coleccionable__que">Eres</p>
+        <h1 id="r-t">${esc(nombre)}</h1>
+        <ul class="g-chips"><li>${r.aciertos} de ${r.total} aciertos</li><li>Mejor racha: ${r.racha}</li>${ajeno ? '' : `<li>Tu récord: ${record()}</li>`}</ul>
+        <p class="g-frase">«${esc(sub)}»</p>
+      </article>
+      <div class="g-acciones">
+        <button class="g-btn g-btn--test" type="button" data-accion="compartir"><svg class="icono" aria-hidden="true"><use href="#i-compartir"/></svg> Compartir</button>
+        <button class="g-btn g-btn--reto" type="button" data-accion="reto"><svg class="icono" aria-hidden="true"><use href="#i-rayo"/></svg> Retar a un pana</button>
+        <button class="g-btn g-btn--suave" type="button" data-accion="tarjeta"><svg class="icono icono--s" aria-hidden="true"><use href="#i-descargar"/></svg> Tarjeta</button>
+        <button class="g-btn g-btn--suave" type="button" data-empezar="${r.id}"><svg class="icono icono--s" aria-hidden="true"><use href="#i-reiniciar"/></svg> ${ajeno ? 'Jugar' : 'Otra vez'}</button>
+      </div>
+      ${vs ? `<section class="g-panel"><h2>Tú contra tu pana</h2>
+        <div class="g-vs">
+          <div class="g-vs__quien"><small>Tú</small><b class="g-vs__pts">${r.puntos}</b><b>${r.aciertos}/${r.total}</b></div>
+          <div class="g-vs__pct">${r.puntos === vs.puntos ? '=' : r.puntos > vs.puntos ? '>' : '<'}</div>
+          <div class="g-vs__quien"><small>Tu pana</small><b class="g-vs__pts">${vs.puntos}</b><b>${vs.aciertos}/${vs.total}</b></div>
+          <p>${r.puntos === vs.puntos ? 'Empate técnico, como en la Asamblea.' : r.puntos > vs.puntos ? `Le ganaste por ${r.puntos - vs.puntos} puntos. Mándale el pantallazo.` : `Te ganó por ${vs.puntos - r.puntos} puntos. Pide la revancha.`}</p>
+        </div></section>` : ''}
+      ${log ? `<section class="g-panel"><h2>Tus titulares</h2>
+        <ol class="g-repaso">${log.map((x) => `<li class="${x.bien ? 'bien' : 'mal'}">
+          <span class="g-repaso__s" aria-label="${x.bien ? 'Acertaste' : 'Fallaste'}">${x.bien ? '✓' : '✗'}</span>
+          <div><b>${esc(x.t)}</b><small>${x.real ? `Real · <a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.fuente)}</a>` : 'Inventado por EL MERCIO.'}</small></div></li>`).join('')}</ol></section>` : ''}
+      <h2 class="g-h2">Sigue jugando</h2>
+      <ul class="g-tests">${Object.keys(TESTS).filter((k) => k !== r.id).map(tarjetaTest).join('')}</ul>
+      <p class="g-aviso">Los titulares reales resumen noticias publicadas por los medios que se citan; los
+      falsos los inventó la redacción de EL MERCIO. y no se refieren a ninguna persona real.</p>
+    </div>`;
+  el._r = r;
+  mostrar('resultado');
+  pintaAlbum();
+  const anuncio = nuevoRecord ? '¡Nuevo récord!' : '¡Se acabó!';
+  const cuenta = () => {
+    const b = $('#r-puntos'), fin = +b.dataset.n, t0 = performance.now();
+    const paso = (t) => { const k = Math.min(1, (t - t0) / 1200); b.textContent = Math.round(fin * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(paso); };
+    requestAnimationFrame(paso);
+  };
+  if (quieto.matches) { el.classList.add('revelado'); $('#r-anuncio').textContent = anuncio; $('#r-puntos').textContent = r.puntos; return; }
+  el.classList.remove('revelado');
+  el.classList.add('contando');
+  setTimeout(() => {
+    $('#r-anuncio').textContent = anuncio;
+    cuenta();
+    el.classList.remove('contando');
+    el.classList.add('revelado');
+    if (nuevoRecord || r.aciertos >= r.total * .7) confeti();
+    vibra([20, 40, 20]);
+  }, 900);
+}
+
 function confeti() {
   if (quieto.matches) return;
   const caja = document.createElement('div');
@@ -567,7 +723,9 @@ function pantallaAlbum() {
 /* ══════════ COMPARTIR, RETAR Y LA TARJETA ══════════ */
 const base = () => location.origin + location.pathname;
 function textoCompartir(r) {
-  const T = TESTS[r.id], g = ranking(r)[0];
+  const T = TESTS[r.id];
+  if (T.tipo === 'quiz') return `${T.titulo}: hice ${r.puntos} puntos y acerté ${r.aciertos} de ${r.total}. Soy «${rango(r)[1]}». ¿Me ganas?`;
+  const g = ranking(r)[0];
   return `${T.titulo}: ${T.cosa ? 'soy' : 'me parezco a'} ${g.o.nombre} (${g.pct} %). ¿Y tú?`;
 }
 async function comparte(datos, archivo) {
@@ -587,7 +745,10 @@ async function compartir() {
   comparte({ title: 'El Lamparómetro · EL MERCIO.', text: textoCompartir(r), url: base() + '#r=' + cod(r) }, archivo);
 }
 function retar() {
-  const r = $('#resultado')._r, T = TESTS[r.id], g = ranking(r)[0].o;
+  const r = $('#resultado')._r, T = TESTS[r.id];
+  if (T.tipo === 'quiz') return comparte({ title: 'Te reto · El Lamparómetro', url: base() + '#reto=' + cod(r),
+    text: `Hice ${r.puntos} puntos en «${T.titulo}». A ver si distingues la realidad de EL MERCIO mejor que yo:` });
+  const g = ranking(r)[0].o;
   comparte({ title: 'Te reto · El Lamparómetro', url: base() + '#reto=' + cod(r),
     text: `En «${T.titulo}» ${T.cosa ? 'soy' : 'me salió'} ${g.nombre}. A ver qué tan compatibles somos:` });
 }
@@ -606,7 +767,10 @@ function caja(x, X, Y, W, H, R) {
   if (x.roundRect) x.roundRect(X, Y, W, H, R); else x.rect(X, Y, W, H);
 }
 async function tarjeta(r) {
-  const T = TESTS[r.id], rk = ranking(r), g = rk[0].o;
+  const T = TESTS[r.id];
+  const quiz = T.tipo === 'quiz';
+  const rk = quiz ? [{ pct: r.aciertos * 10 }] : ranking(r);
+  const g = quiz ? { nombre: rango(r)[1], frase: rango(r)[2], apodo: `${r.puntos} puntos · ${r.aciertos}/${r.total}`, ini: `${r.aciertos}/${r.total}`, c: '#c53b2b', t: '#fff' } : rk[0].o;
   const W = 1080, H = 1350, M = 80;
   const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
   const x = cv.getContext('2d');
@@ -636,13 +800,13 @@ async function tarjeta(r) {
   x.fillStyle = g.t; x.font = `900 ${g.ini.length > 2 ? 70 : 88}px ${sans}`; x.textAlign = 'center'; x.textBaseline = 'middle';
   x.fillText(g.ini, mx, my + 4); x.textBaseline = 'alphabetic';
   x.fillStyle = '#7a7a7a'; x.font = `800 30px ${sans}`;
-  x.fillText(T.cosa ? 'SOY' : 'ME PAREZCO A', mx, my + R + 70);
+  x.fillText(quiz ? 'SOY' : T.cosa ? 'SOY' : 'ME PAREZCO A', mx, my + R + 70);
   x.fillStyle = '#141414'; x.font = `900 84px ${sans}`;
   let y = my + R + 160;
   for (const l of nom) { x.fillText(l, mx, y); y += 92; }
   // chip con el apodo
   x.font = `800 30px ${sans}`;
-  const chip = `${g.apodo} · ${rk[0].pct} %`;
+  const chip = quiz ? g.apodo : `${g.apodo} · ${rk[0].pct} %`;
   const cw = Math.min(ancho - 80, x.measureText(chip).width + 56);
   x.fillStyle = '#f1ede5'; caja(x, mx - cw / 2, y - 26, cw, 58, 29); x.fill();
   x.fillStyle = '#141414'; x.fillText(chip, mx, y + 14, cw - 40);
@@ -673,7 +837,9 @@ async function descargar() {
 
 /* ══════════ EL RETO ══════════ */
 function pantallaReto(vs) {
-  const T = TESTS[vs.id], g = ranking(vs)[0].o;
+  const T = TESTS[vs.id];
+  const quiz = T.tipo === 'quiz';
+  const g = quiz ? { nombre: `${vs.puntos} puntos`, frase: `Acertó ${vs.aciertos} de ${vs.total}. ¿Le ganas?`, ini: `${vs.aciertos}/${vs.total}`, c: '#c53b2b', t: '#fff' } : ranking(vs)[0].o;
   colorTest(vs.id);
   const el = $('#resultado');
   el.classList.remove('suspenso', 'contando');
@@ -681,14 +847,14 @@ function pantallaReto(vs) {
   el.innerHTML = `
     <div class="g-res-hero">
       <p class="g-hero__k">Te retaron · ${esc(T.titulo)}</p>
-      <p class="g-anuncio">Tu pana ${T.cosa ? 'es' : 'se parece a'}…</p>
+      <p class="g-anuncio">${quiz ? 'Tu pana hizo…' : `Tu pana ${T.cosa ? 'es' : 'se parece a'}…`}</p>
     </div>
     <div class="g-despues">
       <article class="g-coleccionable">
         ${mono(g, 'g-mono--xl')}
         <h1 id="r-t">${esc(g.nombre)}</h1>
         <p class="g-frase">«${esc(g.frase)}»</p>
-        <p class="g-desc" style="text-align:center">¿Y tú? Juega y mira qué tan compatibles son.</p>
+        <p class="g-desc" style="text-align:center">${quiz ? 'Juega y supéralo.' : '¿Y tú? Juega y mira qué tan compatibles son.'}</p>
       </article>
       <div class="g-acciones"><button class="g-btn g-btn--test" type="button" data-reto>Aceptar el reto
         <svg class="icono" aria-hidden="true"><use href="#i-play"/></svg></button></div>
@@ -700,10 +866,11 @@ function pantallaReto(vs) {
 /* ══════════ ARRANQUE ══════════ */
 function tarjetaTest(id) {
   const T = TESTS[id];
-  const a = album(), tiene = tienesDe(a, T.album);
+  const a = album(), tiene = T.album ? tienesDe(a, T.album) : 0;
+  const rec = T.tipo === 'quiz' ? record() : 0;
   return `<li><button class="g-test" type="button" data-empezar="${id}" style="--c:${T.color};--t:${T.tinta}">
     <span class="g-test__ico" aria-hidden="true"><svg class="icono icono--l"><use href="#i-${T.icono}"/></svg></span>
-    ${tiene ? `<span class="g-test__ok">${tiene}/${Object.keys(ALBUM[T.album]).length}</span>` : ''}
+    ${tiene ? `<span class="g-test__ok">${tiene}/${Object.keys(ALBUM[T.album]).length}</span>` : rec ? `<span class="g-test__ok">Récord ${rec}</span>` : T.nuevo ? '<span class="g-test__ok g-test__ok--nuevo">Nuevo</span>' : ''}
     <span class="g-test__t">${esc(T.titulo)}</span>
     <span class="g-test__m">${esc(T.meta)}</span></button></li>`;
 }
@@ -737,7 +904,7 @@ document.addEventListener('click', (e) => {
   else if (b.id === 'q-salir') salir();
   else if (b.id === 'hoja-seguir') avanzar();
   else if (b.id === 'asi-seguir') sigueAsi();
-  else if (b.classList.contains('g-op')) elegir(+b.dataset.k);
+  else if (b.classList.contains('g-op')) (st && TESTS[st.id].tipo === 'quiz' ? responderQuiz : elegir)(+b.dataset.k);
 });
 
 /* teclado: 1–4 eligen, 0 o S saltan, Enter sigue, Escape sale */
@@ -749,6 +916,11 @@ document.addEventListener('keydown', (e) => {
   if (st?.asi && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); return sigueAsi(); }
   if (st?.decidido && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); return avanzar(); }
   if (!st || st.decidido) return;
+  if (TESTS[st.id].tipo === 'quiz') {
+    if (e.key === '1' || e.key === 'ArrowLeft') { e.preventDefault(); responderQuiz(0); }
+    else if (e.key === '2' || e.key === 'ArrowRight') { e.preventDefault(); responderQuiz(1); }
+    return;
+  }
   const n = +e.key;
   if (n >= 1 && n <= 4 && $(`#q-cuerpo [data-k="${n - 1}"]`)) { e.preventDefault(); elegir(n - 1); }
   else if ((e.key === '0' || e.key.toLowerCase() === 's') && $('#q-saltar') && !$('#q-saltar').hidden) { e.preventDefault(); elegir(-1); }

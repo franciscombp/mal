@@ -752,8 +752,58 @@ const TESTS = {
         { t: '«Huelo a limpio, de lejos»', p: { detergente: 2 }, q: 'De cerca, ya veremos.' }
       ]}
     ]
+  },
+  titulares: {
+    titulo: '¿Noticia real o EL MERCIO?',
+    corto: 'Real o EL MERCIO',
+    kicker: 'Test 6 · Contra reloj',
+    bajada: 'Te mostramos un titular. ¿Pasó de verdad o lo inventamos nosotros? En este país, cuesta.',
+    meta: '10 titulares · contra reloj',
+    pie: '¿Distingues la realidad de EL MERCIO?',
+    color: '#1d1d1f', tinta: '#fff', icono: 'periodico',
+    tipo: 'quiz', ronda: 10, tiempo: 12000, nuevo: true
   }
 };
+
+
+/* ══════════ ¿NOTICIA REAL O EL MERCIO? ══════════
+   Los reales son noticias que pasaron, resumidas por la redacción, con su
+   fuente: se verificaron una por una. Los falsos son de EL MERCIO. y no
+   nombran a ninguna persona real, para que un pantallazo suelto no pase por
+   noticia. */
+const FALSOS = [
+  { t: 'Municipio inaugura por tercera vez el mismo puente y promete una cuarta', q: 'La placa ya no cabe: van a poner otra placa.' },
+  { t: 'Asamblea aprueba una ley que nadie alcanzó a leer, ni quien la escribió', q: 'El artículo 3, dicen, se explica solo.' },
+  { t: 'Estudio revela que el 100 % de los encuestados respondió la encuesta', q: 'El margen de error es cero, y eso asusta.' },
+  { t: 'La fanesca traía trece granos y la Corte pidió tiempo para volver a contar', q: 'Doce granos, una crisis constitucional.' },
+  { t: 'Ministerio crea una comisión para estudiar por qué hay tantas comisiones', q: 'La comisión ya pidió una subcomisión.' },
+  { t: 'Quiteño sale sin chompa y declara estado de excepción climático en su casa', q: 'Granizó a las cuatro, como siempre.' },
+  { t: 'Bus urbano se detiene en la parada y los pasajeros piden explicaciones', q: 'El chofer dijo que fue sin querer.' },
+  { t: 'Encuesta: nueve de cada diez ecuatorianos dicen «ya mismo» sin especificar cuándo', q: 'El décimo dijo «ahorita».' },
+  { t: 'Candidato promete un bono para quienes ya cobran el bono', q: 'Y otro bono para los que cobren ese.' },
+  { t: 'Cuy gana la elección de la directiva barrial por unanimidad', q: 'Su primera medida: más alfalfa.' },
+  { t: 'Lobo marino se niega a desocupar una banca del malecón y pide abogado', q: 'El abogado también es lobo marino.' },
+  { t: 'Concejo declara patrimonio a un bache que ya cumplió quince años', q: 'Tiene placa, guía turística y fiesta de cumpleaños.' },
+  { t: 'Funcionario pide licencia para recuperarse de su licencia anterior', q: 'Descansar cansa, dijo el sindicato.' },
+  { t: 'Suspenden por apagón la reunión sobre cómo evitar los apagones', q: 'La próxima será con velas, por si acaso.' },
+  { t: 'Instituto confirma que nadie lee los términos y condiciones, ni el propio instituto', q: 'El estudio tenía términos y condiciones.' },
+  { t: 'Asambleísta pide un minuto de silencio y la sesión lleva tres días callada', q: 'Es la sesión más productiva del periodo.' },
+  { t: 'Pico y placa se extiende a las bicicletas y a los peatones de cédula par', q: 'Los impares caminan los martes.' },
+  { t: 'Volcán emite un comunicado: «Solo estoy botando un poco de vapor»', q: 'Pidió que no le hagan memes.' },
+  { t: 'Inauguran una oficina para las quejas sobre la oficina de quejas', q: 'Atiende de 10:00 a 10:15.' },
+  { t: 'Declaran al encebollado medicamento esencial del sistema de salud', q: 'Receta: uno cada domingo, con chifle.' },
+  { t: 'Ecuatoriano hace seis horas de fila y descubre que era la fila para otra fila', q: 'Le dieron un turno para la fila correcta.' },
+  { t: 'Proponen que el feriado de Carnaval dure hasta que se seque la ropa', q: 'En Quito, eso es hasta Semana Santa.' },
+  { t: 'Cantón crea su propio huso horario para llegar puntual a las reuniones', q: 'Ahora llegan tarde, pero con la hora oficial.' },
+  { t: 'Semáforo de Guayaquil cumple diez años en amarillo y lo condecoran', q: 'Nadie le hizo caso, pero nunca falló.' },
+  { t: 'Partido político se disuelve tras una pelea por el color del logo', q: 'Iban a votar, pero no se pusieron de acuerdo en el color de la papeleta.' },
+  { t: 'Gimnasio municipal abre a las cinco de la mañana y nadie llega hasta el lunes', q: 'El lunes, como todo buen propósito.' },
+  { t: 'Hallan en una oficina pública un trámite iniciado en sucres que sigue en curso', q: 'Le falta una copia a color.' },
+  { t: 'Ministerio lanza la campaña «Ecuador: visítelo antes del próximo feriado puente»', q: 'El puente, por supuesto, sigue sin inaugurar.' },
+  { t: 'Tienda de barrio deja de fiar y el barrio convoca a paro', q: 'La cuenta del cuaderno llegaba a 1998.' },
+  { t: 'El chulla quiteño pide reconocimiento como patrimonio, con terno y todo', q: 'El terno también pidió reconocimiento.' }
+];
+const REALES = [];
 
 /* Signos: el sol reparte puntos entre dos lámparas. El reparto es tan
    arbitrario como el de un horóscopo de verdad. */
@@ -767,5 +817,5 @@ const SIGNOS = [
   ['Escorpio', 10, 23, { dnoboa: 2, correa: 1 }], ['Sagitario', 11, 22, { alvaro: 2, bucaram: 1 }]
 ];
 
-window.LAMP = { PJ, PROD, PROV, RASGOS, ESCALA, SALTO, QUIPS, TESTS, SIGNOS };
+window.LAMP = { PJ, PROD, PROV, RASGOS, ESCALA, SALTO, QUIPS, TESTS, SIGNOS, FALSOS, REALES };
 })();
