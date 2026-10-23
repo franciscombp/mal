@@ -8,6 +8,18 @@ persona la termine de decorar a mano.
 No dibuja nada: la receta es solo datos (`../masa.js`, el mismo módulo que usa el juego). La
 imagen y el 3D los hace el navegador de quien abre el enlace.
 
+## Sin servidor: el enlace por encargo
+
+Si no puedes instalar nada, no hace falta el MCP: el juego amasa la guagua solo con la
+dirección. Una IA (o cualquiera) escribe algo así y listo:
+
+```
+https://franciscombp.github.io/mal/guagua/?molde=dormilon&para=Lobita&de=Francisco&dedicada=1&decoracion=carita
+```
+
+Acepta los mismos parámetros que `crear_guagua`: `molde`, `nombre`, `para`, `de`, `mensaje`,
+`dedicada=1`, `vale`, `coccion`, `decoracion`, `colores` (separados por comas) y `semilla`.
+
 ## Herramientas
 
 - **`despensa`** — qué hay: moldes, cremas, vales, cocciones y mensajes sugeridos.

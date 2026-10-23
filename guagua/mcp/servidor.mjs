@@ -15,8 +15,8 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
 import {
-  DIRECCION, MOLDES, NOMBRES, MENSAJES, MENSAJES_MEMORIA, MENSAJE_GUAGUAU, VALES, CREMAS,
-  codificar, decodificar, sorpresa, tieneCara, queEs, nombreDe, punto, elige, Sonda,
+  DIRECCION, NOMBRES, MENSAJES, MENSAJES_MEMORIA, MENSAJE_GUAGUAU, VALES, CREMAS,
+  COCCION, amasarReceta, codificar, decodificar, tieneCara, queEs, nombreDe, punto,
 } from '../masa.js';
 
 const BASE = process.env.GUAGUA_URL || 'https://' + DIRECCION + '/';
@@ -30,29 +30,10 @@ const DESCRIPCION_MOLDE = {
   chanchito: 'un chanchito gordito',
   gallinita: 'una gallinita con su cresta',
 };
-const COCCION = { blanquita: 85, punto: 100, tostada: 118, quemada: 140 };
-
-/* Las cremas del juego, por nombre, para que la IA elija colores. */
-const indiceCrema = (nombre) => CREMAS.findIndex((c) => c.n.toLowerCase() === String(nombre || '').toLowerCase());
-
-/* Amasa, hornea y decora, todo sin pantalla. */
+/* Amasa, hornea y decora, todo sin pantalla (ver amasarReceta en ../masa.js). */
 async function amasar(args) {
-  const molde = MOLDES[args.molde] ? args.molde : 'guagua';
-  const e = {
-    v: 3, f: molde, a: MOLDES[molde](), k: COCCION[args.coccion] || 100, o: [],
-    n: (args.nombre || elige(NOMBRES[molde] || NOMBRES.guagua)).slice(0, 40),
-    p: (args.para || '').slice(0, 40), d: (args.de || '').slice(0, 40), m: '',
-    t: args.dedicada ? 'm' : '', l: !args.dedicada && VALES[args.vale] ? args.vale : 0,
-  };
-  e.m = (args.mensaje || (e.t === 'm' ? (molde === 'guaguau' ? MENSAJE_GUAGUAU : elige(MENSAJES_MEMORIA)) : elige(MENSAJES))).slice(0, 160);
-  if (args.decoracion !== 'ninguna') {
-    // la misma decoración de panadería que «Sorpréndeme» en el juego; con
-    // semilla, la misma petición da la misma guagua
-    const cremas = (args.colores || []).map(indiceCrema).filter((i) => i >= 0);
-    e.o = sorpresa(e, new Sonda(e), { cremas, semilla: args.semilla, soloCara: args.decoracion === 'carita' });
-  }
-  const cod = await codificar(e);
-  return { e, url: BASE + '#r=' + cod };
+  const e = amasarReceta(args);
+  return { e, url: BASE + '#r=' + await codificar(e) };
 }
 
 function describir(e) {

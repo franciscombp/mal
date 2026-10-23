@@ -108,6 +108,20 @@ Para ponerla en marcha en el proyecto real:
 
 ## Desde un chat de IA
 
+**Sin instalar nada:** basta con escribir la dirección con los datos después del `?`. El juego
+amasa la guagua en el navegador de quien la abre y la muestra como regalo:
+
+```
+https://franciscombp.github.io/mal/guagua/?molde=dormilon&nombre=Lobita&para=Lobita&de=Francisco&dedicada=1&decoracion=carita&mensaje=Duerme%20tranquila
+```
+
+Parámetros: `molde` (guagua, tradicional, guaguau, dormilon, caballito, chanchito, gallinita),
+`nombre`, `para`, `de`, `mensaje`, `dedicada=1`, `vale` (1 guagua de verdad, 2 colada morada,
+3 pásala), `coccion` (blanquita, punto, tostada, quemada), `decoracion` (panaderia, carita,
+ninguna), `colores` (cremas por nombre, separadas por comas) y `semilla`. La dirección se
+convierte sola en un enlace `#r=` que ya se puede compartir.
+
+**Con MCP:** 
 `masa.js` es la receta sin pantalla (moldes, geometría, enlace y «Sorpréndeme»), y la comparten
 el juego y el servidor MCP de `mcp/`: con él, una IA amasa una guagua con lo que sabe de la
 persona y devuelve el enlace que la abre en 3D. Ver `mcp/README.md`.
