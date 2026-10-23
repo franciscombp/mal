@@ -26,7 +26,7 @@ import * as THREE from 'three';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
 import * as nube from './nube.js';
 import {
-  DIRECCION, V, Q, ent, CREMAS, BOQUILLAS, GROSORES, MASAS, TAMANOS, GRAGEAS, MAX_BOCADOS, BOCADOS_TALLER, MAX_PIEZAS, MORDIDA, NOMBRES, MENSAJES, MENSAJES_MEMORIA, MENSAJE_GUAGUAU, VALES, enMemoria, echada, posturaDe, azar, elige, limita, bolita, chorizo, masaDe, iniPuntos, conMasa, SG, G, C, frenteDe, CUERPO, CABEZA, guaguaConBrazos, MOLDES, elipsoide, tubo, PISO, aplanar, geometriaPieza, moverPieza, base, b64, exprimir, PASOS, aDeltas, deDeltas, codificar, decodificar, deLaPrimeraHornada, sano, punto, tieneCara, queEs, nombreDe, puntoDeCrema, pn, caraPintada, chapitas, sorpresa, Sonda,
+  DIRECCION, V, Q, ent, CREMAS, BOQUILLAS, GROSORES, MASAS, TAMANOS, GRAGEAS, MAX_BOCADOS, BOCADOS_TALLER, MAX_PIEZAS, MORDIDA, NOMBRES, MENSAJES, MENSAJES_MEMORIA, MENSAJE_GUAGUAU, VALES, enMemoria, echada, posturaDe, azar, elige, limita, bolita, chorizo, masaDe, iniPuntos, conMasa, SG, G, C, frenteDe, CUERPO, CABEZA, guaguaConBrazos, MOLDES, elipsoide, tubo, PISO, aplanar, geometriaPieza, moverPieza, base, b64, exprimir, PASOS, aDeltas, deDeltas, codificar, decodificar, deLaPrimeraHornada, sano, punto, tieneCara, queEs, nombreDe, puntoDeCrema, pn, caraPintada, chapitas, sorpresa, Sonda, amasarReceta,
 } from './masa.js';
 
 const $ = (s, r) => (r || document).querySelector(s);
@@ -2165,7 +2165,7 @@ function arrancar() {
     nueva('guagua');
   }
   pintarVitrina();
-  if (!location.hash && !almacen.leer('guagua:visto', false)) {
+  if (!location.hash && !/[?&](molde|para|dedicada)=/.test(location.search) && !almacen.leer('guagua:visto', false)) {
     almacen.poner('guagua:visto', true);
     window.malDS.abrir('#d-info');
   }
@@ -2185,7 +2185,18 @@ function arrancar() {
       else avisa('Esta guagua ya no está disponible. Pide que te la envíen otra vez.', 'error');
     } catch (e) { avisa(nube.explicar(e), 'error'); }
   };
-  leerHash();
+  // un enlace por encargo (?molde=…&para=…): se amasa aquí mismo y se abre como regalo
+  const encargo = new URLSearchParams(location.search);
+  if (encargo.has('molde') || encargo.has('para') || encargo.has('dedicada')) {
+    const args = Object.fromEntries(encargo.entries());
+    codificar(amasarReceta(args)).then((cod) => {
+      const limpia = new URLSearchParams(location.search);
+      ['molde', 'nombre', 'para', 'de', 'mensaje', 'dedicada', 'vale', 'coccion', 'decoracion', 'colores', 'semilla'].forEach((k) => limpia.delete(k));
+      const q = limpia.toString();
+      history.replaceState(null, '', location.pathname + (q ? '?' + q : '') + '#r=' + cod);
+      leerHash();
+    });
+  } else leerHash();
   window.addEventListener('hashchange', leerHash);
   montarCuenta();
 }
