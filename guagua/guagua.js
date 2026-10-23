@@ -2165,7 +2165,7 @@ function arrancar() {
     nueva('guagua');
   }
   pintarVitrina();
-  if (!location.hash && !almacen.leer('guagua:visto', false)) {
+  if (!location.hash && !/[?&](molde|para|dedicada)=/.test(location.search) && !almacen.leer('guagua:visto', false)) {
     almacen.poner('guagua:visto', true);
     window.malDS.abrir('#d-info');
   }
