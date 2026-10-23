@@ -301,3 +301,37 @@ body.juego-cuerpo{margin:0;background:var(--mantel-1);color:var(--mal-on-surface
 .regalar__previa{display:flex;flex-direction:column;gap:8px;align-items:center}
 .regalar__formato{gap:6px;flex-wrap:wrap;justify-content:center}
 .regalar__pie .btn[aria-busy="true"]{opacity:.6;cursor:progress}
+
+/* ─── el dock se pliega: asa arriba, resumen en la cabecera ─── */
+.dock__asa{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:22px;padding:0;border:0;background:none;cursor:grab;touch-action:none;display:flex;align-items:center;justify-content:center}
+.dock__asa i{display:block;width:44px;height:5px;border-radius:3px;background:rgba(255,255,255,.35);transition:background .2s, width .2s}
+.dock__asa:hover i,.dock__asa:focus-visible i{background:rgba(255,255,255,.7);width:56px}
+.dock__asa:focus-visible{outline:0}
+.dock__asa:active{cursor:grabbing}
+.dock{padding-top:22px}
+.dock__resumen{display:none;font:600 13px var(--mal-texto);letter-spacing:0;color:var(--mal-on-surface-2);margin-left:6px}
+.juego[data-plegado="1"] .dock > :not(.dock__asa):not(.dock__cab){display:none}
+.juego[data-plegado="1"] .dock__resumen{display:inline}
+.juego[data-plegado="1"] .dock__t{cursor:pointer}
+.juego[data-plegado="1"] .dock{gap:0}
+@media (orientation:landscape) and (max-height:560px){
+  .dock__asa{left:0;top:50%;transform:translateY(-50%) rotate(90deg);width:80px;height:22px}
+  .dock{padding-top:calc(12px + env(safe-area-inset-top));padding-left:24px}
+}
+
+/* ─── regalar por pasos ─── */
+.pasos{display:flex;gap:6px;margin:0 auto 0 12px;padding:0;list-style:none;align-items:center}
+.pasos__punto{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);transition:width .2s, background .2s}
+.pasos__punto[aria-current="true"]{width:22px;background:var(--mal-primary)}
+.paso{border:0;padding:0;margin:0;min-width:0;display:flex;flex-direction:column;gap:var(--mal-e4)}
+.paso[hidden]{display:none}
+.regalar__cuerpo{overflow:hidden}
+.regalar__previa .regalar__vista{max-height:min(48vh, 520px);width:auto;max-width:100%}
+.regalar__previa .regalar__entrar{margin:0;width:100%}
+.regalar__pie{justify-content:space-between}
+.regalar__pie .regalar__final{display:none}
+.regalar--final .regalar__pie .regalar__final{display:inline-flex}
+.regalar--final .regalar__pie{justify-content:flex-start}
+.regalar__sig{margin-left:auto}
+.btn--ok{background:var(--mal-ok)!important;border-color:var(--mal-ok)!important;color:#fff!important}
+.panadera{margin:0}
