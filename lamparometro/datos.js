@@ -752,8 +752,87 @@ const TESTS = {
         { t: '«Huelo a limpio, de lejos»', p: { detergente: 2 }, q: 'De cerca, ya veremos.' }
       ]}
     ]
+  },
+  titulares: {
+    titulo: '¿Noticia real o EL MERCIO?',
+    corto: 'Real o EL MERCIO',
+    kicker: 'Test 6 · Contra reloj',
+    bajada: 'Te mostramos un titular. ¿Pasó de verdad o lo inventamos nosotros? En este país, cuesta.',
+    meta: '10 titulares · contra reloj',
+    pie: '¿Distingues la realidad de EL MERCIO?',
+    color: '#1d1d1f', tinta: '#fff', icono: 'periodico',
+    tipo: 'quiz', ronda: 10, tiempo: 12000, nuevo: true
   }
 };
+
+
+/* ══════════ ¿NOTICIA REAL O EL MERCIO? ══════════
+   Los reales son noticias que pasaron, resumidas por la redacción, con su
+   fuente: se verificaron una por una. Los falsos son de EL MERCIO. y no
+   nombran a ninguna persona real, para que un pantallazo suelto no pase por
+   noticia. */
+const FALSOS = [
+  { t: 'Municipio inaugura por tercera vez el mismo puente y promete una cuarta', q: 'La placa ya no cabe: van a poner otra placa.' },
+  { t: 'Asamblea aprueba una ley que nadie alcanzó a leer, ni quien la escribió', q: 'El artículo 3, dicen, se explica solo.' },
+  { t: 'Estudio revela que el 100 % de los encuestados respondió la encuesta', q: 'El margen de error es cero, y eso asusta.' },
+  { t: 'La fanesca traía trece granos y la Corte pidió tiempo para volver a contar', q: 'Doce granos, una crisis constitucional.' },
+  { t: 'Ministerio crea una comisión para estudiar por qué hay tantas comisiones', q: 'La comisión ya pidió una subcomisión.' },
+  { t: 'Quiteño sale sin chompa y declara estado de excepción climático en su casa', q: 'Granizó a las cuatro, como siempre.' },
+  { t: 'Bus urbano se detiene en la parada y los pasajeros piden explicaciones', q: 'El chofer dijo que fue sin querer.' },
+  { t: 'Encuesta: nueve de cada diez ecuatorianos dicen «ya mismo» sin especificar cuándo', q: 'El décimo dijo «ahorita».' },
+  { t: 'Candidato promete un bono para quienes ya cobran el bono', q: 'Y otro bono para los que cobren ese.' },
+  { t: 'Cuy gana la elección de la directiva barrial por unanimidad', q: 'Su primera medida: más alfalfa.' },
+  { t: 'Lobo marino se niega a desocupar una banca del malecón y pide abogado', q: 'El abogado también es lobo marino.' },
+  { t: 'Concejo declara patrimonio a un bache que ya cumplió quince años', q: 'Tiene placa, guía turística y fiesta de cumpleaños.' },
+  { t: 'Funcionario pide licencia para recuperarse de su licencia anterior', q: 'Descansar cansa, dijo el sindicato.' },
+  { t: 'Suspenden por apagón la reunión sobre cómo evitar los apagones', q: 'La próxima será con velas, por si acaso.' },
+  { t: 'Instituto confirma que nadie lee los términos y condiciones, ni el propio instituto', q: 'El estudio tenía términos y condiciones.' },
+  { t: 'Asambleísta pide un minuto de silencio y la sesión lleva tres días callada', q: 'Es la sesión más productiva del periodo.' },
+  { t: 'Pico y placa se extiende a las bicicletas y a los peatones de cédula par', q: 'Los impares caminan los martes.' },
+  { t: 'Volcán emite un comunicado: «Solo estoy botando un poco de vapor»', q: 'Pidió que no le hagan memes.' },
+  { t: 'Inauguran una oficina para las quejas sobre la oficina de quejas', q: 'Atiende de 10:00 a 10:15.' },
+  { t: 'Declaran al encebollado medicamento esencial del sistema de salud', q: 'Receta: uno cada domingo, con chifle.' },
+  { t: 'Ecuatoriano hace seis horas de fila y descubre que era la fila para otra fila', q: 'Le dieron un turno para la fila correcta.' },
+  { t: 'Proponen que el feriado de Carnaval dure hasta que se seque la ropa', q: 'En Quito, eso es hasta Semana Santa.' },
+  { t: 'Cantón crea su propio huso horario para llegar puntual a las reuniones', q: 'Ahora llegan tarde, pero con la hora oficial.' },
+  { t: 'Semáforo de Guayaquil cumple diez años en amarillo y lo condecoran', q: 'Nadie le hizo caso, pero nunca falló.' },
+  { t: 'Partido político se disuelve tras una pelea por el color del logo', q: 'Iban a votar, pero no se pusieron de acuerdo en el color de la papeleta.' },
+  { t: 'Gimnasio municipal abre a las cinco de la mañana y nadie llega hasta el lunes', q: 'El lunes, como todo buen propósito.' },
+  { t: 'Hallan en una oficina pública un trámite iniciado en sucres que sigue en curso', q: 'Le falta una copia a color.' },
+  { t: 'Ministerio lanza la campaña «Ecuador: visítelo antes del próximo feriado puente»', q: 'El puente, por supuesto, sigue sin inaugurar.' },
+  { t: 'Tienda de barrio deja de fiar y el barrio convoca a paro', q: 'La cuenta del cuaderno llegaba a 1998.' },
+  { t: 'El chulla quiteño pide reconocimiento como patrimonio, con terno y todo', q: 'El terno también pidió reconocimiento.' }
+];
+const REALES = [
+  {"t": "Ecuador exige a Assange cuidar a su gato y limpiar el baño para seguir en la embajada", "dato": "En octubre de 2018 un protocolo del Gobierno obligó a Assange a encargarse de la comida y el aseo de su gato y a mantener limpios los espacios que usaba en la embajada en Londres.", "fuente": "El Comercio", "url": "https://www.elcomercio.com/app_public.php/actualidad/polemica-gato-assange-embajada-protocolo.html", "fecha": "2018"},
+  {"t": "El Gobierno retira la estatua de Néstor Kirchner de la sede de Unasur y la guarda en bodega", "dato": "Tras la salida de Ecuador de Unasur, la estatua de Kirchner fue retirada en septiembre de 2019 y pasó un año embodegada en Quito antes de volver a Argentina.", "fuente": "El Comercio", "url": "https://www.elcomercio.com/actualidad/estatua-kirchner-unasur-buenos-aires.html", "fecha": "2019"},
+  {"t": "Simpatizantes hacen fila para llevarse un Daniel Noboa de cartón en tamaño real", "dato": "En la campaña de 2023 las figuras de cartón de Noboa se volvieron virales: cientos hicieron fila en Guayaquil para llevarse una.", "fuente": "Primicias", "url": "https://www.primicias.ec/noticias/elecciones-presidenciales-2023/elecciones-ecuador-noboa-quaker-muneco-carton", "fecha": "2023"},
+  {"t": "Hinchas de la Tri corean «¡queremos cerveza!» en el partido inaugural del Mundial de Qatar", "dato": "El 20 de noviembre de 2022, en el Ecuador-Qatar inaugural, la hinchada ecuatoriana protestó cantando por la prohibición de vender cerveza en los estadios.", "fuente": "El Comercio", "url": "https://www.elcomercio.com/deportes/mundial-qatar/hinchas-ecuador-qatar-muncial-cerveza/", "fecha": "2022"},
+  {"t": "La Supercom ordena a un caricaturista «rectificar» una caricatura", "dato": "En 2014 la Supercom multó a El Universo con el 2 % de su facturación trimestral y ordenó al caricaturista Bonil corregir en 72 horas una caricatura de diciembre de 2013.", "fuente": "El Universo", "url": "https://www.eluniverso.com/noticias/2014/02/01/nota/2116886/supercom-sanciono-universo-bonil/", "fecha": "2014"},
+  {"t": "La tortuga Diego vuelve a su isla tras tener unas 800 crías y salvar a su especie", "dato": "En junio de 2020 Diego, tortuga gigante centenaria, fue devuelta a la isla Española tras décadas en un programa de cría en el que engendró unas 800 crías.", "fuente": "Primicias", "url": "https://www.primicias.ec/noticias/tecnologia/diego-tortuga-inseminadora-galapagos-vuelve-casa/", "fecha": "2020"},
+  {"t": "Hallan en Galápagos una tortuga de una especie que se creía extinta hace más de un siglo", "dato": "En 2019 se halló en la isla Fernandina a «Fernanda», de una especie que se daba por extinta; un análisis genético lo confirmó después.", "fuente": "El Universo", "url": "https://www.eluniverso.com/noticias/2019/02/19/nota/7197515/hallan-galapagos-especie-tortuga-extinta-hace-mas-siglo/", "fecha": "2019"},
+  {"t": "El presidente dice que pudo mandar a su vicepresidenta a la Antártida, pero la mandó a Israel", "dato": "En enero de 2024 Daniel Noboa defendió haber nombrado a Verónica Abad «embajadora de paz» en Israel: dijo que tenía 500 opciones, entre ellas la estación de la Antártida.", "fuente": "Primicias", "url": "https://www.primicias.ec/noticias/politica/daniel-noboa-funciones-veronica-abad-israel-antartida/", "fecha": "2024"},
+  {"t": "Ecuador paga un anuncio en el Super Bowl para promocionar su turismo", "dato": "En 2015 Ecuador emitió el comercial «All you need is Ecuador» durante el Super Bowl; el espacio de 30 segundos costó unos USD 3,8 millones.", "fuente": "Expreso", "url": "https://www.expreso.ec/deportes/cuesta-comercial-super-bowl-esto-pago-ecuador-2015-229910", "fecha": "2015"},
+  {"t": "El presidente mete la mano en una piscina de crudo para lanzar una campaña contra Chevron", "dato": "En septiembre de 2013, en un pozo de Sucumbíos, Rafael Correa hundió la mano en sedimentos petroleros y la mostró manchada para lanzar «La mano sucia de Chevron».", "fuente": "Expreso", "url": "https://www.expreso.ec/actualidad/lsquo-mano-sucia-rsquo-complica-ecuador-18699.html", "fecha": "2013"},
+  {"t": "El Gobierno suspende la jornada laboral en todo el país por dos días por los cortes de luz", "dato": "Por la crisis energética, un decreto suspendió el trabajo público y privado el 18 y 19 de abril de 2024; las horas debían recuperarse después.", "fuente": "Primicias", "url": "https://www.primicias.ec/noticias/economia/suspension-gobierno-trabajo-ecuador-noboa-abril/", "fecha": "2024"},
+  {"t": "El Metro de Quito arranca después de diez años de obra y varios alcaldes", "dato": "La obra empezó en 2013 y se planificó para unos cuatro años; los trenes se probaban desde 2018 y la operación comercial arrancó el 1 de diciembre de 2023.", "fuente": "Primicias", "url": "https://www.primicias.ec/noticias/quito/metro-inauguracion-mapa-cronologia-estaciones/", "fecha": "2023"},
+  {"t": "Aeropuerto de USD 43,6 millones en Tena atiende a 1.530 pasajeros en todo un año", "dato": "El aeropuerto Jumandy de Tena movió 1.530 pasajeros en 2016, unos cuatro al día, después de quedarse sin vuelos comerciales en 2015.", "fuente": "El Comercio", "url": "https://www.elcomercio.com/actualidad/ecuador/aeropuerto-jumandy-tena-cancelacion-vuelos/", "fecha": "2017"},
+  {"t": "Ecuador recibe su mayor hidroeléctrica con miles de fisuras en sus equipos", "dato": "En abril de 2026 el Gobierno firmó la recepción definitiva de Coca Codo Sinclair pese a las fisuras de sus distribuidores, que la prensa cifra en más de 17.000.", "fuente": "Primicias", "url": "https://www.primicias.ec/economia/gobierno-noboa-recepcion-hidroelectrica-coca-codo-sinclair-fallas-china-sinohydro-120687/", "fecha": "2026"},
+  {"t": "Álvaro Noboa se lanza a la presidencia por quinta vez y promete seguir hasta llegar", "dato": "En 2012, al anunciar su quinta candidatura, Álvaro Noboa dijo que seguiría buscando la presidencia hasta conseguirla. Perdió también esa elección.", "fuente": "El Universo", "url": "https://www.eluniverso.com/2012/09/23/1/1355/catorce-anos-carrera-llegar-hasta-carondelet.html", "fecha": "2012"},
+  {"t": "La UNESCO declara patrimonio el tejido del «sombrero de Panamá»… que es de Ecuador", "dato": "En diciembre de 2012 la UNESCO inscribió como patrimonio inmaterial el tejido tradicional del sombrero de paja toquilla ecuatoriano, conocido en el mundo como «Panama hat».", "fuente": "El Universo", "url": "https://www.eluniverso.com/2012/12/05/1/1447/panama-hat-ecuador-patrimonio-cultural-inmaterial.html/", "fecha": "2012"},
+  {"t": "Guayas logra el récord Guinness del encebollado más grande del mundo", "dato": "En noviembre de 2024 se preparó en una olla de 4,5 metros un encebollado de casi dos toneladas y unas 5.000 porciones, que Guinness certificó como récord.", "fuente": "El Universo", "url": "https://www.eluniverso.com/guayaquil/comunidad/guayas-consigue-el-record-guinnes-del-encebollado-mas-grande-del-mundo-nota/", "fecha": "2024"},
+  {"t": "Paute bate un récord Guinness con una cuchara de palo de 20 metros", "dato": "En 2019 Guinness certificó en Paute (Azuay) la cuchara de palo más grande del mundo: 20,06 metros de largo.", "fuente": "El Universo", "url": "https://www.eluniverso.com/noticias/2019/06/24/nota/7392186/ritos-paute-develo-cuchara-palo-gigante/", "fecha": "2019"},
+  {"t": "La Asamblea vota que el Chimborazo es el punto más cercano al Sol", "dato": "En febrero de 2020, con 98 votos, la Asamblea reconoció al Chimborazo como «el punto más cercano al sol» y creó un día nacional para el volcán.", "fuente": "El Universo", "url": "https://www.eluniverso.com/noticias/2020/02/11/nota/7735005/asamblea-reconocio-chimborazo-como-punto-mas-cercano-sol-montana/", "fecha": "2020"},
+  {"t": "La Asamblea declara el Día Nacional del Bizcocho, el Manjar y el Queso de Hoja", "dato": "En enero de 2023 el Pleno aprobó con 93 votos el 23 de julio como día de los productos típicos de Cayambe.", "fuente": "El Comercio", "url": "https://www.elcomercio.com/actualidad/politica/asamblea-julio-bizcocho-manjar-queso/", "fecha": "2023"},
+  {"t": "Con 70 votos, la Asamblea crea el Día Nacional del Gamer", "dato": "En agosto de 2024 el Pleno declaró el 29 de agosto Día Nacional del Gamer, de los Videojuegos y los Deportes Electrónicos.", "fuente": "El Universo", "url": "https://www.eluniverso.com/noticias/politica/con-70-votos-la-asamblea-declaro-el-29-de-agosto-como-el-dia-nacional-del-gamer-de-las-industrias-de-los-videojuegos-y-los-deportes-electronicos-nota/", "fecha": "2024"},
+  {"t": "Ecuador pide al mundo USD 3.600 millones por no sacar su petróleo, y no llegan", "dato": "La iniciativa Yasuní-ITT (2007) pedía USD 3.600 millones a cambio de dejar el crudo bajo tierra; en 2013 el Gobierno la dio por terminada por falta de aportes.", "fuente": "El Universo", "url": "https://www.eluniverso.com/noticias/2013/08/16/nota/1295016/gobierno-pone-fin-iniciativa-yasuni-itt-avala-su-explotacion/", "fecha": "2013"},
+  {"t": "Lobos marinos cruzan la calle por el paso cebra en Galápagos", "dato": "En febrero de 2021 el ECU 911 difundió imágenes de una pareja de lobos marinos cruzando una calzada por el paso cebra en la isla Isabela.", "fuente": "El Comercio", "url": "https://www.elcomercio.com/tendencias/ambiente/lobos-marinos-paso-cebra-galapagos/", "fecha": "2021"},
+  {"t": "Cuenca contrata a Guinness para certificar el mote pata más grande del mundo", "dato": "Para el Carnaval de 2026 se pagaron entre USD 23.000 y 26.450, según la fuente, por la certificación; se sirvieron unos 9.500 platos en la plaza de San Francisco.", "fuente": "Primicias", "url": "https://www.primicias.ec/sociedad/carnaval-cuenca-contratos-artistas-festivales-record-guinness-mote-pata-municipio-115655/", "fecha": "2026"},
+  {"t": "Ecuador pasa por tres gobiernos en menos de un día", "dato": "El 21 de enero de 2000 cayó Jamil Mahuad, gobernó unas horas una Junta de Salvación Nacional y finalmente asumió Gustavo Noboa.", "fuente": "El Comercio", "url": "https://www.elcomercio.com/actualidad/ecuador/jamil-mahuad-gobierno-caida-contexto/", "fecha": "2000"},
+  {"t": "El Municipio de Quito retira 552 metros cúbicos de granizo de sus calles", "dato": "Tras la granizada del 7 de octubre de 2026, con capas de hielo de hasta 35 centímetros, el Municipio retiró con volquetas 552 m³ de granizo; Teleamazonas habló de 530.", "fuente": "Primicias", "url": "https://www.primicias.ec/quito/retiro-granizo-hielo-lluvias-municipio-balance-trabajos-volquetas-134491/", "fecha": "2026"},
+  {"t": "Una ley crea la figura del «linchamiento mediático»", "dato": "La Ley de Comunicación de 2013 sancionaba el «linchamiento mediático»; la Academia Ecuatoriana de la Lengua dijo que el término era una metáfora.", "fuente": "El Universo", "url": "https://www.eluniverso.com/noticias/2013/08/06/nota/1254896/academia-lengua-uso-linchamiento-mediatico-ley-es-metaforico/", "fecha": "2013"},
+  {"t": "Aucas gana su primer título nacional 77 años después de fundado", "dato": "El 13 de noviembre de 2022 Aucas, fundado en 1945, venció a Barcelona y fue campeón ecuatoriano por primera vez en su historia.", "fuente": "Primicias", "url": "https://www.primicias.ec/noticias/jugada/aucas-barcelona-campeon-ligapro2022/", "fecha": "2022"}
+];
 
 /* Signos: el sol reparte puntos entre dos lámparas. El reparto es tan
    arbitrario como el de un horóscopo de verdad. */
@@ -767,5 +846,5 @@ const SIGNOS = [
   ['Escorpio', 10, 23, { dnoboa: 2, correa: 1 }], ['Sagitario', 11, 22, { alvaro: 2, bucaram: 1 }]
 ];
 
-window.LAMP = { PJ, PROD, PROV, RASGOS, ESCALA, SALTO, QUIPS, TESTS, SIGNOS };
+window.LAMP = { PJ, PROD, PROV, RASGOS, ESCALA, SALTO, QUIPS, TESTS, SIGNOS, FALSOS, REALES };
 })();

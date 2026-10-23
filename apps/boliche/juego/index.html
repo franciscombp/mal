@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="es" data-marca="juegos">
+<html lang="es" data-marca="boliche">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>El boliche · Finados en la Sierra</title>
 <meta name="description" content="El boliche de Guano y Píllaro, en 3D: la gente grita pares o nones, la banca decide, tú pones tu moneda o pasas, y ocho canicas ruedan por la tina hasta caer en los dos agujeros. Si en cada uno quedan pares, pares; si quedan impares, nones.">
-<meta name="theme-color" content="#1d1822">
+<meta name="theme-color" content="#1B110D">
 <link rel="canonical" href="https://franciscombp.github.io/mal/apps/boliche/juego/">
 <link rel="icon" href="../../../img/icono-boliche.svg" type="image/svg+xml">
-<link rel="preload" href="../../../ds/fonts/syne.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../ds/fonts/montserrat.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../ds/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="modulepreload" href="three.module.min.js">
 <link rel="stylesheet" href="../../../ds/mal/mal.css?v=1.0.17">
@@ -25,6 +25,7 @@ body{margin:0;overflow:hidden;overscroll-behavior:none;-webkit-user-select:none;
 .mesa .kicker{margin:0}
 .mesa p{margin:0}
 .mesa__linea{display:flex;align-items:baseline;justify-content:space-between;gap:var(--mal-e3)}
+.mesa__linea > *{white-space:nowrap}
 .mesa__dice{font-family:var(--mal-display);font-weight:800;font-size:clamp(1.25rem, 1rem + 1.4vw, 1.6rem);
   line-height:1.1;letter-spacing:-.02em}
 .mesa__suma{font-family:var(--mal-display);font-weight:800;font-size:clamp(1.6rem, 1.1rem + 2.4vw, 2.2rem);
@@ -39,14 +40,19 @@ body{margin:0;overflow:hidden;overscroll-behavior:none;-webkit-user-select:none;
 
 /* la mano: las monedas que puedes poner en la mesa */
 .mano{display:flex;align-items:center;gap:var(--mal-e2);min-height:56px}
-.ficha{width:48px;height:48px;border-radius:50%;flex:none;cursor:grab;touch-action:none;
+.ficha{width:52px;height:52px;border-radius:50%;flex:none;cursor:grab;touch-action:none;
   border:2px solid #8f8a80;font:700 .7rem/1 var(--mal-mono);color:#4a463f;
   background:radial-gradient(circle at 35% 30%, #fbfaf6, #d9d5cb 55%, #a9a497);
   box-shadow:inset 0 0 0 4px rgba(255,255,255,.35), 0 3px 0 #7d786d}
 .ficha:active{cursor:grabbing}
 .ficha[disabled]{opacity:.25;cursor:not-allowed}
 .ficha--fantasma{position:fixed;z-index:60;pointer-events:none;transform:translate(-50%, -50%) scale(1.12)}
-.mano__total{margin-left:auto;text-align:right}
+.mano__recoger{margin-left:auto;text-align:right;display:grid;justify-items:end;gap:2px;min-width:0}
+.mano__recoger .mesa__suma{font-size:1.5rem}
+.mano__recoger .btn{min-height:32px;padding:.2rem .5rem}
+#b-recoger[aria-hidden=true]{visibility:hidden}
+@media (max-width:380px){.ficha{width:46px;height:46px}.mano{gap:6px}}
+.ficha.puesta{visibility:hidden}
 
 /* lo que grita la gente: un globo encima de cada cabeza */
 .globos{position:absolute;inset:0;pointer-events:none;z-index:15}
@@ -73,18 +79,116 @@ body{margin:0;overflow:hidden;overscroll-behavior:none;-webkit-user-select:none;
 .reglas .icono{margin-top:.15em;color:var(--mal-primary)}
 .lugares{display:grid;grid-template-columns:1fr 1fr;gap:var(--mal-e2)}
 .lugares .chip{justify-content:center}
+/* En el teléfono todo se hace con el dedo: sin zoom por doble toque, sin
+   el menú de copiar al dejar el dedo quieto y sin el destello gris. */
+button,.ficha{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+body{-webkit-touch-callout:none}
+
+/* La portada: lo de leer se desplaza y el botón de jugar queda siempre
+   a la vista, abajo. */
+.portada{display:flex;flex-direction:column;padding:0;overflow:hidden;gap:0;width:min(100%, 440px)}
+.portada h1{white-space:nowrap}
+.portada__cuerpo{overflow:auto;padding:var(--mal-e5) var(--mal-e5) var(--mal-e3);display:flex;flex-direction:column;gap:var(--mal-e4)}
+.portada__pie{padding:var(--mal-e3) var(--mal-e5) var(--mal-e5);display:grid;gap:var(--mal-e2);
+  border-top:1px solid rgba(255,255,255,.12)}
+
+/* Pantallas chicas: menos margen alrededor y paneles a todo lo ancho. */
+@media (max-width:480px){
+  .hud-juego{padding:calc(env(safe-area-inset-top, 0px) + 12px) calc(env(safe-area-inset-right, 0px) + 12px)
+    calc(env(safe-area-inset-bottom, 0px) + 12px) calc(env(safe-area-inset-left, 0px) + 12px)}
+  .mesa{width:100%;padding:var(--mal-e3) var(--mal-e4) var(--mal-e4);gap:var(--mal-e3)}
+  .capa{padding:12px}
+  .portada__cuerpo{padding:var(--mal-e4) var(--mal-e4) var(--mal-e3);gap:var(--mal-e3)}
+  .portada__pie{padding:var(--mal-e3) var(--mal-e4) var(--mal-e4)}
+  .portada h1{font-size:2.4rem}
+  .mesa__dice{font-size:1.2rem}
+  .lugares .chip{min-height:44px;padding-inline:.5rem}
+}
+/* Acostado: la mesa va a un lado y la tina se corre al espacio libre. */
+@media (orientation:landscape) and (max-height:520px){
+  .mesa{width:min(46vw, 360px);max-height:calc(100dvh - 92px);overflow:auto;padding:var(--mal-e3) var(--mal-e4);gap:var(--mal-e2)}
+  .mesa__dice{font-size:1.15rem}
+  .boton-juego{min-height:52px}
+  .capa__panel{width:min(100%, 640px)}
+  .portada h1{font-size:2.2rem}
+}
+
+/* El sello del final: grande, torcido, como un timbre. */
+.sello{position:absolute;left:50%;top:24%;z-index:25;pointer-events:none;text-align:center;
+  font-family:var(--mal-display);font-weight:800;font-size:clamp(2.6rem, 12vw, 5.5rem);line-height:.9;
+  color:#fff;padding:.18em .4em .22em;border:5px solid #fff;border-radius:18px;
+  box-shadow:0 8px 0 rgba(0,0,0,.25), 0 18px 40px rgba(0,0,0,.35);
+  transform:translate(-50%, -50%) rotate(-7deg) scale(0);opacity:0}
+.sello small{display:block;font-family:var(--mal-mono);font-size:.28em;letter-spacing:.12em;margin-top:.25em}
+.sello--gana{background:#2f8f3a}.sello--pierde{background:#c0262d}.sello--pasa{background:#5a4d66}
+.sello.ve{animation:sello 1.9s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes sello{0%{opacity:0;transform:translate(-50%, -50%) rotate(-18deg) scale(2.2)}
+  14%{opacity:1;transform:translate(-50%, -50%) rotate(-7deg) scale(1)}
+  80%{opacity:1;transform:translate(-50%, -50%) rotate(-7deg) scale(1)}
+  100%{opacity:0;transform:translate(-50%, -62%) rotate(-7deg) scale(.9)}}
+/* lo que entra o sale de tu plata, flotando junto al marcador */
+.delta{position:absolute;right:0;top:100%;font:800 1.2rem/1 var(--mal-mono);pointer-events:none;
+  animation:delta 1.6s ease-out both}
+.delta--mas{color:#7ad36a}.delta--menos{color:#ff8a80}
+@keyframes delta{from{opacity:0;transform:translateY(8px)}20%{opacity:1}to{opacity:0;transform:translateY(-26px)}}
+.hud-juego__cifras{position:relative}
+/* cuando falta una canica: la pantalla late */
+.escena::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:14;opacity:0;transition:opacity .4s;
+  box-shadow:inset 0 0 120px 24px rgba(224,27,106,.45)}
+.escena.tension::after{opacity:1;animation:latido .8s ease-in-out infinite}
+@keyframes latido{50%{opacity:.45}}
+/* la pista para lanzar deslizando: un dedo que pasa por el borde */
+.pista{position:absolute;z-index:16;width:150px;height:60px;transform:translate(-50%, -50%);pointer-events:none}
+.pista[hidden]{display:none}
+.pista i{position:absolute;left:12px;top:22px;width:30px;height:30px;border-radius:50%;
+  background:rgba(255,255,255,.92);box-shadow:0 0 0 7px rgba(255,201,60,.5);animation:desliza 1.5s ease-in-out infinite}
+.pista b{position:absolute;left:0;right:0;bottom:-18px;text-align:center;font:700 .78rem/1 var(--mal-texto);color:#fff;
+  text-shadow:0 1px 3px rgba(0,0,0,.7)}
+@keyframes desliza{0%{opacity:0;transform:translate(0, 0)}15%{opacity:1}70%{opacity:1;transform:translate(96px, -18px)}100%{opacity:0;transform:translate(104px, -20px)}}
+@media (prefers-reduced-motion:reduce){.sello.ve,.delta,.escena.tension::after,.pista i{animation:none}.sello.ve{opacity:1;transform:translate(-50%, -50%) rotate(-7deg)}}
+/* La explicación, paso a paso */
+.expls{display:grid}
+.expl{display:grid;gap:var(--mal-e3);justify-items:center;text-align:center;animation:expl .3s var(--mal-ease, ease)}
+.expl[hidden]{display:none}
+.expl__dibujo{width:100%;max-width:300px;height:auto;display:block}
+.expl__t{font-size:1.35rem;margin:0;display:flex;align-items:center;gap:.5rem;justify-content:center}
+.expl__n{display:inline-grid;place-items:center;width:1.7rem;height:1.7rem;border-radius:50%;font-size:.95rem;
+  background:var(--mal-primary);color:var(--mal-on-primary);flex:none}
+.expl__x{margin:0;max-width:34ch;font-size:var(--mal-t-cuerpo);line-height:1.45;color:var(--mal-on-surface-2)}
+.expl .lugares{width:100%}
+.puntos{display:flex;justify-content:center;gap:8px}
+.puntos i{width:9px;height:9px;border-radius:50%;background:var(--mal-outline-2);transition:width .2s, background .2s}
+.puntos i.ve{width:24px;border-radius:5px;background:var(--mal-primary)}
+.portada__pie .opciones > .btn-ghost{flex:0 0 auto}
+@keyframes expl{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.expl{animation:none}}
+@media (orientation:landscape) and (max-height:520px){
+  .expl{grid-template-columns:minmax(0, 1fr) minmax(0, 1fr);text-align:left;justify-items:start;align-items:center;column-gap:var(--mal-e5)}
+  .expl__dibujo{grid-row:span 2;max-width:240px;max-height:150px}
+  /* acostado no sobra alto: el título se achica y el rótulo de arriba se va */
+  .portada .kicker{display:none}
+  .portada h1{font-size:1.5rem !important;text-shadow:2px 2px 0 #D7392B, 3px 3px 0 #24150F !important}
+  .portada__cuerpo{gap:var(--mal-e2) !important;padding-top:var(--mal-e3) !important}
+  .expl__x{font-size:.92rem}
+  .expl__t{justify-content:flex-start}
+  .expl:last-child{grid-template-columns:1fr}
+}
 .sin-3d{position:absolute;inset:auto 0 50% 0;text-align:center;padding:var(--mal-e5)}
 </style>
+<!-- el tema propio del juego: un fork del de juegos, ver boliche.css -->
+<link rel="stylesheet" href="boliche.css?v=1">
 </head>
-<body class="fondo--aurora">
+<body>
 <main class="escena">
   <canvas id="tina" aria-label="La tina del boliche: una hondonada con dos agujeros grandes juntos en el fondo —uno redondo y una cajita cuadrada— y un tope recto un poco más arriba, con la gente alrededor" role="img"></canvas>
   <div class="globos" id="globos" aria-hidden="true"></div>
+  <div class="sello" id="sello" aria-hidden="true"></div>
+  <div class="pista" id="pista" hidden aria-hidden="true"><i></i><b>Desliza de costado</b></div>
 
   <div class="hud-juego">
     <div class="hud-juego__arriba">
       <div class="fila">
-        <button class="btn btn--icono" id="b-reglas" type="button" aria-label="Reglas">
+        <button class="btn btn--icono" id="b-reglas" type="button" aria-label="Cómo se juega">
           <svg class="icono" aria-hidden="true"><use href="#i-menu"/></svg></button>
         <button class="btn btn--icono" id="b-sonido" type="button" aria-label="Sonido" aria-pressed="true">
           <svg class="icono" aria-hidden="true"><use href="#i-altavoz"/></svg></button>
@@ -114,23 +218,26 @@ body{margin:0;overflow:hidden;overscroll-behavior:none;-webkit-user-select:none;
 
       <!-- 2 · ¿Va a jugar o no? -->
       <section class="vidrio pila mesa" id="m-apuesta" hidden aria-label="Tu apuesta">
-        <p class="mesa__dice" id="apuesta-dice">Vamos por pares. ¿Va a jugar o no?</p>
+        <p class="kicker" id="apuesta-vamos">Vamos por pares</p>
+        <p class="mesa__dice" id="apuesta-dice">«¿Va a jugar o no?»</p>
         <p class="caption" id="apuesta-nota"></p>
+        <!-- nada aquí cambia de tamaño al poner monedas: si el panel creciera,
+             el botón «Juego» quedaría bajo el dedo y se apostaría sin querer -->
         <div class="mano" id="mano" role="group" aria-label="Tus monedas: arrástralas a la mesa o tócalas">
           <button class="ficha" type="button" aria-label="Poner 25 centavos">25¢</button>
           <button class="ficha" type="button" aria-label="Poner 25 centavos">25¢</button>
           <button class="ficha" type="button" aria-label="Poner 25 centavos">25¢</button>
           <button class="ficha" type="button" aria-label="Poner 25 centavos">25¢</button>
-          <div class="mano__total">
+          <div class="mano__recoger">
             <p class="micro">En la mesa</p>
             <p class="mesa__suma" id="en-mesa">$0,00</p>
+            <button class="btn btn-ghost btn--sm" id="b-recoger" type="button" aria-hidden="true" tabindex="-1">Recoger</button>
           </div>
         </div>
         <div class="opciones">
           <button class="btn btn--rojo boton-juego" id="b-juego" type="button" disabled>Juego</button>
           <button class="btn boton-juego" id="b-paso" type="button">Paso</button>
         </div>
-        <button class="btn btn-ghost btn--sm" id="b-recoger" type="button" hidden>Recoger mis monedas</button>
       </section>
 
       <!-- 3 · Lanzas tú (cuando la banca te da la mano) -->
@@ -163,32 +270,55 @@ body{margin:0;overflow:hidden;overscroll-behavior:none;-webkit-user-select:none;
   </div>
 
   <!-- Portada y reglas -->
+  <!-- La pantalla inicial: cómo se juega, paso a paso, y al final dónde -->
   <div class="capa" id="c-inicio">
-    <div class="vidrio pila capa__panel">
-      <p class="kicker">Finados en la Sierra</p>
-      <h1>El boliche</h1>
-      <ul class="reglas">
-        <li><svg class="icono icono--s" aria-hidden="true"><use href="#i-altavoz"/></svg>
-          <span><b>La gente grita pares o nones</b> y la banca va por lo que pide la mayoría. Grita tú también: se puede convencer.</span></li>
-        <li><svg class="icono icono--s" aria-hidden="true"><use href="#i-billete"/></svg>
-          <span>La banca pregunta: <b>¿va a jugar o no?</b> Pon tus monedas en la mesa o pasa, aunque tú quisieras lo otro.</span></li>
-        <li><svg class="icono icono--s" aria-hidden="true"><use href="#i-punto"/></svg>
-          <span>Ocho canicas ruedan por la tina y caen en los dos agujeros del fondo. <b>Se cuentan:</b> 4 y 4 o 2 y 6 es pares; 3 y 5 o 1 y 7 es nones. La última decide.</span></li>
-        <li><svg class="icono icono--s" aria-hidden="true"><use href="#i-estrella"/></svg>
-          <span>Si sale lo de la gente, <b>la banca paga el doble</b> a todos. Si no, barre la mesa. La banca tiene buena mano, pero también pierde.</span></li>
-      </ul>
-      <div class="pila pila--estrecha">
-        <p class="micro">¿Dónde se juega?</p>
-        <div class="lugares" role="group" aria-label="Dónde se juega">
-          <button class="chip" type="button" data-escenario="comunidad" aria-pressed="true">En la comunidad</button>
-          <button class="chip" type="button" data-escenario="patio" aria-pressed="false">En el patio</button>
-          <button class="chip" type="button" data-escenario="plaza" aria-pressed="false">En la plaza</button>
-          <button class="chip" type="button" data-escenario="tienda" aria-pressed="false">En la tienda</button>
+    <div class="vidrio capa__panel portada" role="dialog" aria-labelledby="titulo-juego">
+      <div class="portada__cuerpo">
+        <p class="kicker">Finados en la Sierra</p>
+        <h1 id="titulo-juego">El boliche</h1>
+        <div class="expls" id="expls" aria-live="polite">
+          <section class="expl" data-paso="0" aria-label="Paso 1 de 5">
+            <svg class="expl__dibujo" viewBox="0 0 220 120" aria-hidden="true"><circle cx="40" cy="62" r="13" fill="#B97D55" stroke="#24150F" stroke-width="2"/><circle cx="36" cy="60" r="1.6" fill="#24150F"/><circle cx="44" cy="60" r="1.6" fill="#24150F"/><ellipse cx="40" cy="67" rx="3.5" ry="3" fill="#24150F"/><path d="M23 92 Q40 70 57 92Z" fill="#9B1D2A" stroke="#24150F" stroke-width="2"/><circle cx="110" cy="52" r="13" fill="#B97D55" stroke="#24150F" stroke-width="2"/><circle cx="106" cy="50" r="1.6" fill="#24150F"/><circle cx="114" cy="50" r="1.6" fill="#24150F"/><ellipse cx="110" cy="57" rx="3.5" ry="3" fill="#24150F"/><path d="M93 82 Q110 60 127 82Z" fill="#5A1A1A" stroke="#24150F" stroke-width="2"/><ellipse cx="110" cy="42" rx="17" ry="3.5" fill="#24150F"/><rect x="102" y="31" width="16" height="11" rx="2" fill="#24150F"/><circle cx="180" cy="62" r="13" fill="#B97D55" stroke="#24150F" stroke-width="2"/><circle cx="176" cy="60" r="1.6" fill="#24150F"/><circle cx="184" cy="60" r="1.6" fill="#24150F"/><ellipse cx="180" cy="67" rx="3.5" ry="3" fill="#24150F"/><path d="M163 92 Q180 70 197 92Z" fill="#2F7D4A" stroke="#24150F" stroke-width="2"/><rect x="17.0" y="19" width="46" height="20" rx="10" fill="#5FB4E6" stroke="#24150F" stroke-width="2"/><path d="M36 38 L40 45 L44 38" fill="#5FB4E6" stroke="#24150F" stroke-width="2"/><text x="40" y="33.5" text-anchor="middle" font-family="Montserrat,Arial Black,sans-serif" font-weight="900" font-size="9" fill="#24150F">¡PARES!</text><rect x="157.0" y="19" width="46" height="20" rx="10" fill="#7E3592" stroke="#24150F" stroke-width="2"/><path d="M176 38 L180 45 L184 38" fill="#7E3592" stroke="#24150F" stroke-width="2"/><text x="180" y="33.5" text-anchor="middle" font-family="Montserrat,Arial Black,sans-serif" font-weight="900" font-size="9" fill="#F6EBD3">¡NONES!</text><rect x="68.0" y="3" width="84" height="20" rx="10" fill="#F2B33D" stroke="#24150F" stroke-width="2"/><path d="M106 22 L110 29 L114 22" fill="#F2B33D" stroke="#24150F" stroke-width="2"/><text x="110" y="17.5" text-anchor="middle" font-family="Montserrat,Arial Black,sans-serif" font-weight="900" font-size="9" fill="#24150F">¿PARES O NONES?</text><rect x="20" y="104" width="180" height="9" rx="4.5" fill="#7E3592" stroke="#24150F" stroke-width="2"/><rect x="20" y="104" width="108" height="9" rx="4.5" fill="#5FB4E6" stroke="#24150F" stroke-width="2"/></svg>
+            <h2 class="expl__t"><span class="expl__n">1</span> La gente grita</h2>
+            <p class="expl__x">Cada vecino grita <b>pares</b> o <b>nones</b>. Grita tú también para convencerlos: la banca va por lo que pida la mayoría.</p>
+          </section>
+          <section class="expl" data-paso="1" hidden aria-label="Paso 2 de 5">
+            <svg class="expl__dibujo" viewBox="0 0 220 120" aria-hidden="true"><circle cx="110" cy="40" r="13" fill="#B97D55" stroke="#24150F" stroke-width="2"/><circle cx="106" cy="38" r="1.6" fill="#24150F"/><circle cx="114" cy="38" r="1.6" fill="#24150F"/><ellipse cx="110" cy="45" rx="3.5" ry="3" fill="#24150F"/><path d="M93 70 Q110 48 127 70Z" fill="#5A1A1A" stroke="#24150F" stroke-width="2"/><ellipse cx="110" cy="30" rx="17" ry="3.5" fill="#24150F"/><rect x="102" y="19" width="16" height="11" rx="2" fill="#24150F"/><rect x="64.0" y="-1" width="92" height="20" rx="10" fill="#F2B33D" stroke="#24150F" stroke-width="2"/><path d="M106 18 L110 25 L114 18" fill="#F2B33D" stroke="#24150F" stroke-width="2"/><text x="110" y="13.5" text-anchor="middle" font-family="Montserrat,Arial Black,sans-serif" font-weight="900" font-size="9" fill="#24150F">¿VA A JUGAR O NO?</text><ellipse cx="60" cy="98" rx="16" ry="6" fill="#D9D5CB" stroke="#24150F" stroke-width="2"/><ellipse cx="60" cy="96" rx="16" ry="6" fill="#F4F1EA" stroke="#24150F" stroke-width="2"/><ellipse cx="60" cy="91" rx="16" ry="6" fill="#D9D5CB" stroke="#24150F" stroke-width="2"/><ellipse cx="60" cy="89" rx="16" ry="6" fill="#F4F1EA" stroke="#24150F" stroke-width="2"/><ellipse cx="60" cy="84" rx="16" ry="6" fill="#D9D5CB" stroke="#24150F" stroke-width="2"/><ellipse cx="60" cy="82" rx="16" ry="6" fill="#F4F1EA" stroke="#24150F" stroke-width="2"/><text x="60" y="117" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="900" font-size="9" fill="#F2B33D">$0,75</text><rect x="112" y="78" width="44" height="22" rx="8" fill="#F2B33D" stroke="#24150F" stroke-width="2"/><text x="134" y="93" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="900" font-size="9" fill="#24150F">JUEGO</text><rect x="162" y="78" width="44" height="22" rx="8" fill="#F6EBD3" stroke="#24150F" stroke-width="2"/><text x="184" y="93" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="900" font-size="9" fill="#24150F">PASO</text></svg>
+            <h2 class="expl__t"><span class="expl__n">2</span> ¿Va a jugar o no?</h2>
+            <p class="expl__x">Si tú querías lo otro, igual puedes entrar. <b>Pon tus monedas</b> en la mesa y di «Juego», o pasa esta vuelta.</p>
+          </section>
+          <section class="expl" data-paso="2" hidden aria-label="Paso 3 de 5">
+            <svg class="expl__dibujo" viewBox="0 0 220 120" aria-hidden="true"><ellipse cx="110" cy="62" rx="98" ry="52" fill="#B8B2A6" stroke="#24150F" stroke-width="2.5"/><ellipse cx="110" cy="64" rx="80" ry="40" fill="#9C968B"/><ellipse cx="110" cy="68" rx="52" ry="24" fill="#857F75"/><path d="M58 40 C 20 60, 60 104, 120 98 S 170 70, 128 66" fill="none" stroke="#F2B33D" stroke-width="2.5" stroke-dasharray="5 5"/><circle cx="99" cy="70" r="9" fill="#24150F" stroke="#C9C6BE" stroke-width="2.5"/><rect x="113" y="61" width="17" height="17" fill="#24150F" stroke="#A8763F" stroke-width="2.5"/><rect x="111" y="40" width="4" height="15" fill="#A4532E"/><circle cx="58" cy="40" r="7" fill="#5FB4E6" stroke="#24150F" stroke-width="1.5"/><circle cx="56" cy="37.5" r="2" fill="#fff" opacity=".85"/><circle cx="40" cy="62" r="7" fill="#F6EBD3" stroke="#24150F" stroke-width="1.5"/><circle cx="38" cy="59.5" r="2" fill="#fff" opacity=".85"/><circle cx="150" cy="92" r="7" fill="#5FB4E6" stroke="#24150F" stroke-width="1.5"/><circle cx="148" cy="89.5" r="2" fill="#fff" opacity=".85"/><circle cx="172" cy="66" r="7" fill="#F6EBD3" stroke="#24150F" stroke-width="1.5"/><circle cx="170" cy="63.5" r="2" fill="#fff" opacity=".85"/><circle cx="80" cy="98" r="7" fill="#F6EBD3" stroke="#24150F" stroke-width="1.5"/><circle cx="78" cy="95.5" r="2" fill="#fff" opacity=".85"/><circle cx="128" cy="66" r="7" fill="#5FB4E6" stroke="#24150F" stroke-width="1.5"/><circle cx="126" cy="63.5" r="2" fill="#fff" opacity=".85"/></svg>
+            <h2 class="expl__t"><span class="expl__n">3</span> Ruedan las ocho</h2>
+            <p class="expl__x">La banca suelta <b>ocho canicas</b> en la tina. Dan vueltas, chocan con el tope y caen en los dos agujeros del fondo.</p>
+          </section>
+          <section class="expl" data-paso="3" hidden aria-label="Paso 4 de 5">
+            <svg class="expl__dibujo" viewBox="0 0 220 120" aria-hidden="true"><circle cx="32" cy="58" r="26" fill="#24150F" stroke="#C9C6BE" stroke-width="3"/><circle cx="24" cy="50" r="6.5" fill="#F6EBD3" stroke="#24150F" stroke-width="1.5"/><circle cx="22" cy="47.5" r="2" fill="#fff" opacity=".85"/><circle cx="40" cy="50" r="6.5" fill="#5FB4E6" stroke="#24150F" stroke-width="1.5"/><circle cx="38" cy="47.5" r="2" fill="#fff" opacity=".85"/><circle cx="24" cy="66" r="6.5" fill="#F6EBD3" stroke="#24150F" stroke-width="1.5"/><circle cx="22" cy="63.5" r="2" fill="#fff" opacity=".85"/><circle cx="40" cy="66" r="6.5" fill="#5FB4E6" stroke="#24150F" stroke-width="1.5"/><circle cx="38" cy="63.5" r="2" fill="#fff" opacity=".85"/><rect x="60" y="34" width="48" height="48" fill="#24150F" stroke="#A8763F" stroke-width="3"/><circle cx="76" cy="50" r="6.5" fill="#F6EBD3" stroke="#24150F" stroke-width="1.5"/><circle cx="74" cy="47.5" r="2" fill="#fff" opacity=".85"/><circle cx="92" cy="50" r="6.5" fill="#5FB4E6" stroke="#24150F" stroke-width="1.5"/><circle cx="90" cy="47.5" r="2" fill="#fff" opacity=".85"/><circle cx="76" cy="66" r="6.5" fill="#F6EBD3" stroke="#24150F" stroke-width="1.5"/><circle cx="74" cy="63.5" r="2" fill="#fff" opacity=".85"/><circle cx="92" cy="66" r="6.5" fill="#5FB4E6" stroke="#24150F" stroke-width="1.5"/><circle cx="90" cy="63.5" r="2" fill="#fff" opacity=".85"/><text x="58" y="108" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="900" font-size="12" fill="#5FB4E6">4 Y 4 · PARES</text><line x1="110" y1="20" x2="110" y2="100" stroke="#F2B33D" stroke-width="2" stroke-dasharray="3 4"/><circle cx="136" cy="58" r="26" fill="#24150F" stroke="#C9C6BE" stroke-width="3"/><circle cx="128" cy="50" r="6.5" fill="#F6EBD3" stroke="#24150F" stroke-width="1.5"/><circle cx="126" cy="47.5" r="2" fill="#fff" opacity=".85"/><circle cx="144" cy="50" r="6.5" fill="#5FB4E6" stroke="#24150F" stroke-width="1.5"/><circle cx="142" cy="47.5" r="2" fill="#fff" opacity=".85"/><circle cx="128" cy="66" r="6.5" fill="#F6EBD3" stroke="#24150F" stroke-width="1.5"/><circle cx="126" cy="63.5" r="2" fill="#fff" opacity=".85"/><rect x="164" y="34" width="48" height="48" fill="#24150F" stroke="#A8763F" stroke-width="3"/><circle cx="180" cy="50" r="6.5" fill="#F6EBD3" stroke="#24150F" stroke-width="1.5"/><circle cx="178" cy="47.5" r="2" fill="#fff" opacity=".85"/><circle cx="196" cy="50" r="6.5" fill="#5FB4E6" stroke="#24150F" stroke-width="1.5"/><circle cx="194" cy="47.5" r="2" fill="#fff" opacity=".85"/><circle cx="180" cy="66" r="6.5" fill="#F6EBD3" stroke="#24150F" stroke-width="1.5"/><circle cx="178" cy="63.5" r="2" fill="#fff" opacity=".85"/><circle cx="196" cy="66" r="6.5" fill="#5FB4E6" stroke="#24150F" stroke-width="1.5"/><circle cx="194" cy="63.5" r="2" fill="#fff" opacity=".85"/><circle cx="188" cy="58" r="6.5" fill="#F6EBD3" stroke="#24150F" stroke-width="1.5"/><circle cx="186" cy="55.5" r="2" fill="#fff" opacity=".85"/><text x="162" y="108" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="900" font-size="12" fill="#C88BDA">3 Y 5 · NONES</text></svg>
+            <h2 class="expl__t"><span class="expl__n">4</span> Se cuentan</h2>
+            <p class="expl__x">Si en cada agujero quedan pares —<b>4 y 4, 2 y 6</b>— es pares. Si quedan impares —<b>3 y 5, 1 y 7</b>— es nones. Si sale lo de la gente, <b>la banca paga el doble</b>.</p>
+          </section>
+          <section class="expl" data-paso="4" hidden aria-label="Paso 5 de 5">
+            <h2 class="expl__t"><span class="expl__n">5</span> ¿Dónde se juega?</h2>
+            <div class="lugares" role="group" aria-label="Dónde se juega">
+              <button class="chip" type="button" data-escenario="comunidad" aria-pressed="true">Comunidad</button>
+              <button class="chip" type="button" data-escenario="patio" aria-pressed="false">Patio</button>
+              <button class="chip" type="button" data-escenario="plaza" aria-pressed="false">Plaza</button>
+              <button class="chip" type="button" data-escenario="tienda" aria-pressed="false">Tienda</button>
+            </div>
+            <p class="expl__x">Empiezas con <b>cinco dólares</b> de mentira, que se guardan en este navegador.</p>
+          </section>
         </div>
       </div>
-      <button class="btn btn--rojo boton-juego btn-block" id="b-jugar" type="button">
-        <svg class="icono" aria-hidden="true"><use href="#i-play"/></svg> Acercarse a la tina</button>
-      <p class="caption">Plata de mentira, se guarda en este navegador. Juego tradicional de Guano y Píllaro.</p>
+      <div class="portada__pie">
+        <div class="puntos" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="opciones">
+          <button class="btn btn-ghost" id="b-saltar" type="button">Saltar</button>
+          <button class="btn btn--rojo boton-juego" id="b-siguiente" type="button">Siguiente
+            <svg class="icono" aria-hidden="true"><use href="#i-flecha-der"/></svg></button>
+          <button class="btn btn--rojo boton-juego" id="b-jugar" type="button" hidden>
+            <svg class="icono" aria-hidden="true"><use href="#i-play"/></svg> ¡A la tina!</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -279,6 +409,13 @@ function sonar(tipo, fuerza) {
   } catch (e) {}
 }
 
+/* En el teléfono, también se siente: una vibración corta para cada cosa.
+   Va con el mismo botón que el sonido. */
+function vibrar(patron) {
+  if (!est.sonido) return;
+  try { if (navigator.vibrate) navigator.vibrate(patron); } catch (e) {}
+}
+
 /* ─── la escena ────────────────────────────────────────────── */
 const CFG = Tina.CFG;
 const alt = (x, z) => Tina.altura(CFG, x, z);
@@ -311,11 +448,12 @@ function textura(ancho, alto, pinta) {
 
 // los brillos que marcan dónde cayó la primera
 const LADO_CAJITA = Math.max(CFG.cajita.lado, CFG.bola * 2.25);
-const brillo = () => new THREE.MeshBasicMaterial({ color: 0xffc93c, transparent: true, opacity: 0, depthWrite: false });
-const brilloRedondo = new THREE.Mesh(new THREE.RingGeometry(CFG.redondo.r + .012, CFG.redondo.r + .024, 40), brillo());
+// el color de cada bando, el mismo del tema: el redondo es celeste (pares), la cajita morada (nones)
+const brillo = color => new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0, depthWrite: false });
+const brilloRedondo = new THREE.Mesh(new THREE.RingGeometry(CFG.redondo.r + .012, CFG.redondo.r + .024, 40), brillo(0x5FB4E6));
 brilloRedondo.rotation.x = -Math.PI / 2;
 brilloRedondo.position.set(CFG.redondo.x, alt(CFG.redondo.x, CFG.redondo.z) + .012, CFG.redondo.z);
-const brilloCajita = new THREE.Mesh(new THREE.RingGeometry(LADO_CAJITA * .78, LADO_CAJITA * .95, 4, 1, Math.PI / 4), brillo());
+const brilloCajita = new THREE.Mesh(new THREE.RingGeometry(LADO_CAJITA * .78, LADO_CAJITA * .95, 4, 1, Math.PI / 4), brillo(0xB066C9));
 brilloCajita.rotation.x = -Math.PI / 2;
 brilloCajita.position.set(CFG.cajita.x, alt(CFG.cajita.x, CFG.cajita.z) + .012, CFG.cajita.z);
 escena.add(brilloRedondo, brilloCajita);
@@ -383,14 +521,51 @@ function grita(quien, texto, ms = 1800, sub) {
 }
 let hablando = null;   // a quien mira la gente mientras no ruedan
 const cabeza = new THREE.Vector3();
+const borde = new THREE.Vector3();
 function moverGlobos() {
   const w = lienzo.clientWidth, h = lienzo.clientHeight;
+  // el espacio libre: debajo de los botones de arriba y encima del panel
+  const techo = document.querySelector('.hud-juego__arriba').getBoundingClientRect().bottom + 40;
+  const mesaVisible = [...document.querySelectorAll('.mesa')].find(m => !m.hidden);
+  const caja = mesaVisible && mesaVisible.getBoundingClientRect();
+  const puestos = [];
   for (const [quien, el] of globos) {
     if (!el.classList.contains('ve')) continue;
-    if (quien === TU) { el.style.left = '50%'; el.style.top = `${h * .62}px`; continue; }
-    quien.persona.globo(cabeza); cabeza.project(camara);
-    el.style.left = `${Math.min(w - 50, Math.max(50, (cabeza.x + 1) / 2 * w))}px`;
-    el.style.top = `${Math.max(86, (1 - cabeza.y) / 2 * h)}px`;
+    const mitad = el.offsetWidth / 2 + 8;
+    let x, y;
+    if (quien === TU) { x = w / 2; y = h * .62; }
+    else { quien.persona.globo(cabeza); cabeza.project(camara); x = (cabeza.x + 1) / 2 * w; y = (1 - cabeza.y) / 2 * h; }
+    x = Math.min(w - mitad, Math.max(mitad, x));
+    y = Math.max(techo, y);
+    // si el panel está debajo, el globo no se mete detrás
+    if (caja && x + mitad > caja.left && x - mitad < caja.right) y = Math.min(y, caja.top - 8);
+    // que no se encime con otro globo: si choca, sube
+    const alto = el.offsetHeight + 6;
+    for (const p of puestos) if (Math.abs(p.x - x) < p.mitad + mitad && Math.abs(p.y - y) < alto) {
+      // sube, y si ya no cabe arriba, se corre hacia el centro
+      if (p.y - alto >= techo) y = p.y - alto;
+      else x = x > w / 2 ? p.x - p.mitad - mitad : p.x + p.mitad + mitad;
+    }
+    x = Math.min(w - mitad, Math.max(mitad, x));
+    // si después de correrse sigue encima de otro, mejor no se ve
+    const encima = puestos.some(p => Math.abs(p.x - x) < p.mitad + mitad - 4 && Math.abs(p.y - y) < alto - 4);
+    el.style.visibility = encima ? 'hidden' : '';
+    if (encima) continue;
+    puestos.push({ x, y, mitad });
+    el.style.left = `${x}px`; el.style.top = `${y}px`;
+  }
+  // la pista para lanzar: sobre el borde de tu lado de la tina
+  const pista = $('pista');
+  if (!pista.hidden) {
+    let px = w / 2, py = h / 2;
+    for (const grados of [90, 115, 140, 165, 180]) {
+      const a = grados * Math.PI / 180;
+      borde.set(Math.cos(a) * .95, 0, Math.sin(a) * .95).project(camara);
+      px = (borde.x + 1) / 2 * w; py = (1 - borde.y) / 2 * h;
+      // que no quede debajo del panel (abajo en vertical, a la izquierda acostado)
+      if (!caja || py < caja.top - 60 || px > caja.right + 80) break;
+    }
+    pista.style.left = `${Math.min(w - 80, Math.max(80, px))}px`; pista.style.top = `${py - 24}px`;
   }
 }
 
@@ -547,17 +722,27 @@ function medir() {
   vista.lejos.set(0, Math.sin(elev) * D, Math.cos(elev) * D);
   vista.cerca.set(0, Math.sin(52 * Math.PI / 180) * D * .58, Math.cos(52 * Math.PI / 180) * D * .58);
   // al final, encima de los agujeros, para contar
-  vista.encima.set(0, -.55 + Math.sin(62 * Math.PI / 180) * D * .26, Math.cos(62 * Math.PI / 180) * D * .26);
+  /* Encima: que quepan los dos agujeros y el tope —unos 0,34 de ancho y
+     0,3 de alto— y un poco de margen. El ancho manda en vertical. */
+  // acostado sobra ancho: manda el alto, y se puede acercar más
+  const dEncima = aspecto > 1.3 ? .24 / tan : Math.max(.3 / (tan * aspecto), .24 / tan);
+  vista.encima.set(0, -.55 + Math.sin(62 * Math.PI / 180) * dEncima, Math.cos(62 * Math.PI / 180) * dEncima);
   // de noche la niebla se traga lo de lejos; de día se alcanza a ver la iglesia
   escena.fog.near = D + (esc && !esc.noche ? 3 : 1.4); escena.fog.far = D + (esc && !esc.noche ? 13 : 5.5);
   const arriba = document.querySelector('.hud-juego__arriba').getBoundingClientRect().bottom;
   const mesa = [...document.querySelectorAll('.mesa')].find(m => !m.hidden);
   // solo estorba si tapa el medio: en pantalla ancha la mesa va a un lado
   const caja = mesa && mesa.getBoundingClientRect();
-  const abajo = caja && caja.left < w / 2 && caja.right > w / 2 ? h - caja.top : 0;
-  const corre = Math.max(0, (abajo - arriba) / 2);
   camara.aspect = aspecto;
-  camara.setViewOffset(w, h + corre * 2, 0, corre * 2, w, h);
+  if (aspecto > 1.3 && caja && caja.right < w * .62 && caja.top < h * .5) {
+    // acostado, con la mesa al costado: la tina se corre al espacio libre de la derecha
+    const lado = caja.right / 2;
+    camara.setViewOffset(w + lado * 2, h, 0, 0, w, h);
+  } else {
+    const abajo = caja && caja.left < w / 2 && caja.right > w / 2 ? h - caja.top : 0;
+    const corre = Math.max(0, (abajo - arriba) / 2);
+    camara.setViewOffset(w, h + corre * 2, 0, corre * 2, w, h);
+  }
   camara.updateProjectionMatrix();
   apuntar();
 }
@@ -579,6 +764,7 @@ function apuntar() {
 
 /* ─── el bucle ─────────────────────────────────────────────── */
 const DT = 1 / 240;
+const escenaEl = document.querySelector('.escena');
 let tina = Tina.crear(), resto = 0, antes = 0, lenta = 1, ultimoUy = 0, ultimoGrito = 0;
 function cuadro(ahora) {
   const real = Math.min(1, (ahora - antes) / 1000 || 0), dt = Math.min(.05, real); antes = ahora;
@@ -592,16 +778,18 @@ function cuadro(ahora) {
     while (resto >= DT && n++ < 60) {
       resto -= DT;
       for (const e of Tina.paso(tina, DT)) {
-        if (e.tipo === 'cae') { sonar('cae'); contarCaida(e); if (e.ultima) decidir(); }
+        if (e.tipo === 'cae') { sonar('cae'); vibrar(15); contarCaida(e); if (e.ultima) decidir(); }
         else sonar(e.tipo, e.fuerza / 2.2);
       }
     }
     if (est.fase === 'rueda') { comentar(ahora); if (Tina.quietas(tina) && !Tina.todasDentro(tina)) nulo(); }
+    escenaEl.classList.toggle('tension', est.fase === 'rueda' && tina.primera && restantes() === 1);
     // la cámara se acerca cuando la mayoría ya llegó al fondo
     const abajo = tina.bolas.filter(b => !b.hueco && Math.hypot(b.x, b.z) < .4).length;
     if (est.fase === 'rueda' && (abajo >= 3 || tina.t > 3)) vista.objetivo = 1;
   }
-  vista.k += (vista.objetivo - vista.k) * Math.min(1, dt * 1.6);
+  // al bajar a contar va más rápido: la gente quiere ver ya cuántas quedaron
+  vista.k += (vista.objetivo - vista.k) * Math.min(1, dt * (vista.objetivo === 2 ? 3.2 : 1.6));
   apuntar();
   colocar(tina);
   moverMonedas(dt);
@@ -645,7 +833,7 @@ function contarCaida(e) {
     const paraPares = r.redondo % 2 ? 'el redondo' : 'la cajita';
     $('rueda-t').textContent = `¡Falta una y esa decide! Si cae en ${paraPares}, pares; si no, nones.`;
     grita(BANCA, '¡La última decide!', 1800);
-    sonar('uy', .6);
+    sonar('uy', .6); vibrar([25, 50, 25]);
   } else if (falta > 0 && Math.random() < .55) {
     grita(azar(VECINOS), azar([`¡${e.dentro}!`, e.hueco === 'redondo' ? '¡Otra al redondo!' : '¡Otra a la cajita!', '¡Una más!']), 900);
   }
@@ -724,7 +912,7 @@ function nuevaRonda() {
   for (const b of [brilloRedondo, brilloCajita]) b.userData.encendido = false;
   for (const q of [...VECINOS, TU]) vaciar(q);
   if (pila(BANCA).userData.n < 6) ponerEn(BANCA, 10 - pila(BANCA).userData.n);
-  est.quieres = null; est.vamos = null; est.apostado = 0; est.juegas = false;
+  est.quieres = null; est.vamos = null; est.apostado = 0; est.juegas = false; gritos = 0;
   for (const v of VECINOS) { v.quiere = Math.random() < .5 ? 'pares' : 'nones'; v.juega = false; v.apuesta = 0; }
   vista.objetivo = 0; lenta = 1;
   enLaMano(ENFRENTE);
@@ -759,10 +947,13 @@ function gritadera(dt, ahora) {
   }
   if (reloj <= 0) decideBanca();
 }
+let gritos = 0;
 function gritar(lado) {
   if (est.fase !== 'gente') return;
-  est.quieres = lado;
-  grita(TU, `¡${lado === 'pares' ? 'Pares' : 'Nones'}!`, 800);
+  if (est.quieres !== lado) gritos = 0;
+  est.quieres = lado; gritos++;
+  grita(TU, `¡${lado === 'pares' ? 'Pares' : 'Nones'}!${gritos > 1 ? ' ×' + gritos : ''}`, 800);
+  vibrar(8);
   // convence a alguno de los del otro lado, si es blando
   const otros = VECINOS.filter(v => v.quiere !== lado);
   const v = otros.sort((a, b) => a.firme - b.firme)[Math.floor(Math.random() * Math.min(2, otros.length))];
@@ -794,7 +985,8 @@ function decideBanca() {
     grita(v, quiere ? azar(['¡Juego!', '¡Ahí va!', '¡Va!']) : 'Ya, por no dejar', 1200);
   }, 900 + i * 450));
   const contra = est.quieres && est.quieres !== est.vamos;
-  $('apuesta-dice').textContent = `«Vamos por ${est.vamos}. ¿Va a jugar o no?»`;
+  $('apuesta-vamos').textContent = `Vamos por ${est.vamos}`;
+  $('apuesta-dice').textContent = '«¿Va a jugar o no?»';
   $('apuesta-nota').textContent = contra
     ? `Tú querías ${est.quieres}, pero la gente pidió ${est.vamos}. ¿Entras igual?`
     : est.quieres ? `Salió lo que pediste. Si quedan ${QUEDAN[est.vamos]}, la banca paga el doble.`
@@ -811,17 +1003,24 @@ const QUEDAN = { pares: 'pares en cada agujero (4 y 4, 2 y 6)', nones: 'impares 
 function pintarMano() {
   const fichas = [...document.querySelectorAll('.ficha')];
   const puestas = est.apostado / FICHA;
-  fichas.forEach((f, i) => { f.hidden = i < puestas; f.disabled = est.apostado + FICHA > est.saldo; });
+  // las que ya están en la mesa dejan su hueco: nada se corre bajo el dedo
+  fichas.forEach((f, i) => { f.classList.toggle('puesta', i < puestas); f.disabled = i < puestas || est.apostado + FICHA > est.saldo; });
   $('en-mesa').textContent = plata(est.apostado);
   $('b-juego').disabled = !est.apostado;
-  $('b-recoger').hidden = !est.apostado;
+  const r = $('b-recoger');
+  r.setAttribute('aria-hidden', String(!est.apostado)); r.tabIndex = est.apostado ? 0 : -1;
 }
 function ponerMoneda() {
   if (est.fase !== 'apuesta' || est.apostado >= FICHA * 4 || est.apostado + FICHA > est.saldo) return;
-  est.apostado += FICHA; ponerEn(TU, 1); sonar('moneda');
+  est.apostado += FICHA; ponerEn(TU, 1); sonar('moneda'); vibrar(12);
+  ultimaFicha = performance.now();
   pintarMano();
 }
 function recoger() { est.apostado = 0; vaciar(TU); pintarMano(); }
+/* Un toque que acaba de poner una moneda no puede ser también «Juego» o
+   «Paso»: en el teléfono el clic llega después y podría caer en otro botón. */
+let ultimaFicha = 0;
+const muyPronto = () => performance.now() - ultimaFicha < 450;
 
 /* Arrastrar una moneda de la mano a la mesa (o tocarla, que es lo mismo). */
 let arrastre = null;
@@ -854,13 +1053,14 @@ document.querySelectorAll('.ficha').forEach(f => {
 });
 
 function juego() {
-  if (est.fase !== 'apuesta' || !est.apostado) return;
+  if (est.fase !== 'apuesta' || !est.apostado || muyPronto()) return;
   est.juegas = true; est.saldo -= est.apostado; guardar(); pintar();
+  delta(-est.apostado);
   grita(TU, '¡Juego!', 1000);
   arrancaTiro();
 }
 function paso() {
-  if (est.fase !== 'apuesta') return;
+  if (est.fase !== 'apuesta' || muyPronto()) return;
   recoger(); est.juegas = false; pintar();
   grita(TU, 'Paso', 1000);
   arrancaTiro();
@@ -880,9 +1080,11 @@ function arrancaTiro() {
     return;
   }
   if (est.juegas && est.apostado >= FICHA * 4) {
+    const g = globos.get(TU); if (g) g.classList.remove('ve');
     grita(BANCA, 'Usted que va duro, lance usted', 2200);
     enLaMano(DELANTE);
     est.fase = 'lanzar'; mesa('m-lanzar');
+    $('pista').hidden = false;
     $('b-lanzar').focus({ preventScroll: true });
     return;
   }
@@ -934,6 +1136,7 @@ function tiroDeLaBanca(estilo) {
 }
 
 function lanzar(origen, angulo, fuerza, semilla) {
+  $('pista').hidden = true;
   tina = Tina.crear();
   Tina.tirar(tina, origen, angulo, fuerza, semilla == null ? Math.random : semillado(semilla));
   ponerCanicas(tina);
@@ -954,9 +1157,10 @@ function decidir() {
   const salio = r.par ? 'pares' : 'nones', gana = salio === est.vamos;
   brilloRedondo.userData.encendido = brilloCajita.userData.encendido = true;
   lenta = 1;
-  setTimeout(() => { if (est.fase === 'fin') vista.objetivo = 2; }, 500);
+  setTimeout(() => { if (est.fase === 'fin') vista.objetivo = 2; }, 300);
   const donde = `Quedaron ${r.redondo} en el redondo y ${r.cajita} en la cajita.`;
   $('fin-suma').innerHTML = `${r.par ? 'Pares' : 'Nones'} <small class="micro">${r.redondo} y ${r.cajita}</small>`;
+  $('fin-suma').dataset.bando = r.par ? 'pares' : 'nones';
   const jugadores = VECINOS.filter(v => v.juega);
   if (gana) {
     // la banca paga el doble: devuelve lo de cada uno y pone otro tanto
@@ -973,6 +1177,11 @@ function decidir() {
       if (Math.random() < .6) grita(v, azar(['¡Ayayay!', '¡No puede ser!', '¡Por un pelito!']), 1500); v.persona.lamenta(); });
     if (est.juegas) { const n = pila(TU).userData.n; vaciar(TU); volar(TU, BANCA, n, .3); }
   }
+  // lo que se gritaba mientras rodaban se calla: ahora hablan el resultado
+  for (const g of globos.values()) g.classList.remove('ve');
+  sellar(r.par ? '¡Pares!' : '¡Nones!', `${r.redondo} y ${r.cajita}`, !est.juegas ? 'pasa' : gana ? 'gana' : 'pierde');
+  if (est.juegas) { vibrar(gana ? [40, 60, 40, 60, 140] : 160); if (gana) delta(est.apostado * 2); }
+  escenaEl.classList.remove('tension');
   let texto;
   if (!est.juegas) texto = `${donde} ${gana ? 'Ganó la gente y tú pasaste.' : 'Ganó la banca; hiciste bien en pasar.'}`;
   else if (gana) texto = `${donde} La banca paga el doble: te llevas ${plata(est.apostado * 2)}.`;
@@ -984,6 +1193,22 @@ function decidir() {
   guardar(); pintar();
   est.fase = 'fin';
   setTimeout(() => { if (est.fase === 'fin') { mesa('m-fin'); $('b-otra').focus({ preventScroll: true }); } }, 900);
+}
+
+/* El sello grande del final, y lo que entra o sale de tu plata. */
+function sellar(texto, sub, tono) {
+  const el = $('sello');
+  el.className = 'sello sello--' + tono;
+  el.innerHTML = '';
+  el.append(texto); const s = document.createElement('small'); s.textContent = sub; el.append(s);
+  void el.offsetWidth; el.classList.add('ve');
+}
+function delta(centavos) {
+  const d = document.createElement('span');
+  d.className = 'delta ' + (centavos > 0 ? 'delta--mas' : 'delta--menos');
+  d.textContent = (centavos > 0 ? '+' : '−') + plata(Math.abs(centavos));
+  document.querySelector('.hud-juego__cifras').append(d);
+  setTimeout(() => d.remove(), 1700);
 }
 
 /* Alguna se quedó afuera: el tiro no vale y cada uno recoge lo suyo. */
@@ -1015,10 +1240,39 @@ document.querySelectorAll('[data-escenario]').forEach(b => b.addEventListener('c
   ponerCanicas(tina);
 }));
 pintarLugares();
+/* La explicación: cinco pasos; se avanza con «Siguiente», deslizando o
+   con las flechas, y «Saltar» va directo a escoger dónde jugar. */
+const PASOS = 5;
+let enPaso = 0;
+function irAPaso(n) {
+  enPaso = Math.max(0, Math.min(PASOS - 1, n));
+  document.querySelectorAll('.expl').forEach(el => { el.hidden = +el.dataset.paso !== enPaso; });
+  document.querySelectorAll('.puntos i').forEach((el, k) => el.classList.toggle('ve', k === enPaso));
+  const ultimo = enPaso === PASOS - 1;
+  $('b-siguiente').hidden = ultimo; $('b-jugar').hidden = !ultimo; $('b-saltar').hidden = ultimo;
+  (ultimo ? $('b-jugar') : $('b-siguiente')).focus({ preventScroll: true });
+}
+$('b-siguiente').addEventListener('click', () => irAPaso(enPaso + 1));
+$('b-saltar').addEventListener('click', () => irAPaso(PASOS - 1));
+{
+  let x0 = null;
+  const caja = $('expls');
+  caja.addEventListener('pointerdown', e => { x0 = e.clientX; });
+  caja.addEventListener('pointerup', e => {
+    if (x0 == null) return;
+    const dx = e.clientX - x0; x0 = null;
+    if (Math.abs(dx) > 40) irAPaso(enPaso + (dx < 0 ? 1 : -1));
+  });
+  $('c-inicio').addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') irAPaso(enPaso + 1);
+    else if (e.key === 'ArrowLeft') irAPaso(enPaso - 1);
+  });
+}
+irAPaso(0);
 $('b-jugar').addEventListener('click', () => { $('c-inicio').hidden = true; if (revisarPlata()) nuevaRonda(); });
 $('b-reglas').addEventListener('click', () => {
   if (est.fase !== 'fin' && est.fase !== 'inicio') return;
-  $('c-inicio').hidden = false; $('b-jugar').focus({ preventScroll: true });
+  $('c-inicio').hidden = false; irAPaso(0);
 });
 const bs = $('b-sonido');
 const pintarSonido = () => bs.setAttribute('aria-pressed', String(est.sonido));
@@ -1050,11 +1304,12 @@ function alPiso(e) {
   return rayo.ray.intersectPlane(piso, punto) ? { x: punto.x, z: punto.z } : null;
 }
 const guia = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]),
-  new THREE.LineDashedMaterial({ color: 0xffc93c, dashSize: .04, gapSize: .03 }));
+  new THREE.LineDashedMaterial({ color: 0xF2B33D, dashSize: .04, gapSize: .03 }));
 guia.visible = false; escena.add(guia);
 let gesto = null;
 lienzo.addEventListener('pointerdown', e => {
   if (est.fase !== 'lanzar') return;
+  $('pista').hidden = true;
   const p = alPiso(e); if (!p) return;
   const origen = Math.atan2(p.z, p.x);
   enLaMano(origen);

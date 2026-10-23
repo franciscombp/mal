@@ -25,7 +25,21 @@ Vive en `franciscombp.github.io/mal/guagua/` y la carpeta se basta sola: Three.j
 `vendor/` (r170, licencia MIT en `vendor/LICENSE-three.txt`) y el sistema de diseño se pide
 con ruta relativa desde `../ds/`.
 
+## Versiones y caché
+
+La versión va en el `<meta name="guagua-version">`, en los `?v=` de `guagua.css`, `guagua.js`,
+`masa.js`, `nube.js` y `nube-config.js`, y en `version.json`. Al publicar, se sube la misma
+cadena en todos (`grep -rn 2026.10.23.2 guagua/`). Al abrir, el juego pide `version.json`
+sin caché y, si hay una versión más nueva, se recarga una sola vez: así nadie se queda con el
+juego viejo por el caché del navegador.
+
 ## Cómo se toca
+
+El panel de herramientas se pliega con el asa de arriba (o deslizándola hacia abajo) para
+dejarle más pantalla a la guagua; queda la cabecera con un resumen de lo elegido. Regalar va
+en tres pasos que caben sin desplazarse: para quién, unas palabras y la imagen para compartir.
+En la compu, la rueda acerca y, con Shift (o el desplazamiento horizontal del trackpad), gira.
+
 
 Con un dedo se amasa y se decora; con dos dedos se gira y se acerca a la vez. El primer dedo
 espera un instante antes de pintar: si en ese rato llega el segundo, era un gesto y no se mancha
@@ -99,3 +113,23 @@ Para ponerla en marcha en el proyecto real:
 3. Activar en Authentication los proveedores «Correo/contraseña» y «Google», y agregar en
    *Dominios autorizados*: `franciscombp.github.io`, `elmercio.com` y `una.red`.
 4. Publicar las reglas: `cd guagua/firebase && npx -y firebase-tools@latest deploy --only firestore`.
+
+## Desde un chat de IA
+
+**Sin instalar nada:** basta con escribir la dirección con los datos después del `?`. El juego
+amasa la guagua en el navegador de quien la abre y la muestra como regalo:
+
+```
+https://franciscombp.github.io/mal/guagua/?molde=dormilon&nombre=Lobita&para=Lobita&de=Francisco&dedicada=1&decoracion=carita&mensaje=Duerme%20tranquila
+```
+
+Parámetros: `molde` (guagua, tradicional, guaguau, dormilon, caballito, chanchito, gallinita),
+`nombre`, `para`, `de`, `mensaje`, `dedicada=1`, `vale` (1 guagua de verdad, 2 colada morada,
+3 pásala), `coccion` (blanquita, punto, tostada, quemada), `decoracion` (panaderia, carita,
+ninguna), `colores` (cremas por nombre, separadas por comas) y `semilla`. La dirección se
+convierte sola en un enlace `#r=` que ya se puede compartir.
+
+**Con MCP:** 
+`masa.js` es la receta sin pantalla (moldes, geometría, enlace y «Sorpréndeme»), y la comparten
+el juego y el servidor MCP de `mcp/`: con él, una IA amasa una guagua con lo que sabe de la
+persona y devuelve el enlace que la abre en 3D. Ver `mcp/README.md`.
