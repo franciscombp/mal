@@ -631,6 +631,32 @@ export class Sonda {
   deFrente(x, y) { return this.rayoLocal(V(x, y, 10), V(0, 0, -1)); }
 }
 
+/* ─── amasar por encargo: de unos datos a una receta ──────── */
+/* Lo usan el MCP y el juego cuando llega un enlace con `?molde=…`: así
+   cualquier IA (o cualquiera) arma una guagua escribiendo solo la dirección. */
+const COCCION = { blanquita: 85, punto: 100, tostada: 118, quemada: 140 };
+const indiceCrema = (nombre) => CREMAS.findIndex((c) => c.n.toLowerCase() === String(nombre || '').trim().toLowerCase());
+const esVerdad = (v) => v === true || v === 1 || v === '1' || v === 'true' || v === 'si' || v === 'sí';
+function amasarReceta(args = {}) {
+  const molde = MOLDES[args.molde] ? args.molde : 'guagua';
+  const dedicada = esVerdad(args.dedicada);
+  const vale = Number(args.vale) || 0;
+  const e = {
+    v: 3, f: molde, a: MOLDES[molde](), k: COCCION[args.coccion] || 100, o: [],
+    n: String(args.nombre || elige(NOMBRES[molde] || NOMBRES.guagua)).slice(0, 40),
+    p: String(args.para || '').slice(0, 40), d: String(args.de || '').slice(0, 40), m: '',
+    t: dedicada ? 'm' : '', l: !dedicada && VALES[vale] ? vale : 0,
+  };
+  e.m = String(args.mensaje || (e.t === 'm' ? (echada(e) ? MENSAJE_GUAGUAU : elige(MENSAJES_MEMORIA)) : elige(MENSAJES))).slice(0, 160);
+  if (args.decoracion !== 'ninguna') {
+    const lista = Array.isArray(args.colores) ? args.colores : String(args.colores || '').split(',');
+    const cremas = lista.map(indiceCrema).filter((i) => i >= 0);
+    const semilla = args.semilla != null && args.semilla !== '' && isFinite(Number(args.semilla)) ? Number(args.semilla) : undefined;
+    e.o = sorpresa(e, new Sonda(e), { cremas, semilla, soloCara: args.decoracion === 'carita' });
+  }
+  return sano(e);
+}
+
 export {
-  dormida, DIRECCION, V, Q, ent, CREMAS, BOQUILLAS, GROSORES, MASAS, TAMANOS, GRAGEAS, MAX_BOCADOS, BOCADOS_TALLER, MAX_PIEZAS, MORDIDA, NOMBRES, MENSAJES, MENSAJES_MEMORIA, MENSAJE_GUAGUAU, VALES, enMemoria, echada, posturaDe, azar, elige, limita, bolita, chorizo, masaDe, iniPuntos, conMasa, SG, G, C, frenteDe, CUERPO, CABEZA, guaguaConBrazos, MOLDES, elipsoide, tubo, PISO, aplanar, geometriaPieza, moverPieza, base, b64, exprimir, PASOS, aDeltas, deDeltas, codificar, decodificar, deLaPrimeraHornada, sano, punto, tieneCara, queEs, nombreDe, puntoDeCrema, pn, caraPintada, chapitas, sorpresa,
+  amasarReceta, COCCION, dormida, DIRECCION, V, Q, ent, CREMAS, BOQUILLAS, GROSORES, MASAS, TAMANOS, GRAGEAS, MAX_BOCADOS, BOCADOS_TALLER, MAX_PIEZAS, MORDIDA, NOMBRES, MENSAJES, MENSAJES_MEMORIA, MENSAJE_GUAGUAU, VALES, enMemoria, echada, posturaDe, azar, elige, limita, bolita, chorizo, masaDe, iniPuntos, conMasa, SG, G, C, frenteDe, CUERPO, CABEZA, guaguaConBrazos, MOLDES, elipsoide, tubo, PISO, aplanar, geometriaPieza, moverPieza, base, b64, exprimir, PASOS, aDeltas, deDeltas, codificar, decodificar, deLaPrimeraHornada, sano, punto, tieneCara, queEs, nombreDe, puntoDeCrema, pn, caraPintada, chapitas, sorpresa,
 };
