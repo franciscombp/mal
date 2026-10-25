@@ -18,6 +18,13 @@
   const PIE = 628;            // dónde pisa Fran
   const VEL = 215;            // al paso, unidades por segundo
   const ZANCADA = 116;        // lo que avanza un ciclo de dos pasos, en unidades
+  /* con teclado: arranca andando y, si se mantiene la flecha, se va
+     soltando hasta un trote; con Shift corre. Un toque corto sigue
+     siendo un paso, para acomodarse frente a una pieza. */
+  const PASO = 280;
+  const TROTE = 640;
+  const CARRERA = 1000;
+  const ACEL = 950;           // unidades por segundo, cada segundo
   const CERCA = 110;          // desde dónde una pieza está «a mano»
   const VISIBLE = [86, 652];  // la franja del mundo que tiene que verse entera
   const LADO = 80;            // a qué distancia de la pieza se para Fran
@@ -40,6 +47,7 @@
   const giro = $('.fran__giro', franEl);
   const hud = $('.papel-hud');
   const portada = $('#portada');
+  const lectura = $('#texto');
   const ficha = $('#ficha');
   const fichaSala = $('#ficha-sala');
   const fichaTitulo = $('#ficha-titulo');
@@ -92,6 +100,9 @@
   const st = {
     x: 240, dir: 1, meta: null, vel: VEL,
     cam: 0, izq: false, der: false, andando: false,
+    corre: false,       // Shift apretado
+    aTecla: false,      // anda por las flechas, no hacia una meta
+    mira: 0,            // cuánto adelanta la cámara en la dirección de la marcha
     cerca: null,        // la pieza a mano, por proximidad
     sel: null,          // la pieza elegida (tocada, Tab, flechas de la ficha)
     selDesde: 0,
@@ -359,12 +370,18 @@
   function mover(dt) {
     const antes = st.x;
     if (st.izq !== st.der && !panel.open) {
-      st.meta = null;
-      st.vel = VEL;
       const d = st.der ? 1 : -1;
+      /* al arrancar o dar la vuelta, vuelve al paso */
+      if (!st.aTecla || d !== st.dir) st.vel = PASO;
+      st.aTecla = true;
+      st.meta = null;
       voltear(d);
-      st.x = limita(st.x + d * VEL * dt, 50, W - 50);
+      const tope = st.corre ? CARRERA : TROTE;
+      st.vel = st.vel < tope ? Math.min(tope, st.vel + ACEL * (st.corre ? 2 : 1) * dt)
+        : Math.max(tope, st.vel - ACEL * 2 * dt);
+      st.x = limita(st.x + d * st.vel * dt, 50, W - 50);
     } else if (st.meta !== null) {
+      st.aTecla = false;
       const falta = st.meta - st.x;
       voltear(Math.sign(falta));
       if (Math.abs(falta) <= st.vel * dt) {
@@ -377,6 +394,8 @@
       } else {
         st.x += Math.sign(falta) * st.vel * dt;
       }
+    } else {
+      st.aTecla = false;
     }
     const anda = st.x !== antes;
     if (anda !== st.andando) {
@@ -384,9 +403,15 @@
       franEl.classList.toggle('fran--anda', anda);
       if (anda) { quietoDesde = ultimo; franEl.classList.remove('fran--espera', 'fran--frente', 'fran--chill'); }
     }
-    /* el ritmo sale de la velocidad: a más prisa, pasos más rápidos;
-       en los viajes largos los pies ya no dan abasto y se nota, a propósito */
-    if (anda) franEl.style.setProperty('--ciclo', limita(ZANCADA / st.vel, 0.3, 0.8).toFixed(3) + 's');
+    /* el ritmo sale de la velocidad: a más prisa, pasos más rápidos y
+       más largos (al correr la zancada crece); en los viajes largos los
+       pies ya no dan abasto y se nota, a propósito */
+    const prisa = limita((st.vel - VEL) / (CARRERA - VEL), 0, 1);
+    if (anda) franEl.style.setProperty('--ciclo', limita(ZANCADA * (1 + 0.7 * prisa) / st.vel, 0.2, 0.8).toFixed(3) + 's');
+    franEl.classList.toggle('fran--corre', anda && prisa > 0.45);
+    /* la cámara se adelanta un poco hacia donde va, más cuanto más prisa */
+    const mira = anda ? st.dir * prisa * verAncho * 0.14 : 0;
+    st.mira += (mira - st.mira) * (1 - Math.pow(0.05, dt));
   }
   function camara(dt) {
     const max = Math.max(0, W - verAncho);
@@ -396,10 +421,10 @@
       const libre = (vw - panel.offsetWidth) / s;
       obj = st.abierta.x - libre / 2;
     } else {
-      obj = st.x - verAncho * 0.42;
+      obj = st.x - verAncho * 0.42 + st.mira;
     }
     obj = limita(obj, 0, max);
-    st.cam += (obj - st.cam) * (1 - Math.pow(0.003, dt));
+    st.cam += (obj - st.cam) * (1 - Math.pow(0.0015, dt));
     if (Math.abs(obj - st.cam) < 0.05) st.cam = obj;
   }
 
@@ -512,7 +537,7 @@
         fichaTitulo.textContent = lugar.lema;
         fichaFrase.textContent = tactil.matches
           ? 'Toca una pieza para acercarte, o pasa de una a otra con las flechas.'
-          : 'Camina con ← →, pasa de pieza en pieza con las flechas de aquí o con Tab.';
+          : 'Camina con ← → (con Shift corre), salta de sala con 1–' + salas.length + ' o pasa de pieza en pieza con Tab.';
         fichaNota.textContent = '';
       }
     }
@@ -553,7 +578,7 @@
     st.sel = p;
     st.izq = st.der = false;
     if (Math.abs(p.x - st.x) > LADO + 10) irA(parada(p));
-    panelCuerpo.replaceChildren(t.content.cloneNode(true));
+    panelCuerpo.replaceChildren(...Array.from(t.childNodes, (n) => n.cloneNode(true)));
     panelLugar.textContent = p.sala.num + ' · ' + p.sala.nombre;
     const i = piezas.indexOf(p);
     panelN.textContent = (i + 1) + ' / ' + piezas.length;
@@ -607,9 +632,9 @@
   /* los temas del sistema: cambian la piel del mundo entero */
   function sincronizaTemas() {
     const m = raiz.dataset.marca || 'mal';
-    $$('[data-marca-pon]', panelCuerpo).forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.marcaPon === m)));
+    $$('[data-marca-pon]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.marcaPon === m)));
   }
-  panelCuerpo.addEventListener('click', (e) => {
+  for (const r of [panelCuerpo, lectura]) r.addEventListener('click', (e) => {
     const b = e.target.closest('[data-marca-pon]');
     if (!b) return;
     const m = b.dataset.marcaPon;
@@ -725,18 +750,53 @@
     if (!st.portada) return;
     st.portada = false;
     portada.classList.add('portada--fuera');
-    setTimeout(() => { portada.hidden = true; }, 500);
+    setTimeout(() => { if (!leyendo) portada.hidden = true; }, 500);
     ficha.removeAttribute('data-oculta');
     pintarFicha();
   }
   $('#empezar').addEventListener('click', () => {
+    salirDelTexto();
     empezar();
     elegir(piezas[0]);
     fichaVer.focus({ preventScroll: true });
   });
   $('#marca').addEventListener('click', (e) => {
     e.preventDefault();
+    salirDelTexto();
     elegir(piezas[0]);
+  });
+
+  /* ─── la versión en texto ────────────────────────────────────── */
+  /* #texto convierte la página en un documento que se lee con scroll:
+     la portada arriba y cada pieza en su artículo. El recorrido se
+     queda donde estaba, quieto, hasta volver. */
+  let leyendo = false;
+  function modoTexto(si) {
+    if (si === leyendo) return;
+    leyendo = si;
+    raiz.classList.toggle('papel-leer', si);
+    st.izq = st.der = false;
+    if (si) {
+      for (const d of [panel, indice]) if (d.open) d.close();
+      portada.hidden = false;
+      portada.classList.remove('portada--fuera');
+      scrollTo({ top: 0, behavior: 'instant' });
+      lectura.focus({ preventScroll: true });
+    } else {
+      if (!st.portada) { portada.hidden = true; portada.classList.add('portada--fuera'); }
+      scrollTo({ top: 0, behavior: 'instant' });
+      requestAnimationFrame(medir);
+    }
+  }
+  function salirDelTexto() {
+    if (!leyendo) return;
+    if (location.hash === '#texto') history.replaceState(null, '', location.pathname + location.search);
+    modoTexto(false);
+  }
+  addEventListener('hashchange', () => modoTexto(location.hash === '#texto'));
+  $('#volver').addEventListener('click', () => {
+    salirDelTexto();
+    (st.portada ? $('#empezar') : fichaVer).focus({ preventScroll: true });
   });
 
   /* ─── teclado ────────────────────────────────────────────────── */
@@ -744,8 +804,9 @@
   const DER = new Set(['ArrowRight', 'KeyD']);
   const VER = new Set(['KeyE', 'ArrowUp', 'KeyW']);
   addEventListener('keydown', (e) => {
+    st.corre = e.shiftKey;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
-    if (indice.open) return;
+    if (indice.open || leyendo) return;
     const sobreControl = e.target.closest && e.target.closest('button, a, input, select, textarea');
     if (panel.open) {
       /* con la hoja abierta, las flechas pasan de pieza */
@@ -763,13 +824,25 @@
       const p = actual();
       if (st.portada) { $('#empezar').click(); } else if (p) abrir(p);
       e.preventDefault();
+    } else {
+      /* atajos: 1–6 van a cada sala; Inicio y Fin, a la primera y la
+         última pieza; Re Pág y Av Pág, a la pieza de al lado */
+      const n = /^(?:Digit|Numpad)([1-9])$/.exec(e.code);
+      let p = null;
+      if (n && salas[n[1] - 1]) p = salas[n[1] - 1].piezas[0];
+      else if (e.key === 'Home') p = piezas[0];
+      else if (e.key === 'End') p = piezas[piezas.length - 1];
+      else if (e.key === 'PageDown') p = vecina(1);
+      else if (e.key === 'PageUp') p = vecina(-1);
+      if (p) { elegir(p); e.preventDefault(); }
     }
   });
   addEventListener('keyup', (e) => {
+    st.corre = e.shiftKey;
     if (IZQ.has(e.code)) st.izq = false;
     if (DER.has(e.code)) st.der = false;
   });
-  addEventListener('blur', () => { st.izq = st.der = false; });
+  addEventListener('blur', () => { st.izq = st.der = st.corre = false; });
 
   /* ─── ratón y dedo ───────────────────────────────────────────── */
   /* Tocar el suelo lleva a Fran hasta ahí; arrastrar lo lleva de la
@@ -811,7 +884,7 @@
   /* el navegador intenta desplazar el escenario para enseñar el foco:
      de eso se encarga la cámara */
   esc.addEventListener('scroll', () => { esc.scrollLeft = 0; esc.scrollTop = 0; });
-  addEventListener('scroll', () => { if (scrollX || scrollY) scrollTo(0, 0); });
+  addEventListener('scroll', () => { if (!leyendo && (scrollX || scrollY)) scrollTo(0, 0); });
 
   /* ─── el bucle ───────────────────────────────────────────────── */
   let ultimo = performance.now();
@@ -825,6 +898,7 @@
   function cuadro(t) {
     const dt = Math.min((t - ultimo) / 1000, 0.05);
     ultimo = t;
+    if (leyendo) { quietoDesde = t; requestAnimationFrame(cuadro); return; }
     mover(dt);
     proximidad();
     reacciones();
@@ -858,5 +932,6 @@
   pintar();
   pintarFicha();
   if (window.malDS && window.malDS.iconos) window.malDS.iconos();
+  if (location.hash === '#texto') modoTexto(true);
   requestAnimationFrame((t) => { ultimo = t; cuadro(t); });
 })();

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- una.red es solo la landing del estudio. El sistema de diseño y las páginas
-     de proyecto viven en franciscombp.github.io/mal/ y tienen su propio sitio;
-     las URLs viejas de /ds/, /apps/ y /renuncia/ responden 301 hacia allí. -->
+     de proyecto viven en franciscombp.github.io/mal/ y tienen su propio sitio
+     (y su propio mapa: sitemap-github.xml); las URLs viejas de /ds/, /apps/,
+     /renuncia/ y compañía responden 301 hacia allí. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://una.red/</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>

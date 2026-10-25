@@ -315,6 +315,9 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 .fran--anda .codo{animation:papel-codo var(--ciclo) ease-in-out infinite;animation-delay:calc(var(--ciclo) * var(--fase, 0))}
 .fran--anda .fran__cuerpo{animation:papel-bote var(--ciclo) ease-in-out infinite}
 .fran--anda .fran__tronco{transform:rotate(-4deg)}
+/* corriendo: se echa hacia delante y bota más */
+.fran--corre .fran__tronco{transform:rotate(-10deg)}
+.fran--corre .fran__cuerpo{animation-name:papel-bote-corre}
 .fran--anda .fran__melena{animation:papel-melena var(--ciclo) ease-in-out infinite}
 .fran--anda .fran__cabeza{animation:papel-nuca var(--ciclo) ease-in-out infinite}
 .fran--anda .fran__mechon{animation:papel-mechon var(--ciclo) ease-in-out infinite}
@@ -335,6 +338,7 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 @keyframes papel-hombro{0%{transform:rotate(30deg)}50%{transform:rotate(-34deg)}100%{transform:rotate(30deg)}}
 @keyframes papel-codo{0%{transform:rotate(-12deg)}50%{transform:rotate(-50deg)}100%{transform:rotate(-12deg)}}
 @keyframes papel-bote{0%,50%,100%{transform:translateY(0)}25%,75%{transform:translateY(-5px)}}
+@keyframes papel-bote-corre{0%,50%,100%{transform:translateY(1px)}25%,75%{transform:translateY(-9px)}}
 @keyframes papel-melena{0%,50%,100%{transform:rotate(5deg)}25%,75%{transform:rotate(-3deg)}}
 /* la cabeza, grande, va un pelín a contratiempo del bote */
 @keyframes papel-nuca{0%,50%,100%{transform:rotate(1.5deg)}25%,75%{transform:rotate(-1.5deg)}}
@@ -424,6 +428,8 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
   font-family:var(--mal-display);font-weight:var(--ref-peso-display);letter-spacing:var(--ref-tracking);line-height:.98;
   font-size:clamp(2.1rem, 1.5rem + 2.6vw, 3.4rem);text-wrap:balance;
 }
+/* el nombre va dentro del h1, con voz de antetítulo: es lo que buscan */
+.portada__quien{margin-bottom:var(--mal-e3);line-height:1.4}
 .portada__lede{font-family:"PT Serif",Georgia,serif;font-style:italic;font-size:var(--mal-t-lede);line-height:1.45;color:var(--mal-on-surface-2);max-width:34ch}
 .portada__cifras{margin:0}
 .portada__acc{display:flex;flex-wrap:wrap;gap:var(--mal-e2)}
@@ -502,7 +508,7 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 .hoja__titulo--serif{font-family:"PT Serif",Georgia,serif;letter-spacing:-.01em}
 .hoja__titulo--serif span{color:var(--mal-morado)}
 .hoja__lede{font-size:var(--mal-t-lede);line-height:1.45;color:var(--mal-on-surface-2)}
-.hoja__cuerpo > p:not([class]){color:var(--mal-on-surface-2);line-height:1.55}
+:is(.hoja__cuerpo, .lectura__pieza) > p:not([class]){color:var(--mal-on-surface-2);line-height:1.55}
 .hoja__datos{display:flex;flex-direction:column;margin:0;border-top:var(--mal-separador)}
 .hoja__datos > div{display:grid;grid-template-columns:7.5rem minmax(0, 1fr);gap:var(--mal-e3);padding:var(--mal-e3) 0;border-bottom:var(--mal-separador)}
 .hoja__datos dt{font-family:var(--mal-mono);font-size:var(--mal-t-mini);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mal-on-surface-3);padding-top:.2em}
@@ -648,7 +654,7 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
   .ficha__flecha--ant{grid-area:ant}
   .ficha__flecha--sig{grid-area:sig}
   .ficha__ver{grid-area:ver;justify-self:stretch;justify-content:center;min-height:44px}
-  .papel-texto span,.papel-indice-btn__t{display:none}
+  .papel-texto span,.papel-volver span,.papel-indice-btn__t{display:none}
   .papel-marca{overflow:hidden}
   .papel-marca__nombre{overflow:hidden;text-overflow:ellipsis}
   .papel-indice-btn{position:relative;width:var(--ref-tap, 44px);height:var(--ref-tap, 44px);padding:0;justify-content:center}
@@ -667,6 +673,33 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
   .ficha__frase{-webkit-line-clamp:1}
   .ficha__nota{display:none}
 }
+
+/* ─── la versión en texto ──────────────────────────────────────
+   Sin JS, o con #texto, la página deja de ser un escenario y se lee
+   como un documento: la barra arriba, la portada y un artículo por
+   pieza. Las hojas del recorrido copian esos mismos artículos. */
+.papel-js:not(.papel-leer) :is(.lectura, .papel-volver){display:none}
+:root:not(.papel-js) :is(.papel-hud__acc, #empezar){display:none}
+:is(:root:not(.papel-js), .papel-leer) :is(.escenario, .ficha, .papel-capitulos, #abrir-indice, .papel-texto, .portada__texto, .portada__ayuda){display:none}
+:is(:root:not(.papel-js), .papel-leer) body.papel{height:auto;overflow:auto;overscroll-behavior:auto}
+:is(:root:not(.papel-js), .papel-leer) .papel-hud{
+  position:sticky;grid-template-columns:minmax(0, 1fr) auto;padding-bottom:12px;
+  background:var(--mal-bg);border-bottom:var(--mal-separador);
+}
+:is(:root:not(.papel-js), .papel-leer) .portada{
+  position:static;width:min(44rem, calc(100% - 32px));max-height:none;overflow:visible;margin:var(--mal-e7) auto 0;
+  padding:0;background:none;border:0;box-shadow:none;transform:none;opacity:1;pointer-events:auto;
+}
+.lectura{width:min(44rem, calc(100% - 32px));margin:var(--mal-e7) auto var(--mal-e8);display:flex;flex-direction:column;gap:var(--mal-e7)}
+.lectura:focus{outline:none}
+.lectura__sala{display:flex;flex-direction:column;gap:var(--mal-e6);padding-top:var(--mal-e5);border-top:var(--mal-borde)}
+.lectura__sala-t{font-family:var(--mal-mono);font-size:var(--mal-t-mini);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mal-on-surface-3)}
+.lectura__sala-t span{color:var(--mal-primary-txt)}
+.lectura__pieza{display:flex;flex-direction:column;gap:var(--mal-e5);scroll-margin-top:88px}
+.lectura__pieza > *{min-width:0}
+.lectura__pieza + .lectura__pieza{padding-top:var(--mal-e6);border-top:var(--mal-separador)}
+/* lo que la portada ya dijo arriba, y el enlace a esta misma versión */
+.lectura #t-perfil :is(.hoja__kicker, .hoja__titulo, .cifras),.lectura a[href="#texto"]{display:none}
 
 /* ─── menos movimiento ──────────────────────────────────────── */
 @media (prefers-reduced-motion:reduce){
