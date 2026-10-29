@@ -2,7 +2,7 @@
    El id no se cambia nunca: es el mismo que se registra en Steam, en Game
    Center y en Google Play. Game Center admite hasta 100 logros y 1000
    puntos por juego, así que los puntos se reparten con cuidado.
-   «premio» son las guaguas que da al desbloquearse. «secreto» lo esconde
+   «premio» son los sucres que da al desbloquearse. «secreto» lo esconde
    hasta que sale. */
 export const LOGROS = [
   // ─── el boliche ───
@@ -31,6 +31,6 @@ export const JUEGOS = {
   coches: { nombre: 'Coches de madera', url: 'coches/' },
 };
 
-/* Lo que se gana con la moneda común, las guaguas, jugando. El boliche
+/* Lo que se gana con la moneda común, los sucres, jugando. El boliche
    tiene tope diario: apostar no es la forma rápida de progresar. */
 export const TOPE_DIARIO = { boliche: 20 };
