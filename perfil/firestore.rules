@@ -1,0 +1,15 @@
+rules_version = '2';
+// Cada quien lee y escribe solo su propio perfil, y con la forma que espera
+// perfil.js. Se publica en Firebase → Firestore → Reglas.
+service cloud.firestore {
+  match /databases/{db}/documents {
+    match /usuarios/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['cuentas', 'logros', 'nombre', 'actualizado'])
+        && request.resource.data.cuentas is map && request.resource.data.cuentas.size() <= 50
+        && request.resource.data.logros is map && request.resource.data.logros.size() <= 200
+        && request.resource.data.nombre is string && request.resource.data.nombre.size() <= 100;
+    }
+  }
+}

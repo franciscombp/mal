@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tu perfil — UNA</title>
+<meta name="description" content="Tus guaguas y tus logros en los juegos de UNA: el boliche y los coches de madera. Se guardan en tu navegador y, si entras con tu cuenta, en la nube.">
+<link rel="canonical" href="https://franciscombp.github.io/mal/perfil/">
+<meta name="theme-color" content="#E7E7E4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151514" media="(prefers-color-scheme: dark)">
+<meta name="robots" content="noindex">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../img/icono-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="../img/icono-180.png">
+<link rel="preload" href="../ds/fonts/syne.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../ds/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../ds/mal/mal.css?v=1.0.18">
+<script src="../ds/mal/mal.js?v=1.0.18" defer></script>
+<style>
+  .bolsa{display:flex;align-items:baseline;gap:.5rem;margin:.5rem 0 0}
+  .bolsa b{font:800 clamp(2.6rem,9vw,3.6rem)/1 "Syne",system-ui,sans-serif}
+  .avance{display:flex;align-items:center;gap:.75rem;margin:.75rem 0 0}
+  .avance .progreso{flex:1}
+  .logros .fila-app{min-height:64px}
+  .logros .no .fila-app__icono{filter:grayscale(1);opacity:.45}
+  .logros .no .fila-app__texto b{opacity:.7}
+  .cuenta{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem}
+  .codigo{width:100%;font-family:ui-monospace,monospace;font-size:.8rem;min-height:5.5rem}
+</style>
+</head>
+<body>
+<a class="salta" href="#principal">Saltar al contenido</a>
+<header class="hud">
+  <div class="wrap hud__in">
+    <a class="hud__marca" href=".."><span class="hud__punto" aria-hidden="true"></span><b>UNA</b><span>una.red</span></a>
+    <nav aria-label="Secciones"><a href="../#apps">Apps</a><a href="../#juegos">Juegos</a><a href="../#medios">Blogs</a><a href="../ds/">Sistemas</a><a href="../#quien">Quién</a></nav>
+  </div>
+</header>
+<main id="principal" class="wrap emb">
+  <p class="kicker">Juegos / Tu perfil</p>
+  <h1 class="emb__t">Tu perfil</h1>
+  <p class="lede emb__d">Lo que ganas en los juegos se junta aquí: las guaguas y los logros. Más adelante, con las guaguas
+  se mejora el coche de madera y se compran ollitas encantadas.</p>
+
+  <section class="sec">
+    <p class="kicker">Tus guaguas</p>
+    <p class="bolsa"><b id="saldo">0</b><span>guaguas de pan</span></p>
+    <p class="caption">Se ganan jugando y con los logros. En el boliche entran hasta <span id="tope"></span> al día:
+    apostar no es la forma rápida de juntar. Hoy te quedan <b id="queda"></b> por el boliche. Nada de esto es dinero de verdad,
+    ni se compra ni se cobra.</p>
+  </section>
+
+  <section class="sec">
+    <p class="kicker">Logros</p>
+    <h2 class="emb__h2">Los logros</h2>
+    <div class="avance"><div class="progreso" aria-hidden="true"><span id="barra"></span></div><span class="micro" id="cuenta-logros"></span></div>
+    <div id="logros"></div>
+  </section>
+
+  <section class="sec">
+    <p class="kicker">La cuenta</p>
+    <h2 class="emb__h2">Guardar en la nube</h2>
+    <div class="cuenta" id="cuenta"></div>
+    <p class="caption" id="cuenta-x"></p>
+  </section>
+
+  <section class="sec">
+    <p class="kicker">A mano</p>
+    <h2 class="emb__h2">Código de respaldo</h2>
+    <p class="caption">Copia este código para pasar tu perfil a otro navegador. Al pegarlo allá, se junta con lo que ya haya:
+    no se pierde nada.</p>
+    <textarea class="input codigo" id="codigo" aria-label="Código de respaldo" spellcheck="false"></textarea>
+    <p class="hero__acciones">
+      <button class="btn btn--sm" type="button" id="b-copiar"><svg class="icono icono--s" aria-hidden="true"><use href="#i-copiar"/></svg> Copiar mi código</button>
+      <button class="btn btn--sm" type="button" id="b-pegar"><svg class="icono icono--s" aria-hidden="true"><use href="#i-subir"/></svg> Juntar el código pegado</button>
+    </p>
+    <p class="micro" id="codigo-x" role="status"></p>
+  </section>
+</main>
+<footer class="pie">
+  <div class="wrap pie__in">
+    <p><b>UNA</b> · <a href="..">una.red</a> · el hub de MAL · Quito, Ecuador</p>
+    <p>Código abierto en GitHub · hecho en Quito, con Claude Code de copiloto</p>
+  </div>
+</footer>
+<script type="module">
+import * as perfil from './perfil.js?v=1';
+import { JUEGOS, TOPE_DIARIO } from './logros.js';
+const $ = id => document.getElementById(id);
+const fecha = t => new Date(t).toLocaleDateString('es-EC', { day: 'numeric', month: 'long', year: 'numeric' });
+
+function pintar() {
+  $('saldo').textContent = perfil.saldo();
+  $('tope').textContent = TOPE_DIARIO.boliche;
+  $('queda').textContent = perfil.quedaHoy('boliche');
+  const ls = perfil.logros(), hechos = ls.filter(l => l.cuando);
+  $('barra').style.width = `${Math.round(hechos.length / ls.length * 100)}%`;
+  $('cuenta-logros').textContent = `${hechos.length} de ${ls.length}`;
+  const cont = $('logros'); cont.innerHTML = '';
+  for (const [juego, j] of Object.entries(JUEGOS)) {
+    const h = document.createElement('h3'); h.className = 'kicker'; h.style.margin = '1.25rem 0 .5rem';
+    const a = document.createElement('a'); a.href = `../${j.url}`; a.textContent = j.nombre; h.append(a);
+    const ul = document.createElement('ul'); ul.className = 'lista-agrupada logros';
+    for (const l of ls.filter(l => l.juego === juego)) {
+      const oculto = l.secreto && !l.cuando;
+      const li = document.createElement('li'); if (!l.cuando) li.className = 'no';
+      li.innerHTML = `<div class="fila-app"><span class="fila-app__icono"><svg class="icono" aria-hidden="true"><use href="#i-${l.cuando ? 'trofeo' : 'candado'}"/></svg></span>
+        <span class="fila-app__texto"><b></b><small></small></span><span class="fila-app__valor"></span></div>`;
+      li.querySelector('b').textContent = oculto ? 'Logro secreto' : l.nombre;
+      li.querySelector('small').textContent = oculto ? 'Sale jugando.' : l.cuando ? `${l.desc} · ${fecha(l.cuando)}` : l.desc;
+      li.querySelector('.fila-app__valor').textContent = l.premio ? `+${l.premio}` : '';
+      ul.append(li);
+    }
+    cont.append(h, ul);
+  }
+  if (document.activeElement !== $('codigo')) $('codigo').value = perfil.respaldo();
+}
+perfil.alCambiar(pintar);
+pintar();
+
+$('b-copiar').addEventListener('click', async () => {
+  $('codigo').value = perfil.respaldo();
+  try { await navigator.clipboard.writeText($('codigo').value); $('codigo-x').textContent = 'Copiado.'; }
+  catch (e) { $('codigo').select(); $('codigo-x').textContent = 'Selecciónalo y cópialo a mano.'; }
+});
+$('b-pegar').addEventListener('click', () => {
+  try { perfil.restaurar($('codigo').value); $('codigo-x').textContent = 'Listo: se juntó con tu perfil.'; $('codigo').blur(); pintar(); }
+  catch (e) { $('codigo-x').textContent = 'Ese código no sirve. Revisa que esté completo.'; }
+});
+
+// la cuenta en la nube
+const cuenta = $('cuenta'), cx = $('cuenta-x');
+if (!perfil.hayNube) {
+  cx.textContent = 'Por ahora tu perfil vive solo en este navegador. Pronto podrás entrar con tu cuenta para no perderlo y jugar en varios dispositivos.';
+} else {
+  cx.textContent = 'Conectando…';
+  perfil.conNube().then(n => {
+    if (!n) { cx.textContent = 'No se pudo conectar con la nube. Tu perfil sigue guardado en este navegador.'; return; }
+    n.alCambiarUsuario(u => {
+      cuenta.innerHTML = '';
+      const b = document.createElement('button'); b.type = 'button'; b.className = u ? 'btn btn--sm' : 'btn btn--rojo btn--sm';
+      b.innerHTML = `<svg class="icono icono--s" aria-hidden="true"><use href="#i-${u ? 'salir' : 'usuario'}"/></svg> `;
+      b.append(u ? 'Salir' : 'Entrar con Google');
+      b.addEventListener('click', () => (u ? n.salir() : n.entrar()).catch(e => { cx.textContent = 'No se pudo entrar: ' + (e.code || e.message); }));
+      if (u) { const s = document.createElement('span'); s.textContent = u.displayName || u.email || 'Con tu cuenta'; cuenta.append(s); }
+      cuenta.prepend(b);
+      cx.textContent = u ? 'Tu perfil se guarda en la nube y se junta en cada dispositivo donde entres.' : 'Entra para guardar tus logros en la nube y jugar en varios dispositivos.';
+    });
+  });
+}
+</script>
+</body>
+</html>
