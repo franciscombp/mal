@@ -1,4 +1,4 @@
-/* El perfil compartido de los juegos: la moneda común (las guaguas), los
+/* El perfil compartido de los juegos: la moneda común (los sucres), los
    logros y, si está configurada, la cuenta en la nube.
 
    Todo vive primero en este navegador. Los juegos están en el mismo sitio,
@@ -58,7 +58,7 @@ export function mezclarDeFuera(otro) {
 /* ─── la moneda común ─── */
 const mias = () => (p.cuentas[p.dispositivo] ||= { ganado: 0, gastado: 0 });
 export const saldo = () => Object.values(p.cuentas).reduce((s, c) => s + c.ganado - c.gastado, 0);
-// Gana guaguas; el boliche respeta su tope del día. Devuelve lo que sí entró.
+// Gana sucres; el boliche respeta su tope del día. Devuelve lo que sí entró.
 export function ganar(n, juego) {
   if (p.dia.fecha !== hoy()) p.dia = { fecha: hoy() };
   const tope = TOPE_DIARIO[juego];
@@ -131,7 +131,7 @@ function siguiente() {
   const l = caja.cola.shift();
   if (!l) { caja.va = false; return; }
   caja.va = true;
-  caja.el.innerHTML = `<span class="m" aria-hidden="true">★</span><span><small>Logro</small><b></b></span>${l.premio ? `<span class="g">+${l.premio} guaguas</span>` : ''}`;
+  caja.el.innerHTML = `<span class="m" aria-hidden="true">★</span><span><small>Logro</small><b></b></span>${l.premio ? `<span class="g">+${l.premio} ${l.premio === 1 ? 'sucre' : 'sucres'}</span>` : ''}`;
   caja.el.querySelector('b').textContent = l.nombre;
   requestAnimationFrame(() => caja.el.classList.add('ve'));
   setTimeout(() => { caja.el.classList.remove('ve'); setTimeout(siguiente, 500); }, 3200);

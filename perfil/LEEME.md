@@ -1,6 +1,6 @@
 # El perfil compartido
 
-La moneda común (las guaguas), los logros y la cuenta de todos los juegos.
+La moneda común (los sucres, como la moneda del Ecuador hasta el 2000), los logros y la cuenta de todos los juegos.
 
 - `perfil.js`: el perfil. Se guarda en el navegador (`una.perfil.v1`) y lo comparten todos los juegos del sitio.
 - `logros.js`: el catálogo de logros y el tope diario del boliche.
@@ -13,7 +13,7 @@ La moneda común (las guaguas), los logros y la cuenta de todos los juegos.
 
 ```js
 import * as perfil from '../perfil/perfil.js?v=1';
-perfil.ganar(1, 'boliche');          // guaguas; el boliche tiene tope diario
+perfil.ganar(1, 'boliche');          // sucres; el boliche tiene tope diario
 perfil.desbloquear('boliche-quebraste');
 perfil.saldo();
 perfil.gastar(10);                   // false si no alcanza
@@ -22,7 +22,7 @@ perfil.gastar(10);                   // false si no alcanza
 ## Las reglas de la economía
 
 - Nada se compra ni se cobra con dinero de verdad.
-- La plata del boliche se queda en el boliche. Lo que sale a las guaguas es una por ronda jugada, con tope diario (`TOPE_DIARIO`), y los premios de los logros.
+- La plata del boliche se queda en el boliche. Lo que sale a los sucres es uno por ronda jugada, con tope diario (`TOPE_DIARIO`), y los premios de los logros.
 - Ningún logro premia apostar mucho ni perder.
 
 ## Cómo se juntan los dispositivos

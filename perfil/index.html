@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Tu perfil — UNA</title>
-<meta name="description" content="Tus guaguas y tus logros en los juegos de UNA: el boliche y los coches de madera. Se guardan en tu navegador y, si entras con tu cuenta, en la nube.">
+<meta name="description" content="Tus sucres y tus logros en los juegos de UNA: el boliche y los coches de madera. Se guardan en tu navegador y, si entras con tu cuenta, en la nube.">
 <link rel="canonical" href="https://franciscombp.github.io/mal/perfil/">
 <meta name="theme-color" content="#E7E7E4" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#151514" media="(prefers-color-scheme: dark)">
@@ -39,12 +39,12 @@
 <main id="principal" class="wrap emb">
   <p class="kicker">Juegos / Tu perfil</p>
   <h1 class="emb__t">Tu perfil</h1>
-  <p class="lede emb__d">Lo que ganas en los juegos se junta aquí: las guaguas y los logros. Más adelante, con las guaguas
+  <p class="lede emb__d">Lo que ganas en los juegos se junta aquí: los sucres y los logros. Más adelante, con los sucres
   se mejora el coche de madera y se compran ollitas encantadas.</p>
 
   <section class="sec">
-    <p class="kicker">Tus guaguas</p>
-    <p class="bolsa"><b id="saldo">0</b><span>guaguas de pan</span></p>
+    <p class="kicker">Tus sucres</p>
+    <p class="bolsa"><b id="saldo">0</b><span>sucres</span></p>
     <p class="caption">Se ganan jugando y con los logros. En el boliche entran hasta <span id="tope"></span> al día:
     apostar no es la forma rápida de juntar. Hoy te quedan <b id="queda"></b> por el boliche. Nada de esto es dinero de verdad,
     ni se compra ni se cobra.</p>
@@ -84,7 +84,7 @@
   </div>
 </footer>
 <script type="module">
-import * as perfil from './perfil.js?v=1';
+import * as perfil from './perfil.js?v=2';
 import { JUEGOS, TOPE_DIARIO } from './logros.js';
 const $ = id => document.getElementById(id);
 const fecha = t => new Date(t).toLocaleDateString('es-EC', { day: 'numeric', month: 'long', year: 'numeric' });
