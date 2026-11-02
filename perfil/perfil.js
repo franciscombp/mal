@@ -119,6 +119,12 @@ function avisar(l) {
       small{display:block;font-weight:500;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#ffcf6b}
       b{display:block;font-size:15px}
       .g{flex:none;margin-left:4px;color:#ffcf6b;font-weight:700;white-space:nowrap}
+      /* De lado en un teléfono no hay sitio arriba al centro (ahí van los
+         títulos): el aviso entra por la esquina de arriba a la izquierda. */
+      @media (orientation:landscape) and (max-height:600px){
+        .l{left:calc(12px + env(safe-area-inset-left));transform:translate(-120%,0)}
+        .l.ve{transform:translate(0,0)}
+      }
       @media (prefers-reduced-motion:reduce){.l{transition:none}}
     </style><div class="l" role="status" aria-live="polite"></div>`;
     document.body.append(host);
