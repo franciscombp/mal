@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000">
+<defs>
+<filter id="grano" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .09 0"/></filter>
+
+</defs>
+<rect width="1600" height="1000" fill="#E9D7BC"/>
+<rect x="520" y="160" width="560" height="620" fill="#1F2E4A"/><circle cx="930" cy="300" r="58" fill="#F1E3C2"/><circle cx="620" cy="260" r="3" fill="#F1E3C2" opacity=".7"/><circle cx="700" cy="420" r="3" fill="#F1E3C2" opacity=".7"/><circle cx="1010" cy="500" r="3" fill="#F1E3C2" opacity=".7"/><circle cx="600" cy="560" r="3" fill="#F1E3C2" opacity=".7"/><rect x="790" y="160" width="20" height="620" fill="#C9AE8C"/><rect x="520" y="460" width="560" height="20" fill="#C9AE8C"/><rect x="500" y="140" width="600" height="660" fill="none" stroke="#C9AE8C" stroke-width="40"/><rect x="440" y="790" width="720" height="40" fill="#B69A78"/><g fill="#141414"><ellipse cx="760" cy="720" rx="120" ry="80"/><circle cx="700" cy="600" r="62"/><polygon points="650,560 660,490 700,548"/><polygon points="750,560 742,490 704,548"/><path d="M860 760 q90 -10 80 -120 q-6 -50 30 -60" stroke="#141414" stroke-width="22" fill="none" stroke-linecap="round"/></g><g fill="#F2B33D"><ellipse cx="680" cy="598" rx="9" ry="5"/><ellipse cx="722" cy="598" rx="9" ry="5"/></g>
+<rect width="1600" height="1000" filter="url(#grano)"/>
+</svg>
