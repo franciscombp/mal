@@ -11,7 +11,7 @@ const FUERA = [
   // donde comparten el perfil (mismo origen).
   ["/coches", "https://quesf-ec.github.io/coches"],
   ["/apps/boliche", "https://quesf-ec.github.io/boliche"],
-  ["/perfil", "https://quesf-ec.github.io/Perfil"],
+  ["/perfil", "https://quesf-ec.github.io/perfil"],
 ];
 const redir = (to) => new Response(null, { status: 301, headers: { Location: to } });
 // Un 3xx del origen NO se sigue: si un repo tiene dominio propio en Pages, GitHub redirige a
