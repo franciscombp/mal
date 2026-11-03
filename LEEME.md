@@ -1,6 +1,6 @@
 # mal — una.red
 
-El sitio de **MAL SAS**, la casa matriz de Francisco Maldonado: [una.red](https://una.red).
+El sitio de **MAL** (nombre legal: Mal S.A.S.), la casa matriz de Francisco Maldonado: [una.red](https://una.red).
 Lo sirve Cloudflare (`workers/una-red/`) desde el GitHub Pages de este repo.
 
 ## Qué vive dónde
@@ -16,7 +16,7 @@ Lo sirve Cloudflare (`workers/una-red/`) desde el GitHub Pages de este repo.
 
 ## Este repo
 
-- `index.html`: la portada de MAL SAS, por marcas.
+- `index.html`: la portada de MAL, por marcas.
 - `apps/`: la ficha de cada proyecto, que incrusta el juego o la app desde su repo.
 - `lamparometro/`, `leyendas/`, `umbral/`, `renuncia/`: pruebas de concepto que viven aquí
   hasta que pasan a su marca.
