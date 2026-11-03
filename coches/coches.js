@@ -2649,7 +2649,7 @@ function actualiza(dt) {
       actualiza.n = n;
       const el = $('#cuenta');
       el.classList.remove('is-sale'); void el.offsetWidth;
-      el.textContent = n > 0 ? String(n) : pistaActual.premio ? '¡A subir!' : LARGO_VUELTA ? '¡A correr!' : '¡A bajar!';
+      el.textContent = reanudando ? (n > 0 ? String(n) : '¡Sigue!') : n > 0 ? String(n) : pistaActual.premio ? '¡A subir!' : LARGO_VUELTA ? '¡A correr!' : '¡A bajar!';
       el.dataset.n = Math.max(0, n);
       el.classList.add('is-sale');
       tono(n > 0 ? 440 : 880, n > 0 ? 0.18 : 0.45, 'square', 0.12);
@@ -2657,6 +2657,7 @@ function actualiza(dt) {
     // Pisar durante la cuenta: el ritmo que se trae al «¡A bajar!» es el
     // arranque. Alternando a buen ritmo, el de atrás ya sale corriendo y
     // salta al carro; a medias, un empujón; sin pisar, se sale desde cero.
+    if (reanudando) { if (cuenta <= 0) { estado = 'carrera'; reanudando = false; } return; }
     pasaPasos(dt); if (modo !== 'demo') enseña();
     if (cuenta <= 0) {
       estado = 'carrera';
@@ -3925,15 +3926,23 @@ function empieza() {
 function pausa() {
   if (modo === 'demo') { terminaDemo(); return; }
   if (estado !== 'carrera' && estado !== 'cuenta') return;
-  antes = estado; estado = 'pausa';
+  antes = reanudando ? 'carrera' : estado; reanudando = false; estado = 'pausa';
+  // En la Copa, salir o repetir cuesta la Copa entera: que lo diga el botón.
+  $('#b-salir span').textContent = modo === 'copa' ? 'Salir al menú (se pierde la Copa)' : 'Salir al menú';
+  $('#b-reintentar span').textContent = modo === 'copa' ? 'Otra vez desde la salida (se pierde la Copa)' : 'Otra vez desde la salida';
   $('#pausa').hidden = false;
   $('#b-seguir').focus({ preventScroll: true });
   if (son.ctx) son.ctx.suspend();
 }
+// Al seguir desde la pausa en plena carrera, un segundo de cuenta («¡Sigue!»)
+// para poner los pulgares, sin arranque extra ni avisos.
+let reanudando = false;
 function sigue() {
   if (estado !== 'pausa') return;
-  estado = antes; $('#pausa').hidden = true;
+  $('#pausa').hidden = true;
   if (son.ctx) son.ctx.resume();
+  if (antes === 'carrera') { estado = 'cuenta'; cuenta = 1; reanudando = true; actualiza.n = null; }
+  else estado = antes;
 }
 
 function empiezaCopa(id) {
