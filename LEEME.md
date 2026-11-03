@@ -20,7 +20,7 @@ Lo sirve Cloudflare (`workers/una-red/`) desde el GitHub Pages de este repo.
 - `apps/`: la ficha de cada proyecto, que incrusta el juego o la app desde su repo.
 - `lamparometro/`, `leyendas/`, `umbral/`, `renuncia/`: pruebas de concepto que viven aquí
   hasta que pasan a su marca.
-- El perfil compartido (sucres y logros) vive en [quesf-ec/Perfil](https://github.com/quesf-ec/Perfil), en `quesf-ec.github.io/Perfil/`.
+- El perfil compartido (sucres y logros) vive en [quesf-ec/Perfil](https://github.com/quesf-ec/Perfil), en `quesf-ec.github.io/perfil/`.
 - `portafolio/`: el portafolio de Fran, que se sirve en [maldonado.pro](https://maldonado.pro).
 - `workers/`: el código de los Workers de Cloudflare de una.red y maldonado.pro.
 
