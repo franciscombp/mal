@@ -2503,7 +2503,8 @@ function ritmo() {
 
 function pasaPasos(dt) {
   const subeIzq = (teclas.izq && !pasos.prevIzq) || pulsos.izq > 0, subeDer = (teclas.der && !pasos.prevDer) || pulsos.der > 0;
-  const subeEmp = (teclas.empuja && !pasos.prevEmp) || pulsos.empuja > 0;
+  // En la cuenta atrás solo se pisa: ni subirse ni el empujón antes del «¡A bajar!».
+  const subeEmp = estado !== 'cuenta' && ((teclas.empuja && !pasos.prevEmp) || pulsos.empuja > 0);
   pasos.prevIzq = teclas.izq; pasos.prevDer = teclas.der; pasos.prevEmp = teclas.empuja;
   pulsos.izq = pulsos.der = pulsos.empuja = 0;
   pasos.burst = Math.max(0, pasos.burst - dt);
@@ -2583,14 +2584,14 @@ function pisaUnPie(lado) {
 // girar al subirse, el botón morado con la primera colada y bajarse cuando
 // va lento. Cada aviso sale dos veces en la vida del jugador y ya.
 function enseña() {
-  if (estado !== 'carrera' || modo === 'demo') return;
+  if ((estado !== 'carrera' && estado !== 'cuenta') || modo === 'demo') return;
   const v = ajustes.vistos || (ajustes.vistos = {});
   const di = (clave, texto) => {
     if ((v[clave] || 0) >= 2 || reloj - (enseña.t || -9) < 3) return;
     v[clave] = (v[clave] || 0) + 1; enseña.t = reloj; guardaAjustes();
     avisa(texto, 2600);
   };
-  if (reloj > 0.6 && reloj < 4 && e.estado === 'empujando') di('pisa', esTactil ? 'Toca ◀ ▶ alternando: así empuja el de atrás' : 'Pisa ← → alternando: así empuja el de atrás');
+  if (estado === 'cuenta' && cuenta < 2.6 && e.estado === 'empujando') di('pisa', esTactil ? 'Toca ◀ ▶ alternando ya: a buen ritmo, arranque extra' : 'Pisa ← → alternando ya: a buen ritmo, arranque extra');
   else if (reloj > 4 && e.estado === 'a_bordo' && j.v > 6) di('gira', esTactil ? 'Ya a bordo: toca los lados para girar' : 'Ya a bordo: ← → giran, ↓ frena');
   else if (e.estado === 'empujando' && (j.coladas || 0) > 0) di('colada', esTactil ? '¡Tienes colada! El botón morado da el empujón fuerte' : '¡Tienes colada! ← + → a la vez: el empujón fuerte');
   else if (e.estado === 'a_bordo' && j.v < BAJA_MANUAL && j.v > BAJA_EMPUJE && reloj > 8) di('bajate', esTactil ? 'Vas lento: «Bájate» y empuja a pie' : 'Vas lento: ↑ para bajarse a empujar');
@@ -2639,7 +2640,18 @@ function actualiza(dt) {
       el.classList.add('is-sale');
       tono(n > 0 ? 440 : 880, n > 0 ? 0.18 : 0.45, 'square', 0.12);
     }
-    if (cuenta <= 0) estado = 'carrera';
+    // Pisar durante la cuenta: el ritmo que se trae al «¡A bajar!» es el
+    // arranque. Alternando a buen ritmo, el de atrás ya sale corriendo y
+    // salta al carro; a medias, un empujón; sin pisar, se sale desde cero.
+    if (modo !== 'demo') { pasaPasos(dt); enseña(); }
+    if (cuenta <= 0) {
+      estado = 'carrera';
+      const r = ritmo();
+      if (r >= 0.7) { j.v = 6 * ST.empuje; pasos.burst = 0.5; sacudida = 0.4; avisa('¡Arranque perfecto!', 1200); tono(880, 0.1, 'square', 0.12); setTimeout(() => tono(1320, 0.14, 'square', 0.12), 90); }
+      else if (r >= 0.35) { j.v = 3 * ST.empuje; pasos.burst = 0.35; avisa('¡Buen arranque!', 1000); tono(700, 0.1, 'square', 0.1); }
+      // Los rivales también arrancan pisando, cada uno según su maña.
+      for (const rv of rivales) rv.v = (Math.random() < rv.cruce.eq.hab - 0.3 ? 4 : 1.5) * rv.cruce.eq.hab;
+    }
     return;
   }
   if (estado !== 'carrera' && estado !== 'llegada') return;
@@ -3186,7 +3198,7 @@ function pintaHud() {
   datos.coladas = coladas;
   // Los pies: se enciende el que toca (los dos, antes del primer paso), la
   // racha en medio, y la píldora se ilumina con cada buen paso.
-  const pisa = e.estado === 'empujando' && estado === 'carrera';
+  const pisa = e.estado === 'empujando' && (estado === 'carrera' || estado === 'cuenta');
   if (pisa !== ultimoHud.pisa) { hud.pasos.hidden = !pisa; ultimoHud.pisa = pisa; }
   if (pisa) {
     const toca = -pasos.ultimo;
