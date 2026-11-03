@@ -1,16 +1,17 @@
 const ORIGIN = "https://franciscombp.github.io/mal";
-// Sitios con repo propio: se sirven aquí (no se redirigen) para seguir en el origen de una.red
-// (el perfil vive en su localStorage) y conservar los enlaces relativos ../ds/, ../perfil/.
+// Repos que se sirven aquí (no se redirigen): otros sitios consumen el sistema por una.red/ds/.
 const PROPIOS = [
   ["/ds", "https://franciscombp.github.io/ds"],
-  ["/coches", "https://quesf-ec.github.io/coches"],
-  ["/perfil", "https://quesf-ec.github.io/perfil"],
-  ["/apps/boliche", "https://quesf-ec.github.io/boliche"],
 ];
 // Lo que tiene su propio dominio: 301, porque son URLs que estuvieron en el sitemap.
 const FUERA = [
   ["/portafolio", "https://maldonado.pro"],
   ["/guagua", "https://finados.una.red"],
+  // Los juegos de Quesf viven en su organización: funcionan solos en quesf-ec.github.io,
+  // donde comparten el perfil (mismo origen).
+  ["/coches", "https://quesf-ec.github.io/coches"],
+  ["/apps/boliche", "https://quesf-ec.github.io/boliche"],
+  ["/perfil", "https://quesf-ec.github.io/Perfil"],
 ];
 const redir = (to) => new Response(null, { status: 301, headers: { Location: to } });
 // Un 3xx del origen NO se sigue: si un repo tiene dominio propio en Pages, GitHub redirige a
