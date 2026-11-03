@@ -23,9 +23,10 @@
 <!-- El sello ?v= se sube a mano en cada cambio del juego (CSS, JS y, con el
      JS, los modelos, que heredan su sello): así el navegador no se queda con
      la versión anterior. -->
-<link rel="stylesheet" href="coches.css?v=c32ecb30ff">
+<link rel="stylesheet" href="coches.css?v=ca1e9f8e85">
 <!-- La piel del juego: variante del tema juegos (ver tema/LEEME.md). Va al final para mandar. -->
-<link rel="stylesheet" href="tema/tema.css?v=c32ecb30ff">
+<link rel="stylesheet" href="tema/tema.css?v=ca1e9f8e85">
+<link rel="modulepreload" href="vendor/three.module.min.js">
 <script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js", "three/addons/": "./vendor/addons/" } }</script>
 <script type="application/ld+json">
 {
@@ -401,6 +402,6 @@
 </div>
 
 <script src="../ds/mal/mal.js?v=1.0.18" defer></script>
-<script type="module" src="coches.js?v=c32ecb30ff"></script>
+<script type="module" src="coches.js?v=ca1e9f8e85"></script>
 </body>
 </html>
