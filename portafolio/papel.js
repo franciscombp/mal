@@ -118,24 +118,24 @@
   /* ─── escala ─────────────────────────────────────────────────── */
   let s = 1, s0 = 1, vw = 0, vh = 0, verAncho = 0, offY = 0, abajo = 0, arriba = 0;
   let techo = 0;       // dónde acaba la barra de arriba, en unidades del mundo
-  let zoom = 1, zoomPintado = 0;
-  const ZOOM = 1.05;   // cuánto se acerca la cámara al llegar a una pieza
+  /* La escala solo cambia al cambiar el tamaño de la pantalla. Hubo un
+     acercamiento de cámara del 5 % al llegar a cada pieza, pero cada
+     cambio de escala obliga a repintar el mundo entero a la nueva
+     resolución, sombras incluidas: costaba la mitad del tiempo de pintado
+     al caminar y apenas se notaba. */
   function medir() {
     despertar();
     vw = esc.clientWidth;
     vh = esc.clientHeight;
     arriba = hud.getBoundingClientRect().bottom + 10;
     abajo = vh - ficha.offsetHeight - 30;
-    const franja = (VISIBLE[1] - VISIBLE[0]) * ZOOM;   // con sitio para el acercamiento
+    const franja = VISIBLE[1] - VISIBLE[0];
     s0 = limita(Math.min((abajo - arriba) / franja, vw / (vw < vh ? 430 : 520)), 0.4, 1.6);
-    zoomPintado = 0;
     horaPintada = -1;
     escala();
   }
   function escala() {
-    if (Math.abs(zoom - zoomPintado) < 0.0005) return;
-    zoomPintado = zoom;
-    s = s0 * zoom;
+    s = s0;
     verAncho = vw / s;
     offY = abajo - VISIBLE[1] * s;
     techo = (arriba - offY) / s;
@@ -493,11 +493,6 @@
       idCerca = id;
       if (sala) sala.el.dataset.cerca = id;
     }
-    /* la cámara se acerca un poco cuando Fran ya está ante la pieza */
-    const objetivo = llego ? ZOOM : 1;
-    zoom += (objetivo - zoom) * 0.06;
-    if (Math.abs(objetivo - zoom) < 0.0008) zoom = objetivo;
-    escala();
   }
 
   /* ─── qué hay a mano ─────────────────────────────────────────── */
@@ -961,7 +956,7 @@
      temporizador para lo que está programado: el trolebús y las poses
      de espera de Fran. */
   let durmiendo = false, dormidoDesde = 0, quietos = 0, alarma = 0;
-  let camAntes = NaN, xAntes = NaN, zoomAntes = NaN;
+  let camAntes = NaN, xAntes = NaN;
   const ESPERAS = [3500, 6000, 10500];
   function despertar() {
     if (!durmiendo) return;
@@ -1001,8 +996,8 @@
     if (!st.andando && t - quietoDesde > 6000 && !franEl.classList.contains('fran--frente')) franEl.classList.add('fran--frente');
     /* y al rato se le pasa: manos al bolsillo, silbando */
     if (!st.andando && t - quietoDesde > 10500 && !franEl.classList.contains('fran--chill')) franEl.classList.add('fran--chill');
-    const movido = st.cam !== camAntes || st.x !== xAntes || zoom !== zoomAntes;
-    camAntes = st.cam; xAntes = st.x; zoomAntes = zoom;
+    const movido = st.cam !== camAntes || st.x !== xAntes;
+    camAntes = st.cam; xAntes = st.x;
     const activo = movido || st.izq !== st.der || st.meta !== null || troleSt.va;
     quietos = activo ? 0 : quietos + 1;
     if (quietos > 20) { dormirBucle(t); return; }
