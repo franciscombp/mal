@@ -515,9 +515,10 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 .hoja__datos dd{margin:0;font-weight:600;color:var(--mal-on-surface);overflow-wrap:anywhere}
 .hoja__datos a{color:var(--mal-primary-txt)}
 .hoja__pendiente{
-  font-size:var(--mal-t-caption);color:var(--mal-on-surface-3);
+  font-size:var(--mal-t-caption);color:var(--mal-on-surface-3);line-height:1.5;
   padding:var(--mal-e3) var(--mal-e4);border:1px dashed var(--mal-outline-2);border-radius:var(--mal-r-s);
 }
+.hoja__pendiente a{color:var(--mal-primary-txt);font-weight:600;overflow-wrap:anywhere}
 .hoja__nota{font-family:var(--mal-mono);font-size:var(--mal-t-mini);color:var(--mal-on-surface-3)}
 .hoja__acc{display:flex;flex-wrap:wrap;gap:var(--mal-e2)}
 .hoja__perfil{display:flex;align-items:center;gap:var(--mal-e4)}
@@ -739,7 +740,7 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
   html,body.papel{height:auto;overflow:visible;background:#fff;color:#111}
   body::before{content:none !important}
   .escenario,.ficha,.hoja,.papel-defs,.papel-hud__acc,.papel-capitulos,.portada__acc,.portada__ayuda,
-  .hoja__temas,.hoja__acc,.hoja__pendiente,.lectura a[href="#texto"],#t-salida{display:none !important}
+  .hoja__temas,.hoja__acc,.lectura a[href="#texto"],#t-salida{display:none !important}
   .papel-hud{position:static;display:block;padding:0 0 8mm;border-bottom:1px solid #111}
   .papel-marca__rol{display:inline}
   .portada,.lectura{display:flex !important;position:static;width:auto;max-width:none;margin:0;padding:0;
@@ -762,6 +763,8 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
   .hoja__datos dd a[href^="http"]::after{content:" · " attr(href);font-family:var(--mal-mono);font-size:8pt;color:#666}
   .hoja__lista b::after{content:none}
   .hoja__lista li,.hoja__datos > div{break-inside:avoid}
+  .hoja__pendiente{border-color:#bbb;color:#444}
+  .hoja__pendiente a{color:#111;text-decoration:none}
   .hoja__citas figure{padding:3mm;background:#f3f1ec;break-inside:avoid}
   .hoja__citas blockquote{font-size:9.5pt}
   .hoja__mas{border:0}
