@@ -113,17 +113,19 @@
   };
 
   /* ─── escala ─────────────────────────────────────────────────── */
-  let s = 1, s0 = 1, vw = 0, vh = 0, verAncho = 0, offY = 0, abajo = 0;
+  let s = 1, s0 = 1, vw = 0, vh = 0, verAncho = 0, offY = 0, abajo = 0, arriba = 0;
+  let techo = 0;       // dónde acaba la barra de arriba, en unidades del mundo
   let zoom = 1, zoomPintado = 0;
   const ZOOM = 1.05;   // cuánto se acerca la cámara al llegar a una pieza
   function medir() {
     vw = esc.clientWidth;
     vh = esc.clientHeight;
-    const arriba = hud.getBoundingClientRect().bottom + 10;
+    arriba = hud.getBoundingClientRect().bottom + 10;
     abajo = vh - ficha.offsetHeight - 30;
     const franja = (VISIBLE[1] - VISIBLE[0]) * ZOOM;   // con sitio para el acercamiento
     s0 = limita(Math.min((abajo - arriba) / franja, vw / (vw < vh ? 430 : 520)), 0.4, 1.6);
     zoomPintado = 0;
+    horaPintada = -1;
     escala();
   }
   function escala() {
@@ -132,6 +134,7 @@
     s = s0 * zoom;
     verAncho = vw / s;
     offY = abajo - VISIBLE[1] * s;
+    techo = (arriba - offY) / s;
     mundo.style.transform = `translate3d(0,${offY.toFixed(1)}px,0) scale(${s.toFixed(4)})`;
   }
 
@@ -438,9 +441,11 @@
     if (Math.abs(hora - horaPintada) < 0.002) return;
     horaPintada = hora;
     /* en coordenadas de la capa lejana: la x sigue a la cámara (que la
-       capa desplaza a 0,12) y recorre el ancho visible; la y hace un arco */
+       capa desplaza a 0,12) y recorre el ancho visible; la y hace un arco.
+       En pantallas bajas (el teléfono acostado) el mundo asoma por debajo
+       de la barra de arriba: el astro nunca sube más allá de ella */
     const ax = st.cam * 0.12 + (0.08 + 0.84 * hora) * verAncho - 42;
-    const ay = 96 + 110 * (1 - Math.sin(Math.PI * hora)) - 42;
+    const ay = Math.max(96 + 110 * (1 - Math.sin(Math.PI * hora)), techo + 50) - 42;
     astro.style.transform = `translate3d(${ax.toFixed(1)}px,${ay.toFixed(1)}px,0)`;
     esc.style.setProperty('--pp-tarde', suave(0.5, 1, hora).toFixed(3));
     esc.style.setProperty('--pp-luz-tarde', suave(0.72, 1, hora).toFixed(3));
