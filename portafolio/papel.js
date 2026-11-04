@@ -112,12 +112,16 @@
     finDicho: false,
   };
 
+  /* lo último que se escribió en el DOM, para no repetirlo */
+  let camPintada = NaN, xPintada = NaN;
+
   /* ─── escala ─────────────────────────────────────────────────── */
   let s = 1, s0 = 1, vw = 0, vh = 0, verAncho = 0, offY = 0, abajo = 0, arriba = 0;
   let techo = 0;       // dónde acaba la barra de arriba, en unidades del mundo
   let zoom = 1, zoomPintado = 0;
   const ZOOM = 1.05;   // cuánto se acerca la cámara al llegar a una pieza
   function medir() {
+    despertar();
     vw = esc.clientWidth;
     vh = esc.clientHeight;
     arriba = hud.getBoundingClientRect().bottom + 10;
@@ -135,6 +139,7 @@
     verAncho = vw / s;
     offY = abajo - VISIBLE[1] * s;
     techo = (arriba - offY) / s;
+    camPintada = NaN;   // cambió lo que se ve: hay que volver a desplegar
     mundo.style.transform = `translate3d(0,${offY.toFixed(1)}px,0) scale(${s.toFixed(4)})`;
   }
 
@@ -363,6 +368,7 @@
     giro.style.setProperty('--dir', d);
   }
   function irA(x) {
+    despertar();
     st.meta = limita(x, 50, W - 50);
     /* lejos se va más rápido: ningún trayecto pasa de un par de segundos */
     st.vel = limita(Math.abs(st.meta - st.x) * 0.8, VEL, 1400);
@@ -410,11 +416,16 @@
        más largos (al correr la zancada crece); en los viajes largos los
        pies ya no dan abasto y se nota, a propósito */
     const prisa = limita((st.vel - VEL) / (CARRERA - VEL), 0, 1);
-    if (anda) franEl.style.setProperty('--ciclo', limita(ZANCADA * (1 + 0.7 * prisa) / st.vel, 0.2, 0.8).toFixed(3) + 's');
+    if (anda) {
+      /* a dos decimales: más fino no se nota y cada cambio recalcula a Fran entero */
+      const ciclo = limita(ZANCADA * (1 + 0.7 * prisa) / st.vel, 0.2, 0.8).toFixed(2) + 's';
+      if (ciclo !== cicloPintado) { cicloPintado = ciclo; franEl.style.setProperty('--ciclo', ciclo); }
+    }
     franEl.classList.toggle('fran--corre', anda && prisa > 0.45);
     /* la cámara se adelanta un poco hacia donde va, más cuanto más prisa */
     const mira = anda ? st.dir * prisa * verAncho * 0.14 : 0;
     st.mira += (mira - st.mira) * (1 - Math.pow(0.05, dt));
+    if (Math.abs(mira - st.mira) < 0.01) st.mira = mira;
   }
   function camara(dt) {
     const max = Math.max(0, W - verAncho);
@@ -433,7 +444,8 @@
 
   /* ─── el día: el astro cruza el cielo mientras se camina ─────── */
   const astro = $('#astro');
-  let horaPintada = -1;
+  const conTarde = [$('.cielo'), $('#fondo-medio'), $('#fondo-frente')];
+  let horaPintada = -1, tardePintada = '', luzPintada = '';
   const suave = (a, b, v) => { const t = limita((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
   function dia() {
     const max = Math.max(1, W - verAncho);
@@ -447,8 +459,12 @@
     const ax = st.cam * 0.12 + (0.08 + 0.84 * hora) * verAncho - 42;
     const ay = Math.max(96 + 110 * (1 - Math.sin(Math.PI * hora)), techo + 50) - 42;
     astro.style.transform = `translate3d(${ax.toFixed(1)}px,${ay.toFixed(1)}px,0)`;
-    esc.style.setProperty('--pp-tarde', suave(0.5, 1, hora).toFixed(3));
-    esc.style.setProperty('--pp-luz-tarde', suave(0.72, 1, hora).toFixed(3));
+    /* las variables de la tarde van solo a los tres sitios que las usan:
+       puestas en el escenario, cada cambio recalculaba el mundo entero */
+    const tarde = suave(0.5, 1, hora).toFixed(2);
+    const luz = suave(0.72, 1, hora).toFixed(2);
+    if (tarde !== tardePintada) { tardePintada = tarde; for (const el of conTarde) el.style.setProperty('--pp-tarde', tarde); }
+    if (luz !== luzPintada) { luzPintada = luz; for (const el of conTarde) el.style.setProperty('--pp-luz-tarde', luz); }
   }
 
   /* ─── la calle responde: las escenas y lo de cada sala ───────── */
@@ -554,6 +570,7 @@
 
   /* ─── elegir y abrir ─────────────────────────────────────────── */
   function elegir(p) {
+    despertar();
     empezar();
     st.sel = p;
     st.selDesde = performance.now();
@@ -576,6 +593,7 @@
     progreso();
   }
   function abrir(p) {
+    despertar();
     const t = $('#t-' + p.id);
     if (!t) return;
     empezar();
@@ -622,6 +640,7 @@
     });
   }
   panel.addEventListener('close', () => {
+    despertar();
     st.abierta = null;
     if (/^#t-/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search);
     if (!st.fin && piezas.every((p) => p.visto)) {
@@ -725,10 +744,25 @@
     }
   }
 
+  /* Lo que queda fuera de cámara no se anima: el gato, el colibrí, el
+     vapor o los pulsos de las piezas siguen en su sitio, en pausa. */
+  const escenas = [...salas.map((e) => e.el), ...$$('.prop', mundo)].map((el) => ({
+    el, x0: el.offsetLeft, x1: el.offsetLeft + el.offsetWidth, dormida: false,
+  }));
+  function dormir() {
+    const a = st.cam - 150;
+    const z = st.cam + verAncho + 150;
+    for (const e of escenas) {
+      const d = e.x1 < a || e.x0 > z;
+      if (d !== e.dormida) { e.dormida = d; e.el.classList.toggle('papel-dormida', d); }
+    }
+  }
+
   /* ─── día y noche ────────────────────────────────────────────── */
   const esNoche = () => (raiz.dataset.tema ? raiz.dataset.tema === 'oscuro' : oscuroSO.matches);
   function pintarTema() {
     const noche = esNoche();
+    raiz.classList.toggle('papel-noche', noche);   // de día, estrellas y luciérnagas en pausa
     temaBtn.setAttribute('aria-label', noche ? 'Pasar al día' : 'Pasar a la noche');
     const uso = temaBtn.querySelector('use');
     if (uso) uso.setAttribute('href', noche ? '#i-sol' : '#i-luna');
@@ -905,16 +939,56 @@
   /* ─── el bucle ───────────────────────────────────────────────── */
   let ultimo = performance.now();
   let quietoDesde = ultimo;
+  let cicloPintado = '';
+  /* Solo se escribe lo que cambió: una escritura de estilo, aunque repita
+     el valor, obliga al navegador a recalcular y repintar la capa. */
   function pintar() {
-    for (const c of capas) c.el.style.transform = `translate3d(${(-st.cam * c.p).toFixed(2)}px,0,0)`;
-    franEl.style.transform = `translate3d(${(st.x - 45).toFixed(2)}px,${PIE - 226}px,0)`;
-    desplegar();
-    marcarLugar();
+    if (st.cam !== camPintada) {
+      camPintada = st.cam;
+      for (const c of capas) c.el.style.transform = `translate3d(${(-st.cam * c.p).toFixed(1)}px,0,0)`;
+      desplegar();
+      dormir();
+    }
+    if (st.x !== xPintada) {
+      xPintada = st.x;
+      franEl.style.transform = `translate3d(${(st.x - 45).toFixed(1)}px,${PIE - 226}px,0)`;
+      marcarLugar();
+    }
+  }
+  /* El bucle se duerme cuando nada se mueve: pedir un fotograma 60 veces
+     por segundo cuesta aunque no se pinte nada, y en un teléfono eso es
+     batería. Lo despierta cualquier gesto, un cambio de tamaño o un
+     temporizador para lo que está programado: el trolebús y las poses
+     de espera de Fran. */
+  let durmiendo = false, dormidoDesde = 0, quietos = 0, alarma = 0;
+  let camAntes = NaN, xAntes = NaN, zoomAntes = NaN;
+  const ESPERAS = [3500, 6000, 10500];
+  function despertar() {
+    if (!durmiendo) return;
+    durmiendo = false;
+    clearTimeout(alarma);
+    const ahora = performance.now();
+    if (!troleSt.va) troleSt.espera -= (ahora - dormidoDesde) / 1000;
+    quietos = 0;
+    ultimo = ahora;
+    requestAnimationFrame(cuadro);
+  }
+  function dormirBucle(t) {
+    durmiendo = true;
+    dormidoDesde = performance.now();
+    if (leyendo) return;   // vuelve con el hashchange o con «Volver»
+    const quieto = t - quietoDesde;
+    const fran = ESPERAS.map((e) => e - quieto).filter((e) => e > 0);
+    const proximo = Math.min(troleSt.va ? Infinity : Math.max(0, troleSt.espera * 1000), ...fran);
+    if (proximo < Infinity) alarma = setTimeout(despertar, proximo + 20);
+  }
+  for (const ev of ['keydown', 'keyup', 'pointerdown', 'pointermove', 'wheel', 'focusin', 'hashchange', 'resize', 'visibilitychange']) {
+    addEventListener(ev, despertar, { capture: true, passive: true });
   }
   function cuadro(t) {
     const dt = Math.min((t - ultimo) / 1000, 0.05);
     ultimo = t;
-    if (leyendo) { quietoDesde = t; requestAnimationFrame(cuadro); return; }
+    if (leyendo) { quietoDesde = t; dormirBucle(t); return; }
     mover(dt);
     proximidad();
     reacciones();
@@ -927,6 +1001,11 @@
     if (!st.andando && t - quietoDesde > 6000 && !franEl.classList.contains('fran--frente')) franEl.classList.add('fran--frente');
     /* y al rato se le pasa: manos al bolsillo, silbando */
     if (!st.andando && t - quietoDesde > 10500 && !franEl.classList.contains('fran--chill')) franEl.classList.add('fran--chill');
+    const movido = st.cam !== camAntes || st.x !== xAntes || zoom !== zoomAntes;
+    camAntes = st.cam; xAntes = st.x; zoomAntes = zoom;
+    const activo = movido || st.izq !== st.der || st.meta !== null || troleSt.va;
+    quietos = activo ? 0 : quietos + 1;
+    if (quietos > 20) { dormirBucle(t); return; }
     requestAnimationFrame(cuadro);
   }
 

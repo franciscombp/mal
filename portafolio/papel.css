@@ -382,6 +382,12 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 @keyframes papel-respira{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.2px)}}
 @keyframes papel-mira{0%,38%,100%{transform:rotate(0)}44%,56%{transform:rotate(-6deg)}62%,80%{transform:rotate(3deg)}}
 
+/* ─── lo que no se ve, quieto ──────────────────────────────────
+   papel.js marca las salas y escenas fuera de cámara; y de día las
+   estrellas y las luciérnagas no se ven, así que no se animan. */
+.papel-dormida,.papel-dormida *,.papel-dormida ::after{animation-play-state:paused !important}
+.papel-js:not(.papel-noche) :is(.cielo__estrellas,.luciernaga){animation-play-state:paused}
+
 /* ─── la barra de arriba ────────────────────────────────────── */
 .papel-hud{
   position:fixed;z-index:8;top:0;left:0;right:0;
