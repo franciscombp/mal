@@ -26,7 +26,13 @@ const fijo = (p, q) => FIJO.test(p) || /[?&]v=/.test(q);
 const traer = async (u, p, q) => {
   const ttl = fijo(p, q) ? 86400 : 300;
   const r = await fetch(u, { redirect: "manual", cf: { cacheEverything: true, cacheTtlByStatus: { "200-299": ttl, "404": 60, "500-599": 0 } } });
-  if (r.status >= 300 && r.status < 400) throw new Error("el origen redirige: " + u + " -> " + r.headers.get("location"));
+  if (r.status >= 300 && r.status < 400) {
+    // La única redirección que se acepta es la de GitHub Pages a la carpeta con barra final
+    // (/renuncia → /renuncia/): se repite aquí, en una.red, en vez de seguirla.
+    const destino = new URL(r.headers.get("location") || "", u);
+    if (destino.pathname === new URL(u).pathname + "/") return redir(p + "/" + q);
+    throw new Error("el origen redirige: " + u + " -> " + destino.href);
+  }
   return r;
 };
 
