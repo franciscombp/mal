@@ -21,7 +21,7 @@ Lo sirve Cloudflare (`workers/una-red/`) desde el GitHub Pages de este repo.
 - `lamparometro/`, `leyendas/`, `umbral/`, `renuncia/`: pruebas de concepto que viven aquí
   hasta que pasan a su marca.
 - El perfil compartido (sucres y logros) vive en [quesf-ec/Perfil](https://github.com/quesf-ec/Perfil), en `quesf-ec.github.io/perfil/`.
-- `portafolio/`: el portafolio de Fran, que se sirve en [maldonado.pro](https://maldonado.pro).
+- `portafolio/`: el portafolio de Fran, que se sirve en [maldonado.pro](https://maldonado.pro); las fotos de las reseñas de mentoría están en `img/mentoria/`.
 - `workers/`: el código de los Workers de Cloudflare de una.red y maldonado.pro.
 
 Cuando un proyecto madura y pasa a su organización, sale de aquí con su historial

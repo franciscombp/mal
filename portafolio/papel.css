@@ -535,11 +535,38 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 .hoja__lista small{font-family:var(--mal-mono);font-size:var(--mal-t-mini);font-weight:600;color:var(--mal-on-surface-3);text-transform:uppercase;letter-spacing:.06em}
 .hoja__lista span{font-size:var(--mal-t-caption);color:var(--mal-on-surface-2)}
 .hoja__citas{display:flex;flex-direction:column;gap:var(--mal-e3)}
-.hoja__citas figure{margin:0;padding:var(--mal-e4);background:var(--mal-surface-alt);border-radius:var(--mal-r-s)}
+.hoja__citas figure{display:flex;gap:var(--mal-e3);margin:0;padding:var(--mal-e4);background:var(--mal-surface-alt);border-radius:var(--mal-r-s)}
+.hoja__citas figure > div{min-width:0}
 .hoja__citas blockquote{margin:0;padding:0;border:0;font-family:"PT Serif",Georgia,serif;font-style:italic;font-size:var(--mal-t-cuerpo);line-height:1.45;color:var(--mal-on-surface)}
 .hoja__citas blockquote::before{content:none}
 .hoja__citas figcaption{margin-top:var(--mal-e2);font-size:var(--mal-t-mini);color:var(--mal-on-surface-3)}
 .hoja__citas figcaption b{color:var(--mal-on-surface-2)}
+/* quien lo dice: la foto, o las iniciales si no la hay */
+.cita__cara{flex:none;width:40px;height:40px;border-radius:50%;object-fit:cover;filter:grayscale(1);
+  display:grid;place-items:center;font-family:var(--mal-mono);font-size:var(--mal-t-mini);font-weight:700;letter-spacing:.04em;
+  color:var(--mal-on-surface-2);background:var(--mal-surface);box-shadow:inset 0 0 0 1px var(--mal-outline-2)}
+.hoja__citas figure:hover .cita__cara{filter:none}
+/* la fila de caras y el dato de ADPList */
+.caras{display:flex;flex-wrap:wrap;align-items:center;gap:var(--mal-e2) var(--mal-e4)}
+.caras__fila{display:flex;list-style:none;margin:0;padding:0 0 0 10px}
+.caras__fila li{margin-left:-10px}
+.caras__fila img{display:block;width:40px;height:40px;border-radius:50%;object-fit:cover;filter:grayscale(1);
+  border:2px solid var(--mal-surface);background:var(--mal-surface-alt);transition:transform .25s var(--mal-ease), filter .25s}
+.caras__fila li:hover img{transform:translateY(-3px) scale(1.08);filter:none;position:relative;z-index:1}
+.caras__dato{font-family:var(--mal-mono);font-size:var(--mal-t-mini);letter-spacing:.04em;color:var(--mal-on-surface-3)}
+.caras__dato b{font-weight:700;color:var(--mal-on-surface)}
+.caras__dato a{color:var(--mal-primary-txt)}
+/* las reseñas que no caben a la vista, plegadas */
+.hoja__mas{border-top:var(--mal-separador);border-bottom:var(--mal-separador)}
+.hoja__mas summary{display:flex;align-items:center;justify-content:space-between;gap:var(--mal-e3);min-height:48px;
+  font-family:var(--mal-texto);font-size:var(--mal-t-cuerpo);font-weight:600;color:var(--mal-on-surface)}
+.hoja__mas summary::after{content:"+";font-family:var(--mal-mono);font-size:20px;color:var(--mal-primary-txt);transition:transform .25s}
+.hoja__mas[open] summary::after{transform:rotate(45deg)}
+.hoja__mas summary:focus-visible{outline:3px solid var(--mal-primary);outline-offset:-3px}
+.hoja__mas .hoja__citas{padding-bottom:var(--mal-e4)}
+/* los tipos de sesión: la duración a la izquierda, como un dato más */
+.hoja__datos--sesiones > div{grid-template-columns:4.5rem minmax(0, 1fr)}
+.hoja__datos--sesiones dd span{display:block;font-weight:400;font-size:var(--mal-t-caption);color:var(--mal-on-surface-2)}
 .hoja__temas{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:var(--mal-e2)}
 .hoja__tema{
   display:flex;flex-direction:column;align-items:flex-start;gap:.15rem;padding:var(--mal-e3) var(--mal-e4);cursor:pointer;text-align:left;
@@ -647,9 +674,11 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
   .ficha{
     grid-template-columns:auto minmax(0, 1fr) auto;
     grid-template-areas:"cuerpo cuerpo cuerpo" "ant ver sig";
-    row-gap:var(--mal-e3);height:182px;padding:var(--mal-e3);
+    row-gap:var(--mal-e3);height:200px;padding:var(--mal-e3);
   }
   .ficha__cuerpo{grid-area:cuerpo;padding-inline:var(--mal-e2)}
+  /* la nota entera, en dos líneas, en lugar de cortada con puntos */
+  .ficha__nota{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
   .hoja__datos > div{grid-template-columns:1fr;gap:2px}
   .ficha__flecha--ant{grid-area:ant}
   .ficha__flecha--sig{grid-area:sig}
@@ -678,7 +707,7 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
    Sin JS, o con #texto, la página deja de ser un escenario y se lee
    como un documento: la barra arriba, la portada y un artículo por
    pieza. Las hojas del recorrido copian esos mismos artículos. */
-.papel-js:not(.papel-leer) :is(.lectura, .papel-volver){display:none}
+.papel-js:not(.papel-leer) :is(.lectura, .papel-volver, .papel-imprimir){display:none}
 :root:not(.papel-js) :is(.papel-hud__acc, #empezar){display:none}
 :is(:root:not(.papel-js), .papel-leer) :is(.escenario, .ficha, .papel-capitulos, #abrir-indice, .papel-texto, .portada__texto, .portada__ayuda){display:none}
 :is(:root:not(.papel-js), .papel-leer) body.papel{height:auto;overflow:auto;overscroll-behavior:auto}
@@ -700,6 +729,46 @@ body.papel{margin:0;overflow:hidden;overscroll-behavior:none;background:var(--ma
 .lectura__pieza + .lectura__pieza{padding-top:var(--mal-e6);border-top:var(--mal-separador)}
 /* lo que la portada ya dijo arriba, y el enlace a esta misma versión */
 .lectura #t-perfil :is(.hoja__kicker, .hoja__titulo, .cifras),.lectura a[href="#texto"]{display:none}
+
+/* ─── en papel de verdad: la hoja de vida ─────────────────────
+   Imprimir (o guardar en PDF) da la versión en texto, entera, con los
+   enlaces escritos: es lo que pide RR. HH. */
+@media print{
+  @page{margin:16mm 18mm}
+  :root{--mal-bg:#fff;--mal-surface:#fff;--mal-surface-alt:#f3f1ec;--ref-grano:none}
+  html,body.papel{height:auto;overflow:visible;background:#fff;color:#111}
+  body::before{content:none !important}
+  .escenario,.ficha,.hoja,.papel-defs,.papel-hud__acc,.papel-capitulos,.portada__acc,.portada__ayuda,
+  .hoja__temas,.hoja__acc,.hoja__pendiente,.lectura a[href="#texto"],#t-salida{display:none !important}
+  .papel-hud{position:static;display:block;padding:0 0 8mm;border-bottom:1px solid #111}
+  .papel-marca__rol{display:inline}
+  .portada,.lectura{display:flex !important;position:static;width:auto;max-width:none;margin:0;padding:0;
+    background:none;border:0;box-shadow:none;transform:none;opacity:1}
+  .portada{margin:8mm 0 10mm;gap:4mm}
+  .portada__t{font-size:26pt}
+  .lectura{gap:8mm}
+  .lectura__sala{gap:5mm;padding-top:5mm;border-top:1px solid #111}
+  .lectura__sala-t{break-after:avoid}
+  .lectura__pieza{gap:3mm;break-inside:avoid}
+  #t-juegos,#t-apps,#t-mentoria{break-inside:auto}
+  .hoja__titulo,.hoja__kicker{break-after:avoid}
+  .lectura__pieza + .lectura__pieza{padding-top:4mm;border-top:1px solid #ddd}
+  .hoja__titulo{font-size:16pt}
+  .hoja__titulo--grande{font-size:20pt}
+  .hoja__lede,:is(.hoja__cuerpo, .lectura__pieza) > p:not([class]){font-size:10.5pt;color:#333}
+  .hoja__foto{width:64px;height:64px}
+  .hoja__lista a,.hoja__datos a,.caras__dato a{color:#111;text-decoration:none}
+  .hoja__lista a[href^="http"]::after{content:attr(href);font-family:var(--mal-mono);font-size:8pt;color:#666}
+  .hoja__datos dd a[href^="http"]::after{content:" · " attr(href);font-family:var(--mal-mono);font-size:8pt;color:#666}
+  .hoja__lista b::after{content:none}
+  .hoja__lista li,.hoja__datos > div{break-inside:avoid}
+  .hoja__citas figure{padding:3mm;background:#f3f1ec;break-inside:avoid}
+  .hoja__citas blockquote{font-size:9.5pt}
+  .hoja__mas{border:0}
+  .hoja__mas summary{display:none}
+  .caras__fila img,.cita__cara,.hoja__foto{filter:grayscale(1)}
+  .cifras li{border:1px solid #bbb;background:none}
+}
 
 /* ─── menos movimiento ──────────────────────────────────────── */
 @media (prefers-reduced-motion:reduce){

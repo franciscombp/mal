@@ -600,6 +600,8 @@
     panelCuerpo.scrollTop = 0;
     marcarVisto(p);
     pintarFicha();
+    /* la URL dice qué pieza está abierta: #t-deuna se puede compartir */
+    if (location.hash !== '#t-' + p.id) history.replaceState(null, '', '#t-' + p.id);
   }
   function cerrar(d) {
     if (!d.open || d.classList.contains('hoja--sale')) return;
@@ -621,6 +623,7 @@
   }
   panel.addEventListener('close', () => {
     st.abierta = null;
+    if (/^#t-/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search);
     if (!st.fin && piezas.every((p) => p.visto)) {
       st.fin = true;
       st.sel = null;
@@ -803,6 +806,14 @@
     salirDelTexto();
     (st.portada ? $('#empezar') : fichaVer).focus({ preventScroll: true });
   });
+  /* imprimir da la versión en texto entera, con lo plegado abierto */
+  $('#imprimir').addEventListener('click', () => print());
+  addEventListener('beforeprint', () => { for (const d of $$('details', lectura)) d.open = true; });
+  /* #t-{pieza} en la URL abre esa pieza directamente, con Fran ya delante */
+  function piezaDeLaURL() {
+    const m = /^#t-([\w-]+)$/.exec(location.hash);
+    return m ? piezas.find((p) => p.id === m[1]) || null : null;
+  }
 
   /* ─── teclado ────────────────────────────────────────────────── */
   const IZQ = new Set(['ArrowLeft', 'KeyA']);
@@ -933,10 +944,13 @@
   qr();
   progreso();
   pintarTema();
+  const directa = piezaDeLaURL();
+  if (directa) { st.x = parada(directa); st.dir = Math.sign(directa.x - st.x) || 1; giro.style.setProperty('--dir', st.dir); }
   st.cam = limita(st.x - verAncho * 0.42, 0, Math.max(0, W - verAncho));
   pintar();
   pintarFicha();
   if (window.malDS && window.malDS.iconos) window.malDS.iconos();
   if (location.hash === '#texto') modoTexto(true);
+  else if (directa) abrir(directa);
   requestAnimationFrame((t) => { ultimo = t; cuadro(t); });
 })();
