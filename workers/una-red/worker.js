@@ -90,6 +90,7 @@ export default {
           // Si el repo aún no publica (Pages apagado), cae a la copia de este repo, si queda.
           let res = null;
           try { res = await traer(destino + p.slice(prefijo.length) + q, p, q); } catch (e) {}
+          if (res && res.status === 301) return res;
           if (!res || !res.ok) res = await traer(ORIGIN + p + q, p, q);
           return conCabeceras(await conPistas(res, url.href), p, q);
         }
