@@ -3,7 +3,7 @@ const ORIGIN = GH + "/mal";
 const CASA = "https://maldonado.pro";
 // maldonado.pro es solo el portafolio: su página, sus recursos, su robots y su sitemap, y el
 // sistema de diseño. Todo lo demás (../apps/…, ../renuncia/…) vive en una.red.
-const HOME = new Set(["/", "/index.html", "/papel.css", "/papel.js", "/og.jpg", "/robots.txt", "/sitemap.xml"]);
+const HOME = new Set(["/", "/index.html", "/espacio.html", "/espacio.css", "/espacio.js", "/cueva.html", "/cueva.css", "/cueva.js", "/papel.html", "/papel.css", "/papel.js", "/og.jpg", "/robots.txt", "/sitemap.xml"]);
 const redir = (to) => new Response(null, { status: 301, headers: { Location: to } });
 
 // Lo que no cambia de URL cuando cambia de contenido: imágenes, fuentes y lo que lleva ?v=.
@@ -66,7 +66,8 @@ export default {
       if (req.method !== "GET" && req.method !== "HEAD") return new Response("Method not allowed", { status: 405 });
       const p = url.pathname;
       const q = url.search;
-      if (HOME.has(p)) {
+      // la portada 3D trae su propio Three.js en vendor/
+      if (HOME.has(p) || p.startsWith("/vendor/")) {
         const res = await get(ORIGIN + "/portafolio" + (p === "/index.html" ? "/" : p) + q, p, q);
         return conCabeceras(await conPistas(res, url.href), p, q);
       }

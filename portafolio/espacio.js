@@ -1,6 +1,7 @@
-// Fran, en sueños: un túnel de membranas translúcidas que se abre como un embudo mientras se baja.
-// El texto vive en el HTML (accesible y legible sin 3D); esto solo pinta el sueño detrás y
-// mueve la cámara con el scroll. Inspirado en la cueva de la criatura de «Her».
+// El portafolio de Fran en el espacio: un túnel de membranas translúcidas que se abre como un
+// embudo mientras se baja, con las ventanas de vidrio de espacio.css flotando dentro. El texto
+// vive en el HTML (accesible y legible sin 3D); esto pinta el túnel, mueve la cámara con el
+// scroll y vuelve las ventanas de frente al acercarse. Inspirado en la cueva de «Her» y en visionOS.
 import * as THREE from 'three';
 
 const QUIETO = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -11,10 +12,25 @@ const PALETA = ['#7ee8c8', '#9ff0d0', '#ffd38a', '#ffb38a', '#ff9a8b', '#f6a6c1'
 const FONDO = [new THREE.Color('#06120f'), new THREE.Color('#0d0a14')];
 
 const estaciones = [...document.querySelectorAll('.estacion')];
-const burbujas = estaciones.map((e) => e.querySelector('.burbuja'));
-const huella = document.querySelector('.huella');
-estaciones.forEach(() => huella.appendChild(document.createElement('li')));
-const puntos = [...huella.children];
+const burbujas = estaciones.map((e) => e.querySelector('.ventana'));
+const pestanas = [...document.querySelectorAll('.pestana')];
+// a qué pestaña pertenece cada estación: la última pestaña cuyo destino está antes o en ella
+const pestanaDe = estaciones.map((e) => {
+  let k = -1;
+  pestanas.forEach((p, j) => { const d = document.querySelector(p.getAttribute('href')); if (d && d.compareDocumentPosition(e) & Node.DOCUMENT_POSITION_FOLLOWING || d === e) k = j; });
+  return k;
+});
+
+// el brillo de la mirada: --mx/--my en lo que está bajo el puntero
+addEventListener('pointermove', (ev) => {
+  const el = ev.target.closest?.('.pestana, .capsula, .boton, .lista a, .fichas a');
+  if (!el) return;
+  const r = el.getBoundingClientRect();
+  el.style.setProperty('--mx', `${ev.clientX - r.left}px`);
+  el.style.setProperty('--my', `${ev.clientY - r.top}px`);
+}, { passive: true });
+let mx = 0, my = 0;
+addEventListener('pointermove', (ev) => { mx = ev.clientX / innerWidth - .5; my = ev.clientY / innerHeight - .5; }, { passive: true });
 
 // ── progreso: del scroll a un número entre 0 y 1 ──────────────────────────
 let objetivo = 0, progreso = 0;
@@ -34,10 +50,15 @@ function pintarTexto() {
     const r = estaciones[i].getBoundingClientRect();
     const d = Math.abs(r.top + r.height / 2 - medio);
     const cerca = 1 - Math.min(1, d / (innerHeight * 0.62));
-    b.style.setProperty('--cerca', (cerca * cerca * (3 - 2 * cerca)).toFixed(3));
+    const c = cerca * cerca * (3 - 2 * cerca);
+    b.style.setProperty('--cerca', c.toFixed(3));
+    // lejos, la ventana mira hacia el centro del túnel; cerca, se pone de frente y sigue un poco la mirada
+    const lado = b.classList.contains('ventana--libre') ? 0 : (r.left + r.width / 2 < innerWidth / 2 ? 1 : -1);
+    b.style.setProperty('--giro', `${(lado * (1 - c) * 18 + mx * c * 6).toFixed(2)}deg`);
+    b.style.setProperty('--giro-x', `${(-my * c * 4).toFixed(2)}deg`);
     if (d < mejorD) { mejorD = d; mejor = i; }
   });
-  puntos.forEach((p, i) => p.classList.toggle('aqui', i === mejor));
+  pestanas.forEach((p, j) => p.classList.toggle('aqui', j === pestanaDe[mejor]));
   tonoActual = +estaciones[mejor].dataset.tono || 0;
 }
 
@@ -277,13 +298,14 @@ function iniciar() {
         v.renderOrder = 10; escena.add(v); vainas[i] = v;
       }
       // la portada y la salida van centradas: ahí una semilla taparía el texto
-      if (i === 0 || i === estaciones.length - 1) { vainas[i].visible = false; return; }
+      // en el teléfono la ventana ocupa el centro: no hay costado libre para la semilla
+      if (i === 0 || i === estaciones.length - 1 || MOVIL) { vainas[i].visible = false; return; }
       const centro = e.offsetTop + e.offsetHeight / 2 - innerHeight / 2;
       const t = Math.min(.98, tCamara(Math.min(1, Math.max(0, centro / max))) + .03);
       const c = camino.getPointAt(t);
       lado.crossVectors(camino.getTangentAt(t), arriba).normalize();
       // del lado contrario al texto, para que la semilla y la burbuja no se tapen
-      const signo = i % 2 === 0 ? -1 : 1;
+      const signo = i % 2 === 0 ? 1 : -1;
       vainas[i].position.copy(c).addScaledVector(lado, signo * radio(t) * (MOVIL ? .28 : .42)).addScaledVector(arriba, radio(t) * .12);
       vainas[i].scale.setScalar(.55 + t * 1.4);
     });

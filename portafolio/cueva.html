@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Francisco Maldonado · Product designer en Quito · Fran en 3D</title>
+<meta name="description" content="El portafolio de Francisco «Fran» Maldonado, para caminarlo en 3D: Fran recorre una cueva de luz y en cada parada aparece un caso, un escrito, un juego o la mentoría.">
+<link rel="canonical" href="https://maldonado.pro/cueva.html">
+<meta name="theme-color" content="#160a09">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Fran en 3D: el portafolio de Francisco Maldonado, para caminarlo">
+<meta property="og:description" content="Fran recorre una cueva de luz; en cada parada, un caso, un escrito, un juego o la mentoría.">
+<meta property="og:url" content="https://maldonado.pro/cueva.html">
+<meta property="og:image" content="https://maldonado.pro/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../img/icono-180.png">
+<link rel="stylesheet" href="cueva.css?v=1">
+<script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js" } }</script>
+<script type="module" src="cueva.js?v=1"></script>
+</head>
+<body>
+<canvas id="escena" aria-label="Fran caminando por una cueva de luz. Usa las flechas para caminar y E o Enter para abrir lo que tiene delante."></canvas>
+<div class="velo" aria-hidden="true"></div>
+
+<header class="cima">
+  <a class="cima__marca" href="./">Fran <span>· en 3D</span></a>
+  <nav aria-label="Otras versiones">
+    <a href="./">En papel</a>
+    <a href="espacio.html">En el espacio</a>
+    <a href="./#texto">En texto</a>
+  </nav>
+</header>
+
+<!-- la etiqueta que flota sobre la pieza que Fran tiene delante -->
+<button class="globo" id="globo" type="button" hidden><span id="globo-t"></span><kbd>E</kbd></button>
+
+<nav class="salas" aria-label="Salas">
+  <ol id="salas"></ol>
+</nav>
+<p class="pista" id="pista">← → para caminar · Mayús para correr · E para abrir · o toca el suelo</p>
+
+<!-- la portada -->
+<section class="portada" id="portada" aria-labelledby="portada-t">
+  <p class="susurro">Francisco Maldonado · Product designer · Quito</p>
+  <h1 id="portada-t">Fran, en la cueva.</h1>
+  <p>Su portafolio, para caminarlo. Once paradas: quién es, tres casos, lo que escribe, sus juegos y apps, la mentoría y el sistema con el que pinta todo.</p>
+  <button class="boton" id="empezar" type="button">Entrar</button>
+</section>
+
+<!-- la hoja que se abre en cada pieza: blanda, de vidrio, sin esquinas -->
+<dialog class="hoja" id="hoja" aria-labelledby="hoja-t">
+  <div class="hoja__cabeza">
+    <p class="susurro" id="hoja-sala"></p>
+    <button class="redondo" id="cerrar" type="button" aria-label="Cerrar">✕</button>
+  </div>
+  <div id="hoja-cuerpo"></div>
+  <div class="hoja__pie">
+    <button class="redondo" id="ant" type="button" aria-label="Pieza anterior">←</button>
+    <span id="hoja-n"></span>
+    <button class="redondo" id="sig" type="button" aria-label="Pieza siguiente">→</button>
+  </div>
+</dialog>
+
+<!-- las piezas, en orden: el 3D las coloca a lo largo del camino. Están en el HTML para que se
+     lean sin JavaScript y con lector de pantalla. -->
+<main class="piezas" id="piezas">
+  <article id="perfil" data-sala="Quién" data-nombre="Fran">
+    <div class="cabeza"><img class="retrato" src="../img/francisco-maldonado.jpg" alt="Francisco Maldonado" width="72" height="72"><h2>Francisco Maldonado</h2></div>
+    <p>Product designer en Quito. Catorce años en producto —fintech, e-commerce, entretenimiento— y una manía: preguntar para qué sirve cada cosa antes de dibujarla.</p>
+    <p>De día diseña productos dentro del corporativo. De noche escribe sobre por qué casi todo lo que ese mundo vende como innovación es humo con buen render.</p>
+    <p class="enlaces"><a href="mailto:francisco@maldonado.pro">Correo</a> <a href="https://www.linkedin.com/in/franmaldonadoc/" rel="me">LinkedIn</a> <a href="https://www.instagram.com/franmal__/" rel="me">Instagram</a> <a href="https://github.com/franciscombp" rel="me">GitHub</a></p>
+  </article>
+  <article id="deuna" data-sala="Trabajo" data-nombre="Deuna!">
+    <p class="susurro">Caso 1 de 3 · Fintech · Pagos</p>
+    <h2>Deuna!</h2>
+    <p>Pagar y cobrar sin efectivo, en un país que adora el efectivo. El reto no era la tecnología: era la confianza.</p>
+    <dl><div><dt>Resultado</dt><dd>La mayor red de comercios digitales del país</dd></div><div><dt>Áreas</dt><dd>Onboarding · QR · Casos de error</dd></div></dl>
+  </article>
+  <article id="kiosk" data-sala="Trabajo" data-nombre="KFC Kiosk">
+    <p class="susurro">Caso 2 de 3 · Autoservicio</p>
+    <h2>KFC Kiosk</h2>
+    <p>Pedidos sin fila, para dedos con hambre y cero paciencia. Nadie lee menús en pantallas.</p>
+    <dl><div><dt>Resultado</dt><dd>Menos fila, mayor ticket, menos errores</dd></div><div><dt>Áreas</dt><dd>Kioscos · Combos · Pago</dd></div></dl>
+  </article>
+  <article id="control" data-sala="Trabajo" data-nombre="Control Point">
+    <p class="susurro">Caso 3 de 3 · Logística</p>
+    <h2>Control Point</h2>
+    <p>Operación en campo, donde el wifi no llega y nadie perdona. Flujos cortos y legibles bajo el sol.</p>
+    <dl><div><dt>Resultado</dt><dd>Control fiable donde antes había papel</dd></div><div><dt>Áreas</dt><dd>Sin conexión · Uso con una mano</dd></div></dl>
+    <p class="nota">Fichas resumidas. Para saber más, <a href="mailto:francisco@maldonado.pro?subject=Sobre%20tus%20casos">escríbele a Fran</a>.</p>
+  </article>
+  <article id="mercio" data-sala="Escritura" data-nombre="EL MERCIO.">
+    <p class="susurro">Periódico satírico · desde 2009</p>
+    <h2>EL MERCIO.</h2>
+    <p>Las noticias, el entretenimiento y la desinformación de ayer. Más de novecientos artículos y tres registros que nunca se mezclan: opinión firmada, humor sobre noticias reales y desinformación declarada como tal.</p>
+    <p><a class="boton" href="https://elmercio.com/">Leer EL MERCIO.</a></p>
+  </article>
+  <article id="newsletters" data-sala="Escritura" data-nombre="Newsletters">
+    <p class="susurro">Newsletters</p>
+    <h2>Lo que no cabe en LinkedIn.</h2>
+    <p><a href="https://malpensamientos.substack.com/"><b>Mal Pensamientos</b></a>, los lunes: diseño, producto y tecnología sin el barniz corporativo.</p>
+    <p><a href="https://franmaldonado.substack.com/"><b>Todo Mal</b></a>, sin calendario: política, farándula, papers y lo que caiga.</p>
+  </article>
+  <article id="juegos" data-sala="Proyectos" data-nombre="Juegos">
+    <p class="susurro">Juegos · en el navegador</p>
+    <h2>Juegos</h2>
+    <ul class="fichas">
+      <li><a href="https://quesf-ec.github.io/coches/">Coches de madera</a></li>
+      <li><a href="https://quesf-ec.github.io/boliche/">El boliche</a></li>
+      <li><a href="https://finados.una.red/">Guagua de pan</a></li>
+      <li><a href="https://una.red/apps/fanesca/">La fanesca</a></li>
+      <li><a href="https://una.red/apps/estadodecepcion/">Estado Decepción</a></li>
+      <li><a href="https://una.red/apps/modo-incognito/">Modo Incógnito</a></li>
+      <li><a href="https://una.red/apps/pambamesa/">Pambamesa</a></li>
+      <li><a href="https://una.red/apps/nero/">Nero</a></li>
+      <li><a href="https://una.red/umbral/">Umbral</a></li>
+    </ul>
+  </article>
+  <article id="apps" data-sala="Proyectos" data-nombre="Apps">
+    <p class="susurro">Cinco apps · sin cuenta</p>
+    <h2>Herramientas que resuelven algo concreto.</h2>
+    <ul class="fichas">
+      <li><a href="https://una.red/apps/quanto/">Quanto</a></li>
+      <li><a href="https://una.red/apps/agro/">Mi Huerto</a></li>
+      <li><a href="https://una.red/apps/jacky/">Jacky</a></li>
+      <li><a href="https://una.red/apps/test-cds/">Test CDS</a></li>
+      <li><a href="https://una.red/renuncia/">Cartas de renuncia</a></li>
+    </ul>
+  </article>
+  <article id="mentoria" data-sala="Mentoría" data-nombre="Mentoría">
+    <p class="susurro">Mentoría · gratis · en ADPList</p>
+    <h2>Gratis, y sin adornos.</h2>
+    <p>Si necesitas que alguien revise tu portafolio sin edulcorar, agarra un café y charlamos. Desde 2024, con gente de Ecuador, Perú, Colombia, México, España e Italia.</p>
+    <blockquote>«Francisco supo escucharme, motivarme y aconsejarme, y agradezco mucho lo humano que fue durante la sesión.»<cite>Karen Benites Segura · UX Designer, Produbanco</cite></blockquote>
+    <p><a class="boton" href="https://adplist.org/mentors/francisco-maldonado">Agendar en ADPList</a></p>
+  </article>
+  <article id="sistema" data-sala="Sistema" data-nombre="mal-ds">
+    <p class="susurro">Sistema de diseño · mal-ds</p>
+    <h2>Un sistema, cuatro temas.</h2>
+    <p>Los portafolios, el periódico, las apps y los juegos están pintados con las mismas variables. Cambia el tema y el mundo cambia de piel; el HTML no se toca.</p>
+    <p><a class="boton" href="https://una.red/ds/">Ver el sistema</a></p>
+  </article>
+  <article id="salida" data-sala="Fin" data-nombre="La salida">
+    <p class="susurro">Fin del recorrido</p>
+    <h2>El resto está en UNA.</h2>
+    <p>La casa de MAL: Quesf, EL MERCIO., Modo Inc, Acolita y el laboratorio, todo junto.</p>
+    <p><a class="boton" href="https://una.red/">Ir a UNA</a> <a class="boton boton--claro" href="mailto:francisco@maldonado.pro">Escribirle a Fran</a></p>
+  </article>
+</main>
+</body>
+</html>

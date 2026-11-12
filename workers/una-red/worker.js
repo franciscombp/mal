@@ -6,6 +6,8 @@ const PROPIOS = [
 // Lo que tiene su propio dominio: 301, porque son URLs que estuvieron en el sitemap.
 const FUERA = [
   ["/portafolio", "https://maldonado.pro"],
+  // la primera versión onírica del portafolio vivió aquí unos días; ahora es maldonado.pro
+  ["/sueno", "https://maldonado.pro/espacio.html"],
   ["/guagua", "https://finados.una.red"],
   // Los juegos de Quesf viven en su organización: funcionan solos en quesf-ec.github.io,
   // donde comparten el perfil (mismo origen).
@@ -82,7 +84,7 @@ export default {
       const p = url.pathname;
       const q = url.search;
       for (const [prefijo, destino] of FUERA) {
-        if (bajo(p, prefijo)) return redir(destino + (p.slice(prefijo.length) || "/") + q);
+        if (bajo(p, prefijo)) return redir(destino.endsWith(".html") ? destino : destino + (p.slice(prefijo.length) || "/") + q);
       }
       for (const [prefijo, destino] of PROPIOS) {
         if (p === prefijo) return redir(url.origin + p + "/" + q);

@@ -1,0 +1,189 @@
+/* Fran en el espacio: ventanas de vidrio a lo visionOS flotando en el túnel de espacio.js.
+   Vidrio esmerilado claro, esquinas muy redondas, ornamentos que flotan fuera de las ventanas
+   y un brillo que sigue la mirada (el puntero). Nada tiene esquinas rectas. */
+:root {
+  --tinta: #fff;
+  --tinta-2: rgba(255, 255, 255, .72);
+  --tinta-3: rgba(255, 255, 255, .5);
+  --luz: #9ff0d0;            /* lo cambia espacio.js según la estación */
+  --fondo: #06120f;
+  --vidrio: linear-gradient(180deg, rgba(255, 255, 255, .17), rgba(255, 255, 255, .07)), rgba(58, 64, 62, .32);
+  --vidrio-filtro: blur(42px) saturate(190%) brightness(1.08);
+  --plato: rgba(255, 255, 255, .09);
+  --plato-2: rgba(255, 255, 255, .15);
+  --canto: inset 0 1px 1px rgba(255, 255, 255, .38), inset 0 -1px 1px rgba(255, 255, 255, .06), 0 0 0 1px rgba(255, 255, 255, .07);
+  --suave: cubic-bezier(.22, .61, .36, 1);
+  --resorte: cubic-bezier(.34, 1.56, .64, 1);
+  color-scheme: dark;
+}
+* { box-sizing: border-box }
+html { background: var(--fondo); scrollbar-width: none; scroll-behavior: smooth }
+html::-webkit-scrollbar { display: none }
+body {
+  margin: 0; color: var(--tinta);
+  font: 400 clamp(1rem, .96rem + .25vw, 1.12rem)/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, "Inter", "Segoe UI", sans-serif;
+  letter-spacing: -.005em;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  background: radial-gradient(120% 90% at 60% 40%, #1d4a3e 0%, #0b2420 45%, var(--fondo) 80%) fixed;
+}
+
+#cielo { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100lvh; display: block; z-index: 0 }
+.velo {
+  position: fixed; inset: -2px; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(130% 100% at 50% 50%, transparent 55%, rgba(2, 8, 7, .5) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+}
+
+/* ── el vidrio y la mirada ─────────────────────────────────────────────── */
+.vidrio, .ventana:not(.ventana--libre), .ornamento {
+  background: var(--vidrio);
+  -webkit-backdrop-filter: var(--vidrio-filtro); backdrop-filter: var(--vidrio-filtro);
+  box-shadow: var(--canto), 0 40px 90px -30px rgba(0, 0, 0, .55);
+}
+/* El brillo de la mirada: visionOS ilumina lo que miras. Aquí sigue al puntero (espacio.js pone
+   --mx y --my en el elemento bajo el puntero). */
+.pestana, .capsula, .boton, .lista a, .fichas a { position: relative; isolation: isolate }
+.pestana::after, .capsula::after, .boton::after, .lista a::after, .fichas a::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; z-index: -1; pointer-events: none;
+  background: radial-gradient(120px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, .22), transparent 70%);
+  opacity: 0; transition: opacity .35s var(--suave);
+}
+.pestana:hover::after, .capsula:hover::after, .boton:hover::after, .lista a:hover::after, .fichas a:hover::after,
+.pestana:focus-visible::after, .capsula:focus-visible::after { opacity: 1 }
+:focus-visible { outline: 2px solid rgba(255, 255, 255, .85); outline-offset: 3px }
+
+/* ── ornamentos ────────────────────────────────────────────────────────── */
+.ornamento { position: fixed; z-index: 4; display: flex; gap: .4rem; padding: .5rem; border-radius: 999px }
+.pestanas {
+  left: max(1.2rem, env(safe-area-inset-left)); top: 50%; translate: 0 -50%;
+  flex-direction: column;
+}
+.pestana {
+  width: 2.9rem; height: 2.9rem; border-radius: 50%; display: grid; place-items: center;
+  color: var(--tinta-2); text-decoration: none; transition: background .3s var(--suave), color .3s var(--suave), scale .4s var(--resorte);
+}
+.pestana svg, .capsula svg { width: 1.3rem; height: 1.3rem; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round }
+.pestana:hover { scale: 1.08; color: var(--tinta) }
+.pestana.aqui { background: var(--plato-2); color: var(--tinta); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25) }
+.pestana.aqui svg { stroke: var(--luz) }
+/* la etiqueta aparece a un lado, como en visionOS al mirar una pestaña */
+.pestana span {
+  position: absolute; left: calc(100% + .9rem); top: 50%; translate: -.4rem -50%;
+  padding: .45rem .9rem; border-radius: 999px; white-space: nowrap; font-size: .82rem; font-weight: 500; color: var(--tinta);
+  background: var(--vidrio); -webkit-backdrop-filter: var(--vidrio-filtro); backdrop-filter: var(--vidrio-filtro); box-shadow: var(--canto);
+  opacity: 0; pointer-events: none; transition: opacity .3s var(--suave), translate .35s var(--suave);
+}
+.pestana:hover span, .pestana:focus-visible span { opacity: 1; translate: 0 -50% }
+
+.barra { left: 50%; bottom: max(1.2rem, env(safe-area-inset-bottom)); translate: -50% 0 }
+.capsula {
+  display: flex; align-items: center; gap: .5rem; padding: .62rem 1.1rem; border-radius: 999px;
+  color: var(--tinta); text-decoration: none; font-size: .9rem; font-weight: 500;
+  transition: background .3s var(--suave), scale .4s var(--resorte);
+}
+.capsula:hover { background: var(--plato); scale: 1.04 }
+
+/* ── las estaciones y sus ventanas ─────────────────────────────────────── */
+main { position: relative; z-index: 2 }
+.estacion {
+  min-height: 115vh; min-height: 115svh; display: flex; align-items: center; justify-content: center;
+  padding: 18vh max(1.4rem, env(safe-area-inset-left)); perspective: 1400px;
+}
+.estacion:nth-child(odd):not(.estacion--umbral):not(.estacion--salida) { justify-content: flex-end; padding-right: max(5vw, 2rem) }
+.estacion:nth-child(even) { justify-content: flex-start; padding-left: max(calc(5vw + 4rem), 6rem) }
+.estacion--umbral { min-height: 100vh; min-height: 100svh; text-align: center }
+.estacion--salida { min-height: 130vh; text-align: center }
+
+.ventana {
+  --cerca: 0; --giro: 0deg;
+  position: relative;
+  width: min(34rem, 100%);
+  padding: clamp(1.6rem, 1.2rem + 1.8vw, 2.4rem);
+  border-radius: 2.6rem;
+  /* espacio.js pone --cerca de 0 a 1 según lo cerca que esté del centro, y --giro según el lado
+     y la mirada: la ventana se vuelve de frente al acercarse, como en el espacio */
+  opacity: calc(.12 + var(--cerca) * .88);
+  filter: blur(calc((1 - var(--cerca)) * 7px));
+  /* sin translateZ ni preserve-3d: con ellos el desenfoque del vidrio se rompe (Safari incluido) */
+  transform: translateY(calc((1 - var(--cerca)) * 3.5rem)) scale(calc(.94 + var(--cerca) * .06)) rotateY(var(--giro)) rotateX(var(--giro-x, 0deg));
+  will-change: opacity, filter, transform;
+}
+/* el agarre de visionOS, la barrita que cuelga bajo cada ventana */
+.ventana:not(.ventana--libre)::after {
+  content: ""; position: absolute; left: 50%; bottom: -1.25rem; translate: -50% 0;
+  width: 5.5rem; height: .42rem; border-radius: 999px;
+  background: rgba(255, 255, 255, .32); box-shadow: 0 0 0 1px rgba(255, 255, 255, .06);
+  opacity: calc(var(--cerca) * .9);
+}
+.ventana--libre { width: min(42rem, 100%) }
+
+h1, h2 { font-weight: 700; letter-spacing: -.025em; line-height: 1.06; margin: .25em 0 .45em; text-wrap: balance }
+h1 { font-size: clamp(2.5rem, 1.6rem + 4.2vw, 4.8rem) }
+h2 { font-size: clamp(1.9rem, 1.4rem + 2.2vw, 2.9rem) }
+p { margin: 0 0 .9em; color: var(--tinta-2); text-wrap: pretty }
+.estacion--umbral p, .estacion--salida p { margin-inline: auto; max-width: 33rem }
+b { color: var(--tinta); font-weight: 600 }
+a { color: var(--tinta); text-decoration-color: color-mix(in srgb, var(--luz) 65%, transparent); text-underline-offset: .2em; text-decoration-thickness: 1px; transition: color .3s var(--suave), text-decoration-color .3s var(--suave) }
+a:hover { color: var(--luz) }
+
+.susurro { font-size: .8rem; font-weight: 600; letter-spacing: .02em; color: var(--luz); margin: 0 }
+.invita { margin-top: 2.4rem; font-size: .9rem; color: var(--tinta-3); animation: respira 4s ease-in-out infinite }
+@keyframes respira { 50% { opacity: .35; translate: 0 6px } }
+
+.cabeza { display: flex; align-items: center; gap: 1.1rem; margin-bottom: .6rem }
+.cabeza h2 { margin: .1em 0 0 }
+.retrato { width: 4.5rem; height: 4.5rem; border-radius: 50%; object-fit: cover; flex: none; box-shadow: 0 0 0 1px rgba(255, 255, 255, .25), 0 10px 30px -10px rgba(0, 0, 0, .6) }
+
+/* los «platos» de visionOS: superficies un poco más claras dentro del vidrio */
+.gotas { list-style: none; padding: 0; margin: 1.3rem 0 0; display: flex; flex-wrap: wrap; gap: .5rem }
+.gotas li { padding: .55rem 1.05rem; border-radius: 999px; background: var(--plato); color: var(--tinta-2); font-size: .9rem }
+.gotas b { margin-right: .3em }
+.rastro { margin: 1.2rem 0 0; display: grid; gap: .55rem }
+.rastro div { padding: .85rem 1.15rem; border-radius: 1.3rem; background: var(--plato) }
+.rastro dt { font-size: .76rem; font-weight: 600; color: var(--tinta-3) }
+.rastro dd { margin: .15rem 0 0; color: var(--tinta) }
+.nota { font-size: .86rem; color: var(--tinta-3); margin-top: 1.1rem }
+
+.lista { list-style: none; padding: 0; margin: 1.1rem 0 0; display: grid; gap: .5rem }
+.lista a { display: block; padding: .95rem 1.2rem; border-radius: 1.4rem; background: var(--plato); text-decoration: none; transition: background .3s var(--suave), scale .4s var(--resorte) }
+.lista a:hover { background: var(--plato-2); color: var(--tinta); scale: 1.015 }
+.lista span { display: block; margin-top: .15rem; color: var(--tinta-2); font-size: .92rem }
+
+.fichas { list-style: none; padding: 0; margin: 1rem 0 1.2rem; display: flex; flex-wrap: wrap; gap: .45rem }
+.fichas a { display: block; padding: .55rem 1rem; border-radius: 999px; background: var(--plato); text-decoration: none; font-size: .92rem; transition: background .3s var(--suave), scale .4s var(--resorte) }
+.fichas a:hover { background: var(--plato-2); color: var(--tinta); scale: 1.05 }
+
+blockquote { margin: 1.3rem 0; padding: 1.1rem 1.3rem; border-radius: 1.4rem; background: var(--plato); color: var(--tinta) }
+cite { display: block; margin-top: .55rem; font-style: normal; font-size: .82rem; color: var(--tinta-3) }
+
+.acciones { display: flex; flex-wrap: wrap; align-items: center; gap: .9rem }
+.acciones .nota { margin: 0 }
+.boton {
+  display: inline-block; padding: .78rem 1.4rem; border-radius: 999px; text-decoration: none; font-weight: 600;
+  background: var(--plato-2); color: var(--tinta); transition: background .3s var(--suave), scale .4s var(--resorte);
+}
+.boton:hover { background: rgba(255, 255, 255, .24); color: var(--tinta); scale: 1.04 }
+.boton--lleno { background: rgba(255, 255, 255, .92); color: #10201b }
+.boton--lleno:hover { background: #fff; color: #10201b }
+.contacto { margin-top: 2rem; font-size: .92rem }
+
+@media (max-width: 760px) {
+  .estacion, .estacion:nth-child(odd):not(.estacion--umbral):not(.estacion--salida), .estacion:nth-child(even) {
+    justify-content: center; padding: 12svh 1rem 16svh; min-height: 100svh;
+  }
+  /* en el teléfono la barra de pestañas baja y se vuelve horizontal, como en un iPhone */
+  .pestanas { left: 50%; top: auto; bottom: max(1rem, env(safe-area-inset-bottom)); translate: -50% 0; flex-direction: row; gap: .15rem; padding: .35rem }
+  .pestana { width: 2.6rem; height: 2.6rem }
+  .pestana span { display: none }
+  .barra { top: max(.8rem, env(safe-area-inset-top)); bottom: auto; padding: .3rem }
+  .capsula { padding: .5rem .8rem; font-size: .82rem }
+  .capsula span { display: none }
+  .ventana { border-radius: 2.1rem; transform: translateY(calc((1 - var(--cerca)) * 2.5rem)) }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto }
+  .ventana { filter: none; transform: none }
+  .invita { animation: none }
+}
