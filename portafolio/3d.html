@@ -4,31 +4,29 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Francisco Maldonado · Product designer en Quito · Fran en 3D</title>
-<meta name="description" content="El portafolio de Francisco «Fran» Maldonado, para caminarlo en 3D: Fran recorre una cueva de luz y en cada parada aparece un caso, un escrito, un juego o la mentoría.">
-<link rel="canonical" href="https://maldonado.pro/cueva.html">
-<meta name="theme-color" content="#160a09">
+<meta name="description" content="El portafolio de Francisco «Fran» Maldonado en 3D: el mismo Quito de la versión en papel, de bulto, para recorrerlo con Fran. En cada parada, un caso, un escrito, un juego o la mentoría.">
+<link rel="canonical" href="https://maldonado.pro/3d.html">
+<meta name="theme-color" content="#f4efe7">
 <meta property="og:type" content="profile">
 <meta property="og:title" content="Fran en 3D: el portafolio de Francisco Maldonado, para caminarlo">
-<meta property="og:description" content="Fran recorre una cueva de luz; en cada parada, un caso, un escrito, un juego o la mentoría.">
-<meta property="og:url" content="https://maldonado.pro/cueva.html">
+<meta property="og:description" content="El mismo Quito de la versión en papel, ahora en 3D, para recorrerlo con Fran.">
+<meta property="og:url" content="https://maldonado.pro/3d.html">
 <meta property="og:image" content="https://maldonado.pro/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../img/icono-180.png">
-<link rel="stylesheet" href="cueva.css?v=2">
+<link rel="stylesheet" href="3d.css?v=1">
 <script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js" } }</script>
-<script type="module" src="cueva.js?v=2"></script>
+<script type="module" src="3d.js?v=1"></script>
 </head>
 <body>
-<canvas id="escena" aria-label="Fran caminando por una cueva de luz. Usa las flechas para caminar y E o Enter para abrir lo que tiene delante."></canvas>
-<div class="velo" aria-hidden="true"></div>
+<canvas id="escena" aria-label="Fran en una calle de Quito en 3D. Usa las flechas para caminar y E o Enter para abrir lo que tiene delante."></canvas>
 
 <header class="cima">
-  <a class="cima__marca" href="./">Fran <span>· en 3D</span></a>
+  <a class="marca" href="./">Francisco Maldonado</a>
   <nav aria-label="Otras versiones">
-    <a href="./">En papel</a>
-    <a href="espacio.html">En el espacio</a>
-    <a href="./#texto">En texto</a>
+    <a class="pastilla" href="./">Versión en papel</a>
+    <a class="pastilla" href="espacio.html">En el espacio</a>
   </nav>
 </header>
 
@@ -42,16 +40,19 @@
 
 <!-- la portada -->
 <section class="portada" id="portada" aria-labelledby="portada-t">
-  <p class="susurro">Francisco Maldonado · Product designer · Quito</p>
-  <h1 id="portada-t">Fran, en la cueva.</h1>
-  <p>Su portafolio, como un mundo para andar. Once luces: quién es, tres casos, lo que escribe, sus juegos y apps, la mentoría y el sistema con el que pinta todo.</p>
-  <button class="boton" id="empezar" type="button">Entrar</button>
+  <div class="portada__hoja">
+    <p class="kicker">01 · Presentación · en 3D</p>
+    <h1 id="portada-t">Francisco Maldonado</h1>
+    <p class="serif">Diseño producto. Y escribo sobre él.</p>
+    <p>El mismo Quito de la versión en papel, ahora de bulto. Camina con Fran por la calle: el trabajo, lo que escribe, sus juegos y apps, la mentoría y el sistema, cada cosa en su casa.</p>
+    <button class="boton" id="empezar" type="button">Empezar el recorrido →</button>
+  </div>
 </section>
 
-<!-- la hoja que se abre en cada pieza: blanda, de vidrio, sin esquinas -->
+<!-- la hoja que se abre en cada pieza, como la tarjeta del papel -->
 <dialog class="hoja" id="hoja" aria-labelledby="hoja-t">
   <div class="hoja__cabeza">
-    <p class="susurro" id="hoja-sala"></p>
+    <p class="kicker" id="hoja-sala"></p>
     <button class="redondo" id="cerrar" type="button" aria-label="Cerrar">✕</button>
   </div>
   <div id="hoja-cuerpo"></div>
@@ -65,7 +66,7 @@
 <!-- las piezas, en orden: el 3D las coloca a lo largo del camino. Están en el HTML para que se
      lean sin JavaScript y con lector de pantalla. -->
 <main class="piezas" id="piezas">
-  <article id="perfil" data-sala="Quién" data-nombre="Fran">
+  <article id="perfil" data-sala="Presentación" data-nombre="Fran">
     <div class="cabeza"><img class="retrato" src="../img/francisco-maldonado.jpg" alt="Francisco Maldonado" width="72" height="72"><h2>Francisco Maldonado</h2></div>
     <p>Product designer en Quito. Catorce años en producto —fintech, e-commerce, entretenimiento— y una manía: preguntar para qué sirve cada cosa antes de dibujarla.</p>
     <p>De día diseña productos dentro del corporativo. De noche escribe sobre por qué casi todo lo que ese mundo vende como innovación es humo con buen render.</p>
@@ -141,7 +142,7 @@
     <p>Los portafolios, el periódico, las apps y los juegos están pintados con las mismas variables. Cambia el tema y el mundo cambia de piel; el HTML no se toca.</p>
     <p><a class="boton" href="https://una.red/ds/">Ver el sistema</a></p>
   </article>
-  <article id="salida" data-sala="Fin" data-nombre="La salida">
+  <article id="salida" data-sala="Sistema" data-nombre="La salida">
     <p class="susurro">Fin del recorrido</p>
     <h2>El resto está en UNA.</h2>
     <p>La casa de MAL: Quesf, EL MERCIO., Modo Inc, Acolita y el laboratorio, todo junto.</p>
