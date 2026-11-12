@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fran, en sueños — un portafolio que se atraviesa</title>
+<meta name="description" content="La versión onírica del portafolio de Francisco Maldonado, product designer en Quito: un túnel de luz que se abre mientras bajas y va mostrando su trabajo, sus escritos, sus juegos y su mentoría.">
+<link rel="canonical" href="https://una.red/sueno/">
+<meta name="theme-color" content="#06120f">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Fran, en sueños">
+<meta property="og:description" content="Un portafolio que se atraviesa: un túnel de luz que se abre mientras bajas.">
+<meta property="og:url" content="https://una.red/sueno/">
+<meta property="og:image" content="https://una.red/img/og.jpg">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="sueno.css?v=1">
+<script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js" } }</script>
+<script type="module" src="sueno.js?v=1"></script>
+</head>
+<body>
+<canvas id="cielo" aria-hidden="true"></canvas>
+<div class="velo" aria-hidden="true"></div>
+
+<header class="cima">
+  <a class="cima__marca" href="https://maldonado.pro/">Fran <span>· en sueños</span></a>
+  <nav aria-label="Otras versiones">
+    <a href="https://maldonado.pro/">Versión clásica</a>
+    <a href="https://una.red/">UNA</a>
+  </nav>
+</header>
+
+<ol class="huella" aria-hidden="true"></ol>
+
+<main id="principal">
+
+  <section class="estacion estacion--umbral" data-tono="0">
+    <div class="burbuja">
+      <p class="susurro">Product designer · Quito, Ecuador</p>
+      <h1>Diseño producto.<br>Y escribo sobre él.</h1>
+      <p>De día diseño productos dentro del corporativo. De noche escribo sobre por qué casi todo lo que ese mundo vende como innovación es humo con buen render.</p>
+      <p class="invita">Baja despacio. El túnel se abre.</p>
+    </div>
+  </section>
+
+  <section class="estacion" data-tono="0">
+    <div class="burbuja">
+      <p class="susurro">01 · Quién</p>
+      <h2>Francisco Maldonado</h2>
+      <p>Catorce años en producto —fintech, e-commerce, entretenimiento— y una manía: preguntar para qué sirve cada cosa antes de dibujarla.</p>
+      <ul class="gotas" aria-label="En números">
+        <li><b>2010</b> desde</li>
+        <li><b>3</b> industrias</li>
+        <li><b>14</b> reseñas</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="estacion" data-tono="1">
+    <div class="burbuja">
+      <p class="susurro">02 · Trabajo · Fintech</p>
+      <h2>Deuna!</h2>
+      <p>Pagar y cobrar sin efectivo, en un país que adora el efectivo. El reto no era la tecnología: era la confianza.</p>
+      <dl class="rastro">
+        <div><dt>Resultado</dt><dd>La mayor red de comercios digitales del país</dd></div>
+        <div><dt>Áreas</dt><dd>Onboarding · QR · Casos de error</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="estacion" data-tono="2">
+    <div class="burbuja">
+      <p class="susurro">02 · Trabajo · Autoservicio</p>
+      <h2>KFC Kiosk</h2>
+      <p>Pedidos sin fila, para dedos con hambre y cero paciencia. Nadie lee menús en pantallas.</p>
+      <dl class="rastro">
+        <div><dt>Resultado</dt><dd>Menos fila, mayor ticket, menos errores</dd></div>
+        <div><dt>Áreas</dt><dd>Kioscos · Combos · Pago</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="estacion" data-tono="3">
+    <div class="burbuja">
+      <p class="susurro">02 · Trabajo · Logística</p>
+      <h2>Control Point</h2>
+      <p>Operación en campo, donde el wifi no llega y nadie perdona. Flujos cortos y legibles bajo el sol.</p>
+      <dl class="rastro">
+        <div><dt>Resultado</dt><dd>Control fiable donde antes había papel</dd></div>
+        <div><dt>Áreas</dt><dd>Sin conexión · Uso con una mano</dd></div>
+      </dl>
+      <p class="nota">Fichas resumidas. Para saber más, escríbele a Fran: <a href="mailto:francisco@maldonado.pro?subject=Sobre%20tus%20casos">francisco@maldonado.pro</a></p>
+    </div>
+  </section>
+
+  <section class="estacion" data-tono="4">
+    <div class="burbuja">
+      <p class="susurro">03 · Escritura</p>
+      <h2>Un periódico y dos newsletters.</h2>
+      <p><a href="https://elmercio.com/"><b>EL MERCIO.</b></a> Las noticias, el entretenimiento y la desinformación de ayer. Desde 2009, más de novecientos artículos.</p>
+      <p><a href="https://malpensamientos.substack.com/"><b>Mal Pensamientos</b></a>, los lunes: diseño, producto y tecnología sin el barniz corporativo.</p>
+      <p><a href="https://franmaldonado.substack.com/"><b>Todo Mal</b></a>, sin calendario: lo que no cabe en LinkedIn.</p>
+    </div>
+  </section>
+
+  <section class="estacion" data-tono="5">
+    <div class="burbuja">
+      <p class="susurro">04 · Proyectos</p>
+      <h2>Juegos y apps propios.</h2>
+      <p>Juegos de aquí, para jugar en el navegador: <a href="https://quesf-ec.github.io/coches/">Coches de madera</a>, <a href="https://quesf-ec.github.io/boliche/">El boliche</a>, <a href="https://finados.una.red/">Guagua de pan</a>, <a href="https://una.red/apps/fanesca/">La fanesca</a>, <a href="https://una.red/apps/estadodecepcion/">Estado Decepción</a>, <a href="https://una.red/apps/modo-incognito/">Modo Incógnito</a> y más en el laboratorio.</p>
+      <p>Y herramientas que resuelven algo concreto: <a href="https://una.red/apps/quanto/">Quanto</a>, <a href="https://una.red/apps/agro/">Mi Huerto</a>, <a href="https://una.red/apps/jacky/">Jacky</a>, <a href="https://una.red/apps/test-cds/">Test CDS</a>, <a href="https://una.red/renuncia/">Cartas de renuncia</a>.</p>
+      <p><a class="boton" href="https://una.red/#quesf">Verlos todos en UNA</a></p>
+    </div>
+  </section>
+
+  <section class="estacion" data-tono="6">
+    <div class="burbuja">
+      <p class="susurro">05 · Mentoría · Gratis</p>
+      <h2>Gratis, y sin adornos.</h2>
+      <p>Si necesitas que alguien revise tu portafolio sin edulcorar, agarra un café y charlamos. Desde 2024, con gente de Ecuador, Perú, Colombia, México, España e Italia.</p>
+      <blockquote>«Francisco supo escucharme, motivarme y aconsejarme, y agradezco mucho lo humano que fue durante la sesión.»<cite>Karen Benites Segura · UX Designer, Produbanco</cite></blockquote>
+      <p><a class="boton" href="https://adplist.org/mentors/francisco-maldonado">Agendar en ADPList</a> <span class="nota">14 reseñas · 4,2 de 5</span></p>
+    </div>
+  </section>
+
+  <section class="estacion estacion--salida" data-tono="7">
+    <div class="burbuja">
+      <p class="susurro">Al otro lado</p>
+      <h2>Despertaste.</h2>
+      <p>El resto está en <a href="https://una.red/">UNA</a>: Quesf, EL MERCIO., Modo Inc, Acolita y el laboratorio. Y si prefieres el portafolio despierto, está en <a href="https://maldonado.pro/">maldonado.pro</a>.</p>
+      <p class="contacto"><a href="mailto:francisco@maldonado.pro">francisco@maldonado.pro</a> · <a href="https://www.linkedin.com/in/franmaldonadoc/" rel="me">LinkedIn</a> · <a href="https://www.instagram.com/franmal__/" rel="me">Instagram</a></p>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>

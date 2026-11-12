@@ -1,0 +1,127 @@
+/* Fran, en sueños: el texto flota sobre el túnel (sueno.js) en burbujas de vidrio.
+   Nada tiene esquinas: todo es redondo, blando y un poco desenfocado. */
+:root {
+  --tinta: #f4efe6;
+  --tinta-2: rgba(244, 239, 230, .72);
+  --tinta-3: rgba(244, 239, 230, .5);
+  --luz: #9ff0d0;            /* lo cambia sueno.js según la estación */
+  --fondo: #06120f;
+  --vidrio: rgba(18, 38, 33, .38);
+  --borde: rgba(220, 255, 240, .16);
+  --suave: cubic-bezier(.22, .61, .36, 1);
+  color-scheme: dark;
+}
+* { box-sizing: border-box }
+html { background: var(--fondo); scrollbar-width: none }
+html::-webkit-scrollbar { display: none }
+body {
+  margin: 0; color: var(--tinta);
+  font: 400 clamp(1rem, .95rem + .3vw, 1.15rem)/1.6 ui-rounded, "SF Pro Rounded", "Nunito", "Quicksand", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  /* sin WebGL, al menos el color del sueño */
+  background: radial-gradient(120% 90% at 60% 40%, #1d4a3e 0%, #0b2420 45%, var(--fondo) 80%) fixed;
+}
+
+#cielo { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100lvh; display: block; z-index: 0 }
+/* grano y viñeta: lo que vuelve blanda la imagen */
+.velo {
+  position: fixed; inset: -2px; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(130% 100% at 50% 50%, transparent 55%, rgba(2, 8, 7, .55) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+}
+
+.cima {
+  position: fixed; z-index: 3; left: 0; right: 0; top: 0;
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  padding: calc(env(safe-area-inset-top, 0px) + 1.1rem) max(1.4rem, env(safe-area-inset-right)) 1rem max(1.4rem, env(safe-area-inset-left));
+  font-size: .82rem; letter-spacing: .04em;
+}
+.cima a { color: var(--tinta-2); text-decoration: none; transition: color .4s var(--suave) }
+.cima a:hover, .cima a:focus-visible { color: var(--tinta) }
+.cima__marca { font-weight: 600; color: var(--tinta) !important }
+.cima__marca span { font-weight: 400; color: var(--tinta-3) }
+.cima nav { display: flex; gap: 1.2rem }
+
+/* el rastro de estaciones, a la derecha */
+.huella {
+  position: fixed; z-index: 3; right: max(1rem, env(safe-area-inset-right)); top: 50%; translate: 0 -50%;
+  margin: 0; padding: 0; list-style: none; display: grid; gap: .7rem;
+}
+.huella li { width: 7px; height: 7px; border-radius: 50%; background: var(--tinta-3); opacity: .45; transition: all .6s var(--suave) }
+.huella li.aqui { background: var(--luz); opacity: 1; box-shadow: 0 0 14px var(--luz); scale: 1.5 }
+
+main { position: relative; z-index: 2 }
+.estacion {
+  min-height: 115vh; min-height: 115svh;
+  display: flex; align-items: center;
+  padding: 18vh max(1.4rem, env(safe-area-inset-left)) 18vh max(1.4rem, env(safe-area-inset-left));
+}
+.estacion:nth-child(even) { justify-content: flex-end; padding-right: max(3.2rem, env(safe-area-inset-right)) }
+.estacion--umbral { min-height: 100vh; min-height: 100svh; justify-content: center; text-align: center }
+.estacion--salida { min-height: 130vh; justify-content: center; text-align: center }
+
+.burbuja {
+  --cerca: 0;
+  width: min(34rem, 100%);
+  padding: clamp(1.6rem, 1.2rem + 2vw, 2.6rem);
+  border-radius: 2.4rem;
+  background: var(--vidrio);
+  border: 1px solid var(--borde);
+  box-shadow: 0 30px 80px -30px rgba(0, 0, 0, .6), inset 0 1px 0 rgba(255, 255, 255, .06);
+  -webkit-backdrop-filter: blur(18px) saturate(140%); backdrop-filter: blur(18px) saturate(140%);
+  /* sueno.js pone --cerca de 0 a 1 según lo cerca que esté del centro de la pantalla */
+  opacity: calc(.15 + var(--cerca) * .85);
+  filter: blur(calc((1 - var(--cerca)) * 6px));
+  translate: 0 calc((1 - var(--cerca)) * 3rem);
+  scale: calc(.96 + var(--cerca) * .04);
+  will-change: opacity, filter, translate;
+}
+.estacion--umbral .burbuja, .estacion--salida .burbuja { background: transparent; border-color: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; width: min(40rem, 100%) }
+
+h1, h2 { font-weight: 600; letter-spacing: -.02em; line-height: 1.08; margin: .3em 0 .5em; text-wrap: balance }
+h1 { font-size: clamp(2.4rem, 1.6rem + 4vw, 4.6rem) }
+h2 { font-size: clamp(1.9rem, 1.4rem + 2.4vw, 3rem) }
+p { margin: 0 0 .9em; color: var(--tinta-2); text-wrap: pretty }
+.estacion--umbral p, .estacion--salida p { margin-inline: auto; max-width: 32rem }
+b { color: var(--tinta); font-weight: 600 }
+a { color: var(--tinta); text-decoration-color: color-mix(in srgb, var(--luz) 60%, transparent); text-underline-offset: .2em; text-decoration-thickness: 1px; transition: text-decoration-color .4s var(--suave), color .4s var(--suave) }
+a:hover { color: var(--luz); text-decoration-color: var(--luz) }
+a:focus-visible { outline: 2px solid var(--luz); outline-offset: 4px; border-radius: 1rem }
+
+.susurro { font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--luz); opacity: .85; margin: 0 }
+.invita { margin-top: 2.4rem; font-size: .9rem; color: var(--tinta-3); animation: respira 4s ease-in-out infinite }
+@keyframes respira { 50% { opacity: .35; translate: 0 6px } }
+
+.gotas { list-style: none; padding: 0; margin: 1.4rem 0 0; display: flex; flex-wrap: wrap; gap: .6rem }
+.gotas li { padding: .55rem 1.1rem; border-radius: 999px; background: rgba(255, 255, 255, .06); border: 1px solid var(--borde); color: var(--tinta-2); font-size: .9rem }
+.gotas b { margin-right: .3em }
+
+.rastro { margin: 1.2rem 0 0; display: grid; gap: .8rem }
+.rastro div { padding: .9rem 1.2rem; border-radius: 1.4rem; background: rgba(255, 255, 255, .05) }
+.rastro dt { font-size: .74rem; letter-spacing: .12em; text-transform: uppercase; color: var(--tinta-3) }
+.rastro dd { margin: .2rem 0 0; color: var(--tinta) }
+.nota { font-size: .86rem; color: var(--tinta-3); margin-top: 1.2rem }
+
+blockquote { margin: 1.4rem 0; padding: 1.2rem 1.4rem; border-radius: 1.6rem; background: rgba(255, 255, 255, .05); color: var(--tinta); font-style: italic }
+cite { display: block; margin-top: .6rem; font-style: normal; font-size: .82rem; color: var(--tinta-3) }
+
+.boton {
+  display: inline-block; padding: .8rem 1.5rem; border-radius: 999px; text-decoration: none;
+  background: color-mix(in srgb, var(--luz) 18%, transparent); border: 1px solid color-mix(in srgb, var(--luz) 45%, transparent);
+  color: var(--tinta); box-shadow: 0 0 30px -8px var(--luz);
+}
+.boton:hover { background: color-mix(in srgb, var(--luz) 30%, transparent); color: var(--tinta) }
+.contacto { margin-top: 2rem; font-size: .92rem }
+
+@media (max-width: 640px) {
+  .estacion, .estacion:nth-child(even) { justify-content: center; padding-inline: 1rem; min-height: 100svh; padding-block: 12svh }
+  .cima nav a:first-child { display: none }
+  .huella { right: .5rem; gap: .55rem }
+  .burbuja { border-radius: 2rem }
+}
+@media (prefers-reduced-motion: reduce) {
+  .burbuja { filter: none; translate: none; scale: none }
+  .invita { animation: none }
+}
